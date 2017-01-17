@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<umbPackage>
+  <files>
+    <file>
+      <guid>Terratype.dll</guid>
+      <orgPath>/bin</orgPath>
+      <orgName>Terratype.dll</orgName>
+    </file>
+  </files>
+  <info>
+    <package>
+      <name>Terratype</name>
+      <version>1.0.0</version>
+      <license url="http://www.opensource.org/licenses/mit-license.php">MIT license</license>
+      <url>https://twitter.com/joniffrichards</url>
+      <requirements>
+        <major>7/major>
+        <minor>0</minor>
+        <patch>0</patch>
+      </requirements>
+    </package>
+    <author>
+      <name>Jonathan Richards</name>
+      <website>https://twitter.com/joniffrichards</website>
+    </author>
+    <readme>
+		<![CDATA[Once installed creates a new property type called 'Terratype'. To use, create a new datatype based off 'Terratype', set initial values and your good to use in any doctype you wish]]></readme>
+  </info>
+  <DocumentTypes />
+  <Templates />
+  <Stylesheets />
+  <Macros />
+  <DictionaryItems />
+  <Languages />
+</umbPackage>

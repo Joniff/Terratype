@@ -1,0 +1,75 @@
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-disabled="!loading">
+    <div class="umb-editor">
+        <label for="terratype_{{model.alias}}_provider" class="control-label">
+            Map Provider:
+        </label>
+        <select id="terratype_{{model.alias}}_provider" ng-model="model.value.provider.id" class="umb-editor" ng-change="setProvider(model.value.provider.id)">
+            <option ng-repeat="p in bag.providers" value="{{p.id}}">{{p.name}}</option>
+        </select>
+    </div>
+    <br />
+    <fieldset ng-show="bag.provider.id != null" style="padding-left:15px;">
+        <a href="{{bag.provider.referenceUrl}}" target="_blank">
+            <legend style="padding-left:36px;background-image:url({{bag.provider.image}});background-size:auto 32px;background-repeat: no-repeat;">
+                {{bag.provider.name}}
+            </legend>
+        </a>
+        <p>{{bag.provider.description}}</p>
+        <br />
+        <section>
+            <h4 style="background-color:#dfdfdf;padding:5px 0;">
+                Configure
+            </h4>
+            <div class="umb-editor">
+                <label for="terratype_{{model.alias}}_coordinatesystem" class="control-label">
+                    Coordinate System:
+                </label>
+                <select id="terratype_{{model.alias}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)">
+                    <option ng-repeat="c in bag.provider.coordinateSystems" value="{{c.id}}">{{c.name}}</option>
+                </select>
+            </div>
+            <div class="umb-editor" ng-show="model.value.position.id != null">
+                <div style="margin-left:170px;margin-top:5px;">
+                    <small>
+                        <a href="{{bag.provider.position.referenceUrl}}" target="_blank">
+                            {{bag.provider.position.description}}
+                        </a>
+                    </small>
+                </div>
+            </div>
+            <br />
+            <ng-include src="bag.provider.views.definition" onload="bag.provider.definitionSetup()">
+            </ng-include>
+        </section>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding:5px 0;">
+                Apperance
+            </h4>
+            <div class="umb-editor">
+                <label for="terratype_{{model.alias}}_height" class="control-label">
+                    Height:
+                </label>
+                <input type="number" id="terratype_{{model.alias}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
+            </div>
+            <ng-include src="bag.provider.views.apperance" onload="bag.provider.apperanceSetup()">
+            </ng-include>
+        </section>
+
+
+    </fieldset>
+
+    <div ng-show="error != null" style="color:red;">
+        <p ng-bind-html="error">
+        </p>
+    </div>
+
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <textarea>
+        {{model.value}}
+    </textarea>
+</div>

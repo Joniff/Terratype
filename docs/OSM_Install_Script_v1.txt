@@ -1,0 +1,195 @@
+https://switch2osm.org/serving-tiles/manually-building-a-tile-server-14-04/
+
+ubuntu server 16.10
+
+
+
+apt-get install openssh-server
+
+sudo apt-get install libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libpng12-0 libtiff5-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
+
+
+
+sudo apt-get install libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
+
+sudo apt-get install libpng12-0 
+sudo apt-get install libtiff5-dev 
+
+sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
+
+sudo -u postgres -i
+createuser terratype_svc
+createdb -E UTF8 -O terratype_svc gis
+exit
+
+sudo useradd -m terratype_svc
+sudo passwd terratype_svc
+
+# password set to  usual
+
+sudo -u postgres psql
+\c gis
+CREATE EXTENSION postgis;
+ALTER TABLE geometry_columns OWNER TO terratype_svc;
+ALTER TABLE spatial_ref_sys OWNER TO terratype_svc;
+\q
+exit
+
+sudo apt-get install make cmake g++ libboost-dev libboost-system-dev \
+  libboost-filesystem-dev libexpat1-dev zlib1g-dev \
+  libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 \
+  liblua5.2-dev
+  
+mkdir ~/src
+cd ~/src
+git clone git://github.com/openstreetmap/osm2pgsql.git
+cd osm2pgsql
+
+mkdir build && cd build 
+cmake .. # cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF (for RCs)
+
+#./autogen.sh
+#./configure
+make
+sudo make install
+
+cd ~/src
+git clone git://github.com/mapnik/mapnik
+cd mapnik
+git branch 2.2 origin/2.2.x
+git checkout 2.2
+
+python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
+make
+sudo make install
+sudo ldconfig
+
+#python
+#>>> import mapnik
+#>>> #if mapnik has compiled then no errors are reported and the second set of chevrons are displayed
+#quit ()
+
+cd ~/src
+git clone git://github.com/openstreetmap/mod_tile.git
+cd mod_tile
+./autogen.sh
+./configure
+make
+sudo make install
+sudo make install-mod_tile
+sudo ldconfig
+
+
+sudo mkdir -p /usr/local/share/maps/style
+sudo chown terratype_svc /usr/local/share/maps/style
+cd /usr/local/share/maps/style
+sudo wget https://github.com/mapbox/osm-bright/archive/master.zip
+sudo wget http://data.openstreetmapdata.com/simplified-land-polygons-complete-3857.zip
+sudo wget http://data.openstreetmapdata.com/land-polygons-split-3857.zip
+sudo mkdir ne_10m_populated_places_simple
+cd ne_10m_populated_places_simple
+sudo wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places_simple.zip
+sudo unzip ne_10m_populated_places_simple.zip
+sudo rm ne_10m_populated_places_simple.zip
+cd ..
+
+sudo unzip '*.zip'
+sudo mkdir osm-bright-master/shp
+sudo mv land-polygons-split-3857 osm-bright-master/shp/
+sudo mv simplified-land-polygons-complete-3857 osm-bright-master/shp/
+sudo mv ne_10m_populated_places_simple osm-bright-master/shp/
+
+cd osm-bright-master/shp/land-polygons-split-3857
+sudo shapeindex land_polygons.shp
+cd ../simplified-land-polygons-complete-3857/
+sudo shapeindex simplified_land_polygons.shp
+cd ../..
+
+#~~~~~~~ these files modifications need to be added to github and wget/replace original .mml file ~~~~~#
+# nano osm-bright/osm-bright.osm2pgsql.mml
+
+# "file": "/usr/local/share/maps/style/osm-bright-master/shp/land-polygons-split-3857/land_polygons.shp", 
+# "type": "shape"
+# "file": "/usr/local/share/maps/style/osm-bright-master/shp/simplified-land-polygons-complete-3857/simplified_land_polygons.shp", 
+# "type": "shape",
+# "file": "/usr/local/share/maps/style/osm-bright-master/shp/ne_10m_populated_places_simple/ne_10m_populated_places_simple.shp", 
+# "type": "shape"
+
+# "srs": "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+#~~~~~ this shopuld all be in a pore-modified file ~~~~#
+
+cp configure.py.sample configure.py
+nano configure.py
+# Change the config line pointing to ~/Documents/Mapbox/project to /usr/local/share/maps/style instead, and change dbname from osm to gis
+
+sudo ./make.py
+cd ../OSMBright/
+carto project.mml > OSMBright.xml
+
+#~~~~~ these files modifications need to be added to github and wget/replace original .conf file ~~~~#
+#Change the the renderd settings by editing the /usr/local/etc/renderd.conf (you’ll need to do it as root via “sudo”) and change the following five lines, uncommenting (removing the ‘;’) when required. They are found in the [renderd], [mapnik] and [default] sections.
+#socketname=/var/run/renderd/renderd.sock
+#plugins_dir=/usr/local/lib/mapnik/input
+#font_dir=/usr/share/fonts/truetype/ttf-dejavu
+#XML=/usr/local/share/maps/style/OSMBright/OSMBright.xml
+#HOST=localhost
+#~~~#
+
+
+sudo mkdir /var/run/renderd
+sudo chown terratype_svc:root /var/run/renderd
+sudo mkdir /var/lib/mod_tile
+sudo chown terratype_svc:root /var/lib/mod_tile
+
+
+cd /etc/apache2/conf-available
+###~~~~ these files modifications need to be added to github and wget .conf file ~~~~####
+sudo nano mod_tile.conf
+
+LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so
+
+#######
+####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
+# Apache’s default website configuration file needs to be modified to include mod_tile settings. Modify the file /etc/apache2/sites-available/000-default.conf to include the following lines immediately after the admin e-mail address line:
+
+LoadTileConfigFile /usr/local/etc/renderd.conf
+ModTileRenderdSocketName /var/run/renderd/renderd.sock
+# Timeout before giving up for a tile to be rendered
+ModTileRequestTimeout 0
+# Timeout before giving up for a tile to be rendered that is otherwise missing
+ModTileMissingRequestTimeout 30
+
+#Tell Apache that you have added the new module, and restart it:
+cd /etc/apache2/sites-available
+sudo chown root:root 000-default.conf
+
+
+sudo a2enconf mod_tile
+sudo service apache2 reload
+
+####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
+#Edit the file /etc/postgresql/9.5/main/postgresql.conf and make the following changes
+shared_buffers = 128MB
+checkpoint_segments = 20
+maintenance_work_mem = 256MB
+autovacuum = off
+#
+cd /etc/postgresql/9.5/main
+sudo chown postgres:postgres postgresql.conf
+
+#edit /etc/sysctl.conf and add these lines near the top after the other “kernel” definitions
+# Increase kernel shared memory segments - needed for large databases
+kernel.shmmax=268435456
+
+sudo reboot
+
+sudo sysctl kernel.shmmax
+
+######
+make initial drive over 1TB
+######
+
+sudo mkdir /usr/local/share/maps/planet
+sudo chown terratype_svc /usr/local/share/maps/planet
+cd /usr/local/share/maps/planet 
+sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf

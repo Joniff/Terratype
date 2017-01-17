@@ -1,0 +1,67 @@
+
+.simpleColorPicker {
+	float:left;
+}
+
+.simpleColorPicker .colorInput {
+    width: 62px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	height: 26px;
+	padding: 2px 2px 0px 5px;
+	color: #555;
+}
+
+.simpleColorPicker .colorBk {
+    position: relative !important;
+    top: 0px;
+    left: -4px;
+    width: 28px !important;
+    height: 28px !important;
+    display: inline-block;
+    cursor: pointer;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc; 
+	border-left: 1px solid #ccc;	
+}
+
+.simpleColorPicker .colorPicker {
+    display:none;
+    position:absolute;
+    border: 1px solid #B9B8B8;
+    background-color: #3C3B3B;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+    margin-top: -0px;
+    -webkit-box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.simpleColorPicker .colorPicker canvas {
+    display: inline-block;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 10px !important;
+    border-radius: 4px !important;
+    margin: 0 0 -4px 0;
+    padding: 0;
+}
+
+.simpleColorPicker.open .colorPicker {
+    display:block;
+}
+
+.easyColorPickerOpacity {
+	width:60px;
+	Float:left;
+}
+
+.easyColorPickerOpacitySpan{
+	display:inline-block;
+	Float:left;
+	margin: 5px 5px 0 5px;
+}
+
+
+

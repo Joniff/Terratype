@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype", "src\Terratype\Terratype.csproj", "{5034528F-401C-4FD4-8F42-23B378C7140D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.TestSite", "src\Terratype.TestSite\Terratype.TestSite.csproj", "{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{27002E17-BDAD-4E17-93C4-20549B124402}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+		build-appveyor.cmd = build-appveyor.cmd
+		build.cmd = build.cmd
+		build\package.nuspec = build\package.nuspec
+		build\package.proj = build\package.proj
+		build\package.xml = build\package.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A044B1B9-8024-46CC-9E83-908226E3A742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.Test", "src\Terratype.Test\Terratype.Test.csproj", "{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5034528F-401C-4FD4-8F42-23B378C7140D} = {5034528F-401C-4FD4-8F42-23B378C7140D}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5034528F-401C-4FD4-8F42-23B378C7140D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5034528F-401C-4FD4-8F42-23B378C7140D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5034528F-401C-4FD4-8F42-23B378C7140D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5034528F-401C-4FD4-8F42-23B378C7140D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C18EBB97-3145-4ED5-B1D8-92A0BE0800F1} = {A044B1B9-8024-46CC-9E83-908226E3A742}
+		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C} = {A044B1B9-8024-46CC-9E83-908226E3A742}
+	EndGlobalSection
+EndGlobal

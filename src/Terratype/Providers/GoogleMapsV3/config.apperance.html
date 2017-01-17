@@ -1,0 +1,28 @@
+﻿<div class="umb-editor">
+    <label for="terratype_{{model.alias}}_googlemapv3_defaultlocation" class="control-label">
+        Default location:
+    </label>
+    <div ng-show="bag.provider.apiKeySuccess" class="umb-editor">
+        <div style="margin-left:170px;margin-top:5px;">
+            <div ng-show="bag.provider.apiKeyLoading">
+                <img src="/umbraco/assets/img/loader.gif" />
+            </div>
+            <div ng-show="bag.provider.apiKeyFailed">
+                <img src="/umbraco/images/false.png" />
+                <span style="color:red;padding-right:10px;">Invalid Google Map API Key</span>
+            </div>
+
+            <div ng-show="bag.provider.canSearch" style="margin-bottom:5px;">
+                <input id="terratype_{{model.alias}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup">
+            </div>
+            <div style="position: relative;overflow: hidden;">
+                <div id="terratype_{{model.alias}}_googlemapv3_lookup" ng-style="map.height">
+                </div>
+            </div>
+
+            <div style="margin-top:5px">
+                <input type="text" id="terratype_{{model.alias}}_googlemapv3_defaultlocation" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0), zoom (1 to 20)" ng-model="model.value.position.datum" ng-change="checkDatum()" ng-style="bag.position.datumStyle" />
+            </div>
+        </div>
+    </div>
+</div>

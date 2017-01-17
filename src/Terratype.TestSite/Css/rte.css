@@ -1,0 +1,19 @@
+﻿
+
+/**umb_name:Header*/
+h1{font-size: 1.5rem;}
+
+/**umb_name:Header 2*/
+h2{font-size: 1.4rem;}
+
+/**umb_name:Header 3*/
+h3{font-size: 1.2rem;}
+
+/**umb_name:Smooth*/
+h5{font-size: 1rem; font-weight: 100;}
+
+/**umb_name:Paragraph*/
+p{font-size: 1rem;}
+
+/**umb_name:Blockquote*/
+blockquote{font-style: italic;}

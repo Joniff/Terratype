@@ -1,0 +1,77 @@
+syntax: regexp
+^packages/(?!repositories.config).*
+
+# use glob syntax
+syntax: glob
+
+#Build
+artifacts/*
+build/_nuget/*
+build/_umbraco/*
+
+# AngularGoogleMaps
+src/AngularGoogleMaps/bin/*
+src/AngularGoogleMaps.TestSite/App_Plugins/AngularGoogleMaps/*
+
+# Umbraco TestSite
+src/AngularGoogleMaps.TestSite/bin/*
+src/AngularGoogleMaps.TestSite/App_Data/umbraco.config
+src/AngularGoogleMaps.TestSite/App_Data/preview/*.config
+src/AngularGoogleMaps.TestSite/App_Data/TEMP/ClientDependency/
+src/AngularGoogleMaps.TestSite/App_Data/TEMP/ExamineIndexes/
+src/AngularGoogleMaps.TestSite/App_Data/TEMP/PluginCache/*
+src/AngularGoogleMaps.TestSite/App_Data/TEMP/Razor/
+src/AngularGoogleMaps.TestSite/App_Data/ClientDependency/
+src/AngularGoogleMaps.TestSite/App_Data/Logs/*
+src/AngularGoogleMaps.TestSite/App_Data/courier/revisions/
+src/AngularGoogleMaps.TestSite/App_Data/courier/cache/*
+src/AngularGoogleMaps.TestSite/App_Data/umbraco.licensing.log.txt
+src/AngularGoogleMaps.TestSite/aspnet_client/
+*/App_Data/NuGetBackup/*
+
+# ImageProcessor DiskCache 
+src/AngularGoogleMaps.TestSite/App_Data/cache/*
+
+
+# Visual Studio
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+*.orig
+*.rej
+WebApp/*/[Bb]in
+[Dd]ebug*/
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+BuildProcessTemplates/*
+Published/*
+[Tt]humbs.db
+[Uu]pgradeLog*.[Xx][Mm][Ll]
+_[Uu]pgradeReport_Files*/
+*.build.csdef
+[Pp]ackage/*
+ASPNETDB.MDF
+aspnetdb_log.ldf
+_notes/
+*.DS_Store
+*.backup
