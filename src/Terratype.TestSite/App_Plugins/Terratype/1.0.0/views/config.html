@@ -2,6 +2,9 @@
     <div class="umb-editor">
         <label for="terratype_{{model.alias}}_provider" class="control-label">
             Map Provider:
+            <small>
+                Select which system you wish to use to display maps
+            </small>
         </label>
         <select id="terratype_{{model.alias}}_provider" ng-model="model.value.provider.id" class="umb-editor" ng-change="setProvider(model.value.provider.id)">
             <option ng-repeat="p in bag.providers" value="{{p.id}}">{{p.name}}</option>
@@ -23,22 +26,41 @@
             <div class="umb-editor">
                 <label for="terratype_{{model.alias}}_coordinatesystem" class="control-label">
                     Coordinate System:
+                    <small>
+                        Which Geodetic Coordinate System do you wish to use to present and store locations
+                    </small>
                 </label>
-                <select id="terratype_{{model.alias}}_coordinatesystem" ng-model="model.value.provider.coordinateSystem.Id" class="umb-editor" ng-change="setCoordinateSystems(model.value.provider.coordinateSystem.Id)">
+                <select id="terratype_{{model.alias}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)">
                     <option ng-repeat="c in bag.provider.coordinateSystems" value="{{c.id}}">{{c.name}}</option>
                 </select>
             </div>
-            <div class="umb-editor" ng-show="bag.provider.coordinateSystem.id != null">
+            <div class="umb-editor" ng-show="model.value.position.id != null">
                 <div style="margin-left:170px;margin-top:5px;">
                     <small>
-                        <a href="{{bag.provider.coordinateSystem.referenceUrl}}" target="_blank">
-                            {{bag.provider.coordinateSystem.description}}
+                        <a href="{{bag.provider.position.referenceUrl}}" target="_blank">
+                            {{bag.provider.position.description}}
                         </a>
                     </small>
                 </div>
             </div>
             <br />
-            <ng-include src="bag.provider.views.config" onload="bag.provider.configSetup()">
+            <ng-include src="bag.provider.views.definition" onload="bag.provider.definitionSetup()">
+            </ng-include>
+        </section>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding:5px 0;">
+                Apperance
+            </h4>
+            <div class="umb-editor">
+                <label for="terratype_{{model.alias}}_height" class="control-label">
+                    Height:
+                    <small>
+                        The height of the map as displayed to the content editor in pixels
+                    </small>
+                </label>
+                <input type="number" id="terratype_{{model.alias}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
+            </div>
+            <ng-include src="bag.provider.views.apperance" onload="bag.provider.apperanceSetup()">
             </ng-include>
         </section>
 

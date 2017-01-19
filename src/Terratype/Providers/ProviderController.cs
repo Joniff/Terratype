@@ -14,12 +14,15 @@ namespace Terratype.Providers
 
             public string referenceUrl { get; set; }
 
+            public int precision { get; set; }
+
             public CoordinateSystemsJson(CoordinateSystems.Position position)
             {
                 id = position.Id;
                 name = position.Name;
                 description = position.Description;
                 referenceUrl = position.ReferenceUrl;
+                precision = position.Precision;
             }
         }
 

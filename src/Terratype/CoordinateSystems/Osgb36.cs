@@ -48,6 +48,14 @@ namespace Terratype.CoordinateSystems
             }
         }
 
+        public override int Precision
+        {
+            get
+            {
+                return 3;
+            }
+        }
+
         public override string ToString()
         {
             Grid grid = Datum as Grid;
@@ -76,10 +84,10 @@ namespace Terratype.CoordinateSystems
                 l2++;
             }
             // strip 100km-grid indices from easting & northing, and reduce precision
-            e = Math.Floor((e % 100000.0) / Math.Pow(10, 5 - 3 / 2));
-            n = Math.Floor((n % 100000.0) / Math.Pow(10, 5 - 3 / 2));
+            e = Math.Floor((e % 100000.0) / Math.Pow(10, 5 - Precision / 2));
+            n = Math.Floor((n % 100000.0) / Math.Pow(10, 5 - Precision / 2));
 
-            return $"{l1 + 'A'}{l2 + 'A'} {e:000} {n:000}";
+            return $"{l1 + 'A'}{l2 + 'A'} {e} {n}";
         }
 
         /// <summary>

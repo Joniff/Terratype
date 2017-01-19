@@ -35,6 +35,14 @@ namespace Terratype.CoordinateSystems
         [JsonProperty]
         internal object Datum { get; set; }
 
+        public virtual int Precision
+        {
+            get
+            {
+                return 6;       //  Depending on coordinate system, this means different thing
+            }
+        }
+
         /// <summary>
         /// To display position to user
         /// </summary>

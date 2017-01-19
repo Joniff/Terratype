@@ -1,13 +1,13 @@
-﻿<div class="umb-el-wrap">
+﻿<div class="umb-editor">
     <label for="terratype_{{model.alias}}_googlemapv3_apikey" class="control-label">
         Google API Key:
         <small>
             Enter your <a href="https://console.developers.google.com/apis/credentials">Google Map API Key</a> which is linked to this domain. Using localhost with a port number also requires a key. Deploying this Umbraco to other domains requires those domains to be linked to this Google Map API key too.
         </small>
     </label>
-    <div class="controls">
-        <input id="terratype_{{model.alias}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" />
-        <div>
+    <input id="terratype_{{model.alias}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" />
+    <div class="umb-editor">
+        <div style="margin-left:170px;margin-top:5px;">
             <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key" target="_blank" style="font-size:smaller;">[Get a Key]</a>
             <div>
                 <div ng-show="bag.provider.apiKeyLoading">
@@ -26,14 +26,16 @@
         </div>
     </div>
 </div>
-<div class="umb-el-wrap">
+<div class="umb-editor">
     <label for="terratype_{{model.alias}}_googlemapv3_forcehttps" class="control-label">
         Force Https:
         <small>
             Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP.
         </small>
     </label>
-    <div class="controls">
-        <input id="terratype_{{model.alias}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" class="umb-editor" />
+    <div class="umb-editor">
+        <div style="margin-left:170px;margin-top:5px;">
+            <input id="terratype_{{model.alias}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" class="umb-editor" />
+        </div>
     </div>
 </div>

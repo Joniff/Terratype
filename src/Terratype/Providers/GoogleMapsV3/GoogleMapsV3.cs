@@ -84,37 +84,8 @@ namespace Terratype.Providers
         [JsonProperty]
         public string ApiKey { get; set; }
 
-        /// <summary>
-        /// Map types that Google map understands, 
-        /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapTypeId
-        /// </summary>
-        public enum MapTypes
-        {
-            Hybrid = 1,
-            Roadmap = 2,
-            Satellite = 3,
-            Terrain = 4
-        }
-
-
         [JsonProperty]
-        public MapTypes MapType { get; set; }
-
-
-        /// <summary>
-        /// Control styles
-        /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapTypeControlStyle
-        /// </summary>
-        public enum MapTypeControlStyles
-        {
-            Default = 0,
-            DropdownMenu = 1,
-            HorizontalBar = 2
-        }
-
-        [JsonProperty]
-        public MapTypeControlStyles MapTypeControlStyle { get; set; }
-
+        public bool ForceHttps { get; set; }
 
         /// <summary>
         /// Where are the controls situation
@@ -122,20 +93,141 @@ namespace Terratype.Providers
         /// </summary>
         public enum ControlPositions
         {
-            BottomCenter = 0,       // Center of the bottom row.
-            BottomLeft = 1,         // Bottom left and flow towards the middle. Elements are positioned to the right of the Google logo.
-            BottomRight = 2,        // Bottom right and flow towards the middle. Elements are positioned to the left of the copyrights.
-            LeftBottom = 3,         // On the left, above bottom-left elements, and flow upwards.
-            LeftCenter = 4,         // Center of the left side.
-            LeftTop = 5,            // On the left, below top-left elements, and flow downwards.
-            RightBottom = 6,        // On the right, above bottom-right elements, and flow upwards.
-            RightCenter = 7,        // Center of the right side.
-            RightTop = 8,           // On the right, below top-right elements, and flow downwards.
-            TopCenter = 9,          // Center of the top row.
-            TopLeft = 10,           // Top left and flow towards the middle.
-            TopRight = 11           // Top right and flow towards the middle
+            Default = 0,
+            BottomCenter = 1,       // Center of the bottom row.
+            BottomLeft = 2,         // Bottom left and flow towards the middle. Elements are positioned to the right of the Google logo.
+            BottomRight = 3,        // Bottom right and flow towards the middle. Elements are positioned to the left of the copyrights.
+            LeftBottom = 4,         // On the left, above bottom-left elements, and flow upwards.
+            LeftCenter = 5,         // Center of the left side.
+            LeftTop = 6,            // On the left, below top-left elements, and flow downwards.
+            RightBottom = 7,        // On the right, above bottom-right elements, and flow upwards.
+            RightCenter = 8,        // Center of the right side.
+            RightTop = 9,           // On the right, below top-right elements, and flow downwards.
+            TopCenter = 10,          // Center of the top row.
+            TopLeft = 11,           // Top left and flow towards the middle.
+            TopRight = 12           // Top right and flow towards the middle
         }
 
+        /// <summary>
+        /// Control styles
+        /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapType
+        /// </summary>
+        [JsonObject(MemberSerialization.OptIn)]
+        public class MapTypeDefinition
+        {
+            /// <summary>
+            /// Map types that Google map understands, 
+            /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapTypeId
+            /// </summary>
+            public enum BasicMapTypes
+            {
+                Hybrid = 1,
+                Roadmap = 2,
+                Satellite = 3,
+                Terrain = 4
+            }
+
+            public enum Styles
+            {
+                Default = 0,
+                DropdownMenu = 1,
+                HorizontalBar = 2
+            }
+
+            [JsonProperty]
+            public BasicMapTypes MapType { get; set; }
+            [JsonProperty]
+            public Styles Style { get; set; }
+}
+
+        [JsonProperty]
+        public MapTypeDefinition MapType { get; set; }
+
+        public enum PredefineMapColors
+        {
+            Standard = 0,
+            Silver = 1,
+            Retro = 2,
+            Dark = 3,
+            Night = 4,
+            Desert = 5,
+            Blush = 6
+        }
+
+
+        [JsonProperty]
+        public PredefineMapColors PredefineMapColor { get; set; }
+
+        [JsonProperty]
+        public bool ShowRoads { get; set; }
+
+        [JsonProperty]
+        public bool ShowLandmarks { get; set; }
+
+        [JsonProperty]
+        public bool ShowLabels { get; set; }
+
+
+        [JsonObject(MemberSerialization.OptIn)]
+        public class StreetViewControlDefinition
+        {
+            [JsonProperty]
+            public bool Enable { get; set; }
+            [JsonProperty]
+            public ControlPositions Position { get; set; }
+        }
+
+        [JsonProperty]
+        public StreetViewControlDefinition StreetViewControl { get; set; }
+
+        public bool MapScaleControl { get; set; }
+
+        public bool FullScreenControl { get; set; }
+
+
+        [JsonObject(MemberSerialization.OptIn)]
+        public class ZoomControlDefinition
+        {
+            public enum ZoomControlStyles
+            {
+                Default = 0,
+                Large = 1,
+                Small = 2
+            };
+
+            [JsonProperty]
+            public bool Enable { get; set; }
+            [JsonProperty]
+            public ControlPositions Position { get; set; }
+
+            public ZoomControlStyles ZoomControlStyle { get; set; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonProperty]
+        public ZoomControlDefinition ZoomControl { get; set; }
+
+
+        [JsonObject(MemberSerialization.OptIn)]
+        public class PanControlDefinition
+        {
+            [JsonProperty]
+            public bool Enable { get; set; }
+
+            [JsonProperty]
+            public ControlPositions Position { get; set; }
+        }
+
+        [JsonProperty]
+        public PanControlDefinition PanControl { get; set; }
+
+        [JsonProperty]
+        public bool Draggable { get; set; }
+
+        [JsonProperty]
+        public string Language { get; set; }
 
     }
 }

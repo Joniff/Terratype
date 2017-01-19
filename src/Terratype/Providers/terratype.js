@@ -49,17 +49,23 @@
                         if (angular.isUndefined(root.terratypeProvider[id])) {
                             throw $scope.bag.providers[index].script + ' does not define global variable root.terratypeProvider[\'' + id + '\']';
                         }
-                        var e = root.terratypeProvider[id];
-                        angular.extend($scope.bag.providers[index], e);
+                        var provider = root.terratypeProvider[id];
+                        if (angular.isUndefined(provider.init)) {
+                            throw $scope.bag.providers[index].script + ' does not define init()';
+                        }
+                        provider.init($scope, $timeout);
+                        angular.extend($scope.bag.providers[index], provider);
                     });
                 });
             }
             $scope.bag.provider = $scope.bag.providers[index];
+            $scope.$broadcast('setProvider');
         }
 
         $scope.setCoordinateSystems = function (id) {
             var index = $scope.bag.provider.coordinateSystems.map(function (x) { return x.id; }).indexOf(id);
             $scope.bag.position = (index != -1) ? $scope.bag.provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null };
+            $scope.$broadcast('setCoordinateSystems');
         }
     }]);
 
