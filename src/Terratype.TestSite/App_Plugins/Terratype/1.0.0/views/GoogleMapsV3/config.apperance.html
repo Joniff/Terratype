@@ -1,32 +1,86 @@
-﻿<div class="umb-editor">
+﻿<div class="umb-el-wrap control-group">
+    <label for="terratype_{{model.alias}}_googlemapv3_style" class="control-label">
+        Styling:
+        <small>
+            Predefined map styles
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{model.alias}}_googlemapv3_style" ng-model="model.value.provider.predefineMapColor" class="umb-editor" ng-change="bag.provider.styleChange()">
+            <option value="0">Standard</option>
+            <option value="1">Silver</option>
+            <option value="2">Retro</option>
+            <option value="3">Dark</option>
+            <option value="4">Night</option>
+            <option value="5">Desert</option>
+            <option value="6">Blush</option>
+        </select>
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{model.alias}}_googlemapv3_showroads" class="control-label">
+        Show Roads:
+        <small>
+            Do you want roads to appear on the map
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{model.alias}}_googlemapv3_showroads" type="checkbox" ng-model="model.value.provider.showroads" ng-change="bag.provider.styleChange()" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{model.alias}}_googlemapv3_showlandmarks" class="control-label">
+        Show Landmarks:
+        <small>
+            Do you want landmarks to appear on the map
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{model.alias}}_googlemapv3_showlandmarks" type="checkbox" ng-model="model.value.provider.showlandmarks" ng-change="bag.provider.styleChange()" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{model.alias}}_googlemapv3_showlandmarks" class="control-label">
+        Show Labels:
+        <small>
+            Do you want labels (names of countries, regions, areas, etc) to appear on the map
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{model.alias}}_googlemapv3_showlabels" type="checkbox" ng-model="model.value.provider.showlabels" ng-change="bag.provider.styleChange()" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
     <label for="terratype_{{model.alias}}_googlemapv3_defaultlocation" class="control-label">
         Default location:
         <small>
             Select the default location when displaying this map to a content editor
         </small>
     </label>
-    <div class="umb-editor">
-        <div style="margin-left:170px;margin-top:5px;">
-            <div ng-show="bag.provider.apiKeyLoading">
-                <img src="/umbraco/assets/img/loader.gif" />
+    <div class="controls">
+        <div ng-show="bag.provider.apiKeyLoading">
+            <img src="/umbraco/assets/img/loader.gif" />
+        </div>
+        <div ng-show="bag.provider.apiKeyFailed">
+            <img src="/umbraco/images/false.png" />
+            <span style="color:red;padding-right:10px;">Invalid Google Map API Key</span>
+        </div>
+        <div ng-show="bag.provider.apiKeyDuplicate">
+            <img src="/umbraco/images/false.png" />
+            <span style="color:red;padding-right:10px;">Detected multiple GoogleMapsV3 maps with different configuration; All Google Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</span>
+        </div>
+
+        <div ng-show="bag.provider.apiKeySuccess" class="umb-editor">
+            <div ng-show="bag.provider.canSearch" style="margin-bottom:5px;">
+                <input id="terratype_{{model.alias}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup">
             </div>
-            <div ng-show="bag.provider.apiKeyFailed">
-                <img src="/umbraco/images/false.png" />
-                <span style="color:red;padding-right:10px;">Invalid Google Map API Key</span>
+            <div style="overflow:hidden;">
+                <div id="terratype_{{model.alias}}_googlemapv3_map" style="height:400px;" ng-show="bag.provider.showMap">
+                </div>
             </div>
 
-            <div ng-show="bag.provider.apiKeySuccess" class="umb-editor">
-                <div ng-show="bag.provider.canSearch" style="margin-bottom:5px;">
-                    <input id="terratype_{{model.alias}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup">
-                </div>
-                <div style="position:relative;overflow:hidden;">
-                    <div id="terratype_{{model.alias}}_googlemapv3_map" style="height:400px;">
-                    </div>
-                </div>
-
-                <div style="margin-top:5px">
-                    <input type="text" id="terratype_{{model.alias}}_googlemapv3_defaultlocation" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0), zoom (1 to 20)" ng-model="bag.position.datumText" ng-change="datumChange()" ng-style="bag.position.datumStyle" />
-                </div>
+            <div style="margin-top:5px">
+                <input type="text" id="terratype_{{model.alias}}_googlemapv3_defaultlocation" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0), zoom (1 to 20)" ng-model="bag.position.datumText" ng-change="datumChange()" ng-style="bag.position.datumStyle" />
             </div>
         </div>
     </div>

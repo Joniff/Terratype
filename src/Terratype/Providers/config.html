@@ -1,5 +1,5 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-disabled="!loading">
-    <div class="umb-el-wrap">
+    <div class="umb-el-wrap control-group">
         <label for="terratype_{{model.alias}}_provider" class="control-label">
             Map Provider:
             <small>
@@ -22,10 +22,10 @@
         <p>{{bag.provider.description}}</p>
         <br />
         <section>
-            <h4 style="background-color:#dfdfdf;padding:5px 0;">
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 Configure
             </h4>
-            <div class="umb-el-wrap">
+            <div class="umb-el-wrap control-group">
                 <label for="terratype_{{model.alias}}_coordinatesystem" class="control-label">
                     Coordinate System:
                     <small>
@@ -48,10 +48,10 @@
             </ng-include>
         </section>
         <section>
-            <h4 style="background-color:#dfdfdf;padding:5px 0;">
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 Apperance
             </h4>
-            <div class="umb-el-wrap">
+            <div class="umb-el-wrap control-group">
                 <label for="terratype_{{model.alias}}_height" class="control-label">
                     Height:
                     <small>
@@ -83,4 +83,9 @@
     <textarea>
         {{model.value}}
     </textarea>
+    <br />
+    <br />
+    <br />
+    <br />
+
 </div>

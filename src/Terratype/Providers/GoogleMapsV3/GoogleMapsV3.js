@@ -1,9 +1,13 @@
 ﻿(function (root) {
 
     //  Subsystem that loads or destroys Google Map library
-    var terratypeGoogleMapV3 = {
+    var gm = {
         originalConsole: root.console,
         domain: null,
+        apiKey : null,
+        coordinateSystem: null,
+        forceHttps: false,
+        language: null,
         registeredEvents: [],
         subsystemUninitiated: 0,
         subsystemInit: 1,
@@ -15,32 +19,32 @@
         status: 0,
         killswitch: false,
         poll: 250,
-        timeout: 15000,
+        timeout: 10000,
         fakeConsole: {
             isFake: true,
             error: function (a) {
                 if ((a.indexOf('Google Maps API') != -1 || a.indexOf('Google Maps Javascript API') != -1) &&
                     (a.indexOf('MissingKeyMapError') != -1 || a.indexOf('ApiNotActivatedMapError') != -1 ||
                     a.indexOf('InvalidKeyMapError') != -1 || a.indexOf('not authorized') != -1 || a.indexOf('RefererNotAllowedMapError') != -1)) {
-                    destroySubsystem();
-                    raiseEvent('gmaperror');
+                    gm.raiseEvent('gmaperror');
+                    gm.destroySubsystem();
                 }
                 try {
-                    originalConsole.error(a);
+                    gm.originalConsole.error(a);
                 }
                 catch (oh) {
                 }
             },
             warn: function (a) {
                 try {
-                    originalConsole.warn(a);
+                    gm.originalConsole.warn(a);
                 }
                 catch (oh) {
                 }
             },
             log: function (a) {
                 try {
-                    originalConsole.log(a);
+                    gm.originalConsole.log(a);
                 }
                 catch (oh) {
                 }
@@ -48,11 +52,11 @@
         },
         installFakeConsole: function () {
             if (typeof (root.console.isFake) === 'undefined') {
-                root.console = fakeConsole;
+                root.console = gm.fakeConsole;
             }
         },
         uninstallFakeConsole: function () {
-            root.console = originalConsole;
+            root.console = gm.originalConsole;
         },
         isGoogleMapsLoaded: function () {
             return angular.isDefined(root.google) && angular.isDefined(root.google.maps);
@@ -67,115 +71,139 @@
             }
         },
         indexEventHandler: function (scope) {
-            return registeredEvents.map(function (x) { return x.id; }).indexOf(scope.id);
+            return gm.registeredEvents.map(function (x) { return x.$id; }).indexOf(scope.$id);
         },
         registerEventHandler: function (scope) {
-            if (indexEventHandler(scope) == -1) {
-                registeredEvents.push(scope);
+            if (gm.indexEventHandler(scope) == -1) {
+                gm.registeredEvents.push(scope);
                 return true;
             }
             return false;
         },
         cancelEventHandler: function (scope) {
-            var index = indexEventHandler(scope);
-            if (index == -1) {
-                return false;       //  Unable to find this event handler
+            var index = gm.indexEventHandler(scope);
+            if (index != -1) {
+                gm.registeredEvents.splice(index, 1);
             }
-            registeredEvents.splice(index, 1);
-            if (registeredEvents.length == 0) {
+            if (gm.registeredEvents.length == 0 && gm.status != gm.subsystemUninitiated) {
                 //  Nobody left talking to us, so kill
-                terratypeGoogleMapV3.destroySubsystem();
+                gm.destroySubsystem();
             }
-            return true;
         },
         raiseEvent: function (name) {
-            angular.forEach (registeredEvents, function (event, index) {
+            angular.forEach(gm.registeredEvents, function (event, index) {
                 event.$broadcast(name);
             });
         },
         destroySubsystem: function () {
-            uninstallFakeConsole();
+            gm.uninstallFakeConsole();
             delete google;
-            if (domain) {
-                uninstallScript(domain);
-                domain = null;
+            if (gm.domain) {
+                gm.uninstallScript(gm.domain);
+                gm.domain = null;
             }
-            status = subsystemUninitiated;
-            killswitch = false;
+            gm.status = gm.subsystemUninitiated;
+            gm.killswitch = true;
+            //gm.registeredEvents = [];
         },
         ticks: function () {
             return (new Date().getTime());
         },
         createSubsystem: function (apiKey, forceHttps, coordinateSystem, language) {
             root.TerratypeGoogleMapsV3Callback = function  () {
-                status = subsystemCheckGoogleJs;
+                gm.status = gm.subsystemCheckGoogleJs;
             }
-            var start = ticks() + timeout;
-            var wait = setInterval(function  () {
-                if (ticks() > start) {
-                    destroySubsystem();
-                    raiseEvent('gmapkilled');
-                } else if (status == subsystemCompleted || status == subsystemUninitiated || status == subsystemInit) {
+            var start = gm.ticks() + gm.timeout;
+            var wait = setInterval(function () {
+                gm.originalConsole.warn('Waiting for previous subsystem to die');
+                if (gm.ticks() > start) {
                     clearInterval(wait);
+                    gm.raiseEvent('gmapkilled');
+                    gm.destroySubsystem();
+                } else if (gm.status == gm.subsystemCompleted || gm.status == gm.subsystemUninitiated || gm.status == gm.subsystemInit) {
+                    gm.originalConsole.warn('Creating new subsystem');
+                    clearInterval(wait);
+                    gm.forceHttps = forceHttps;
                     var https = '';
                     if (forceHttps) {
                         https = 'https:';
                     }
-                    domain = https + ((coordinateSystem == 'GCJ02') ? '//maps.google.cn/' : '//maps.googleapis.com/');
-                    status = subsystemInit;
-                    killswitch = false;
+                    gm.coordinateSystem = coordinateSystem;
+
+                    gm.domain = https + ((coordinateSystem == 'GCJ02') ? '//maps.google.cn/' : '//maps.googleapis.com/');
+                    gm.status = gm.subsystemInit;
+                    gm.killswitch = false;
+
+                    gm.apiKey = apiKey;
                     var key = '';
                     if (apiKey) {
                         key = '&key=' + apiKey;
                     }
 
+                    gm.language = language;
                     var lan = '';
                     if (language) {
                         lan = '&language' + language;
                     }
 
-                    start = ticks() + timeout;
+                    start = gm.ticks() + gm.timeout;
                     var timer = setInterval(function () {
-                        if (killswitch) {
-                            destroySubsystem();
-                            raiseEvent('gmapkilled');
-                            clearInterval(timer);
-                        } else if (ticks() > start) {
-                            if (status == subsystemCooloff) {
-                                status = subsystemCompleted;
-                                uninstallFakeConsole();
-                            } else {
-                                destroySubsystem();
-                                raiseEvent('gmaperror');
-                            }
+                        if (gm.killswitch) {
                             clearInterval(timer);
                         } else {
-                            switch (status)
+                            gm.originalConsole.warn('Subsystem status ' + gm.status);
+                            switch (gm.status)
                             {
-                                case subsystemInit:
-                                    LazyLoad.js(attempt.domain + '/maps/api/js?v=3&sensor=true&libraries=places&callback=TerratypeGoogleMapsV3Callback' + key + lan, function () {
-                                        status = subsystemReadGoogleJs;
-                                    });
+                                case gm.subsystemInit:
+                                    LazyLoad.js(gm.domain + 'maps/api/js?v=3&libraries=places&callback=TerratypeGoogleMapsV3Callback' + key + lan);
+                                    gm.status = gm.subsystemReadGoogleJs;
                                     break;
 
-                                case subsystemCheckGoogleJs:
-                                    if (isGoogleMapsLoaded()) {
-                                        status = subsystemLoadedGoogleJs;
-                                        raiseEvent('gmaploaded');
+                                case gm.subsystemReadGoogleJs:
+                                    if (gm.ticks() > start) {
+                                        clearInterval(timer);
+                                        gm.raiseEvent('gmaperror');
+                                        gm.destroySubsystem();
                                     }
                                     break;
 
-                                case subsystemLoadedGoogleJs:
-                                    status = subsystemCooloff;
-                                    start = ticks() + timeout;
+                                case gm.subsystemCheckGoogleJs:
+                                    if (gm.ticks() > start) {
+                                        clearInterval(timer);
+                                        gm.raiseEvent('gmaperror');
+                                        gm.destroySubsystem();
+                                    } else if (gm.isGoogleMapsLoaded()) {
+                                        gm.installFakeConsole();
+                                        gm.status = gm.subsystemLoadedGoogleJs;
+                                        gm.raiseEvent('gmaploaded');
+                                    }
                                     break;
+
+                                case gm.subsystemLoadedGoogleJs:
+                                    gm.status = gm.subsystemCooloff;
+                                    start = gm.ticks() + gm.timeout;
+                                    break;
+
+                                case gm.subsystemCooloff:
+                                    if (gm.ticks() > start) {
+                                        gm.status = gm.subsystemCompleted;
+                                        gm.uninstallFakeConsole();
+                                    }
+                                    break;
+
+                                case gm.subsystemCompleted:
+                                    if (gm.registeredEvents.length == 0) {
+                                        clearInterval(timer);
+                                    } else {
+                                        gm.raiseEvent('gmaprefresh');
+                                    }
                             }
                         }
-                    }, poll);
+                    }, gm.poll);
                 } else {
-                    killswitch = true;
+                    gm.killswitch = true;
                 }
-            }, poll)
+            }, gm.poll)
         },
         configIconUrl: function (url) {
             if (typeof (url) === 'undefined' || url == null) {
@@ -251,7 +279,7 @@
         style: function (color, showRoads, showLandmarks, showLabels) {
             var styles = [];
             
-            switch (color)
+            switch (+color)
             {
                 case 1:             //  Silver
                     styles = [
@@ -384,7 +412,7 @@
                     }]
                 });
             }
-            if (!showRoads) {
+            if (!showLandmarks) {
                 styles.push({
                     'featureType': 'administrative',
                     'elementType': 'geometry',
@@ -438,34 +466,57 @@
         }
     }
 
-    var provider = {
+    var pr = {
         $scope: null,
         $timeout: null,
         timerPoll: 250,
         timeout: 15000,
         init: function (s, t) {
-            $scope = s;
-            $timeout = t;
+            pr.$scope = s;
+            pr.$timeout = t;
         },
         destroy: function() {
-            terratypeGoogleMapV3.cancelEventHandler($scope);
+            gm.cancelEventHandler.call(gm, pr.$scope);
         },
         definitionSetup: function () {
             //alert('configSetup');
         },
+        reloadMap: function () {
+            pr.destroy.call(pr);
+            pr.loadMap.call(pr);
+        },
         apperanceSetup: function () {
-            datumChange($scope.model.value.position.datum);
-            loadMap();
-            $scope.$on('setProvider', function() {
-                if (provider.$scope.bag.provider.id != 'GoogleMapsV3') {
-                    provider.destroy.call(provider);
+            if (angular.isDefined(pr.$scope.model.value.position)) {
+                pr.loadMap.call(pr);
+            }
+            pr.$scope.$on('setProvider', function() {
+                if (pr.$scope.bag.provider.id != 'GoogleMapsV3') {
+                    pr.destroy.call(pr);
                 }
             });
-            $scope.$on('setCoordinateSystems', function() {
-                if (provider.$scope.bag.position.id != provider.attempt.coordinateSystem) {
-                    provider.loadMap.call(provider, $scope.model.value.provider.apiKey);
+            pr.$scope.$on('setCoordinateSystems', function() {
+                if (pr.$scope.bag.position.id != pr.coordinateSystem) {
+                    pr.reloadMap.call(pr);
                 }
             });
+        },
+        forceHttpsChange: function () {
+            if (pr.$scope.model.value.provider.forceHttps != gm.forceHttps) {
+                pr.reloadMap.call(pr);
+            }
+        },
+        languageChange: function () {
+            if (pr.$scope.model.value.provider.language != gm.language) {
+                pr.reloadMap.call(pr);
+            }
+        },
+        styleChange: function () {
+            if (pr.$scope.bag.provider.gmap) {
+                pr.$scope.bag.provider.gmap.setOptions({
+                    styles: gm.style.call(gm, pr.$scope.model.value.provider.predefineMapColor, pr.$scope.model.value.provider.showRoads,
+                        pr.$scope.model.value.provider.showLandmarks, pr.$scope.model.value.provider.showLabels)
+                });
+            }
         },
         parse: function (text) {
             var args = text.trim().split(',');
@@ -487,20 +538,20 @@
         },
         toString: function (datum) {
             function encodelatlng(latlng) {
-                return Number(latlng).toFixed($scope.bag.position.precision).replace(/\.?0+$/, '');
+                return Number(latlng).toFixed(pr.$scope.bag.position.precision).replace(/\.?0+$/, '');
             }
             return encodelatlng(datum.latitude) + ',' + encodelatlng(datum.longitude);
         },
         datumChange: function (text) {
-            if (!angular.isUndefined(text)) {
-                var datum = toString(text);
+            if (!angular.isUndefined(text) && text != null) {
+                var datum = pr.toString(text);
                 if (typeof datum !== 'boolean') {
-                    $scope.bag.position.datumText = datum;
-                    bag.position.datumStyle = {};
+                    pr.$scope.bag.position.datumText = datum;
+                    pr.$scope.bag.position.datumStyle = {};
                     return;
                 }
             }
-            bag.position.datumStyle = { 'color': 'red' };
+            pr.$scope.bag.position.datumStyle = { 'color': 'red' };
         },
         configconfig:
             {
@@ -510,11 +561,11 @@
                         longitude: 10.3870147
                     }
                 },
-                zoom: 17,
+                zoom: 12,
                 icon: {
                     image: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png'
                 },
-                predefineMapColor: 0,
+                predefineMapColor: 2,
                 showRoads: true,
                 showLandmarks: true,
                 showLabels: true,
@@ -532,104 +583,179 @@
                     enable: false
                 },
                 draggable: true,
-                predefineMapColor: 6,
-                showRoads: true,
-                showLandmarks: true,
-                showLabels: true
             },
         loadMap: function (config) {
+            gm.originalConsole.warn('Load map');
             if (!config) {
-                config = configconfig;
+                config = pr.configconfig;
             }
-            $scope.bag.provider.apiKeyLoading = true;
-            $scope.bag.provider.apiKeyFailed = false;
-            $scope.bag.provider.apiKeySuccess = false;
-            terratypeGoogleMapV3.registerEventHandler.call(terratypeGoogleMapV3, $scope);
-            $scope.$on('gmaperror', function () {
-                $scope.bag.provider.apiKeyLoading = false;
-                $scope.bag.provider.apiKeyFailed = true;
-                $scope.bag.provider.apiKeySuccess = false;
+            pr.$scope.bag.provider.apiKeyLoading = true;
+            pr.$scope.bag.provider.apiKeyFailed = false;
+            pr.$scope.bag.provider.apiKeyDuplicate = false;
+            pr.$scope.bag.provider.apiKeySuccess = false;
+            pr.$scope.bag.provider.gmapCompleted = false;
+            pr.$scope.bag.provider.showMap = false;
+            pr.$scope.bag.provider.gmap = null;
+            gm.registerEventHandler.call(gm, pr.$scope);
+            var div = 'terratype_' + pr.$scope.model.alias + '_googlemapv3_map';
+            pr.$scope.$on('gmaperror', function () {
+                gm.originalConsole.warn('Map error');
+                pr.$scope.bag.provider.apiKeyLoading = false;
+                pr.$scope.bag.provider.apiKeyFailed = true;
+                pr.$scope.bag.provider.apiKeyDuplicate = false;
+                pr.$scope.bag.provider.apiKeySuccess = false;
+                gm.cancelEventHandler.call(gm, pr.$scope);
+                pr.$scope.$apply();
             });
-            $scope.$on('gmapkilled', function () {
-                $scope.bag.provider.apiKeyLoading = false;
-                $scope.bag.provider.apiKeyFailed = false;
-                $scope.bag.provider.apiKeySuccess = false;
+            pr.$scope.$on('gmapkilled', function () {
+                gm.originalConsole.warn('Map killed');
+                pr.$scope.bag.provider.apiKeyLoading = false;
+                pr.$scope.bag.provider.apiKeyFailed = false;
+                pr.$scope.bag.provider.apiKeyDuplicate = false;
+                pr.$scope.bag.provider.apiKeySuccess = false;
+                gm.cancelEventHandler.call(gm, pr.$scope);
+                pr.$scope.$apply();
             });
-            $scope.$on('gmaploaded', function () {
-                $scope.bag.provider.apiKeyLoading = false;
-                $scope.bag.provider.apiKeyFailed = false;
-                $scope.bag.provider.apiKeySuccess = true;
-                $scope.bag.provider.ignoreEvents = 0;
+            pr.$scope.$on('gmaploaded', function () {
+                gm.originalConsole.warn('Map loaded');
+                pr.$scope.bag.provider.apiKeyLoading = false;
+                pr.$scope.bag.provider.apiKeyFailed = false;
+                pr.$scope.bag.provider.apiKeyDuplicate = false;
+                pr.$scope.bag.provider.apiKeySuccess = true;
 
-                $scope.bag.provider.gmap = new google.maps.Map(document.getElementById('terratype_' + $scope.model.alias + '_googlemapv3_map'), {
-                    disableDefaultUI: true,
+                //  Check that we have loaded with the right setting for us
+                if (gm.apiKey != pr.$scope.model.value.provider.apiKey ||
+                    gm.coordinateSystem != pr.$scope.model.value.position.id ||
+                    gm.forceHttps != pr.$scope.model.value.provider.forceHttps ||
+                    gm.language != pr.$scope.model.value.provider.language)
+                {
+                    pr.$scope.bag.provider.apiKeyDuplicate = true;
+                    gm.cancelEventHandler.call(gm, pr.$scope);
+                    pr.$scope.$apply();
+                    return;
+                }
+                pr.$scope.bag.provider.ignoreEvents = 0;
+                if (!(pr.$scope.model.value.position && pr.$scope.model.value.position.datum && 
+                    pr.$scope.model.value.position.latitude && pr.$scope.model.value.position.longitude))
+                {
+                    pr.$scope.model.value.position.datum = {
+                        latitude: config.defaultPosition.datum.latitude,
+                        longitude: config.defaultPosition.datum.longitude
+                    }
+                }
+                if (!(pr.$scope.model.value.position && pr.$scope.model.value.zoom)) {
+                    pr.$scope.model.value.zoom = config.zoom;
+                }
+                if (!(pr.$scope.model.value.provider && pr.$scope.model.value.provider.predefineMapColor &&
+                    pr.$scope.model.value.provider.showRoads && pr.$scope.model.value.provider.showLandmarks && pr.$scope.model.value.provider.showLabels)) {
+                    pr.$scope.model.value.provider.predefineMapColor = config.predefineMapColor;
+                    pr.$scope.model.value.provider.showRoads = config.showRoads;
+                    pr.$scope.model.value.provider.showLandmarks = config.showLandmarks;
+                    pr.$scope.model.value.provider.showLabels = config.showLabels;
+                };
+                var latlng = {
+                    lat: pr.$scope.model.value.position.datum.latitude,
+                    lng: pr.$scope.model.value.position.datum.longitude
+                };
+
+                pr.$scope.bag.provider.gmap = new google.maps.Map(document.getElementById(div), {
+                    disableDefaultUI: false,
                     scrollwheel: false,
-                    panControl: config.panControl,
+                    panControl: config.panControl.enable,
                     scaleControl: config.mapScaleControl,
-                    center: {
-                        lat: config.defaultPosition.datum.latitude,
-                        lng: config.defaultPosition.datum.longitude
-                    },
-                    zoom: config.zoom,
+                    center: latlng,
+                    zoom: pr.$scope.model.value.zoom,
                     draggable: config.draggable,
                     fullScreenControl: config.fullScreenControl,
-                    styles: terratypeGoogleMapV3.style.call(terratypeGoogleMapV3, config.predefineMapColor, config.showRoads, config.showLandmarks, config.showLabels)
+                    styles: gm.style.call(gm, config.predefineMapColor, config.showRoads, config.showLandmarks, config.showLabels)
                 });
-                google.maps.event.addListener($scope.bag.provider.gmap, 'zoom_changed', $scope.bag.provider.eventZoom);
-                google.maps.event.addListenerOnce($scope.bag.provider.gmap, 'tilesloaded', $scope.bag.provider.eventRefresh);
-                google.maps.event.addListener($scope.bag.provider.gmap, 'resize', $scope.bag.provider.eventCheckRefresh);
-                $scope.bag.provider.gmarker = new google.maps.Marker({
-                    map: $scope.bag.provider.gmap,
-                    position: {
-                        lat: $scope.model.value.position.datum.latitude,
-                        lng: $scope.model.value.position.datum.longitude
-                    },
-                    id: 'terratype_' + $scope.model.alias + '_marker',
+                google.maps.event.addListener(pr.$scope.bag.provider.gmap, 'zoom_changed', pr.$scope.bag.provider.eventZoom);
+                google.maps.event.addListenerOnce(pr.$scope.bag.provider.gmap, 'tilesloaded', pr.$scope.bag.provider.eventRefresh);
+                google.maps.event.addListener(pr.$scope.bag.provider.gmap, 'resize', pr.$scope.bag.provider.eventCheckRefresh);
+                pr.$scope.bag.provider.gmarker = new google.maps.Marker({
+                    map: pr.$scope.bag.provider.gmap,
+                    position: latlng,
+                    id: 'terratype_' + pr.$scope.model.alias + '_marker',
                     draggable: true,
-                    icon: terratypeGoogleMapV3.icon.call(terratypeGoogleMapV3, config.icon)
+                    icon: gm.icon.call(gm, config.icon)
                 })
-                google.maps.event.addListener($scope.bag.provider.gmarker, 'dragend', $scope.bag.provider.eventDrag);
+                google.maps.event.addListener(pr.$scope.bag.provider.gmarker, 'dragend', pr.$scope.bag.provider.eventDrag);
+                pr.$scope.bag.provider.showMap = true;
+                pr.datumChange.call(pr, pr.$scope.model.value.position.datum);
+                pr.$scope.$apply();
             });
+            var oldSize = 0;
+            pr.$scope.$on('gmaprefresh', function () {
+                var element = document.getElementById(div);
+                if (element == null) {
+                    gm.cancelEventHandler.call(gm, pr.$scope);
+                    return;
+                }
+                var newValue = element.offsetTop;
+                var newSize = element.clientHeight * element.clientWidth;
+                if (newValue != 0 && pr.$scope.bag.provider.showMap == false) {
+                    //  Was hidden, now being shown
+                    pr.$scope.bag.provider.showMap = true;
+                    pr.$timeout(pr.$scope.bag.provider.eventRefresh);
+                    pr.$scope.$apply();
+                } else if (newValue == 0 && pr.$scope.bag.provider.showMap == true) {
+                    //  Was shown, now being hidden
+                    pr.$scope.bag.provider.showMap = false;
+                    pr.$scope.$apply();
+                }
+                else if (pr.$scope.bag.provider.showMap == true && oldSize != 0 && newSize != 0 && oldSize != newSize) {
+                    pr.$timeout(pr.$scope.bag.provider.eventCheckRefresh);
+                }
+                oldSize = newSize;
+            });
+
+            if (gm.status == gm.subsystemUninitiated) {
+                gm.createSubsystem(pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
+                    pr.$scope.model.value.position.id, pr.$scope.model.value.provider.language);
+            }
         },
         eventZoom: function () {
-            if ($scope.bag.provider.ignoreEvents > 0) {
+            if (pr.$scope.bag.provider.ignoreEvents > 0) {
                 return;
             }
-            $scope.model.value.zoom = $scope.bag.provider.gmap.getZoom();
+            gm.originalConsole.warn('eventZoom');
+            pr.$scope.model.value.zoom = pr.$scope.bag.provider.gmap.getZoom();
         },
         eventRefresh: function () {
-            if ($scope.bag.provider.ignoreEvents > 0) {
+            if (pr.$scope.bag.provider.ignoreEvents > 0) {
                 return;
             }
-            $scope.bag.provider.ignoreEvents++;
-            $scope.bag.provider.gmap.setZoom($scope.model.value.zoom);
+            gm.originalConsole.warn('eventRefresh');
+            pr.$scope.bag.provider.ignoreEvents++;
+            pr.$scope.bag.provider.gmap.setZoom(pr.$scope.model.value.zoom);
             var latlng = {
-                lat: $scope.model.value.position.datum.latitude,
-                lng: $scope.model.value.position.datum.longitude
+                lat: pr.$scope.model.value.position.datum.latitude,
+                lng: pr.$scope.model.value.position.datum.longitude
             };
-            $scope.bag.provider.gmarker.setPosition(latlng);
-            $scope.bag.provider.gmap.panTo(latlng);
-            google.maps.event.trigger($scope.bag.provider.gmap, 'resize');
-            $scope.bag.provider.ignoreEvents--;
+            pr.$scope.bag.provider.gmarker.setPosition(latlng);
+            pr.$scope.bag.provider.gmap.panTo(latlng);
+            google.maps.event.trigger(pr.$scope.bag.provider.gmap, 'resize');
+            pr.$scope.bag.provider.ignoreEvents--;
         },
         eventCheckRefresh: function () {
-            if (!$scope.bag.provider.gmap.getBounds().contains($scope.bag.provider.gmarker.getPosition())) {
-                eventRefresh();
+            if (!pr.$scope.bag.provider.gmap.getBounds().contains(pr.$scope.bag.provider.gmarker.getPosition())) {
+                pr.eventRefresh.call(pr);
             }
         },
         eventDrag: function (marker) {
-            if ($scope.bag.provider.ignoreEvents > 0) {
+            if (pr.$scope.bag.provider.ignoreEvents > 0) {
                 return;
             }
-            $scope.bag.provider.ignoreEvents++;
-            $scope.model.value.position.datum = {
+            gm.originalConsole.warn('eventDrag');
+            pr.$scope.bag.provider.ignoreEvents++;
+            pr.$scope.model.value.position.datum = {
                 latitude: marker.latLng.lat(),
                 longitude: marker.latLng.lng()
             };
-            datumChange($scope.model.value.position.datum);
-            $scope.bag.provider.ignoreEvents--;
+            pr.datumChange.call(pr, pr.$scope.model.value.position.datum);
+            pr.$scope.bag.provider.ignoreEvents--;
         }
     };
 
-    root.terratypeProvider['GoogleMapsV3'] = provider;
+    root.terratypeProvider['GoogleMapsV3'] = pr;
 }(window));

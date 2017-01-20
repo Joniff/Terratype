@@ -55,11 +55,14 @@
                         }
                         provider.init($scope, $timeout);
                         angular.extend($scope.bag.providers[index], provider);
+                        $scope.bag.provider = $scope.bag.providers[index];
+                        $scope.$broadcast('setProvider');
                     });
                 });
+            } else {
+                $scope.bag.provider = $scope.bag.providers[index];
+                $scope.$broadcast('setProvider');
             }
-            $scope.bag.provider = $scope.bag.providers[index];
-            $scope.$broadcast('setProvider');
         }
 
         $scope.setCoordinateSystems = function (id) {
