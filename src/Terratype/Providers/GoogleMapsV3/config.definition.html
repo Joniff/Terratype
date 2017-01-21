@@ -1,12 +1,12 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{model.alias}}_googlemapv3_apikey" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_apikey" class="control-label">
         Google API Key:
         <small>
             Enter your <a href="https://console.developers.google.com/apis/credentials">Google Map API Key</a> which is linked to this domain. Using localhost with a port number also requires a key. Deploying this Umbraco to other domains requires those domains to be linked to this Google Map API key too.
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{model.alias}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" />
+        <input id="terratype_{{identifier}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" />
         <div>
             <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key" target="_blank" style="font-size:smaller;">[Get a Key]</a>
             <div>
@@ -27,26 +27,26 @@
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{model.alias}}_googlemapv3_forcehttps" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_forcehttps" class="control-label">
         Force Https:
         <small>
             Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP.
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{model.alias}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" ng-change="bag.provider.forceHttpsChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" ng-change="bag.provider.forceHttpsChange(bag.provider)" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{model.alias}}_googlemapv3_language" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_language" class="control-label">
         Language:
         <small>
             Primary language used to display places
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{model.alias}}_googlemapv3_language" ng-model="model.value.provider.language" class="umb-editor" ng-change="bag.provider.languageChange()">
-            <option value="">Use Umbraco</option>
+        <select id="terratype_{{identifier}}_googlemapv3_language" ng-model="model.value.provider.language" class="umb-editor" ng-change="bag.provider.languageChange(bag.provider)">
+            <option value="">[Use Umbraco]</option>
             <option value="ab">Abkhazian</option>
             <option value="aa">Afar</option>
             <option value="af">Afrikaans</option>

@@ -143,20 +143,8 @@ namespace Terratype.Providers
         [JsonProperty]
         public MapTypeDefinition MapType { get; set; }
 
-        public enum PredefineMapColors
-        {
-            Standard = 0,
-            Silver = 1,
-            Retro = 2,
-            Dark = 3,
-            Night = 4,
-            Desert = 5,
-            Blush = 6
-        }
-
-
         [JsonProperty]
-        public PredefineMapColors PredefineMapColor { get; set; }
+        public string PredefineStyling { get; set; }
 
         [JsonProperty]
         public bool ShowRoads { get; set; }

@@ -1,16 +1,16 @@
 ﻿(function (root) {
     root.terratypeProvider = {};
     angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', function ($scope, $timeout, $http, $injector) {
+        $scope.identifier = $scope.$id;
         $scope.urlRoot = '/App_Plugins/Terratype/1.0.0/';
         $scope.error = null;
         $scope.loading = 0;
-        $scope.bag = { provider: { id: null, referenceUrl: null, name: null } };
+        $scope.bag = { provider: { id: null, referenceUrl: null, name: null }, providers: [] };
         $scope.initConfig = function () {
             $scope.loading++;
             if (typeof ($scope.model.value) == 'string') {
                 $scope.model.value = JSON.parse($scope.model.value);
             }
-
             $http.get('/umbraco/backoffice/terratype/provider/providers').then(function success(response) {
                 $scope.loading--;
                 $scope.bag.providers = response.data;
@@ -24,9 +24,7 @@
                     value.script = $scope.urlRoot + 'scripts/' + value.id + '/' + value.id + '.js';
                 });
 
-                if (!angular.isUndefined($scope.model.value) && $scope.model.value != null &&
-                    !angular.isUndefined($scope.model.value.provider) && $scope.model.value.provider != null &&
-                    !angular.isUndefined($scope.model.value.provider.id) && $scope.model.value.provider.id != null) {
+                if ($scope.model.value && $scope.model.value.provider && $scope.model.value.provider.id != null) {
                     $scope.setProvider($scope.model.value.provider.id);
                 }
 
@@ -36,12 +34,21 @@
             });
         }
         $scope.setProvider = function (id) {
+            set = function (index) {
+                $scope.bag.provider = $scope.bag.providers[index];
+                $scope.bag.provider.reinit.call($scope.bag.provider);
+                $scope.$broadcast('setProvider', $scope.bag.provider);
+                if ($scope.model.value && $scope.model.value.position && $scope.model.value.position.id != null) {
+                    $scope.setCoordinateSystems($scope.model.value.position.id);
+                }
+            }
+
             var index = $scope.bag.providers.map(function (x) { return x.id; }).indexOf(id);
             if (index == -1) {
                 $scope.bag.provider = { id: null, referenceUrl: null, name: null };
                 return;
             }
-            if (angular.isUndefined(root.terratypeProvider[id])) {
+            if (angular.isUndefined(root.terratypeProvider) || angular.isUndefined(root.terratypeProvider[id])) {
                 $scope.loading++;
                 LazyLoad.js($scope.bag.providers[index].script, function () {
                     $timeout(function () {
@@ -49,26 +56,27 @@
                         if (angular.isUndefined(root.terratypeProvider[id])) {
                             throw $scope.bag.providers[index].script + ' does not define global variable root.terratypeProvider[\'' + id + '\']';
                         }
-                        var provider = root.terratypeProvider[id];
+                        var provider = angular.copy(root.terratypeProvider[id]);
                         if (angular.isUndefined(provider.init)) {
                             throw $scope.bag.providers[index].script + ' does not define init()';
                         }
                         provider.init($scope, $timeout);
                         angular.extend($scope.bag.providers[index], provider);
-                        $scope.bag.provider = $scope.bag.providers[index];
-                        $scope.$broadcast('setProvider');
+                        set(index);
                     });
                 });
             } else {
-                $scope.bag.provider = $scope.bag.providers[index];
-                $scope.$broadcast('setProvider');
+                var provider = angular.copy(root.terratypeProvider[id]);
+                provider.init($scope, $timeout);
+                angular.extend($scope.bag.providers[index], provider);
+                set(index);
             }
         }
 
         $scope.setCoordinateSystems = function (id) {
             var index = $scope.bag.provider.coordinateSystems.map(function (x) { return x.id; }).indexOf(id);
             $scope.bag.position = (index != -1) ? $scope.bag.provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null };
-            $scope.$broadcast('setCoordinateSystems');
+            $scope.$broadcast('setCoordinateSystems', $scope.bag.provider);
         }
     }]);
 

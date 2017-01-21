@@ -1,14 +1,13 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-disabled="!loading">
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{model.alias}}_provider" class="control-label">
+        <label for="terratype_{{identifier}}_provider" class="control-label">
             Map Provider:
             <small>
                 Select which system you wish to use to display maps
             </small>
         </label>
-        <div class="controls">
-            <select id="terratype_{{model.alias}}_provider" ng-model="model.value.provider.id" class="umb-editor" ng-change="setProvider(model.value.provider.id)">
-                <option ng-repeat="p in bag.providers" value="{{p.id}}">{{p.name}}</option>
+        <div class="controls" ng-if="bag.providers.length != 0">
+            <select id="terratype_{{identifier}}_provider" ng-model="model.value.provider.id" class="umb-editor" ng-change="setProvider(model.value.provider.id)" ng-options="p.id as p.name for p in bag.providers">
             </select>
         </div>
     </div>
@@ -26,17 +25,16 @@
                 Configure
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{model.alias}}_coordinatesystem" class="control-label">
+                <label for="terratype_{{identifier}}_coordinatesystem" class="control-label">
                     Coordinate System:
                     <small>
                         Which Geodetic Coordinate System do you wish to use to present and store locations
                     </small>
                 </label>
-                <div class="controls">
-                    <select id="terratype_{{model.alias}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)">
-                        <option ng-repeat="c in bag.provider.coordinateSystems" value="{{c.id}}">{{c.name}}</option>
+                <div class="controls" ng-if="bag.provider && bag.provider.coordinateSystems && bag.provider.coordinateSystems.length != 0">
+                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)" ng-disabled="!model.value.provider.id" ng-options="c.id as c.name for c in bag.provider.coordinateSystems">
                     </select>
-                    <small ng-show="model.value.position.id != null">
+                    <small ng-show="model.value.position.id">
                         <a href="{{bag.provider.position.referenceUrl}}" target="_blank">
                             {{bag.provider.position.description}}
                         </a>
@@ -44,7 +42,7 @@
                 </div>
             </div>
             <br />
-            <ng-include src="bag.provider.views.definition" onload="bag.provider.definitionSetup()">
+            <ng-include src="bag.provider.views.definition">
             </ng-include>
         </section>
         <section>
@@ -52,17 +50,17 @@
                 Apperance
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{model.alias}}_height" class="control-label">
+                <label for="terratype_{{identifier}}_height" class="control-label">
                     Height:
                     <small>
                         The height of the map as displayed to the content editor in pixels
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{model.alias}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
+                    <input type="number" id="terratype_{{identifier}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
                 </div>
             </div>
-            <ng-include src="bag.provider.views.apperance" onload="bag.provider.apperanceSetup()">
+            <ng-include src="bag.provider.views.apperance">
             </ng-include>
         </section>
 

@@ -1,9 +1,9 @@
 ﻿    <div class="umb-editor">
-        <label for="agm_{{model.alias}}_search">
+        <label for="agm_{{$id}}_search">
             Search:
         </label>
 
-        <select id="agm_{{model.alias}}_search" ng-model="model.value.search.status" class="umb-editor">
+        <select id="agm_{{$id}}_search" ng-model="model.value.search.status" class="umb-editor">
             <option value="hide">Hide Search</option>
             <option value="search">Enable Search</option>
             <option value="autocomplete">Enable Search with Autocomplete</option>
@@ -18,11 +18,11 @@
     <br />
 
     <div class="umb-editor" ng-show="model.value.search.status != 'hide'">
-        <label for="agm_{{model.alias}}_searchlimit">
+        <label for="agm_{{$id}}_searchlimit">
             Restrict search suggestions to which country:
         </label>
 
-        <select id="agm_{{model.alias}}_searchlimit" ng-model="model.value.search.limit.country" class="umb-editor">
+        <select id="agm_{{$id}}_searchlimit" ng-model="model.value.search.limit.country" class="umb-editor">
             <option value="">*No country restriction*</option>
             <option value="AF">Afghanistan</option>
             <option value="AX">Åland Islands</option>
