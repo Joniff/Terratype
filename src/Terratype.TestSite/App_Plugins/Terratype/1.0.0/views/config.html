@@ -34,15 +34,24 @@
                 <div class="controls" ng-if="bag.provider && bag.provider.coordinateSystems && bag.provider.coordinateSystems.length != 0">
                     <select id="terratype_{{identifier}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)" ng-disabled="!model.value.provider.id" ng-options="c.id as c.name for c in bag.provider.coordinateSystems">
                     </select>
-                    <small ng-show="model.value.position.id">
-                        <a href="{{bag.provider.position.referenceUrl}}" target="_blank">
-                            {{bag.provider.position.description}}
-                        </a>
-                    </small>
+                    <div>
+                        <small ng-show="model.value.position.id">
+                            <a href="{{bag.position.referenceUrl}}" target="_blank">
+                                {{bag.position.description}}
+                            </a>
+                        </small>
+                    </div>
                 </div>
             </div>
             <br />
             <ng-include src="bag.provider.views.definition">
+            </ng-include>
+        </section>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+                Search
+            </h4>
+            <ng-include src="bag.provider.views.search">
             </ng-include>
         </section>
         <section>
@@ -63,8 +72,6 @@
             <ng-include src="bag.provider.views.apperance">
             </ng-include>
         </section>
-
-
     </fieldset>
 
     <div ng-show="error != null" style="color:red;">
@@ -78,7 +85,7 @@
     <br />
     <br />
 
-    <textarea>
+    <textarea style="height:300px;width:100%;">
         {{model.value}}
     </textarea>
     <br />

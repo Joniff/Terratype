@@ -92,7 +92,7 @@
         </div>
 
         <div ng-show="bag.provider.statusSuccess" class="umb-editor">
-            <div ng-show="bag.provider.canSearch" style="margin-bottom:5px;">
+            <div ng-show="model.value.searchstatus != 0" style="margin-bottom:5px;">
                 <input id="terratype_{{identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup">
             </div>
             <div style="overflow:hidden;">

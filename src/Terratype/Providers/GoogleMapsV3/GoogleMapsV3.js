@@ -45,6 +45,7 @@
     var gm = {
         originalConsole: root.console,
         domain: null,
+        version: null,
         apiKey : null,
         coordinateSystem: null,
         forceHttps: false,
@@ -123,7 +124,7 @@
         ticks: function () {
             return (new Date().getTime());
         },
-        createSubsystem: function (apiKey, forceHttps, coordinateSystem, language) {
+        createSubsystem: function (version, apiKey, forceHttps, coordinateSystem, language) {
             root.TerratypeGoogleMapsV3Callback = function  () {
                 gm.status = gm.subsystemCheckGoogleJs;
             }
@@ -136,6 +137,10 @@
                     gm.destroySubsystem();
                 } else if (gm.status == gm.subsystemCompleted || gm.status == gm.subsystemUninitiated || gm.status == gm.subsystemInit) {
                     //gm.originalConsole.warn('Creating new subsystem');
+                    if (!version) {
+                        version = '3';  //  Stable release
+                    }
+                    gm.version = version;
                     clearInterval(wait);
                     gm.forceHttps = forceHttps;
                     var https = '';
@@ -173,7 +178,7 @@
                             switch (gm.status)
                             {
                                 case gm.subsystemInit:
-                                    LazyLoad.js(gm.domain + 'maps/api/js?v=3&libraries=places&callback=TerratypeGoogleMapsV3Callback' + key + lan);
+                                    LazyLoad.js(gm.domain + 'maps/api/js?v=' + version  + '&libraries=places&callback=TerratypeGoogleMapsV3Callback' + key + lan);
                                     gm.status = gm.subsystemReadGoogleJs;
                                     break;
 
@@ -760,6 +765,11 @@
                 pr2.reloadMap.call(pr2);
             }
         },
+        versionChange: function (pr2) {
+            if (pr2.$scope.model.value.provider.version != gm.version) {
+                pr2.reloadMap.call(pr2);
+            }
+        },
         styleChange: function (pr2) {
             if (pr2.$scope.bag.provider.gmap) {
                 pr2.$scope.bag.provider.gmap.setOptions({
@@ -805,15 +815,27 @@
                 if (typeof p !== 'boolean') {
                     pr2.$scope.model.value.position.datum = p;
                     pr2.$scope.bag.position.datumStyle = {};
-                    if (pr2.$scope.bag.provider.gmap && pr2.$scope.bag.provider.gmarker) {
-                        var latlng = new google.maps.LatLng(pr2.$scope.model.value.position.datum.latitude, pr2.$scope.model.value.position.datum.longitude);
-                        pr2.$scope.bag.provider.gmarker.setPosition(latlng);
-                        pr2.$scope.bag.provider.gmap.panTo(latlng);
-                    }
+                    pr2.setMarker(pr2);
                     return;
                 }
                 pr2.$scope.bag.position.datumStyle = { 'color': 'red' };
             }, 1000);
+        },
+        setDatum: function (pr2) {
+            var datum = pr2.toString.call(pr2, pr2.$scope.model.value.position.datum, pr2.$scope.bag.position.precision);
+            if (typeof datum !== 'boolean') {
+                pr2.$scope.bag.position.datumText = datum;
+                pr2.$scope.bag.position.datumStyle = {};
+            } else {
+                pr2.$scope.bag.position.datumStyle = { 'color': 'red' };
+            }
+        },
+        setMarker: function (pr2) {
+            if (pr2.$scope.bag.provider.gmap && pr2.$scope.bag.provider.gmarker) {
+                var latlng = new google.maps.LatLng(pr2.$scope.model.value.position.datum.latitude, pr2.$scope.model.value.position.datum.longitude);
+                pr2.$scope.bag.provider.gmarker.setPosition(latlng);
+                pr2.$scope.bag.provider.gmap.panTo(latlng);
+            }
         },
         configconfig:
             {
@@ -827,7 +849,7 @@
                 icon: {
                     image: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png'
                 },
-                predefineStyling: 2,
+                predefineStyling: 'retro',
                 showRoads: true,
                 showLandmarks: true,
                 showLabels: true,
@@ -860,8 +882,11 @@
                     pr.$scope.bag.provider.statusError = false;
                     pr.$scope.bag.provider.statusDuplicate = false;
                     pr.$scope.bag.provider.statusSuccess = false;
+                    pr.$scope.bag.provider.statusSearchFailed = false;
                     pr.$scope.bag.provider.showMap = false;
                     pr.$scope.bag.provider.gmap = null;
+                    pr.$scope.bag.provider.gmarker = null;
+                    pr.$scope.bag.provider.gautocomplete = null;
                     event.register(pr.$scope.identifier, 'gmaperror', pr, pr, function (pr2) {
                         gm.originalConsole.warn(pr2.$scope.identifier + ': Map error');
                         pr2.$scope.bag.provider.statusLoading = false;
@@ -890,6 +915,8 @@
                             pr2.$scope.bag.provider.statusError = false;
                             pr2.$scope.bag.provider.statusDuplicate = false;
                             pr2.$scope.bag.provider.statusSuccess = true;
+                            pr2.$scope.bag.provider.version = String(root.google.maps.version);
+                            pr2.$scope.bag.provider.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
 
                             //  Check that we have loaded with the right setting for us
                             if (gm.apiKey != pr2.$scope.model.value.provider.apiKey ||
@@ -903,7 +930,7 @@
                             }
                             pr2.$scope.bag.provider.ignoreEvents = 0;
                             if (!(pr2.$scope.model.value.position && pr2.$scope.model.value.position.datum &&
-                                pr2.$scope.model.value.position.latitude && pr2$scope.model.value.position.longitude)) {
+                                pr2.$scope.model.value.position.datum.latitude && pr2.$scope.model.value.position.datum.longitude)) {
                                 pr2.$scope.model.value.position.datum = {
                                     latitude: config.defaultPosition.datum.latitude,
                                     longitude: config.defaultPosition.datum.longitude
@@ -933,7 +960,8 @@
                                 zoom: pr2.$scope.model.value.zoom,
                                 draggable: config.draggable,
                                 fullScreenControl: config.fullScreenControl,
-                                styles: gm.style.call(gm, config.predefineStyling, config.showRoads, config.showLandmarks, config.showLabels)
+                                styles: gm.style.call(gm, pr2.$scope.model.value.provider.predefineStyling, pr2.$scope.model.value.provider.showRoads,
+                                    pr2.$scope.model.value.provider.showLandmarks, pr2.$scope.model.value.provider.showLabels)
                             });
                             google.maps.event.addListener(pr2.$scope.bag.provider.gmap, 'zoom_changed', function () {
                                 pr2.$scope.bag.provider.eventZoom.call(pr2, pr2);
@@ -956,29 +984,34 @@
                                 pr2.$scope.bag.provider.eventDrag.call(pr2, pr2, marker);
                             });
 
-                            pr2.$scope.bag.provider.gautocomplete = new google.maps.places.Autocomplete(document.getElementById('terratype_' + pr2.$scope.identifier + '_googlemapv3_lookup'));
+                            pr2.$scope.bag.provider.gautocomplete = new google.maps.places.Autocomplete(document.getElementById('terratype_' + pr2.$scope.identifier + '_googlemapv3_lookup',
+                            {
+                                autocomplete: pr2.$scope.model.value.searchstatus == 2
+                            }));
+                            if (pr2.$scope.model.value && pr2.$scope.model.value.search && pr2.$scope.model.value.search.limit && pr2.$scope.model.value.search.limit.country != '') {
+                                pr2.$scope.bag.provider.gautocomplete.setComponentRestrictions({ "country": pr2.$scope.model.value.search.limit.countries.join(',') });
+                            }
 
-                            google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'place_changed', $scope.searchbox.events.place_changed);
-                            google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'places_changed', $scope.searchbox.events.places_changed);
-
+                            google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'place_changed', function () {
+                                pr2.$scope.bag.provider.eventLookup.call(pr2, pr2, pr2.$scope.bag.provider.gautocomplete.getPlace());
+                            });
+                            google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'places_changed', function () {
+                                var places = pr2.$scope.bag.provider.gautocomplete.getPlaces();
+                                if (places && places.length > 0) {
+                                    pr2.$scope.bag.provider.eventLookup.call(pr2, pr2, places[0]);
+                                }
+                            });
                             //  Check to see if places service is enabled
                             if (typeof (google.maps.places) === 'undefined') {
-                                agm.showPlacesServiceEnabled(false);
+                                pr.$scope.bag.provider.statusSearchFailed = true;
                             } else {
-                                var service = new google.maps.places.PlacesService($scope.map.control.getGMap());
-                                service.textSearch({ query: agm.SEARCH_TEST }, function (results, status) {
-                                    agm.showPlacesServiceEnabled($scope.searchbox.show = (status == google.maps.places.PlacesServiceStatus.OK));
+                                var service = new google.maps.places.PlacesService(pr2.$scope.bag.provider.gmap);
+                                service.textSearch({ query: 'paris, france' }, function (results, status) {
+                                    pr.$scope.bag.provider.statusSearchFailed = (status != google.maps.places.PlacesServiceStatus.OK);
                                 });
                             }
+                            pr2.setDatum.call(pr2, pr2);
 
-
-                            var datum = pr2.toString.call(pr2, pr2.$scope.model.value.position.datum, pr2.$scope.bag.position.precision);
-                            if (typeof datum !== 'boolean') {
-                                pr2.$scope.bag.position.datumText = datum;
-                                pr2.$scope.bag.position.datumStyle = {};
-                            } else {
-                                pr2.$scope.bag.position.datumStyle = { 'color': 'red' };
-                            }
                             pr2.$scope.$apply();
                         }  else {
                             var element = document.getElementById(pr2.div);
@@ -1003,7 +1036,9 @@
                                 pr2.$scope.$apply();
                             }
                             else if (pr2.$scope.bag.provider.showMap == true && pr2.divoldsize != 0 && newSize != 0 && pr2.divoldsize != newSize) {
-                                pr2.$timeout(pr2.$scope.bag.provider.eventCheckRefresh);
+                                pr2.$timeout(function () {
+                                    pr2.$scope.bag.provider.eventCheckRefresh.call(pr2, pr2)
+                                });
                             }
                             pr2.divoldsize = newSize;
                         }
@@ -1011,7 +1046,7 @@
 
                     if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
                         if (gm.status == gm.subsystemUninitiated) {
-                            gm.createSubsystem(pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
+                            gm.createSubsystem(pr.$scope.model.value.provider.version, pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
                                 pr.$scope.model.value.position.id, pr.$scope.model.value.provider.language);
                         }
 
@@ -1024,7 +1059,7 @@
                                     clearInterval(superWaiter);
                                 }
 
-                                gm.createSubsystem(pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
+                                gm.createSubsystem(pr.$scope.model.value.provider.version, pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
                                     pr.$scope.model.value.position.id, pr.$scope.model.value.provider.language);
                                 count++;
                             } else {
@@ -1049,9 +1084,7 @@
             gm.originalConsole.warn(pr2.$scope.identifier + ': eventRefresh()');
             pr2.$scope.bag.provider.ignoreEvents++;
             pr2.$scope.bag.provider.gmap.setZoom(pr2.$scope.model.value.zoom);
-            var latlng = new google.maps.LatLng(pr2.$scope.model.value.position.datum.latitude, pr2.$scope.model.value.position.datum.longitude);
-            pr2.$scope.bag.provider.gmarker.setPosition(latlng);
-            pr2.$scope.bag.provider.gmap.panTo(latlng);
+            pr2.setMarker.call(pr2, pr2);
             google.maps.event.trigger(pr2.$scope.bag.provider.gmap, 'resize');
             pr2.$scope.bag.provider.ignoreEvents--;
         },
@@ -1070,9 +1103,40 @@
                 latitude: marker.latLng.lat(),
                 longitude: marker.latLng.lng()
             };
-            pr2.datumChange.call(pr2, pr2, pr2.$scope.model.value.position.datum);
+            pr2.setMarker.call(pr2, pr2);
+            pr2.setDatum.call(pr2, pr2);
             pr2.$scope.bag.provider.ignoreEvents--;
-        }
+        },
+        eventLookup: function (pr2, place) {
+            if (pr2.$scope.bag.provider.ignoreEvents > 0 || !place.geometry) {
+                return;
+            }
+            gm.originalConsole.warn(pr2.$scope.identifier + ': eventDrag()');
+            pr2.$scope.bag.provider.ignoreEvents++;
+            pr2.$scope.model.value.lookup = place.formatted_address;
+            pr2.$scope.model.value.position.datum = {
+                latitude: place.geometry.location.lat(),
+                longitude: place.geometry.location.lng()
+            };
+            pr2.setMarker.call(pr2, pr2);
+            pr2.setDatum.call(pr2, pr2);
+            pr2.$scope.$apply();
+            pr2.$scope.bag.provider.ignoreEvents--;
+        },
+        searchChange: function (pr2) {
+            if (pr2.$scope.bag.provider.gautocomplete) {
+                if (model.value.searchstatus != 0) {
+                    pr2.$scope.bag.provider.gautocomplete.setOptions({
+                        autocomplete: pr2.$scope.model.value.searchstatus == 2
+                    });
+                }
+            }
+        },
+        searchCountryChnage: function (pr2) {
+            if (pr2.$scope.bag.provider.gautocomplete) {
+                pr2.$scope.bag.provider.gautocomplete.setComponentRestrictions({ "country": pr2.$scope.model.value.search.limit.countries.join(',') });
+            }
+        },
     };
 
     root.terratypeProvider['GoogleMapsV3'] = pr;

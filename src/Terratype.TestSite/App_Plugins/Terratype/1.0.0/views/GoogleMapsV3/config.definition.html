@@ -1,4 +1,51 @@
 ﻿<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_version" class="control-label">
+        Version
+        <small>
+            Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_googlemapv3_version" ng-model="model.value.provider.version" class="umb-editor" ng-change="bag.provider.versionChange(bag.provider)">
+            <option value="3">Stable</option>
+            <option value="3.exp">Experimental</option>
+            <option value="3.27">3.27 (Released 10 January 2017)</option>
+            <option value="3.26">3.26 (Released 18 August 2016)</option>
+            <option value="3.25">3.25 (Released 25 May 2016)</option>
+            <option value="3.24">3.24 (Released 14 April 2016)</option>
+            <option value="3.23">3.23 (Released 18 January 2016)</option>
+            <option value="3.22">3.22 (Released 7 January 2016)</option>
+            <option value="3.21">3.21 (Released 5 August 2015)</option>
+            <option value="3.20">3.20 (Released 24 April 2015)</option>
+            <option value="3.19">3.19 (Released 24 April 2015)</option>
+            <option value="3.18">3.18 (Released 04 December 2014)</option>
+            <option value="3.17">3.17 (Released 20 August 2014)</option>
+            <option value="3.16">3.16 (Released 15 April 2014)</option>
+            <option value="3.15">3.15 (Released 03 March 2014)</option>
+            <option value="3.14">3.14 (Released 10 September 2013)</option>
+            <option value="3.13">3.13 (Released 25 June 2013)</option>
+            <option value="3.12">3.12 (Released 04 June 2013)</option>
+            <option value="3.11">3.11 (Released 19 February 2013)</option>
+            <option value="3.10">3.10 (Released 04 February 2013)</option>
+            <option value="3.9">3.9 (Released 10 September 2012)</option>
+            <option value="3.8">3.8 (Released 1 May, 2012)</option>
+            <option value="3.7">3.7 (Released 7 February 2012)</option>
+            <option value="3.6">3.6 (Released 31 October 2011)</option>
+            <option value="3.5">3.5 (Released 10 August 2011)</option>
+            <option value="3.4">3.4 (Released 7 May 2011)</option>
+            <option value="3.3">3.3 (Released 17 March 2011)</option>
+            <option value="3.2">3.2 (Released 11 November 2010)</option>
+            <option value="3.1">3.1 (Released 28 September 2010)</option>
+            <option value="3.0">3.0 (Released 18 May 2010)</option>
+        </select>
+        <div ng-show="bag.provider.version">
+            <small>
+                Google Maps V{{bag.provider.version}} has been loaded. See <a href="https://developers.google.com/maps/documentation/javascript/releases#3{{bag.provider.versionMajor}}" target="_blank">changelog</a> for details
+            </small>
+        </div>
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
     <label for="terratype_{{identifier}}_googlemapv3_apikey" class="control-label">
         Google API Key:
         <small>
@@ -16,7 +63,7 @@
                 <div ng-show="bag.provider.apiKeyFailed">
                     <img src="/umbraco/images/false.png" />
                     <span style="color:red;padding-right:10px;">Invalid API Key</span>
-                    <button ng-click="bag.provider.reloadMap()">Retry</button>
+                    <button type="button" ng-click="bag.provider.reloadMap()" title="Try and reload map using this Google Map API Key">Retry</button>
                 </div>
                 <div ng-show="bag.provider.apiKeySuccess">
                     <img src="/umbraco/images/true.png" />
