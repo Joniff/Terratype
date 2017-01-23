@@ -1,4 +1,196 @@
 ﻿<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_basic" class="control-label">
+        Show Basic Map:
+        <small>
+            Do you want to see the basic road map
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_variety_basic" type="checkbox" ng-model="model.value.provider.variety.basic" ng-change="bag.provider.optionChange(bag.provider)" ng-disabled="model.value.provider.variety.satellite == false && model.value.provider.variety.terrain == false" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_terrain" class="control-label">
+        Show Terrain Map:
+        <small>
+            Do you want to see the basic map with terrain
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_variety_terrain" type="checkbox" ng-model="model.value.provider.variety.terrain" ng-change="bag.provider.optionChange(bag.provider)" ng-disabled="model.value.provider.variety.satellite == false && model.value.provider.variety.basic == false" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_basic" class="control-label">
+        Show Satellite Map:
+        <small>
+            Do you want to see the satellite map
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_variety_satellite" type="checkbox" ng-model="model.value.provider.variety.satellite" ng-change="bag.provider.optionChange(bag.provider)" ng-disabled="model.value.provider.variety.basic == false && model.value.provider.variety.terrain == false" />
+    </div>
+</div>
+<div ng-show="(model.value.provider.variety.basic + model.value.provider.variety.satellite + model.value.provider.variety.terrain) > 1">
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_variety_selector_type" class="control-label">
+            Map Selector Type:
+            <small>
+                How do you want the user to select between viewing a basic, terrain and satellite map
+            </small>
+        </label>
+        <div class="controls">
+            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_type" ng-model="model.value.provider.variety.selector.type" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+                <option value="1">Horizontal Bar</option>
+                <option value="2">Dropdown Menu</option>
+            </select>
+        </div>
+    </div>
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_variety_selector_position" class="control-label">
+            Map Selector Position:
+            <small>
+                Where do you want the map selector to be positioned on the map
+            </small>
+        </label>
+        <div class="controls">
+            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_position" ng-model="model.value.provider.variety.selector.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+                <option value="0">[Default]</option>
+                <option value="1">Top Left</option>
+                <option value="2">Top Center</option>
+                <option value="3">Top Right</option>
+                <option value="5">Left Top</option>
+                <option value="7">Right Top</option>
+                <option value="4">Left Center</option>
+                <option value="13">Center</option>
+                <option value="8">Right Center</option>
+                <option value="6">Left Bottom</option>
+                <option value="9">Right Bottom</option>
+                <option value="10">Bottom Left</option>
+                <option value="11">Bottom Center</option>
+                <option value="12">Bottom Right</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_fullscreen_enable" class="control-label">
+        Fullscreen:
+        <small>
+            Allow the map to take up the whole screen. Only available on certain browsers / devices.
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_fullscreen_enable" type="checkbox" ng-model="model.value.provider.fullscreen.enable" ng-change="bag.provider.optionChange(bag.provider)" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group" ng-show="model.value.provider.fullscreen.enable == true">
+    <label for="terratype_{{identifier}}_googlemapv3_fullscreen_position" class="control-label">
+        Fullscreen Button Position:
+        <small>
+            Where do you want the fullscreen button to be positioned on the map
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_googlemapv3_fullscreen_position" ng-model="model.value.provider.fullscreen.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+            <option value="0">[Default]</option>
+            <option value="1">Top Left</option>
+            <option value="2">Top Center</option>
+            <option value="3">Top Right</option>
+            <option value="5">Left Top</option>
+            <option value="7">Right Top</option>
+            <option value="4">Left Center</option>
+            <option value="13">Center</option>
+            <option value="8">Right Center</option>
+            <option value="6">Left Bottom</option>
+            <option value="9">Right Bottom</option>
+            <option value="10">Bottom Left</option>
+            <option value="11">Bottom Center</option>
+            <option value="12">Bottom Right</option>
+        </select>
+    </div>
+</div>
+
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_scale_enable" class="control-label">
+        Scale:
+        <small>
+            Allow the map to show the current scale being used
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_scale_enable" type="checkbox" ng-model="model.value.provider.scale.enable" ng-change="bag.provider.optionChange(bag.provider)" />
+    </div>
+</div>
+<!--    Scale has no position yet
+<div class="umb-el-wrap control-group" ng-show="model.value.provider.scale.enable == true">
+    <label for="terratype_{{identifier}}_googlemapv3_scale_position" class="control-label">
+        Scale Position:
+        <small>
+            Where do you want the scale to be positioned on the map
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_googlemapv3_scale_position" ng-model="model.value.provider.scale.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+            <option value="0">[Default]</option>
+            <option value="1">Top Left</option>
+            <option value="2">Top Center</option>
+            <option value="3">Top Right</option>
+            <option value="5">Left Top</option>
+            <option value="7">Right Top</option>
+            <option value="4">Left Center</option>
+            <option value="13">Center</option>
+            <option value="8">Right Center</option>
+            <option value="6">Left Bottom</option>
+            <option value="9">Right Bottom</option>
+            <option value="10">Bottom Left</option>
+            <option value="11">Bottom Center</option>
+            <option value="12">Bottom Right</option>
+        </select>
+    </div>
+</div>
+-->
+
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_streetview_enable" class="control-label">
+        Streetview:
+        <small>
+            Allow user to select streetview mode
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_streetview_enable" type="checkbox" ng-model="model.value.provider.streetView.enable" ng-change="bag.provider.optionChange(bag.provider)" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group" ng-show="model.value.provider.streetView.enable == true">
+    <label for="terratype_{{identifier}}_googlemapv3_streetview_position" class="control-label">
+        Scale Position:
+        <small>
+            Where do you want the streetview 'pegman' to be positioned on the map
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_googlemapv3_streetview_position" ng-model="model.value.provider.streetView.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+            <option value="0">[Default]</option>
+            <option value="1">Top Left</option>
+            <option value="2">Top Center</option>
+            <option value="3">Top Right</option>
+            <option value="5">Left Top</option>
+            <option value="7">Right Top</option>
+            <option value="4">Left Center</option>
+            <option value="13">Center</option>
+            <option value="8">Right Center</option>
+            <option value="6">Left Bottom</option>
+            <option value="9">Right Bottom</option>
+            <option value="10">Bottom Left</option>
+            <option value="11">Bottom Center</option>
+            <option value="12">Bottom Right</option>
+        </select>
+    </div>
+</div>
+
+<div class="umb-el-wrap control-group" ng-show="model.value.provider.variety.basic == true">
     <label for="terratype_{{identifier}}_googlemapv3_style" class="control-label">
         Styling:
         <small>

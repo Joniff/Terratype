@@ -92,20 +92,21 @@ namespace Terratype.Providers
         /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#ControlPosition
         /// </summary>
         public enum ControlPositions
-        {
+        {       //  In order from top left to bottom right
             Default = 0,
-            BottomCenter = 1,       // Center of the bottom row.
-            BottomLeft = 2,         // Bottom left and flow towards the middle. Elements are positioned to the right of the Google logo.
-            BottomRight = 3,        // Bottom right and flow towards the middle. Elements are positioned to the left of the copyrights.
-            LeftBottom = 4,         // On the left, above bottom-left elements, and flow upwards.
-            LeftCenter = 5,         // Center of the left side.
-            LeftTop = 6,            // On the left, below top-left elements, and flow downwards.
-            RightBottom = 7,        // On the right, above bottom-right elements, and flow upwards.
+            TopLeft = 1,           // Top left and flow towards the middle.
+            TopCenter = 2,          // Center of the top row.
+            TopRight = 3,           // Top right and flow towards the middle
+            LeftTop = 5,            // On the left, below top-left elements, and flow downwards.
+            RightTop = 7,           // On the right, below top-right elements, and flow downwards.
+            LeftCenter = 4,         // Center of the left side.
+            Center = 13,
             RightCenter = 8,        // Center of the right side.
-            RightTop = 9,           // On the right, below top-right elements, and flow downwards.
-            TopCenter = 10,          // Center of the top row.
-            TopLeft = 11,           // Top left and flow towards the middle.
-            TopRight = 12           // Top right and flow towards the middle
+            LeftBottom = 6,         // On the left, above bottom-left elements, and flow upwards.
+            RightBottom = 9,        // On the right, above bottom-right elements, and flow upwards.
+            BottomLeft = 10,         // Bottom left and flow towards the middle. Elements are positioned to the right of the Google logo.
+            BottomCenter = 11,       // Center of the bottom row.
+            BottomRight = 12        // Bottom right and flow towards the middle. Elements are positioned to the left of the copyrights.
         }
 
         /// <summary>
@@ -113,35 +114,32 @@ namespace Terratype.Providers
         /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapType
         /// </summary>
         [JsonObject(MemberSerialization.OptIn)]
-        public class MapTypeDefinition
+        public class VarietyDefinition
         {
-            /// <summary>
-            /// Map types that Google map understands, 
-            /// see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapTypeId
-            /// </summary>
-            public enum BasicMapTypes
-            {
-                Hybrid = 1,
-                Roadmap = 2,
-                Satellite = 3,
-                Terrain = 4
-            }
-
-            public enum Styles
+            public enum Selectors
             {
                 Default = 0,
-                DropdownMenu = 1,
-                HorizontalBar = 2
+                HorizontalBar = 1,
+                DropdownMenu = 2
             }
 
             [JsonProperty]
-            public BasicMapTypes MapType { get; set; }
+            public bool Basic { get; set; }
             [JsonProperty]
-            public Styles Style { get; set; }
-}
+            public bool Satellite { get; set; }
+            [JsonProperty]
+            public bool Terrain { get; set; }
+
+            [JsonProperty]
+            public Selectors Selector { get; set; }
+
+            [JsonProperty]
+            public ControlPositions Position { get; set; }
+
+        }
 
         [JsonProperty]
-        public MapTypeDefinition MapType { get; set; }
+        public VarietyDefinition Variety { get; set; }
 
         [JsonProperty]
         public string PredefineStyling { get; set; }
