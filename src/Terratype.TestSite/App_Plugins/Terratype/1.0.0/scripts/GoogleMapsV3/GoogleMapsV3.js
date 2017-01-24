@@ -878,7 +878,6 @@
                 zoomControl: {
                     enable: true,
                     position: 0,
-                    zoomControlStyle: 0
                 },
                 panControl: {
                     enable: false
@@ -920,6 +919,9 @@
 
             if (!pr2.$scope.model.value.provider.streetView) {
                 pr2.$scope.model.value.provider.streetView = config.streetView;
+            }
+            if (!pr2.$scope.model.value.provider.zoomControl) {
+                pr2.$scope.model.value.provider.zoomControl = config.zoomControl;
             }
         },
         mapTypeIds: function (pr2) {
@@ -1029,6 +1031,10 @@
                                 streetViewControl: pr2.$scope.model.value.provider.streetView.enable,
                                 streetViewControlOptions: {
                                     position: pr2.$scope.model.value.provider.streetView.position
+                                },
+                                zoomControl: pr2.$scope.model.value.provider.zoomControl.enable,
+                                zoomControlOptions: {
+                                    position: pr2.$scope.model.value.provider.zoomControl.position
                                 }
                             });
                             google.maps.event.addListener(pr2.$scope.bag.provider.gmap, 'zoom_changed', function () {
@@ -1224,6 +1230,10 @@
                     streetViewControl: pr2.$scope.model.value.provider.streetView.enable,
                     streetViewControlOptions: {
                         position: pr2.$scope.model.value.provider.streetView.position
+                    },
+                    zoomControl: pr2.$scope.model.value.provider.zoomControl.enable,
+                    zoomControlOptions: {
+                        position: pr2.$scope.model.value.provider.zoomControl.position
                     }
                 });
             }

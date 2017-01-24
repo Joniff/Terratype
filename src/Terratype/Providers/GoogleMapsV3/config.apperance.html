@@ -190,6 +190,44 @@
     </div>
 </div>
 
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_zoomcontrol_enable" class="control-label">
+        Zoom:
+        <small>
+            Show zoom control
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_googlemapv3_zoomcontrol_enable" type="checkbox" ng-model="model.value.provider.zoomControl.enable" ng-change="bag.provider.optionChange(bag.provider)" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group" ng-show="model.value.provider.zoomControl.enable == true">
+    <label for="terratype_{{identifier}}_googlemapv3_streetview_position" class="control-label">
+        Zoom Position:
+        <small>
+            Where do you want the czoom control buttons to be positioned on the map
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" ng-model="model.value.provider.zoomControl.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+            <option value="0">[Default]</option>
+            <option value="1">Top Left</option>
+            <option value="2">Top Center</option>
+            <option value="3">Top Right</option>
+            <option value="5">Left Top</option>
+            <option value="7">Right Top</option>
+            <option value="4">Left Center</option>
+            <option value="13">Center</option>
+            <option value="8">Right Center</option>
+            <option value="6">Left Bottom</option>
+            <option value="9">Right Bottom</option>
+            <option value="10">Bottom Left</option>
+            <option value="11">Bottom Center</option>
+            <option value="12">Bottom Right</option>
+        </select>
+    </div>
+</div>
+
 <div class="umb-el-wrap control-group" ng-show="model.value.provider.variety.basic == true">
     <label for="terratype_{{identifier}}_googlemapv3_style" class="control-label">
         Styling:
