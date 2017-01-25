@@ -54,7 +54,7 @@
             </small>
         </label>
         <div class="controls">
-            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_position" ng-model="model.value.provider.variety.selector.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_position" ng-model="model.value.provider.variety.selector.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)" convert-to-number>
                 <option value="0">[Default]</option>
                 <option value="1">Top Left</option>
                 <option value="2">Top Center</option>
@@ -93,7 +93,7 @@
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_fullscreen_position" ng-model="model.value.provider.fullscreen.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+        <select id="terratype_{{identifier}}_googlemapv3_fullscreen_position" ng-model="model.value.provider.fullscreen.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)" convert-to-number>
             <option value="0">[Default]</option>
             <option value="1">Top Left</option>
             <option value="2">Top Center</option>
@@ -171,7 +171,7 @@
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_streetview_position" ng-model="model.value.provider.streetView.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+        <select id="terratype_{{identifier}}_googlemapv3_streetview_position" ng-model="model.value.provider.streetView.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)" convert-to-number>
             <option value="0">[Default]</option>
             <option value="1">Top Left</option>
             <option value="2">Top Center</option>
@@ -209,7 +209,7 @@
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" ng-model="model.value.provider.zoomControl.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)">
+        <select id="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" ng-model="model.value.provider.zoomControl.position" class="umb-editor" ng-change="bag.provider.optionChange(bag.provider)" convert-to-number>
             <option value="0">[Default]</option>
             <option value="1">Top Left</option>
             <option value="2">Top Center</option>
@@ -322,7 +322,7 @@
         </div>
 
         <div ng-show="bag.provider.statusSuccess" class="umb-editor">
-            <div ng-show="model.value.searchstatus != 0" style="margin-bottom:5px;">
+            <div ng-show="model.value.search.enable != 0" style="margin-bottom:5px;">
                 <input id="terratype_{{identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup" spellcheck=false>
             </div>
             <div style="overflow:hidden;">

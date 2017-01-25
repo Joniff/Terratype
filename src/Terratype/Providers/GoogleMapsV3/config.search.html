@@ -1,12 +1,12 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_searchstatus" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_search_enable" class="control-label">
         Search:
         <small>
             Do you want to include a text box, to lookup locations
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_searchstatus" ng-model="model.value.searchstatus" ng-change="bag.provider.searchChange(bag.provider)" class="umb-editor">
+        <select id="terratype_{{identifier}}_googlemapv3_search_enable" ng-model="model.value.search.enable" ng-change="bag.provider.searchChange(bag.provider)" class="umb-editor" convert-to-number>
             <option value="0">Hide Search</option>
             <option value="1">Enable Search</option>
             <option value="2">Enable Search with Autocomplete</option>
@@ -19,7 +19,7 @@
         </div>
     </div>
 </div>
-<div class="umb-el-wrap control-group" ng-show="model.value.searchstatus != 0">
+<div class="umb-el-wrap control-group" ng-show="model.value.search.enable != 0">
     <label for="terratype_{{identifier}}_googlemapv3_searchcountry" class="control-label">
         Restrict results:
         <small>
@@ -32,7 +32,7 @@
                 NOTE: Google Maps V{{bag.provider.version}} has a limited of only allowing search restrictions to one country. From version 3.27 onwards, this restriction has been increased to five
             </small>
         </div>
-        <select id="terratype_{{identifier}}_googlemapv3_searchcountry" ng-model="model.value.search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="bag.provider.searchCountryChnage(bag.provider)">
+        <select id="terratype_{{identifier}}_googlemapv3_searchcountry" ng-model="model.value.search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="bag.provider.searchCountryChange(bag.provider)">
             <option value="AF">Afghanistan</option>
             <option value="AX">Åland Islands</option>
             <option value="AL">Albania</option>

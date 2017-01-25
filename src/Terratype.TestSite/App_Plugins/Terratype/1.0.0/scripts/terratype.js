@@ -22,12 +22,13 @@
                     };
                     value.script = $scope.urlRoot + 'scripts/' + value.id + '/' + value.id + '.js';
                 });
-
-                if ($scope.model.value && $scope.model.value.provider && $scope.model.value.provider.id != null) {
-                    $scope.setProvider($scope.model.value.provider.id);
-                }
-                if ($scope.model.value.icon && $scope.model.value.icon.id) {
-                    $scope.iconPredefineChangeInternal($scope.model.value.icon.id);
+                if ($scope.model.value) {
+                    if ($scope.model.value.provider && $scope.model.value.provider.id != null) {
+                        $scope.setProvider($scope.model.value.provider.id);
+                    }
+                    if ($scope.model.value.icon && $scope.model.value.icon.id) {
+                        $scope.iconPredefineChangeInternal($scope.model.value.icon.id);
+                    }
                 }
             }, function error(response) {
                 $scope.loading--;
@@ -131,19 +132,27 @@
         }
 
         $scope.iconImageChange = function () {
-
-            $http.get('/umbraco/backoffice/terratype/provider/test2').then(function success(response) {
-                alert(response.data);
+            $scope.bag.icon.urlFailed = '';
+            $http({
+                url: '/umbraco/backoffice/terratype/provider/image',
+                method: 'GET',
+                params: {
+                    url: $scope.model.value.icon.url
+                }
+            }).then(function success(response) {
+                if (response.data.status == 200) {
+                    $scope.model.value.icon.size = {
+                        width: response.data.width,
+                        height: response.data.height
+                    };
+                    $scope.model.value.icon.format = response.data.format;
+                } else {
+                    $scope.bag.icon.urlFailed = response.data.error;
+                }
+            }, function fail(response) {
+                $scope.bag.icon.urlFailed = response.data;
             });
-
-
-            //$http.get('/umbraco/backoffice/terratype/provider/image', {
-            //    url: $scope.model.value.icon.url
-            //}).then(function success(response) {
-            //    $scope.model.value.size.width = response.data.width;
-            //    $scope.model.value.size.height = response.data.height;
-            //});
-            //$scope.iconCustom();
+            $scope.iconCustom();
         };
         $scope.bag = {
             provider: {

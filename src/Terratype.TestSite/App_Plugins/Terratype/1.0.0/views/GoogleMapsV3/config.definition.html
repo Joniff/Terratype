@@ -1,246 +1,250 @@
-﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_version" class="control-label">
-        Version
-        <small>
-            Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)
-        </small>
-    </label>
-    <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_version" ng-model="model.value.provider.version" class="umb-editor" ng-change="bag.provider.versionChange(bag.provider)">
-            <option value="3">Stable</option>
-            <option value="3.exp">Experimental</option>
-            <option value="3.27">3.27 (Released 10 January 2017)</option>
-            <option value="3.26">3.26 (Released 18 August 2016)</option>
-            <option value="3.25">3.25 (Released 25 May 2016)</option>
-            <option value="3.24">3.24 (Released 14 April 2016)</option>
-            <option value="3.23">3.23 (Released 18 January 2016)</option>
-            <option value="3.22">3.22 (Released 7 January 2016)</option>
-            <option value="3.21">3.21 (Released 5 August 2015)</option>
-            <option value="3.20">3.20 (Released 24 April 2015)</option>
-            <option value="3.19">3.19 (Released 24 April 2015)</option>
-            <option value="3.18">3.18 (Released 04 December 2014)</option>
-            <option value="3.17">3.17 (Released 20 August 2014)</option>
-            <option value="3.16">3.16 (Released 15 April 2014)</option>
-            <option value="3.15">3.15 (Released 03 March 2014)</option>
-            <option value="3.14">3.14 (Released 10 September 2013)</option>
-            <option value="3.13">3.13 (Released 25 June 2013)</option>
-            <option value="3.12">3.12 (Released 04 June 2013)</option>
-            <option value="3.11">3.11 (Released 19 February 2013)</option>
-            <option value="3.10">3.10 (Released 04 February 2013)</option>
-            <option value="3.9">3.9 (Released 10 September 2012)</option>
-            <option value="3.8">3.8 (Released 1 May, 2012)</option>
-            <option value="3.7">3.7 (Released 7 February 2012)</option>
-            <option value="3.6">3.6 (Released 31 October 2011)</option>
-            <option value="3.5">3.5 (Released 10 August 2011)</option>
-            <option value="3.4">3.4 (Released 7 May 2011)</option>
-            <option value="3.3">3.3 (Released 17 March 2011)</option>
-            <option value="3.2">3.2 (Released 11 November 2010)</option>
-            <option value="3.1">3.1 (Released 28 September 2010)</option>
-            <option value="3.0">3.0 (Released 18 May 2010)</option>
-        </select>
-        <div ng-show="bag.provider.version">
+﻿<div ng-disabled="bag.provider.statusLoading">
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_version" class="control-label">
+            Version
             <small>
-                Google Maps V{{bag.provider.version}} has been loaded. See <a href="https://developers.google.com/maps/documentation/javascript/releases#3{{bag.provider.versionMajor}}" target="_blank">changelog</a> for details
+                Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)
             </small>
+        </label>
+        <div class="controls">
+            <select id="terratype_{{identifier}}_googlemapv3_version" ng-model="model.value.provider.version" class="umb-editor" ng-change="bag.provider.versionChange(bag.provider)">
+                <option value="3">Stable</option>
+                <option value="3.exp">Experimental</option>
+                <option value="3.27">3.27 (Released 10 January 2017)</option>
+                <option value="3.26">3.26 (Released 18 August 2016)</option>
+                <option value="3.25">3.25 (Released 25 May 2016)</option>
+                <option value="3.24">3.24 (Released 14 April 2016)</option>
+                <option value="3.23">3.23 (Released 18 January 2016)</option>
+                <option value="3.22">3.22 (Released 7 January 2016)</option>
+                <option value="3.21">3.21 (Released 5 August 2015)</option>
+                <option value="3.20">3.20 (Released 24 April 2015)</option>
+                <option value="3.19">3.19 (Released 24 April 2015)</option>
+                <option value="3.18">3.18 (Released 04 December 2014)</option>
+                <option value="3.17">3.17 (Released 20 August 2014)</option>
+                <option value="3.16">3.16 (Released 15 April 2014)</option>
+                <option value="3.15">3.15 (Released 03 March 2014)</option>
+                <option value="3.14">3.14 (Released 10 September 2013)</option>
+                <option value="3.13">3.13 (Released 25 June 2013)</option>
+                <option value="3.12">3.12 (Released 04 June 2013)</option>
+                <option value="3.11">3.11 (Released 19 February 2013)</option>
+                <option value="3.10">3.10 (Released 04 February 2013)</option>
+                <option value="3.9">3.9 (Released 10 September 2012)</option>
+                <option value="3.8">3.8 (Released 1 May, 2012)</option>
+                <option value="3.7">3.7 (Released 7 February 2012)</option>
+                <option value="3.6">3.6 (Released 31 October 2011)</option>
+                <option value="3.5">3.5 (Released 10 August 2011)</option>
+                <option value="3.4">3.4 (Released 7 May 2011)</option>
+                <option value="3.3">3.3 (Released 17 March 2011)</option>
+                <option value="3.2">3.2 (Released 11 November 2010)</option>
+                <option value="3.1">3.1 (Released 28 September 2010)</option>
+                <option value="3.0">3.0 (Released 18 May 2010)</option>
+            </select>
+            <div ng-show="bag.provider.version">
+                <small>
+                    Google Maps V{{bag.provider.version}} has been loaded. See <a href="https://developers.google.com/maps/documentation/javascript/releases#3{{bag.provider.versionMajor}}" target="_blank">changelog</a> for details
+                </small>
+            </div>
         </div>
     </div>
-</div>
-<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_apikey" class="control-label">
-        Google API Key:
-        <small>
-            Enter your <a href="https://console.developers.google.com/apis/credentials">Google Map API Key</a> which is linked to this domain. Using localhost with a port number also requires a key. Deploying this Umbraco to other domains requires those domains to be linked to this Google Map API key too.
-        </small>
-    </label>
-    <div class="controls">
-        <input id="terratype_{{identifier}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" spellcheck=false />
-        <div>
-            <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key" target="_blank" style="font-size:smaller;">[Get a Key]</a>
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_apikey" class="control-label">
+            Google API Key:
+            <small>
+                Enter your <a href="https://console.developers.google.com/apis/credentials">Google Map API Key</a> which is linked to this domain. Using localhost with a port number also requires a key. Deploying this Umbraco to other domains requires those domains to be linked to this Google Map API key too.
+            </small>
+        </label>
+        <div class="controls">
+            <input id="terratype_{{identifier}}_googlemapv3_apikey" type="text" ng-model="model.value.provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" spellcheck=false ng-change="bag.provider.statusReload = true" />
             <div>
-                <div ng-show="bag.provider.apiKeyLoading">
-                    <img src="/umbraco/assets/img/loader.gif" />
-                </div>
-                <div ng-show="bag.provider.apiKeyFailed">
-                    <img src="/umbraco/images/false.png" />
-                    <span style="color:red;padding-right:10px;">Invalid API Key</span>
-                    <button type="button" ng-click="bag.provider.reloadMap()" title="Try and reload map using this Google Map API Key">Retry</button>
-                </div>
-                <div ng-show="bag.provider.apiKeySuccess">
-                    <img src="/umbraco/images/true.png" />
-                    <span style="color:green;">API Key is valid</span>
+                <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key" target="_blank" style="font-size:smaller;">[Get a Key]</a>
+                <div>
+                    <div ng-show="bag.provider.statusLoading">
+                        <img src="/umbraco/assets/img/loader.gif" />
+                    </div>
+                    <div ng-show="bag.provider.statusFailed">
+                        <img src="/umbraco/images/false.png" />
+                        <span style="color:red;padding-right:10px;">Invalid API Key</span>
+                    </div>
+                    <div ng-show="bag.provider.statusSuccess">
+                        <img src="/umbraco/images/true.png" />
+                        <span style="color:green;">API Key is valid</span>
+                    </div>
+                    <div ng-show="bag.provider.statusReload">
+                        <button type="button" ng-click="bag.provider.reloadMap()" title="Try and reload map using this Google Map API Key">Retry</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_forcehttps" class="control-label">
-        Force Https:
-        <small>
-            Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP.
-        </small>
-    </label>
-    <div class="controls">
-        <input id="terratype_{{identifier}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" ng-change="bag.provider.forceHttpsChange(bag.provider)" />
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_forcehttps" class="control-label">
+            Force Https:
+            <small>
+                Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP.
+            </small>
+        </label>
+        <div class="controls">
+            <input id="terratype_{{identifier}}_googlemapv3_forcehttps" type="checkbox" ng-model="model.value.provider.forceHttps" ng-change="bag.provider.forceHttpsChange(bag.provider)" />
+        </div>
     </div>
-</div>
-<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_language" class="control-label">
-        Language:
-        <small>
-            Primary language used to display places
-        </small>
-    </label>
-    <div class="controls">
-        <select id="terratype_{{identifier}}_googlemapv3_language" ng-model="model.value.provider.language" class="umb-editor" ng-change="bag.provider.languageChange(bag.provider)">
-            <option value="">[Use Umbraco]</option>
-            <option value="ab">Abkhazian</option>
-            <option value="aa">Afar</option>
-            <option value="af">Afrikaans</option>
-            <option value="sq">Albanian</option>
-            <option value="am">Amharic</option>
-            <option value="ar">Arabic</option>
-            <option value="an">Aragonese</option>
-            <option value="hy">Armenian</option>
-            <option value="as">Assamese</option>
-            <option value="ay">Aymara</option>
-            <option value="az">Azerbaijani</option>
-            <option value="ba">Bashkir</option>
-            <option value="eu">Basque</option>
-            <option value="bn">Bengali (Bangla)</option>
-            <option value="dz">Bhutani</option>
-            <option value="bh">Bihari</option>
-            <option value="bi">Bislama</option>
-            <option value="br">Breton</option>
-            <option value="bg">Bulgarian</option>
-            <option value="my">Burmese</option>
-            <option value="be">Byelorussian (Belarusian)</option>
-            <option value="km">Cambodian</option>
-            <option value="ca">Catalan</option>
-            <option value="zh">Chinese</option>
-            <option value="zh-Hans">Chinese (Simplified)</option>
-            <option value="zh-Hant">Chinese (Traditional)</option>
-            <option value="co">Corsican</option>
-            <option value="hr">Croatian</option>
-            <option value="cs">Czech</option>
-            <option value="da">Danish</option>
-            <option value="nl">Dutch</option>
-            <option value="en">English</option>
-            <option value="eo">Esperanto</option>
-            <option value="et">Estonian</option>
-            <option value="fo">Faeroese</option>
-            <option value="fa">Farsi</option>
-            <option value="fj">Fiji</option>
-            <option value="fi">Finnish</option>
-            <option value="fr">French</option>
-            <option value="fy">Frisian</option>
-            <option value="gl">Galician</option>
-            <option value="gd">Gaelic (Scottish)</option>
-            <option value="gv">Gaelic (Manx)</option>
-            <option value="ka">Georgian</option>
-            <option value="de">German</option>
-            <option value="el">Greek</option>
-            <option value="kl">Greenlandic</option>
-            <option value="gn">Guarani</option>
-            <option value="gu">Gujarati</option>
-            <option value="ht">Haitian Creole</option>
-            <option value="ha">Hausa</option>
-            <option value="he">Hebrew</option>
-            <option value="hi">Hindi</option>
-            <option value="hu">Hungarian</option>
-            <option value="is">Icelandic</option>
-            <option value="io">Ido</option>
-            <option value="id">Indonesian</option>
-            <option value="ia">Interlingua</option>
-            <option value="ie">Interlingue</option>
-            <option value="iu">Inuktitut</option>
-            <option value="ik">Inupiak</option>
-            <option value="ga">Irish</option>
-            <option value="it">Italian</option>
-            <option value="ja">Japanese</option>
-            <option value="jv">Javanese</option>
-            <option value="kn">Kannada</option>
-            <option value="ks">Kashmiri</option>
-            <option value="kk">Kazakh</option>
-            <option value="rw">Kinyarwanda (Ruanda)</option>
-            <option value="ky">Kirghiz</option>
-            <option value="rn">Kirundi (Rundi)</option>
-            <option value="ko">Korean</option>
-            <option value="ku">Kurdish</option>
-            <option value="lo">Laothian</option>
-            <option value="la">Latin</option>
-            <option value="lv">Latvian (Lettish)</option>
-            <option value="li">Limburgish (Limburger)</option>
-            <option value="ln">Lingala</option>
-            <option value="lt">Lithuanian</option>
-            <option value="mk">Macedonian</option>
-            <option value="mg">Malagasy</option>
-            <option value="ms">Malay</option>
-            <option value="ml">Malayalam</option>
-            <option value="mt">Maltese</option>
-            <option value="mi">Maori</option>
-            <option value="mr">Marathi</option>
-            <option value="mo">Moldavian</option>
-            <option value="mn">Mongolian</option>
-            <option value="na">Nauru</option>
-            <option value="ne">Nepali</option>
-            <option value="no">Norwegian</option>
-            <option value="oc">Occitan</option>
-            <option value="or">Oriya</option>
-            <option value="om">Oromo (Afaan Oromo)</option>
-            <option value="ps">Pashto (Pushto)</option>
-            <option value="pl">Polish</option>
-            <option value="pt">Portuguese</option>
-            <option value="pa">Punjabi</option>
-            <option value="qu">Quechua</option>
-            <option value="rm">Rhaeto-Romance</option>
-            <option value="ro">Romanian</option>
-            <option value="ru">Russian</option>
-            <option value="sm">Samoan</option>
-            <option value="sg">Sangro</option>
-            <option value="sa">Sanskrit</option>
-            <option value="sr">Serbian</option>
-            <option value="sh">Serbo-Croatian</option>
-            <option value="st">Sesotho</option>
-            <option value="tn">Setswana</option>
-            <option value="sn">Shona</option>
-            <option value="ii">Sichuan Yi</option>
-            <option value="sd">Sindhi</option>
-            <option value="si">Sinhalese</option>
-            <option value="ss">Siswati</option>
-            <option value="sk">Slovak</option>
-            <option value="sl">Slovenian</option>
-            <option value="so">Somali</option>
-            <option value="es">Spanish</option>
-            <option value="su">Sundanese</option>
-            <option value="sw">Swahili (Kiswahili)</option>
-            <option value="sv">Swedish</option>
-            <option value="tl">Tagalog</option>
-            <option value="tg">Tajik</option>
-            <option value="ta">Tamil</option>
-            <option value="tt">Tatar</option>
-            <option value="te">Telugu</option>
-            <option value="th">Thai</option>
-            <option value="bo">Tibetan</option>
-            <option value="ti">Tigrinya</option>
-            <option value="to">Tonga</option>
-            <option value="ts">Tsonga</option>
-            <option value="tr">Turkish</option>
-            <option value="tk">Turkmen</option>
-            <option value="tw">Twi</option>
-            <option value="ug">Uighur</option>
-            <option value="uk">Ukrainian</option>
-            <option value="ur">Urdu</option>
-            <option value="uz">Uzbek</option>
-            <option value="vi">Vietnamese</option>
-            <option value="vo">Volapük</option>
-            <option value="wa">Wallon</option>
-            <option value="cy">Welsh</option>
-            <option value="wo">Wolof</option>
-            <option value="xh">Xhosa</option>
-            <option value="yi">Yiddish</option>
-            <option value="yo">Yoruba</option>
-            <option value="zu">Zulu</option>
-        </select>
+    <div class="umb-el-wrap control-group">
+        <label for="terratype_{{identifier}}_googlemapv3_language" class="control-label">
+            Language:
+            <small>
+                Primary language used to display places
+            </small>
+        </label>
+        <div class="controls">
+            <select id="terratype_{{identifier}}_googlemapv3_language" ng-model="model.value.provider.language" class="umb-editor" ng-change="bag.provider.languageChange(bag.provider)">
+                <option value="">[Use Umbraco]</option>
+                <option value="ab">Abkhazian</option>
+                <option value="aa">Afar</option>
+                <option value="af">Afrikaans</option>
+                <option value="sq">Albanian</option>
+                <option value="am">Amharic</option>
+                <option value="ar">Arabic</option>
+                <option value="an">Aragonese</option>
+                <option value="hy">Armenian</option>
+                <option value="as">Assamese</option>
+                <option value="ay">Aymara</option>
+                <option value="az">Azerbaijani</option>
+                <option value="ba">Bashkir</option>
+                <option value="eu">Basque</option>
+                <option value="bn">Bengali (Bangla)</option>
+                <option value="dz">Bhutani</option>
+                <option value="bh">Bihari</option>
+                <option value="bi">Bislama</option>
+                <option value="br">Breton</option>
+                <option value="bg">Bulgarian</option>
+                <option value="my">Burmese</option>
+                <option value="be">Byelorussian (Belarusian)</option>
+                <option value="km">Cambodian</option>
+                <option value="ca">Catalan</option>
+                <option value="zh">Chinese</option>
+                <option value="zh-Hans">Chinese (Simplified)</option>
+                <option value="zh-Hant">Chinese (Traditional)</option>
+                <option value="co">Corsican</option>
+                <option value="hr">Croatian</option>
+                <option value="cs">Czech</option>
+                <option value="da">Danish</option>
+                <option value="nl">Dutch</option>
+                <option value="en">English</option>
+                <option value="eo">Esperanto</option>
+                <option value="et">Estonian</option>
+                <option value="fo">Faeroese</option>
+                <option value="fa">Farsi</option>
+                <option value="fj">Fiji</option>
+                <option value="fi">Finnish</option>
+                <option value="fr">French</option>
+                <option value="fy">Frisian</option>
+                <option value="gl">Galician</option>
+                <option value="gd">Gaelic (Scottish)</option>
+                <option value="gv">Gaelic (Manx)</option>
+                <option value="ka">Georgian</option>
+                <option value="de">German</option>
+                <option value="el">Greek</option>
+                <option value="kl">Greenlandic</option>
+                <option value="gn">Guarani</option>
+                <option value="gu">Gujarati</option>
+                <option value="ht">Haitian Creole</option>
+                <option value="ha">Hausa</option>
+                <option value="he">Hebrew</option>
+                <option value="hi">Hindi</option>
+                <option value="hu">Hungarian</option>
+                <option value="is">Icelandic</option>
+                <option value="io">Ido</option>
+                <option value="id">Indonesian</option>
+                <option value="ia">Interlingua</option>
+                <option value="ie">Interlingue</option>
+                <option value="iu">Inuktitut</option>
+                <option value="ik">Inupiak</option>
+                <option value="ga">Irish</option>
+                <option value="it">Italian</option>
+                <option value="ja">Japanese</option>
+                <option value="jv">Javanese</option>
+                <option value="kn">Kannada</option>
+                <option value="ks">Kashmiri</option>
+                <option value="kk">Kazakh</option>
+                <option value="rw">Kinyarwanda (Ruanda)</option>
+                <option value="ky">Kirghiz</option>
+                <option value="rn">Kirundi (Rundi)</option>
+                <option value="ko">Korean</option>
+                <option value="ku">Kurdish</option>
+                <option value="lo">Laothian</option>
+                <option value="la">Latin</option>
+                <option value="lv">Latvian (Lettish)</option>
+                <option value="li">Limburgish (Limburger)</option>
+                <option value="ln">Lingala</option>
+                <option value="lt">Lithuanian</option>
+                <option value="mk">Macedonian</option>
+                <option value="mg">Malagasy</option>
+                <option value="ms">Malay</option>
+                <option value="ml">Malayalam</option>
+                <option value="mt">Maltese</option>
+                <option value="mi">Maori</option>
+                <option value="mr">Marathi</option>
+                <option value="mo">Moldavian</option>
+                <option value="mn">Mongolian</option>
+                <option value="na">Nauru</option>
+                <option value="ne">Nepali</option>
+                <option value="no">Norwegian</option>
+                <option value="oc">Occitan</option>
+                <option value="or">Oriya</option>
+                <option value="om">Oromo (Afaan Oromo)</option>
+                <option value="ps">Pashto (Pushto)</option>
+                <option value="pl">Polish</option>
+                <option value="pt">Portuguese</option>
+                <option value="pa">Punjabi</option>
+                <option value="qu">Quechua</option>
+                <option value="rm">Rhaeto-Romance</option>
+                <option value="ro">Romanian</option>
+                <option value="ru">Russian</option>
+                <option value="sm">Samoan</option>
+                <option value="sg">Sangro</option>
+                <option value="sa">Sanskrit</option>
+                <option value="sr">Serbian</option>
+                <option value="sh">Serbo-Croatian</option>
+                <option value="st">Sesotho</option>
+                <option value="tn">Setswana</option>
+                <option value="sn">Shona</option>
+                <option value="ii">Sichuan Yi</option>
+                <option value="sd">Sindhi</option>
+                <option value="si">Sinhalese</option>
+                <option value="ss">Siswati</option>
+                <option value="sk">Slovak</option>
+                <option value="sl">Slovenian</option>
+                <option value="so">Somali</option>
+                <option value="es">Spanish</option>
+                <option value="su">Sundanese</option>
+                <option value="sw">Swahili (Kiswahili)</option>
+                <option value="sv">Swedish</option>
+                <option value="tl">Tagalog</option>
+                <option value="tg">Tajik</option>
+                <option value="ta">Tamil</option>
+                <option value="tt">Tatar</option>
+                <option value="te">Telugu</option>
+                <option value="th">Thai</option>
+                <option value="bo">Tibetan</option>
+                <option value="ti">Tigrinya</option>
+                <option value="to">Tonga</option>
+                <option value="ts">Tsonga</option>
+                <option value="tr">Turkish</option>
+                <option value="tk">Turkmen</option>
+                <option value="tw">Twi</option>
+                <option value="ug">Uighur</option>
+                <option value="uk">Ukrainian</option>
+                <option value="ur">Urdu</option>
+                <option value="uz">Uzbek</option>
+                <option value="vi">Vietnamese</option>
+                <option value="vo">Volapük</option>
+                <option value="wa">Wallon</option>
+                <option value="cy">Welsh</option>
+                <option value="wo">Wolof</option>
+                <option value="xh">Xhosa</option>
+                <option value="yi">Yiddish</option>
+                <option value="yo">Yoruba</option>
+                <option value="zu">Zulu</option>
+            </select>
+        </div>
     </div>
 </div>

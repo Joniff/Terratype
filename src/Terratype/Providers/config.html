@@ -98,6 +98,11 @@
                 </label>
                 <div class="controls">
                     <input type="text" id="terratype_{{identifier}}_icon_url" ng-model="model.value.icon.url" class="umb-editor umb-textstring textstring" ng-change="iconImageChange(model.value.icon.url)" placeholder="Url" spellcheck=false />
+                    <div ng-show="bag.icon.urlFailed && bag.icon.urlFailed != ''">
+                        <small style="color:red;">
+                            Error: {{bag.icon.urlFailed}}
+                        </small>
+                    </div>
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
@@ -174,9 +179,9 @@
                 </div>
             </div>
 
-            <div class="umb-el-wrap control-group" style="height:50px;" ng-show="model.value.icon.url">
+            <div class="umb-el-wrap control-group" ng-show="model.value.icon.url && urlRoot && model.value.icon.size.width && model.value.icon.size.height">
                 <div style="background-image:url({{urlRoot}}images/map-example.png);padding-top: 10px 0 10px 25px;">
-                    <div style="padding:25px;">
+                    <div style="padding:35px;">
                         <img ng-src="{{absoluteUrl(model.value.icon.url)}}" style="width:{{model.value.icon.size.width}}px;height:{{model.value.icon.size.height}}px;" />
                     </div>
                 </div>
