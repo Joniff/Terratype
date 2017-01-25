@@ -20,13 +20,8 @@ namespace Terratype
 		{
             _defaultPreVals = new Dictionary<string, object>
             {
-    //            { "definition", "{\"apiKey\":\"\", \"coordinateSystem\":\"WGS-84\", \"search\":{\"status\":\"hide\",\"limit\":{\"country\":\"\"}}}" },
-    //            { "defaultLocation", "55.4063207,10.3870147,17" },
-    //            { "height", 400 },
-				//{ "coordinatesBehavour", (int) CoordinatesBehavour.Edit },
-				//{ "icon", "{\"image\":\"https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png\"}" },
-    //            { "format", (int) Models.Format.Csv },
-    //            { "reduceWatches", false }
+                { "height", "400" },
+                {  "icon", "{\"id\":\"redmarker\"}" }
             };
 		}
 

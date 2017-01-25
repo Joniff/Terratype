@@ -33,7 +33,7 @@
 </div>
 <div ng-show="(model.value.provider.variety.basic + model.value.provider.variety.satellite + model.value.provider.variety.terrain) > 1">
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_googlemapv3_variety_selector_type" class="control-label">
+        <label for="terratype_{{identifier}}_googlemapv3_variety_satellite" class="control-label">
             Map Selector Type:
             <small>
                 How do you want the user to select between viewing a basic, terrain and satellite map
@@ -202,10 +202,10 @@
     </div>
 </div>
 <div class="umb-el-wrap control-group" ng-show="model.value.provider.zoomControl.enable == true">
-    <label for="terratype_{{identifier}}_googlemapv3_streetview_position" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" class="control-label">
         Zoom Position:
         <small>
-            Where do you want the czoom control buttons to be positioned on the map
+            Where do you want the zoom control buttons to be positioned on the map
         </small>
     </label>
     <div class="controls">
@@ -287,7 +287,7 @@
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_showlandmarks" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_showlabels" class="control-label">
         Show Labels:
         <small>
             Do you want labels (names of countries, regions, areas, etc) to appear on the map
@@ -323,7 +323,7 @@
 
         <div ng-show="bag.provider.statusSuccess" class="umb-editor">
             <div ng-show="model.value.searchstatus != 0" style="margin-bottom:5px;">
-                <input id="terratype_{{identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup">
+                <input id="terratype_{{identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="model.value.lookup" spellcheck=false>
             </div>
             <div style="overflow:hidden;">
                 <div id="terratype_{{identifier}}_googlemapv3_map" style="height:400px" ng-show="bag.provider.showMap">

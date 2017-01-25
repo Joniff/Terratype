@@ -735,7 +735,7 @@
                     pr2.destroy.call(pr2);
                 }
             });
-            this.$scope.$on('setCoordinateSystems', function (s, pr2) {
+            this.$scope.$on('setCoordinateSystem', function (s, pr2) {
                 if (gm.coordinateSystem && pr2.$scope.bag.position.id != gm.coordinateSystem) {
                     pr2.reloadMap.call(pr2);
                 }
@@ -1237,8 +1237,7 @@
                     }
                 });
             }
-
-        }
+        },
     };
 
     root.terratypeProvider['GoogleMapsV3'] = pr;

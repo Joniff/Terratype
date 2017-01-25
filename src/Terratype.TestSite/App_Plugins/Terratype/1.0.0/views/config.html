@@ -72,6 +72,116 @@
             <ng-include src="bag.provider.views.apperance">
             </ng-include>
         </section>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+                Icon
+            </h4>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_id" class="control-label">
+                    Predefine:
+                    <small>
+                        Select the Map marker image to display the selected location on the map, you can choose from a predefine list or your own custom attributes
+                    </small>
+                </label>
+                <div class="controls">
+                    <select id="terratype_{{identifier}}_icon_predefine" ng-model="model.value.icon.id" class="umb-editor" ng-change="iconPredefineChange(model.value.icon.id)" ng-options="p.id as p.name for p in bag.icon.predefine">
+                    </select>
+                </div>
+            </div>
+
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_url" class="control-label">
+                    Image url:
+                    <small>
+                        Image location. If you include a protocol (http:// or https://), make sure it matches your website
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="text" id="terratype_{{identifier}}_icon_url" ng-model="model.value.icon.url" class="umb-editor umb-textstring textstring" ng-change="iconImageChange(model.value.icon.url)" placeholder="Url" spellcheck=false />
+                </div>
+            </div>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_width" class="control-label">
+                    Width:
+                    <small>
+                        Width of the image in pixels
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="number" id="terratype_{{identifier}}_icon_width" ng-model="model.value.icon.size.width" class="umb-editor" ng-change="iconCustom()" placeholder="Numeric value" />
+                </div>
+            </div>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_height" class="control-label">
+                    Height:
+                    <small>
+                        Height of the image in pixels
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="number" id="terratype_{{identifier}}_icon_height" ng-model="model.value.icon.size.height" class="umb-editor" ng-change="iconCustom()" placeholder="Numeric value" />
+                </div>
+            </div>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_anchor_horizontal" class="control-label">
+                    Horizontal Anchor:
+                    <small>
+                        Focal point of the icon. Ether enter a custom value in pixels from the top edge or choose from a predefine list
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual" />
+                    <input type="number" ng-model="bag.icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual" />
+                </div>
+                <div class="controls" style="margin-top:3px;">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic" />
+                    <select ng-model="bag.icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == true" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic">
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+                <div ng-show="bag.icon.anchor.horizontal.isManual && bag.icon.anchor.horizontal.manual >= model.value.icon.size.width">
+                    <small style="color:red;">
+                        Your focal point is now located outside the boundary of the image
+                    </small>
+                </div>
+            </div>
+
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_icon_anchor_vertical" class="control-label">
+                    Vertical Anchor:
+                    <small>
+                        Focal point of the icon. Ether enter a custom value in pixels from the left hand edge or choose from a predefine list
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="bag.icon.anchor.vertical.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.manual" />
+                    <input type="number" ng-model="bag.icon.anchor.vertical.manual" class="umb-editor" ng-disabled="bag.icon.anchor.vertical.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.manual" />
+                </div>
+                <div class="controls" style="margin-top:3px;">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="bag.icon.anchor.vertical.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.vertical = 'center'" />
+                    <select ng-model="bag.icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.vertical.isManual == true" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.automatic">
+                        <option value="top">Top</option>
+                        <option value="center">Center</option>
+                        <option value="bottom">Bottom</option>
+                    </select>
+                </div>
+                <div ng-show="bag.icon.anchor.vertical.isManual && bag.icon.anchor.vertical.manual >= model.value.icon.size.height">
+                    <small style="color:red;">
+                        Your focal point is now located outside the boundary of the image
+                    </small>
+                </div>
+            </div>
+
+            <div class="umb-el-wrap control-group" style="height:50px;" ng-show="model.value.icon.url">
+                <div style="background-image:url({{urlRoot}}images/map-example.png);padding-top: 10px 0 10px 25px;">
+                    <div style="padding:25px;">
+                        <img ng-src="{{absoluteUrl(model.value.icon.url)}}" style="width:{{model.value.icon.size.width}}px;height:{{model.value.icon.size.height}}px;" />
+                    </div>
+                </div>
+            </div>
+        </section>
     </fieldset>
 
     <div ng-show="error != null" style="color:red;">
