@@ -1,4 +1,4 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-show="!loading">
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()">
     <div class="umb-el-wrap control-group">
         <label for="terratype_{{identifier}}_provider" class="control-label">
             Map Provider:
@@ -12,9 +12,9 @@
         </div>
     </div>
     <br />
-    <fieldset ng-show="bag.provider.id != null" style="padding-left:15px;">
+    <fieldset ng-show="bag.provider.id && bag.provider.loaded" style="padding-left:15px;">
         <a href="{{bag.provider.referenceUrl}}" target="_blank">
-            <legend style="padding-left:36px;background-image:url({{bag.provider.logo}});background-size:auto 32px;background-repeat: no-repeat;">
+            <legend ng-style="{'padding-left':'36px', 'background-image':'url(' + bag.provider.logo + ')', 'background-size': 'auto 32px', 'background-repeat': 'no-repeat'}">
                 {{bag.provider.name}}
             </legend>
         </a>
@@ -44,14 +44,14 @@
                 </div>
             </div>
             <br />
-            <ng-include src="bag.provider.views.definition">
+            <ng-include src="bag.provider.views.config.definition">
             </ng-include>
         </section>
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 Search
             </h4>
-            <ng-include src="bag.provider.views.search">
+            <ng-include src="bag.provider.views.config.search">
             </ng-include>
         </section>
         <section>
@@ -69,7 +69,7 @@
                     <input type="number" id="terratype_{{identifier}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
                 </div>
             </div>
-            <ng-include src="bag.provider.views.apperance">
+            <ng-include src="bag.provider.views.config.apperance">
             </ng-include>
         </section>
         <section>
@@ -135,12 +135,12 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual" />
-                    <input type="number" ng-model="bag.icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual" />
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual; iconCustom()" />
+                    <input type="number" ng-model="bag.icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual; iconCustom()" />
                 </div>
                 <div class="controls" style="margin-top:3px;">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic" />
-                    <select ng-model="bag.icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == true" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic; iconCustom()" />
+                    <select ng-model="bag.icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == true" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic; iconCustom()">
                         <option value="left">Left</option>
                         <option value="center">Center</option>
                         <option value="right">Right</option>
@@ -180,9 +180,9 @@
             </div>
 
             <div class="umb-el-wrap control-group" ng-show="model.value.icon.url && urlRoot && model.value.icon.size.width && model.value.icon.size.height">
-                <div style="background-image:url({{bag.provider.mapExample}});padding-top: 10px 0 10px 25px;">
+                <div ng-style="{'background-image':'url(' + bag.provider.mapExample + ')', 'padding-top':'10px 0 10px 25px;'}">
                     <div style="padding:35px;">
-                        <img ng-src="{{absoluteUrl(model.value.icon.url)}}" style="width:{{model.value.icon.size.width}}px;height:{{model.value.icon.size.height}}px;" />
+                        <img ng-src="{{absoluteUrl(model.value.icon.url)}}" ng-style="{'width': model.value.icon.size.width + 'px', 'height': model.value.icon.size.height + 'px'}" />
                     </div>
                 </div>
             </div>

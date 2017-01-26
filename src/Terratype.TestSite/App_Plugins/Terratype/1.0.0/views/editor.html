@@ -1,6 +1,6 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initEditor()" ng-show="!loading">
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initEditor()">
     <div ng-show="bag.isPreview">
-        <div style="background-image:url({{bag.provider.mapExample}});padding-top: 10px 0 10px 25px;margin:-40px 0 0 -10px;height:100px;">
+        <div ng-style="{'background-image':'url(' + bag.provider.mapExample + ')','padding-top': '10px 0 10px 25px', 'margin':'-40px 0 0 -10px', 'height':'100px'}">
             <div style="text-align:center">
                 <div ng-show="model.value.debug != 1">
                     <img ng-src="{{absoluteUrl(model.value.icon.url)}}" style="width:{{model.value.icon.size.width}}px;height:{{model.value.icon.size.height}}px;margin-top:25px;" />
@@ -15,10 +15,13 @@
     </div>
     <div ng-show="!bag.isPreview">
         <div ng-show="model.value.debug != 1">
-            <ng-include src="bag.provider.views.editor">
+            <ng-include src="bag.provider.views.editor.apperance">
             </ng-include>
         </div>
         <div ng-show="model.value.debug != 0">
+            <div ng-show="error" style="color:red;">
+                Error loading Terratype control, the json below is corrupt
+            </div>
             <textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" json-text></textarea>
         </div>
     </div>

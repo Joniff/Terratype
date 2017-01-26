@@ -711,6 +711,7 @@
     }
 
     var pr = {
+        loaded: false,
         $scope: 'If you are talking to this you have the wrong instance',
         $timeout: null,
         div: null,
@@ -950,16 +951,22 @@
         },
         mapTypeIds: function (pr2) {
             var mapTypeIds = [];
+            //  The order they are pushed sets the order of the buttons
 
+            if (pr2.$scope.model.value.provider.variety.basic) {
+                mapTypeIds.push('roadmap');
+            }
             if (pr2.$scope.model.value.provider.variety.satellite) {
                 mapTypeIds.push('satellite');
             }
             if (pr2.$scope.model.value.provider.variety.terrain) {
                 mapTypeIds.push('terrain');
             }
-            if (pr2.$scope.model.value.provider.variety.basic || mapTypeIds.length == 0) {
+
+            if (mapTypeIds.length == 0) {
                 mapTypeIds.push('roadmap');
             }
+
             return mapTypeIds;
         },
         loadMapWait: null,
@@ -1045,6 +1052,7 @@
                                 fullscreenControlOptions: pr2.$scope.model.value.provider.fullscreen.position,
                                 styles: gm.style.call(gm, pr2.$scope.model.value.provider.predefineStyling, pr2.$scope.model.value.provider.showRoads,
                                     pr2.$scope.model.value.provider.showLandmarks, pr2.$scope.model.value.provider.showLabels),
+                                mapTypeId: mapTypeIds[0],
                                 mapTypeControl: (mapTypeIds.length > 1),
                                 mapTypeControlOptions: {
                                     style: pr2.$scope. model.value.provider.variety.selector.type,
@@ -1236,6 +1244,7 @@
             if (pr2.$scope.bag.provider.gmap) {
                 var mapTypeIds = pr2.mapTypeIds.call(pr2, pr2);
                 pr2.$scope.bag.provider.gmap.setOptions({
+                    mapTypeId: mapTypeIds[0],
                     mapTypeControl: (mapTypeIds.length > 1),
                     mapTypeControlOptions: {
                         style: pr2.$scope.model.value.provider.variety.selector.type,
@@ -1257,6 +1266,9 @@
                         position: pr2.$scope.model.value.provider.zoomControl.position
                     }
                 });
+                //pr2.$timeout(function () {
+                //    pr2.$scope.bag.provider.gmap.setMapTypeId(mapTypeIds[0]);
+                //})
             }
         },
         searchListerners: [],
@@ -1282,13 +1294,15 @@
 
             if (!pr2.haveCheckedSearchFunctionalityExists) {
                 //  Check to see if places service is enabled
-                if (typeof (google.maps.places) === 'undefined') {
-                    pr2.$scope.bag.provider.statusSearchFailed = true;
-                } else {
+                if (google.maps.places) {
                     var service = new google.maps.places.PlacesService(pr2.$scope.bag.provider.gmap);
                     service.textSearch({ query: 'paris, france' }, function (results, status) {
-                        pr2.$scope.bag.provider.statusSearchFailed = (status != google.maps.places.PlacesServiceStatus.OK);
+                        if (google) {
+                            pr2.$scope.bag.provider.statusSearchFailed = (status != 'OK');
+                        }
                     });
+                } else {
+                    pr2.$scope.bag.provider.statusSearchFailed = true;
                 }
                 pr2.haveCheckedSearchFunctionalityExists = true;
             }
@@ -1303,5 +1317,5 @@
         },
     };
 
-    root.terratypeProvider['GoogleMapsV3'] = pr;
+    root.terratype.providers['GoogleMapsV3'] = pr;
 }(window));
