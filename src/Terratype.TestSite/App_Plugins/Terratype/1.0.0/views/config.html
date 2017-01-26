@@ -187,10 +187,35 @@
                 </div>
             </div>
         </section>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+                Debugger
+            </h4>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{identifier}}_debug" class="control-label">
+                    Show Json:
+                    <small>
+                        Do you want to show the map or a json editor. This is for developer debugging purposes only.
+                    </small>
+                </label>
+                <div class="controls">
+                    <select id="terratype_{{identifier}}_debug" ng-model="model.value.debug" class="umb-editor">
+                        <option value="0">Always show map</option>
+                        <option value="1">Always show json</option>
+                        <option value="2">Allow json to be viewable</option>
+                    </select>
+                </div>
+            </div>
+        </section>
     </fieldset>
 
     <div ng-show="error != null" style="color:red;">
         <p ng-bind-html="error">
         </p>
     </div>
+
+    <div ng-show="model.value.debug != 0">
+        <textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" json-text></textarea>
+    </div>
+
 </div>

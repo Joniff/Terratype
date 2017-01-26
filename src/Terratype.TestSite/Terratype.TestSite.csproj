@@ -6146,11 +6146,10 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\css\*.css" "$(ProjectDir)App_Plugins\Terratype\1.0.0\css\" /Y
-xcopy "$(solutiondir)src\Terratype\Providers\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
+    <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\Providers\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
 xcopy "$(solutiondir)src\Terratype\Providers\*.js" "$(ProjectDir)App_Plugins\Terratype\1.0.0\scripts\" /Y /e
 xcopy "$(solutiondir)src\Terratype\Providers\*.png" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y /e
-xcopy "$(solutiondir)src\Terratype\images\*.*" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y
+
 </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
