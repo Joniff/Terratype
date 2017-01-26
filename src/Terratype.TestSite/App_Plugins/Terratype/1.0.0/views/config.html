@@ -1,4 +1,4 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-disabled="!loading">
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()" ng-show="!loading">
     <div class="umb-el-wrap control-group">
         <label for="terratype_{{identifier}}_provider" class="control-label">
             Map Provider:
@@ -14,7 +14,7 @@
     <br />
     <fieldset ng-show="bag.provider.id != null" style="padding-left:15px;">
         <a href="{{bag.provider.referenceUrl}}" target="_blank">
-            <legend style="padding-left:36px;background-image:url({{bag.provider.image}});background-size:auto 32px;background-repeat: no-repeat;">
+            <legend style="padding-left:36px;background-image:url({{bag.provider.logo}});background-size:auto 32px;background-repeat: no-repeat;">
                 {{bag.provider.name}}
             </legend>
         </a>
@@ -180,7 +180,7 @@
             </div>
 
             <div class="umb-el-wrap control-group" ng-show="model.value.icon.url && urlRoot && model.value.icon.size.width && model.value.icon.size.height">
-                <div style="background-image:url({{urlRoot}}images/map-example.png);padding-top: 10px 0 10px 25px;">
+                <div style="background-image:url({{bag.provider.mapExample}});padding-top: 10px 0 10px 25px;">
                     <div style="padding:35px;">
                         <img ng-src="{{absoluteUrl(model.value.icon.url)}}" style="width:{{model.value.icon.size.width}}px;height:{{model.value.icon.size.height}}px;" />
                     </div>
@@ -193,7 +193,4 @@
         <p ng-bind-html="error">
         </p>
     </div>
-    <textarea style="height:300px;width:100%;display:none;">
-        {{model.value}}
-    </textarea>
 </div>

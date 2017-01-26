@@ -1,14 +1,12 @@
 ﻿using ClientDependency.Core;
-using System;
 using System.Collections.Generic;
 using Umbraco.Core.PropertyEditors;
 using Umbraco.Web.PropertyEditors;
 
 namespace Terratype
 {
-	[PropertyEditor("Terratype", "Terratype", "/App_Plugins/Terratype/1.0.0/views/content.html", ValueType = "TEXT")]
+    [PropertyEditor("Terratype", "Terratype", "/App_Plugins/Terratype/1.0.0/views/editor.html", ValueType = "TEXT")]
 	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype/1.0.0/scripts/terratype.js")]
-	[PropertyEditorAsset(ClientDependencyType.Css, "/App_Plugins/Terratype/1.0.0/css/content.css")]
 	public class TerratypePropertyEditor : PropertyEditor
 	{
 		protected override PreValueEditor CreatePreValueEditor()
@@ -20,8 +18,7 @@ namespace Terratype
 		{
             _defaultPreVals = new Dictionary<string, object>
             {
-                { "height", "400" },
-                {  "icon", "{\"id\":\"redmarker\"}" }
+                { "definition", "{\"height\": 400, \"icon\": {\"id\":\"redmarker\"}" }
             };
 		}
 

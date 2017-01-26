@@ -57,17 +57,18 @@
     <Compile Include="TerratypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="images\map-example.png" />
+    <Content Include="Providers\GoogleMapsV3\editor.apperance.html" />
+    <Content Include="Providers\GoogleMapsV3\GoogleMapsV3-Example.png" />
     <Content Include="Providers\BingMapsV8\BingMapsV8.png" />
+    <Content Include="Providers\editor.html" />
     <Content Include="Providers\config.html" />
     <Content Include="Providers\GoogleMapsV3\config.apperance.html" />
-    <Content Include="Providers\GoogleMapsV3\GoogleMapsV3.png" />
+    <Content Include="Providers\GoogleMapsV3\GoogleMapsV3-Logo.png" />
     <Content Include="Providers\GoogleMapsV3\config.definition.html" />
     <Content Include="Providers\GoogleMapsV3\GoogleMapsV3.js" />
-    <Content Include="Providers\GoogleMapsV3\display.html" />
     <Content Include="Providers\LeafletV1\config.setup.html" />
     <Content Include="Providers\LeafletV1\LeafletV1.png" />
-    <Content Include="Providers\OSOpenSpaceV4\OSOpenSpaceV4.png" />
+    <Content Include="Providers\OSOpenSpaceV4\OSOpenSpaceV4-Logo.png" />
     <Content Include="Providers\terratype.js" />
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -296,7 +297,9 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="images\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

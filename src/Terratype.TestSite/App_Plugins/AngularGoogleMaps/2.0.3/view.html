@@ -1,0 +1,28 @@
+﻿<div id="AGM_{{model.alias}}" class="ng-cloak" ng-controller="agmView" ng-init="init()">
+    <div ng-show="preview" class="angulargoolemapsPreview">
+        <div class="img-wrapper">
+            <img ng-src="{{previewIconUrl}}" />
+        </div>
+    </div>
+    <div ng-hide="preview">
+        <div ng-show="main.showLoading">
+            <img src="/umbraco/assets/img/loader.gif" />
+        </div>
+        <div ng-show="main.showFailed">
+            <img src="/umbraco/images/false.png" />
+            <span style="color:red;padding-right:10px;">Invalid Google Map API Key</span>
+        </div>
+        <div ng-show="!main.showLoading">
+            <div class="AGM-Search" id="AGM_{{model.alias}}_search" ng-show="searchbox.show">
+                <input id="AGM_{{model.alias}}_lookup" class="umb-editor umb-textstring ng-scope ng-pristine ng-valid" type="text" placeholder="Search" ng-model="jsonModel.searchtyped">
+            </div>
+
+            <div class="AGM-Map" id="AGM_{{model.alias}}_map" ng-style="map.height" ng-if="map.show">
+            </div>
+
+            <div class="AGM-Coord" ng-show="!main.showLoading">
+                <input type="text" id="AGM_{{model.alias}}_coords" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0), zoom (1 to 20)" ng-show="main.coordinatesBehavour_show" ng-readonly="main.coordinatesBehavour_readonly" ng-model="main.displayvalue" ng-change="checkCoords()" ng-style="main.forecolor" />
+            </div>
+        </div>
+    </div>
+</div>

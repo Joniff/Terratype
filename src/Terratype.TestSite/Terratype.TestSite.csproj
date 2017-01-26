@@ -42,6 +42,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AngularGoogleMaps, Version=2.0.2.45, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AngularGoogleMaps.2.0.3\lib\net45\AngularGoogleMaps.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Archetype, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Archetype.1.9\lib\net40\Archetype.dll</HintPath>
       <Private>True</Private>
@@ -5517,6 +5521,24 @@
     <Content Include="App_Plugins\AngularGoogleMaps\1.0.7\underscore-min.js" />
     <Content Include="App_Plugins\AngularGoogleMaps\1.0.7\view.css" />
     <Content Include="App_Plugins\AngularGoogleMaps\1.0.7\view.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\agm.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\angular-google-maps.2.1.0.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\angular-google-maps.2.1.0.min.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\angular-google-maps.2.3.3.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\angular-google-maps.2.3.3.min.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\angular-simple-logger.min.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\config.coordinatesbehavour.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\config.defaultlocation.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\config.definition.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\config.format.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\config.icon.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\iconanchorpoint.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\iconsize.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\iconurl.html" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\map-example.png" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\underscore-min.js" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\view.css" />
+    <Content Include="App_Plugins\AngularGoogleMaps\2.0.3\view.html" />
     <Content Include="App_Plugins\Archetype\css\archetype.css" />
     <Content Include="App_Plugins\Archetype\js\archetype.js" />
     <Content Include="App_Plugins\Archetype\langs\da-dk.js" />

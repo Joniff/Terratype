@@ -4,17 +4,17 @@
         $scope.identifier = $scope.$id;
         $scope.urlRoot = '/App_Plugins/Terratype/1.0.0/';
         $scope.error = null;
-        $scope.loading = 0;
+        $scope.loading = true;
         $scope.initConfig = function () {
-            $scope.loading++;
-            if (typeof ($scope.model.value) == 'string') {
-                $scope.model.value = JSON.parse($scope.model.value);
+            if (typeof ($scope.model.value) === 'string') {
+                $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
             }
             $http.get('/umbraco/backoffice/terratype/provider/providers').then(function success(response) {
-                $scope.loading--;
+                $scope.loading = false;
                 $scope.bag.providers = response.data;
                 angular.forEach($scope.bag.providers, function (value, key) {
-                    value.image = $scope.urlRoot + 'images/' + value.id + '/' + value.id + '.png';
+                    value.logo = $scope.urlRoot + 'images/' + value.id + '/' + value.id + '-Logo.png';
+                    value.mapExample = $scope.urlRoot + 'images/' + value.id + '/' + value.id + '-Example.png';
                     value.views = {
                         definition: $scope.urlRoot + 'views/' + value.id + '/config.definition.html',
                         apperance: $scope.urlRoot + 'views/' + value.id + '/config.apperance.html',
@@ -23,15 +23,15 @@
                     value.script = $scope.urlRoot + 'scripts/' + value.id + '/' + value.id + '.js';
                 });
                 if ($scope.model.value) {
-                    if ($scope.model.value.provider && $scope.model.value.provider.id != null) {
-                        $scope.setProvider($scope.model.value.provider.id);
+                    if (model.provider && model.provider.id != null) {
+                        $scope.setProvider(model.provider.id);
                     }
-                    if ($scope.model.value.icon && $scope.model.value.icon.id) {
+                    if (model.icon && model.icon.id) {
                         $scope.iconPredefineChangeInternal($scope.model.value.icon.id);
                     }
                 }
             }, function error(response) {
-                $scope.loading--;
+                $scope.loading = false;
                 $scope.error = '<b>Unable to retrieve providers</b><br />' + response.data;
             });
         }
@@ -533,6 +533,28 @@
                 },
                 ]
             }
+        }
+        $scope.initEditor = function () {
+            if (typeof ($scope.model.value) === 'string') {
+                $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
+            }
+            if (!$scope.model.value) {
+                $scope.model.value = $scope.model.config.definition;
+            }
+            $scope.bag.provider.mapExample = $scope.urlRoot + 'images/' + $scope.model.value.provider.id + '/' + $scope.model.value.provider.id + '-Example.png';
+            $scope.bag.isPreview = !angular.isUndefined($scope.model.sortOrder);
+            $scope.bag.provider.views = {
+                editor: $scope.urlRoot + 'views/' + $scope.model.value.provider.id + '/editor.apperance.html'
+            }
+            if ($scope.model.value) {
+                if (!$scope.bag.isPreview && $scope.model.value.provider && $scope.model.value.provider.id != null) {
+                    $scope.setProvider($scope.model.value.provider.id);
+                }
+                if ($scope.model.value.icon && $scope.model.value.icon.id) {
+                    $scope.iconPredefineChangeInternal($scope.model.value.icon.id);
+                }
+            }
+            $scope.loading = false;
         }
     }]);
 

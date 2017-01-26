@@ -1,0 +1,14 @@
+﻿<div class="ng-cloak" ng-controller="agmConfigDefaultLocation" ng-init="init()">
+
+    <div class="AGM-Search" id="AGM_{{model.alias}}_search" ng-show="searchbox.show">
+        <input id="AGM_{{model.alias}}_lookup" class="umb-editor umb-textstring ng-scope ng-pristine ng-valid" type="text" placeholder="Search" ng-model="jsonModel.searchtyped">
+    </div>
+
+	<div class="AGM-Map" id="AGM_{{model.alias}}_map" ng-style="map.height" ng-if="map.show">
+	</div>
+
+	<div class="AGM-Coord">
+		<input type="text" id="AGM_{{model.alias}}_coords" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0), zoom (1 to 20)" ng-model="main.displayvalue" ng-change="checkCoords()" ng-style="main.forecolor" />
+	</div>
+
+</div>
