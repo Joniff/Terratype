@@ -1,5 +1,7 @@
 ﻿(function (root) {
 
+    var packagePath = '/App_Plugins/Terratype/1.0.0/';
+
     if (!root.terratype) {
         root.terratype = {
             loading: false,
@@ -7,222 +9,259 @@
         };
     }
 
-    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', function ($scope, $timeout, $http, $injector) {
-        $scope.identifier = $scope.$id;
-        $scope.urlRoot = '/App_Plugins/Terratype/1.0.0/';
-        $scope.error = null;
-        $scope.poll = 250;
-        $scope.mapId = function (array, id) {
-            for (var i = 0; i != array.length; i++) {
-                if (array[i].id == id) {
-                    return i;
-                }
-            }
-            return -1;
-        },
-        $scope.files = function (value, id) {
-            value.logo = $scope.urlRoot + 'images/' + id + '/' + id + '-Logo.png';
-            value.mapExample = $scope.urlRoot + 'images/' + id + '/' + id + '-Example.png';
-            value.views = {
-                config: {
-                    definition: $scope.urlRoot + 'views/' + id + '/config.definition.html',
-                    apperance: $scope.urlRoot + 'views/' + id + '/config.apperance.html',
-                    search: $scope.urlRoot + 'views/' + id + '/config.search.html'
-                },
-                editor: {
-                    apperance: $scope.urlRoot + 'views/' + id + '/editor.apperance.html'
-                }
-            };
-        }
-        $scope.initConfig = function () {
-            if (typeof ($scope.model.value) === 'string') {
-                $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
-            }
-            $http.get('/umbraco/backoffice/terratype/provider/providers').then(function success(response) {
-                $scope.bag.providers = response.data;
-                if ($scope.model.value) {
-                    if ($scope.model.value.provider && $scope.model.value.provider.id != null) {
-                        $scope.setProvider($scope.model.value.provider.id);
-                    }
-                }
-            }, function error(response) {
-                $scope.error = '<b>Unable to retrieve providers</b><br />' + response.data;
-            });
-        }
-        $scope.loadProvider = function (id, done) {
-            var wait = setInterval(function () {
-                if (!root.terratype.loading) {
-                    clearInterval(wait);
+    angular.module('umbraco').directive('jsonText', function () {
+        return {
+            restrict: 'A', // only activate on element attribute
+            require: 'ngModel', // get a hold of NgModelController
+            link: function (scope, element, attrs, ngModelCtrl) {
 
-                    if (!angular.isUndefined(root.terratype.providers[id])) {
-                        done(id);
-                    } else {
-                        root.terratype.loading = true;
-                        var script = $scope.urlRoot + 'scripts/' + id + '/' + id + '.js';
-                        LazyLoad.js(script, function () {
-                            $timeout(function () {
-                                if (angular.isUndefined(root.terratype.providers[id])) {
-                                    throw script + ' does not define global variable root.terratype.providers[\'' + id + '\']';
-                                }
-                                root.terratype.providers[id].script = script;
-                                $scope.files(root.terratype.providers[id], id);
-                                done(id);
-                                root.terratype.loading = false;
-                            });
-                        });
-                    }
-                }
-            }, $scope.poll);
-        }
+                var lastValid;
 
-        $scope.setProvider = function (id, done) {
-            var index = $scope.mapId($scope.bag.providers, id);
-            if (index == -1) {
-                //  Asked for a provider we don't have
-                return;
-            }
-            $scope.loadProvider(id, function () {
-                var provider = angular.copy(root.terratype.providers[id]);
-                $timeout(function () {
-                    if (!provider.init) {
-                        throw provider.script + ' does not define init()';
-                    }
-                    provider.init($scope, $timeout);
-                    angular.extend($scope.bag.providers[index], provider);
-                    $scope.bag.provider = $scope.bag.providers[index];
-                    $scope.bag.provider.loaded = true;
+                // push() if faster than unshift(), and avail. in IE8 and earlier (unshift isn't)
+                ngModelCtrl.$parsers.push(fromUser);
+                ngModelCtrl.$formatters.push(toUser);
 
-                    if ($scope.model.value.icon && $scope.model.value.icon.id) {
-                        $scope.iconPredefineChangeInternal($scope.model.value.icon.id);
-                    }
-                    $scope.iconAnchor();
-                    if ($scope.model.value.icon && !$scope.model.value.icon.id) {
-                        $scope.iconCustom();
-                    }
-
-                    $scope.bag.provider.reinit.call($scope.bag.provider);
-                    $scope.$broadcast('setProvider', $scope.bag.provider);
-                    if ($scope.model.value && $scope.model.value.position && $scope.model.value.position.id != null) {
-                        $scope.setCoordinateSystems($scope.model.value.position.id);
-                    }
+                // clear any invalid changes on blur
+                element.bind('blur', function () {
+                    element.val(toUser(scope.$eval(attrs.ngModel)));
                 });
-            });
-        }
 
-        $scope.setCoordinateSystems = function (id) {
-            var index = $scope.mapId($scope.bag.provider.coordinateSystems, id);
-            $scope.bag.position = (index != -1) ? $scope.bag.provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null };
-            $scope.$broadcast('setCoordinateSystem', $scope.bag.provider);
-        };
-        $scope.iconAnchor = function () {
-            if (isNaN($scope.model.value.icon.anchor.horizontal)) {
-                $scope.bag.icon.anchor.horizontal.isManual = false;
-                $scope.bag.icon.anchor.horizontal.automatic = $scope.model.value.icon.anchor.horizontal;
-            } else {
-                $scope.bag.icon.anchor.horizontal.isManual = true;
-                $scope.bag.icon.anchor.horizontal.manual = $scope.model.value.icon.anchor.horizontal;
-            }
-            if (isNaN($scope.model.value.icon.anchor.vertical)) {
-                $scope.bag.icon.anchor.vertical.isManual = false;
-                $scope.bag.icon.anchor.vertical.automatic = $scope.model.value.icon.anchor.vertical;
-            } else {
-                $scope.bag.icon.anchor.vertical.isManual = true;
-                $scope.bag.icon.anchor.vertical.manual = $scope.model.value.icon.anchor.vertical;
-            }
-        },
-        $scope.iconPredefineChangeInternal = function (id) {
-            var index = 0;
-            if (id) {
-                var index = $scope.mapId($scope.bag.icon.predefine, id);
-                if (id == -1) {
-                    index = 0;
-                }
-            }
-            $scope.model.value.icon.id = id;
-            $scope.model.value.icon.url = $scope.bag.icon.predefine[index].url;
-            $scope.model.value.icon.size = $scope.bag.icon.predefine[index].size;
-            $scope.model.value.icon.anchor = $scope.bag.icon.predefine[index].anchor;
-            $scope.iconAnchor();
-        };
-        $scope.iconPredefineChange = function (id) {
-            $scope.iconPredefineChangeInternal(id);
-            $scope.$broadcast('setIcon', $scope.bag.provider);
-        };
-        $scope.absoluteUrl = function (url) {
-            if (!url) {
-                return '';
-            }
-            if (url.indexOf('//') != -1) {
-                //  Is an absolute address
-                return url;
-            }
-            //  Must be a relative address
-            if (url.substring(0, 1) != '/') {
-                url = '/' + url;
-            }
+                // $watch(attrs.ngModel) wouldn't work if this directive created a new scope;
+                // see http://stackoverflow.com/questions/14693052/watch-ngmodel-from-inside-directive-using-isolate-scope how to do it then
+                scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                    lastValid = lastValid || newValue;
 
-            return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
-        };
-        $scope.iconCustom = function () {
-            $scope.model.value.icon.id = $scope.bag.icon.predefine[0].id;
-            if (!$scope.bag.icon.anchor.horizontal.isManual) {
-                switch($scope.bag.icon.anchor.horizontal.automatic) {
-                    case 'left':
-                        $scope.bag.icon.anchor.horizontal.manual = 0;
-                        break;
-                    case 'center':
-                        $scope.bag.icon.anchor.horizontal.manual = (($scope.model.value.icon.size.width - 1) / 2) | 0;
-                        break;
-                    case 'right':
-                        $scope.bag.icon.anchor.horizontal.manual = $scope.model.value.icon.size.width - 1;
-                        break;
-                }
-            }
-            if (!$scope.bag.icon.anchor.vertical.isManual) {
-                switch ($scope.bag.icon.anchor.vertical.automatic) {
-                    case 'top':
-                        $scope.bag.icon.anchor.vertical.manual = 0;
-                        break;
-                    case 'center':
-                        $scope.bag.icon.anchor.vertical.manual = (($scope.model.value.icon.size.height - 1) / 2) | 0;
-                        break;
-                    case 'bottom':
-                        $scope.bag.icon.anchor.vertical.manual = $scope.model.value.icon.size.height - 1;
-                        break;
-                }
-            }
-        }
+                    if (newValue != oldValue) {
+                        ngModelCtrl.$setViewValue(toUser(newValue));
 
-        $scope.iconImageChange = function () {
-            $scope.bag.icon.urlFailed = '';
-            $http({
-                url: '/umbraco/backoffice/terratype/provider/image',
-                method: 'GET',
-                params: {
-                    url: $scope.model.value.icon.url
+                        // TODO avoid this causing the focus of the input to be lost..
+                        ngModelCtrl.$render();
+                    }
+                }, true); // MUST use objectEquality (true) here, for some reason..
+
+                function fromUser(text) {
+                    // Beware: trim() is not available in old browsers
+                    if (!text || text.trim() === '') {
+                        return {};
+                    } else {
+                        try {
+                            lastValid = angular.fromJson(text);
+                            ngModelCtrl.$setValidity('invalidJson', true);
+                        } catch (e) {
+                            ngModelCtrl.$setValidity('invalidJson', false);
+                        }
+                        return lastValid;
+                    }
                 }
-            }).then(function success(response) {
-                if (response.data.status == 200) {
-                    $scope.model.value.icon.size = {
-                        width: response.data.width,
-                        height: response.data.height
-                    };
-                    $scope.model.value.icon.format = response.data.format;
-                } else {
-                    $scope.bag.icon.urlFailed = response.data.error;
+
+                function toUser(object) {
+                    // better than JSON.stringify(), because it formats + filters $$hashKey etc.
+                    return angular.toJson(object, true);
                 }
-            }, function fail(response) {
-                $scope.bag.icon.urlFailed = response.data;
-            });
-            $scope.iconCustom();
+            }
         };
-        $scope.bag = {
+    });
+
+    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', function ($scope, $timeout, $http, $injector) {
+        $scope.view = {
+            urlRoot: packagePath,
+            controller: function (a) {
+                return '/umbraco/backoffice/terratype/provider/' + a;
+            },
+            poll: 250,
+            identifier: $scope.$id,
+            error: null,
+            providers: [],
             provider: {
                 id: null,
                 referenceUrl: null,
                 name: null
             },
-            providers: [],
+            config: {},
+            mapId: function (array, id) {
+                for (var i = 0; i != array.length; i++) {
+                    if (array[i].id == id) {
+                        return i;
+                    }
+                }
+                return -1;
+            },
+            initConfig: function () {
+                if (typeof ($scope.model.value) === 'string') {
+                    $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
+                }
+                $scope.view.config = $scope.model.value.config;
+                $scope.view.setIcon();
+                $http.get($scope.view.controller('providers')).then(function success(response) {
+                    $scope.view.providers = response.data;
+                    if ($scope.model.value && $scope.model.value.config && $scope.model.value.config.provider && $scope.model.value.config.provider.id != null) {
+                        $scope.view.setProvider($scope.model.value.config.provider.id);
+                    }
+                }, function error(response) {
+                    $scope.view.error = '<b>Unable to retrieve providers</b><br />' + response.data;
+                });
+            },
+            loadProvider: function (id, done) {
+                var wait = setInterval(function () {
+                    if (!root.terratype.loading) {
+                        clearInterval(wait);
+
+                        if (!angular.isUndefined(root.terratype.providers[id])) {
+                            done();
+                        } else {
+                            root.terratype.loading = true;
+                            var script = $scope.view.urlRoot + 'scripts/' + id + '/' + id + '.js';
+                            LazyLoad.js(script, function () {
+                                $timeout(function () {
+                                    if (angular.isUndefined(root.terratype.providers[id])) {
+                                        throw script + ' does not define global variable root.terratype.providers[\'' + id + '\']';
+                                    }
+                                    root.terratype.providers[id].script = script;
+                                    done(id);
+                                    root.terratype.loading = false;
+                                });
+                            });
+                        }
+                    }
+                }, $scope.view.poll);
+            },
+            setIcon: function () {
+                if ($scope.view.config.icon && $scope.view.config.icon.id) {
+                    $scope.view.iconPredefineChangeInternal($scope.view.config.icon.id);
+                }
+                $scope.view.iconAnchor();
+                if ($scope.view.config.icon && !$scope.view.config.icon.id) {
+                    $scope.view.iconCustom();
+                }
+            },
+            setProvider: function (id) {
+                var index = $scope.view.mapId($scope.view.providers, id);
+                if (index == -1) {
+                    //  Asked for a provider we don't have
+                    return;
+                }
+                $scope.view.loadProvider(id, function () {
+                    if (!$scope.view.providers[index].loaded) {
+                        $scope.view.providers[index] = angular.extend($scope.view.providers[index], root.terratype.providers[id]);
+                        $scope.view.providers[index].loaded = true;
+                        $scope.view.providers[index].events = $scope.view.providers[index].init($scope.view.identifier, packagePath, $scope.model.value, $scope.view.config, $scope.view, function () {
+                            $scope.$apply();
+                        });
+                    }
+
+                    $scope.view.provider = $scope.view.providers[index];
+                    $scope.view.provider.events.setProvider();
+                    if ($scope.view.config.position && $scope.view.config.position.id != null) {
+                        $scope.view.setCoordinateSystem($scope.view.config.position.id);
+                    }
+                });
+            },
+            setCoordinateSystem: function (id) {
+                var index = $scope.view.mapId($scope.view.provider.coordinateSystems, id);
+                $scope.view.position = (index != -1) ? $scope.view.provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null };
+                $scope.view.provider.events.setCoordinateSystem();
+            },
+            iconAnchor: function () {
+                if (isNaN($scope.view.config.icon.anchor.horizontal)) {
+                    $scope.view.icon.anchor.horizontal.isManual = false;
+                    $scope.view.icon.anchor.horizontal.automatic = $scope.view.config.icon.anchor.horizontal;
+                } else {
+                    $scope.view.icon.anchor.horizontal.isManual = true;
+                    $scope.view.icon.anchor.horizontal.manual = $scope.view.config.icon.anchor.horizontal;
+                }
+                if (isNaN($scope.view.config.icon.anchor.vertical)) {
+                    $scope.view.icon.anchor.vertical.isManual = false;
+                    $scope.view.icon.anchor.vertical.automatic = $scope.view.config.icon.anchor.vertical;
+                } else {
+                    $scope.view.icon.anchor.vertical.isManual = true;
+                    $scope.view.icon.anchor.vertical.manual = $scope.view.config.icon.anchor.vertical;
+                }
+            },
+            iconPredefineChangeInternal: function (id) {
+                var index = 0;
+                if (id) {
+                    var index = $scope.view.mapId($scope.view.icon.predefine, id);
+                    if (id == -1) {
+                        index = 0;
+                    }
+                }
+                $scope.view.config.icon.id = id;
+                $scope.view.config.icon.url = $scope.view.icon.predefine[index].url;
+                $scope.view.config.icon.size = $scope.view.icon.predefine[index].size;
+                $scope.view.config.icon.anchor = $scope.view.icon.predefine[index].anchor;
+                $scope.view.iconAnchor();
+            },
+            iconPredefineChange: function (id) {
+                $scope.view.iconPredefineChangeInternal(id);
+                $scope.view.config.provider.events.setIcon();
+            },
+            absoluteUrl: function (url) {
+                if (!url) {
+                    return '';
+                }
+                if (url.indexOf('//') != -1) {
+                    //  Is an absolute address
+                    return url;
+                }
+                //  Must be a relative address
+                if (url.substring(0, 1) != '/') {
+                    url = '/' + url;
+                }
+
+                return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
+            },
+            iconCustom: function () {
+                $scope.view.config.icon.id = $scope.view.config.predefine[0].id;
+                if (!$scope.view.icon.anchor.horizontal.isManual) {
+                    switch ($scope.view.icon.anchor.horizontal.automatic) {
+                        case 'left':
+                            $scope.view.icon.anchor.horizontal.manual = 0;
+                            break;
+                        case 'center':
+                            $scope.view.icon.anchor.horizontal.manual = (($scope.view.config.icon.size.width - 1) / 2) | 0;
+                            break;
+                        case 'right':
+                            $scope.view.icon.anchor.horizontal.manual = $scope.view.config.icon.size.width - 1;
+                            break;
+                    }
+                }
+                if (!$scope.view.icon.anchor.vertical.isManual) {
+                    switch ($scope.view.icon.anchor.vertical.automatic) {
+                        case 'top':
+                            $scope.view.icon.anchor.vertical.manual = 0;
+                            break;
+                        case 'center':
+                            $scope.view.icon.anchor.vertical.manual = (($scope.view.config.icon.size.height - 1) / 2) | 0;
+                            break;
+                        case 'bottom':
+                            $scope.view.icon.anchor.vertical.manual = $scope.view.config.icon.size.height - 1;
+                            break;
+                    }
+                }
+            },
+            iconImageChange: function () {
+                $scope.view.icon.urlFailed = '';
+                $http({
+                    url: $scope.view.controller('image'),
+                    method: 'GET',
+                    params: {
+                        url: $scope.view.config.icon.url
+                    }
+                }).then(function success(response) {
+                    if (response.data.status == 200) {
+                        $scope.view.config.icon.size = {
+                            width: response.data.width,
+                            height: response.data.height
+                        };
+                        $scope.view.config.icon.format = response.data.format;
+                    } else {
+                        $scope.view.icon.urlFailed = response.data.error;
+                    }
+                }, function fail(response) {
+                    $scope.view.icon.urlFailed = response.data;
+                });
+                $scope.view.iconCustom();
+            },
             icon: {
                 anchor: {
                     horizontal: {},
@@ -594,93 +633,53 @@
                     }
                 },
                 ]
-            }
-        }
-
-        if (!$injector.has('jsonTextDirective')) {
-            angular.module('umbraco').directive('jsonText', function () {
-                return {
-                    restrict: 'A', // only activate on element attribute
-                    require: 'ngModel', // get a hold of NgModelController
-                    link: function (scope, element, attrs, ngModelCtrl) {
-
-                        var lastValid;
-
-                        // push() if faster than unshift(), and avail. in IE8 and earlier (unshift isn't)
-                        ngModelCtrl.$parsers.push(fromUser);
-                        ngModelCtrl.$formatters.push(toUser);
-
-                        // clear any invalid changes on blur
-                        element.bind('blur', function () {
-                            element.val(toUser(scope.$eval(attrs.ngModel)));
+            },
+            initEditor: function () {
+                try {
+                    $scope.view.error = false;
+                    if (typeof ($scope.model.value) === 'string') {
+                        $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
+                    }
+                    if (!$scope.model.value) {
+                        $scope.model.value = {};
+                    }
+                    $scope.view.config = $scope.model.config.definition;
+                    if ($scope.model.value.position.id != $scope.view.config.position.id) {
+                        //  Have changed coordinate system
+                        $http({
+                            url: $scope.view.controller('convertcoordinatesystem'),
+                            method: 'GET',
+                            params: {
+                                sourceId: $scope.model.value.position.id,
+                                sourceDatum: $scope.model.value.position.datum,
+                                destinationId: $scope.view.config.position.id
+                            }
+                        }).then(function success(response) {
+                            $scope.model.value.position.datum = response.data;
+                            $scope.model.value.position.id = $scope.model.config.definition.position.id;
+                            done();
                         });
-
-                        // $watch(attrs.ngModel) wouldn't work if this directive created a new scope;
-                        // see http://stackoverflow.com/questions/14693052/watch-ngmodel-from-inside-directive-using-isolate-scope how to do it then
-                        scope.$watch(attrs.ngModel, function (newValue, oldValue) {
-                            lastValid = lastValid || newValue;
-
-                            if (newValue != oldValue) {
-                                ngModelCtrl.$setViewValue(toUser(newValue));
-
-                                // TODO avoid this causing the focus of the input to be lost..
-                                ngModelCtrl.$render();
-                            }
-                        }, true); // MUST use objectEquality (true) here, for some reason..
-
-                        function fromUser(text) {
-                            // Beware: trim() is not available in old browsers
-                            if (!text || text.trim() === '') {
-                                return {};
-                            } else {
-                                try {
-                                    lastValid = angular.fromJson(text);
-                                    ngModelCtrl.$setValidity('invalidJson', true);
-                                } catch (e) {
-                                    ngModelCtrl.$setValidity('invalidJson', false);
-                                }
-                                return lastValid;
-                            }
-                        }
-
-                        function toUser(object) {
-                            // better than JSON.stringify(), because it formats + filters $$hashKey etc.
-                            return angular.toJson(object, true);
-                        }
-                    }
-                };
-            });
-        }
-
-        $scope.initEditor = function () {
-            try {
-                $scope.error = false;
-                if (typeof ($scope.model.value) === 'string') {
-                    $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
-                }
-                if (!$scope.model.value) {
-                    $scope.model.value = $scope.model.config.definition;
-                }
-                //  Always get debug flag from config
-                $scope.model.value.debug = $scope.model.config.definition.debug;
-                $scope.bag.isPreview = !angular.isUndefined($scope.model.sortOrder);
-
-                $scope.bag.providers = [];
-                $scope.bag.providers.push($scope.model.value.provider);
-                $scope.bag.providers[0].coordinateSystems = [];
-                $scope.bag.providers[0].coordinateSystems.push($scope.model.value.position);
-                if ($scope.model.value && $scope.model.value.provider && $scope.model.value.provider.id != null) {
-                    if ($scope.bag.isPreview) {
-                        $scope.files($scope.bag.provider, $scope.model.value.provider.id);
                     } else {
-                        $scope.setProvider($scope.model.value.provider.id);
+                        done();
+                    }
+                    function done () {
+                        $scope.view.loadProvider($scope.model.value.position.id, function () {
+                            $scope.view.isPreview = !angular.isUndefined($scope.model.sortOrder);
+                            $scope.view.providers = [];
+                            $scope.view.providers.push($scope.view.config.provider);
+                            $scope.view.providers[0].coordinateSystems = [];
+                            $scope.view.providers[0].coordinateSystems.push($scope.model.value.position);
+                            if ($scope.model.value && $scope.model.value.provider && $scope.model.value.provider.id != null && !$scope.view.isPreview) {
+                                $scope.view.setProvider($scope.model.value.provider.id);
+                            }
+                        });
                     }
                 }
-            }
-            catch (oh) {
-                //  Error so might as well show debug
-                $scope.error = true;
-                $scope.debug = 1;
+                catch (oh) {
+                    //  Error so might as well show debug
+                    $scope.view.error = true;
+                    $scope.view.config.debug = 1;
+                }
             }
         }
     }]);

@@ -1,4 +1,5 @@
 ﻿(function (root) {
+    var identifier = 'GoogleMapsV3';
 
     var event = {
         events: [],
@@ -174,7 +175,7 @@
                         if (gm.killswitch) {
                             clearInterval(timer);
                         } else {
-                            //gm.originalConsole.warn('Subsystem status ' + gm.status);
+                            gm.originalConsole.warn('Subsystem status ' + gm.status);
                             switch (gm.status)
                             {
                                 case gm.subsystemInit:
@@ -300,6 +301,27 @@
                 }
             }
         },
+        mapTypeIds: function (basic, satellite, terrain) {
+            var mapTypeIds = [];
+            //  The order they are pushed sets the order of the buttons
+
+            if (basic) {
+                mapTypeIds.push('roadmap');
+            }
+            if (satellite) {
+                mapTypeIds.push('satellite');
+            }
+            if (terrain) {
+                mapTypeIds.push('terrain');
+            }
+
+            if (mapTypeIds.length == 0) {
+                mapTypeIds.push('roadmap');
+            }
+
+            return mapTypeIds;
+        },
+
         style: function (name, showRoads, showLandmarks, showLabels) {
             var styles = [];
             
@@ -710,612 +732,626 @@
         }
     }
 
-    var pr = {
-        loaded: false,
-        $scope: 'If you are talking to this you have the wrong instance',
-        $timeout: null,
-        div: null,
-        divoldsize: 0,
+
+    var provider = {
+        identifier: identifier,
         timerPoll: 250,
         timeout: 15000,
-        init: function (s, t) {
-            this.$scope = s;
-            this.$timeout = t;
-        },
-        reinit: function () {
-            event.cancel(this.$scope.identifier);
-            if (this.$scope.model.value.position) {
-                this.loadMap.call(this, this);
-            }
-            this.$scope.$on('setProvider', function (s, pr2) {
-                if (pr2.$scope.bag.provider.id != 'GoogleMapsV3') {
-                    pr2.destroy.call(pr2);
-                }
-            });
-            this.$scope.$on('setCoordinateSystem', function (s, pr2) {
-                if (gm.coordinateSystem && pr2.$scope.bag.position.id != gm.coordinateSystem) {
-                    pr2.reloadMap.call(pr2);
-                }
-            });
-        },
-        destroy: function() {
-            event.cancel(this.$scope.identifier);
-        },
-        reloadMap: function () {
-            if (this.loadMapWait) {
-                clearTimeout(this.loadMapWait);
-                this.loadMapWait = null;
-            }
-            this.destroy.call(this);
-            gm.destroySubsystem();
-            this.haveCheckedSearchFunctionalityExists = false;
-            this.loadMap.call(this, this);
-        },
-        forceHttpsChange: function (pr2) {
-            if (pr2.$scope.model.value.provider.forceHttps != gm.forceHttps) {
-                pr2.reloadMap.call(pr2);
-            }
-        },
-        languageChange: function (pr2) {
-            if (pr2.$scope.model.value.provider.language != gm.language) {
-                pr2.reloadMap.call(pr2);
-            }
-        },
-        versionChange: function (pr2) {
-            if (pr2.$scope.model.value.provider.version != gm.version) {
-                pr2.reloadMap.call(pr2);
-            }
-        },
-        styleChange: function (pr2) {
-            if (pr2.$scope.bag.provider.gmap) {
-                pr2.$scope.bag.provider.gmap.setOptions({
-                    styles: gm.style.call(gm, pr2.$scope.model.value.provider.predefineStyling, pr2.$scope.model.value.provider.showRoads,
-                        pr2.$scope.model.value.provider.showLandmarks, pr2.$scope.model.value.provider.showLabels)
-                });
-            }
-        },
-        parse: function (text) {
-            var args = text.trim().split(',');
-            if (args.length < 2) {
-                return false;
-            }
-            var lat = parseFloat(args[0]);
-            if (isNaN(lat) || lat > 90 || lat < -90) {
-                return false;
-            }
-            var lng = parseFloat(args[1]);
-            if (isNaN(lng) || lng > 180 || lng < -180) {
-                return false;
-            }
-            return {
-                latitude: lat,
-                longitude: lng
-            }
-        },
-        toString: function (datum, precision) {
-            function encodelatlng(latlng) {
-                return Number(latlng).toFixed(precision).replace(/\.?0+$/, '');
-            }
-            return encodelatlng(datum.latitude) + ',' + encodelatlng(datum.longitude);
-        },
-        datumChangeWait: null,
-        datumChangeText: null,
-        datumChange: function (pr2, text) {
-            pr2.datumChangeText = text;
-            if (pr2.datumChangeWait) {
-                clearTimeout(pr2.datumChangeWait);
-            }
-            pr2.datumChangeWait = setTimeout(function () {
-                pr2.datumChangeWait = null;
-                var p = pr2.parse(pr2.datumChangeText);
-                if (typeof p !== 'boolean') {
-                    pr2.$scope.model.value.position.datum = p;
-                    pr2.$scope.bag.position.datumStyle = {};
-                    pr2.setMarker(pr2);
-                    return;
-                }
-                pr2.$scope.bag.position.datumStyle = { 'color': 'red' };
-            }, 1000);
-        },
-        setDatum: function (pr2) {
-            var datum = pr2.toString.call(pr2, pr2.$scope.model.value.position.datum, pr2.$scope.bag.position.precision);
-            if (typeof datum !== 'boolean') {
-                pr2.$scope.bag.position.datumText = datum;
-                pr2.$scope.bag.position.datumStyle = {};
-            } else {
-                pr2.$scope.bag.position.datumStyle = { 'color': 'red' };
-            }
-        },
-        setMarker: function (pr2) {
-            if (pr2.$scope.bag.provider.gmap && pr2.$scope.bag.provider.gmarker) {
-                var latlng = new google.maps.LatLng(pr2.$scope.model.value.position.datum.latitude, pr2.$scope.model.value.position.datum.longitude);
-                pr2.$scope.bag.provider.gmarker.setPosition(latlng);
-                pr2.$scope.bag.provider.gmap.panTo(latlng);
-            }
-        },
-        defaultConfig:
-            {
-                position: {
-                    datum: {
-                        latitude: 55.4063207,
-                        longitude: 10.3870147
-                    }
-                },
-                height: 400,
-                zoom: 12,
-                icon: {
-                    image: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png'
-                },
-                provider: {
-                    version: 3,
-                    forceHttps: true,
-                    language: '',
-                    predefineStyling: 'retro',
-                    showRoads: true,
-                    showLandmarks: true,
-                    showLabels: true,
-                    variety: {
-                        basic: true,
-                        satellite: false,
-                        terrain: false,
-                        selector: {
-                            type: 1,     // Horizontal Bar
-                            position: 0  // Default
+        datumWait: 330,
+        init: function (id, urlRoot, model, config, view, updateView) {
+            var scope = {
+                defaultConfig: {
+                    position: {
+                        datum: {
+                            latitude: 55.4063207,
+                            longitude: 10.3870147
                         }
                     },
-                    streetView: {
-                        enable: false,
-                        position: 0
+                    height: 400,
+                    zoom: 12,
+                    icon: {
+                        id: 'redmarker'
                     },
-                    mapScaleControl: false,
-                    fullscreen: {
-                        enable: false,
-                        position: 0
-                    },
-                    scale: {
-                        enable: false,
-                        position: 0
-                    },
-                    zoomControl: {
-                        enable: true,
-                        position: 0,
-                    },
-                    panControl: {
-                        enable: false
-                    },
-                    draggable: true
-                },
-                search: {
-                    enable: 0,
-                    limit: {
-                        countries: []
-                    }
-                }
-            },
-        initValues: function (pr2, config) {
-            if (!pr2.$scope.model.value.position.datum) {
-                pr2.$scope.model.value.position.datum = config.position.datum;
-            }
-            if (!pr2.$scope.model.value.zoom) {
-                pr2.$scope.model.value.zoom = config.zoom;
-            }
-
-            if (!pr2.$scope.model.height) {
-                pr2.$scope.model.height = config.height;
-            }
-
-            if (!pr2.$scope.model.value.provider.predefineStyling ||
-                !pr2.$scope.model.value.provider.showRoads ||
-                !pr2.$scope.model.value.provider.showLandmarks ||
-                !pr2.$scope.model.value.provider.showLabels) {
-                pr2.$scope.model.value.provider.predefineStyling = config.provider.predefineStyling;
-                pr2.$scope.model.value.provider.showRoads = config.provider.showRoads;
-                pr2.$scope.model.value.provider.showLandmarks = config.provider.showLandmarks;
-                pr2.$scope.model.value.provider.showLabels = config.provider.showLabels;
-            }
-
-            if (!pr2.$scope.model.value.provider.version) {
-                pr2.$scope.model.value.provider.version = config.provider.version;
-            }
-
-            if (!pr2.$scope.model.value.provider.forceHttps) {
-                pr2.$scope.model.value.provider.forceHttps = config.provider.forceHttps;
-            }
-
-            if (!pr2.$scope.model.value.provider.language) {
-                pr2.$scope.model.value.provider.language = config.provider.language;
-            }
-
-            if (!pr2.$scope.model.value.provider.variety) {
-                pr2.$scope.model.value.provider.variety = config.provider.variety;
-            }
-
-            if (!pr2.$scope.model.value.provider.fullscreen) {
-                pr2.$scope.model.value.provider.fullscreen = config.provider.fullscreen;
-            }
-
-            if (!pr2.$scope.model.value.provider.scale) {
-                pr2.$scope.model.value.provider.scale = config.provider.scale;
-            }
-
-            if (!pr2.$scope.model.value.provider.streetView) {
-                pr2.$scope.model.value.provider.streetView = config.provider.streetView;
-            }
-            if (!pr2.$scope.model.value.provider.zoomControl) {
-                pr2.$scope.model.value.provider.zoomControl = config.provider.zoomControl;
-            }
-            if (!pr2.$scope.model.value.search) {
-
-                pr2.$scope.model.value.search = config.search;
-            }
-        },
-        mapTypeIds: function (pr2) {
-            var mapTypeIds = [];
-            //  The order they are pushed sets the order of the buttons
-
-            if (pr2.$scope.model.value.provider.variety.basic) {
-                mapTypeIds.push('roadmap');
-            }
-            if (pr2.$scope.model.value.provider.variety.satellite) {
-                mapTypeIds.push('satellite');
-            }
-            if (pr2.$scope.model.value.provider.variety.terrain) {
-                mapTypeIds.push('terrain');
-            }
-
-            if (mapTypeIds.length == 0) {
-                mapTypeIds.push('roadmap');
-            }
-
-            return mapTypeIds;
-        },
-        loadMapWait: null,
-        loadMap: function (pr, config) {
-            if (pr.loadMapWait == null) {
-                pr.loadMapWait = setTimeout(function () {
-                    //gm.originalConsole.warn(pr.$scope.identifier + ': Loading map');
-                    pr.loadMapWait = null;
-                    if (!config) {
-                        config = pr.defaultConfig;
-                    }
-
-                    pr.initValues.call(pr, pr, config);
-                    pr.$scope.bag.provider.statusLoading = true;
-                    pr.$scope.bag.provider.statusFailed = false;
-                    pr.$scope.bag.provider.statusError = false;
-                    pr.$scope.bag.provider.statusDuplicate = false;
-                    pr.$scope.bag.provider.statusSuccess = false;
-                    pr.$scope.bag.provider.statusSearchFailed = false;
-                    pr.$scope.bag.provider.statusReload = true;
-                    pr.$scope.bag.provider.showMap = false;
-                    pr.$scope.bag.provider.gmap = null;
-                    pr.$scope.bag.provider.gmarker = null;
-                    pr.$scope.bag.provider.gautocomplete = null;
-                    pr.div = null;
-                    pr.divoldsize = 0;
-                    event.register(pr.$scope.identifier, 'gmaperror', pr, pr, function (pr2) {
-                        //gm.originalConsole.warn(pr2.$scope.identifier + ': Map error');
-                        pr2.$scope.bag.provider.statusLoading = false;
-                        pr2.$scope.bag.provider.statusFailed = true;
-                        pr2.$scope.bag.provider.statusError = false;
-                        pr2.$scope.bag.provider.statusDuplicate = false;
-                        pr2.$scope.bag.provider.statusSuccess = false;
-                        event.cancel(pr2.$scope.identifier);
-                        pr2.$scope.$apply();
-                    });
-                    event.register(pr.$scope.identifier, 'gmapkilled', pr, pr, function (pr2) {
-                        //gm.originalConsole.warn(pr2.$scope.identifier + ': Map killed');
-                        pr2.$scope.bag.provider.statusLoading = false;
-                        pr2.$scope.bag.provider.statusFailed = false;
-                        pr2.$scope.bag.provider.statusError = false;
-                        pr2.$scope.bag.provider.statusDuplicate = false;
-                        pr2.$scope.bag.provider.statusSuccess = false;
-                        event.cancel(pr2.$scope.identifier);
-                        pr2.$scope.$apply();
-                    });
-                    event.register(pr.$scope.identifier, 'gmaprefresh', pr, pr, function (pr2) {
-                        //gm.originalConsole.warn(pr2.$scope.identifier + ': Map refresh(). div=' + pr2.div + ', gmap=' + pr2.$scope.bag.provider.gmap);
-                        if (pr2.div == null) {
-                            pr2.$scope.bag.provider.statusLoading = false;
-                            pr2.$scope.bag.provider.statusFailed = false;
-                            pr2.$scope.bag.provider.statusError = false;
-                            pr2.$scope.bag.provider.statusDuplicate = false;
-                            pr2.$scope.bag.provider.statusSuccess = true;
-                            pr2.$scope.bag.provider.version = String(root.google.maps.version);
-                            pr2.$scope.bag.provider.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
-
-                            //  Check that we have loaded with the right setting for us
-                            if (gm.apiKey != pr2.$scope.model.value.provider.apiKey ||
-                                gm.coordinateSystem != pr2.$scope.model.value.position.id ||
-                                gm.forceHttps != pr2.$scope.model.value.provider.forceHttps ||
-                                gm.language != pr2.$scope.model.value.provider.language) {
-                                pr2.$scope.bag.provider.statusDuplicate = true;
-                                event.cancel($scope.identifier);
-                                pr2.$scope.$apply();
-                                return;
+                    provider: {
+                        version: 3,
+                        forceHttps: true,
+                        language: '',
+                        predefineStyling: 'retro',
+                        showRoads: true,
+                        showLandmarks: true,
+                        showLabels: true,
+                        variety: {
+                            basic: true,
+                            satellite: false,
+                            terrain: false,
+                            selector: {
+                                type: 1,     // Horizontal Bar
+                                position: 0  // Default
                             }
-                            pr2.$scope.bag.provider.ignoreEvents = 0;
-                            pr2.div = 'terratype_' + pr2.$scope.identifier + '_googlemapv3_map';
-                            pr2.$scope.bag.provider.showMap = true;
-                            pr2.$scope.$apply();
-                        } else if (pr2.$scope.bag.provider.gmap == null) {
-                            var latlng = new google.maps.LatLng(pr2.$scope.model.value.position.datum.latitude, pr2.$scope.model.value.position.datum.longitude);
-                            var mapTypeIds = pr2.mapTypeIds.call(pr2, pr2);
-                            pr2.$scope.bag.provider.gmap = new google.maps.Map(document.getElementById(pr2.div), {
-                                disableDefaultUI: false,
-                                scrollwheel: false,
-                                panControl: false,      //   Has been depricated
-                                center: latlng,
-                                zoom: pr2.$scope.model.value.zoom,
-                                draggable: config.draggable,
-                                fullScreenControl: pr2.$scope.model.value.provider.fullscreen.enable,
-                                fullscreenControlOptions: pr2.$scope.model.value.provider.fullscreen.position,
-                                styles: gm.style.call(gm, pr2.$scope.model.value.provider.predefineStyling, pr2.$scope.model.value.provider.showRoads,
-                                    pr2.$scope.model.value.provider.showLandmarks, pr2.$scope.model.value.provider.showLabels),
-                                mapTypeId: mapTypeIds[0],
-                                mapTypeControl: (mapTypeIds.length > 1),
-                                mapTypeControlOptions: {
-                                    style: pr2.$scope. model.value.provider.variety.selector.type,
-                                    mapTypeIds: mapTypeIds,
-                                    position: pr2.$scope.model.value.provider.variety.selector.position
+                        },
+                        streetView: {
+                            enable: false,
+                            position: 0
+                        },
+                        mapScaleControl: false,
+                        fullscreen: {
+                            enable: false,
+                            position: 0
+                        },
+                        scale: {
+                            enable: false,
+                            position: 0
+                        },
+                        zoomControl: {
+                            enable: true,
+                            position: 0,
+                        },
+                        panControl: {
+                            enable: false
+                        },
+                        draggable: true
+                    },
+                    search: {
+                        enable: 0,
+                        limit: {
+                            countries: []
+                        }
+                    }
+                },
+                haveCheckedSearchFunctionalityExists: null,
+                datumChangeWait: null,
+                defaultConfig: {
+                    position: {
+                        datum: {
+                            latitude: 55.4063207,
+                            longitude: 10.3870147
+                        }
+                    },
+                    zoom: 12,
+                    provider: {
+                        id: identifier, 
+                        version: 3,
+                        forceHttps: true,
+                        language: '',
+                        predefineStyling: 'retro',
+                        showRoads: true,
+                        showLandmarks: true,
+                        showLabels: true,
+                        variety: {
+                            basic: true,
+                            satellite: false,
+                            terrain: false,
+                            selector: {
+                                type: 1,     // Horizontal Bar
+                                position: 0  // Default
+                            }
+                        },
+                        streetView: {
+                            enable: false,
+                            position: 0
+                        },
+                        mapScaleControl: false,
+                        fullscreen: {
+                            enable: false,
+                            position: 0
+                        },
+                        scale: {
+                            enable: false,
+                            position: 0
+                        },
+                        zoomControl: {
+                            enable: true,
+                            position: 0,
+                        },
+                        panControl: {
+                            enable: false
+                        },
+                        draggable: true
+                    },
+                    search: {
+                        enable: 0,
+                        limit: {
+                            countries: []
+                        }
+                    }
+                },
+                initValues: function () {
+                    if (!model.position.datum) {
+                        model.position.datum = scope.defaultConfig.position.datum;
+                    }
+                    if (!model.zoom) {
+                        model.zoom = scope.defaultConfig.zoom;
+                    }
+                    if (!config.provider || Object.keys(config.provider).length == 1) {
+                        config.provider = scope.defaultConfig.provider;
+                    }
+                    if (!config.search) {
+                        config.search = scope.defaultConfig.search;
+                    }
+                },
+                init: function () {
+                    event.cancel(id);
+                    if (model.position) {
+                        if (typeof model.position.datum === 'string') {
+                            model.position.datum = scope.parse.call(scope, model.position.datum);
+                        }
+                    }
+                    if (config.provider && config.provider.version && model.position && model.position.id) {
+                        scope.loadMap.call(scope);
+                    }
+                    return {
+                        files: {
+                            logo: urlRoot + 'images/' + identifier + '/' + identifier + '-Logo.png',
+                            mapExample: urlRoot + 'images/' + identifier + '/' + identifier + '-Example.png',
+                            views: {
+                                config: {
+                                    definition: urlRoot + 'views/' + identifier + '/config.definition.html',
+                                    apperance: urlRoot + 'views/' + identifier + '/config.apperance.html',
+                                    search: urlRoot + 'views/' + identifier + '/config.search.html'
                                 },
-                                scaleControl: pr2.$scope.model.value.provider.scale.enable,
-                                scaleControlOptions: {
-                                    position: pr2.$scope.model.value.provider.scale.position
-                                },
-                                streetViewControl: pr2.$scope.model.value.provider.streetView.enable,
-                                streetViewControlOptions: {
-                                    position: pr2.$scope.model.value.provider.streetView.position
-                                },
-                                zoomControl: pr2.$scope.model.value.provider.zoomControl.enable,
-                                zoomControlOptions: {
-                                    position: pr2.$scope.model.value.provider.zoomControl.position
+                                editor: {
+                                    apperance: urlRoot + 'views/' + identifier + '/editor.apperance.html'
+                                }
+                            }
+                        },
+                        setProvider: function () {
+                            if (config.provider.id != identifier) {
+                                event.cancel(id);
+                            }
+                        },
+                        setCoordinateSystem: function () {
+                            if (model.position && model.position.id != gm.coordinateSystem) {
+                                scope.reloadMap.call(scope);
+                            }
+                        },
+                        setIcon: function () {
+                            if (view.gmarker) {
+                                view.gmarker.setIcon(gm.icon.call(gm, config.icon));
+                            }
+                        },
+                        forceHttpsChange: function () {
+                            if (config.provider.forceHttps != gm.forceHttps) {
+                                scope.reloadMap.call(scope);
+                            }
+                        },
+                        languageChange: function () {
+                            if (config.provider.language != gm.language) {
+                                scope.reloadMap.call(scope);
+                            }
+                        },
+                        versionChange: function () {
+                            if (config.provider.version != gm.version) {
+                                scope.reloadMap.call(scope);
+                            }
+                        },
+                        styleChange: function () {
+                            if (view.gmap) {
+                                view.gmap.setOptions({
+                                    styles: gm.style.call(gm, config.provider.predefineStyling, config.provider.showRoads,
+                                        config.provider.showLandmarks, config.provider.showLabels)
+                                });
+                            }
+                        },
+                        datumChange: function (text) {
+                            view.datumChangeText = text;
+                            if (scope.datumChangeWait) {
+                                clearTimeout(scope.datumChangeWait);
+                            }
+                            scope.datumChangeWait = setTimeout(function () {
+                                scope.datumChangeWait = null;
+                                var p = scope.parse.call(scope, view.datumChangeText);
+                                if (typeof p !== 'boolean') {
+                                    model.position.datum = p;
+                                    view.position.datumStyle = {};
+                                    scope.setMarker.call(scope);
+                                    return;
+                                }
+                                view.position.datumStyle = { 'color': 'red' };
+                            }, pr.datumWait);
+                        },
+                        optionChange: function () {
+                            if (scope.gmap) {
+                                var mapTypeIds = gm.mapTypeIds.call(config.provider.variety.basic, config.provider.variety.satellite, config.provider.variety.terrain);
+                                view.gmap.setOptions({
+                                    mapTypeId: mapTypeIds[0],
+                                    mapTypeControl: (mapTypeIds.length > 1),
+                                    mapTypeControlOptions: {
+                                        style: config.provider.variety.selector.type,
+                                        mapTypeIds: mapTypeIds,
+                                        position: config.provider.variety.selector.position
+                                    },
+                                    fullScreenControl: config.provider.fullscreen.enable,
+                                    fullscreenControlOptions: config.provider.fullscreen.position,
+                                    scaleControl: config.provider.scale.enable,
+                                    scaleControlOptions: {
+                                        position: config.provider.scale.position
+                                    },
+                                    streetViewControl: config.provider.streetView.enable,
+                                    streetViewControlOptions: {
+                                        position: config.provider.streetView.position
+                                    },
+                                    zoomControl: config.provider.zoomControl.enable,
+                                    zoomControlOptions: {
+                                        position: config.provider.zoomControl.position
+                                    }
+                                });
+                            }
+                        },
+                        searchChange: function () {
+                            if (config.search.enable != 0) {
+                                if (view.gautocomplete) {
+                                    scope.deleteSearch.call(scope);
+                                    setTimeout(function () {
+                                        scope.createSearch.call(scope);
+                                    }, 1);
+                                } else {
+                                    scope.createSearch.call(scope);
+                                }
+                            } else {
+                                scope.deleteSearch.call(scope);
+                            }
+                        },
+                        searchCountryChange: function () {
+                            if (view.gautocomplete) {
+                                view.gautocomplete.setComponentRestrictions({ "country": config.search.limit.countries.join(',') });
+                            }
+                        },
+                        reload: function () {
+                            scope.reloadMap.call(scope);
+                        }
+                    }
+                },
+                reloadMap: function () {
+                    if (scope.loadMapWait) {
+                        clearTimeout(scope.loadMapWait);
+                        scope.loadMapWait = null;
+                    }
+                    event.cancel(id);
+                    gm.destroySubsystem();
+                    scope.haveCheckedSearchFunctionalityExists = false;
+                    setTimeout(function () {
+                        scope.loadMap.call(scope)
+                    }, 1);
+                },
+                parse: function (text) {
+                    var args = text.trim().split(',');
+                    if (args.length < 2) {
+                        return false;
+                    }
+                    var lat = parseFloat(args[0]);
+                    if (isNaN(lat) || lat > 90 || lat < -90) {
+                        return false;
+                    }
+                    var lng = parseFloat(args[1]);
+                    if (isNaN(lng) || lng > 180 || lng < -180) {
+                        return false;
+                    }
+                    return {
+                        latitude: lat,
+                        longitude: lng
+                    };
+                },
+                toString: function (datum, precision) {
+                    function encodelatlng(latlng) {
+                        return Number(latlng).toFixed(precision).replace(/\.?0+$/, '');
+                    }
+                    return encodelatlng(datum.latitude) + ',' + encodelatlng(datum.longitude);
+                },
+                setDatum: function () {
+                    var datum = scope.toString.call(scope, model.position.datum, view.position.precision);
+                    if (typeof datum !== 'boolean') {
+                        view.position.datumText = datum;
+                        view.position.datumStyle = {};
+                    } else {
+                        view.position.datumStyle = { 'color': 'red' };
+                    }
+                },
+                setMarker: function () {
+                    if (view.gmap && view.gmarker) {
+                        var latlng = new google.maps.LatLng(model.position.datum.latitude, model.position.datum.longitude);
+                        view.gmarker.setPosition(latlng);
+                        view.gmap.panTo(latlng);
+                    }
+                },
+                loadMapWait: null,
+                div: null,
+                divoldsize: 0,
+                superWaiter: null,
+                loadMap: function () {
+                    if (scope.loadMapWait == null) {
+                        scope.loadMapWait = setTimeout(function () {
+                            //gm.originalConsole.warn(id + ': Loading map');
+                            scope.initValues();
+                            scope.loadMapWait = null;
+                            view.status = {
+                                loading: true,
+                                reload: true
+                            };
+                            view.showMap = false;
+                            view.gmap = null;
+                            view.gmarker = null;
+                            view.gautocomplete = null;
+                            scope.div = null;
+                            scope.divoldsize = 0;
+                            event.register(id, 'gmaperror', scope, this, function (s) {
+                                //gm.originalConsole.warn(id + ': Map error');
+                                view.status = {
+                                    failed: true,
+                                    reload: true
+                                };
+                                event.cancel(id);
+                                clearInterval(scope.superWaiter);
+                                scope.superWaiter = null;
+                                updateView();
+                            });
+                            event.register(id, 'gmapkilled', scope, this, function (s) {
+                                //gm.originalConsole.warn(id + ': Map killed');
+                                view.status = {
+                                    reload: true
+                                };
+                                event.cancel(id);
+                                clearInterval(scope.superWaiter);
+                                scope.superWaiter = null;
+                                updateView();
+                            });
+                            event.register(id, 'gmaprefresh', scope, this, function (s) {
+                                //gm.originalConsole.warn(id + ': Map refresh(). div=' + scope.div + ', gmap=' + view.gmap);
+                                if (scope.div == null) {
+                                    view.status = {
+                                        success: true,
+                                        reload: true
+                                    };
+                                    view.version = String(root.google.maps.version);
+                                    view.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
+
+                                    //  Check that we have loaded with the right setting for us
+                                    if (gm.apiKey != config.provider.apiKey ||
+                                        gm.coordinateSystem != model.position.id ||
+                                        gm.forceHttps != config.provider.forceHttps ||
+                                        gm.language != config.provider.language) {
+                                        view.status = {
+                                            duplicate: true,
+                                            reload: true
+                                        };
+                                        event.cancel(id);
+                                        updateView();
+                                        return;
+                                    }
+                                    view.ignoreEvents = 0;
+                                    scope.div = 'terratype_' + id + '_googlemapv3_map';
+                                    view.showMap = true;
+                                    updateView();
+                                } else if (view.gmap == null) {
+                                    var latlng = new google.maps.LatLng(model.position.datum.latitude, model.position.datum.longitude);
+                                    var mapTypeIds = gm.mapTypeIds.call(config.provider.variety.basic, config.provider.variety.satellite, config.provider.variety.terrain);
+                                    view.gmap = new google.maps.Map(document.getElementById(scope.div), {
+                                        disableDefaultUI: false,
+                                        scrollwheel: false,
+                                        panControl: false,      //   Has been depricated
+                                        center: latlng,
+                                        zoom: model.zoom,
+                                        draggable: config.draggable,
+                                        fullScreenControl: config.provider.fullscreen.enable,
+                                        fullscreenControlOptions: config.provider.fullscreen.position,
+                                        styles: gm.style.call(gm, config.provider.predefineStyling, config.provider.showRoads,
+                                            config.showLandmarks, config.provider.showLabels),
+                                        mapTypeId: mapTypeIds[0],
+                                        mapTypeControl: (mapTypeIds.length > 1),
+                                        mapTypeControlOptions: {
+                                            style: config.provider.variety.selector.type,
+                                            mapTypeIds: mapTypeIds,
+                                            position: config.provider.variety.selector.position
+                                        },
+                                        scaleControl: config.provider.scale.enable,
+                                        scaleControlOptions: {
+                                            position: config.provider.scale.position
+                                        },
+                                        streetViewControl: config.provider.streetView.enable,
+                                        streetViewControlOptions: {
+                                            position: config.provider.streetView.position
+                                        },
+                                        zoomControl: config.provider.zoomControl.enable,
+                                        zoomControlOptions: {
+                                            position: config.provider.zoomControl.position
+                                        }
+                                    });
+                                    google.maps.event.addListener(view.gmap, 'zoom_changed', function () {
+                                        scope.eventZoom.call(scope);
+                                    });
+                                    google.maps.event.addListenerOnce(view.gmap, 'tilesloaded', function () {
+                                        scope.eventRefresh.call(scope);
+                                    });
+                                    google.maps.event.addListener(view.gmap, 'resize', function () {
+                                        scope.eventCheckRefresh.call(scope);
+                                    });
+                                    view.gmarker = new google.maps.Marker({
+                                        map: view.gmap,
+                                        position: latlng,
+                                        id: 'terratype_' + id + '_marker',
+                                        draggable: true,
+                                        icon: gm.icon.call(gm, config.icon)
+                                    })
+                                    google.maps.event.addListener(view.gmarker, 'dragend', function (marker) {
+                                        scope.eventDrag.call(scope, marker);
+                                    });
+
+                                    if (config.search.enable != 0) {
+                                        scope.createSearch.call(scope);
+                                    }
+                                    scope.setDatum.call(scope);
+
+                                    updateView();
+                                } else {
+                                    var element = document.getElementById(scope.div);
+                                    if (element == null) {
+                                        event.cancel(id);
+                                        delete view.gmap;
+                                        return;
+                                    }
+                                    var newValue = element.offsetTop;
+                                    var newSize = element.clientHeight * element.clientWidth;
+                                    if (newValue != 0 && view.showMap == false) {
+                                        //  Was hidden, now being shown
+                                        view.showMap = true;
+                                        scope.eventRefresh.call(scope);
+                                        updateView();
+                                    } else if (newValue == 0 && view.showMap == true) {
+                                        //  Was shown, now being hidden
+                                        view.showMap = false;
+                                        updateView();
+                                    }
+                                    else if (view.showMap == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
+                                        scope.eventCheckRefresh.call(scope);
+                                    }
+                                    scope.divoldsize = newSize;
                                 }
                             });
-                            google.maps.event.addListener(pr2.$scope.bag.provider.gmap, 'zoom_changed', function () {
-                                pr2.$scope.bag.provider.eventZoom.call(pr2, pr2);
-                            });
-                            google.maps.event.addListenerOnce(pr2.$scope.bag.provider.gmap, 'tilesloaded', function () {
-                                pr2.$scope.bag.provider.eventRefresh.call(pr2, pr2);
-                            });
-                            google.maps.event.addListener(pr2.$scope.bag.provider.gmap, 'resize', function () {
-                                pr2.$scope.bag.provider.eventCheckRefresh.call(pr2, pr2);
-                            });
-                            pr2.$scope.bag.provider.gmarker = new google.maps.Marker({
-                                map: pr2.$scope.bag.provider.gmap,
-                                provider: pr2,
-                                position: latlng,
-                                id: 'terratype_' + pr2.$scope.identifier + '_marker',
-                                draggable: true,
-                                icon: gm.icon.call(gm, config.icon)
-                            })
-                            google.maps.event.addListener(pr2.$scope.bag.provider.gmarker, 'dragend', function (marker) {
-                                pr2.$scope.bag.provider.eventDrag.call(pr2, pr2, marker);
-                            });
 
-                            if (pr2.$scope.model.value.search.enable != 0) {
-                                pr2.createSearch.call(pr2, pr2);
+                            if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
+                                if (gm.status == gm.subsystemUninitiated) {
+                                    gm.createSubsystem(config.provider.version, config.provider.apiKey, config.provider.forceHttps,
+                                        model.position.id, config.provider.language);
+                                }
                             }
-                            pr2.setDatum.call(pr2, pr2);
 
-                            pr2.$scope.$apply();
-                        }  else {
-                            var element = document.getElementById(pr2.div);
-                            if (element == null) {
-                                event.cancel(pr2.$scope.identifier);
-                                delete pr2.$scope.bag.provider.gmap;
-                                delete pr2;
-                                return;
-                            }
-                            var newValue = element.offsetTop;
-                            var newSize = element.clientHeight * element.clientWidth;
-                            if (newValue != 0 && pr2.$scope.bag.provider.showMap == false) {
-                                //  Was hidden, now being shown
-                                pr2.$scope.bag.provider.showMap = true;
-                                pr2.$timeout(function () {
-                                    pr2.$scope.bag.provider.eventRefresh.call(pr2);
-                                });
-                                pr2.$scope.$apply();
-                            } else if (newValue == 0 && pr2.$scope.bag.provider.showMap == true) {
-                                //  Was shown, now being hidden
-                                pr2.$scope.bag.provider.showMap = false;
-                                pr2.$scope.$apply();
-                            }
-                            else if (pr2.$scope.bag.provider.showMap == true && pr2.divoldsize != 0 && newSize != 0 && pr2.divoldsize != newSize) {
-                                pr2.$timeout(function () {
-                                    pr2.$scope.bag.provider.eventCheckRefresh.call(pr2, pr2)
-                                });
-                            }
-                            pr2.divoldsize = newSize;
-                        }
-                    });
+                            //  Check that the subsystem is working
+                            count = 0;
+                            scope.superWaiter = setInterval(function () {
+                                function go() {
+                                    //  Error with subsystem, it isn't loading, only thing we can do is try again
+                                    if (count > 5) {
+                                        view.status = {
+                                            error: true,
+                                            reload: true
+                                        };
+                                        clearInterval(scope.superWaiter);
+                                        scope.superWaiter = null;
+                                        updateView();
+                                    }
 
-                    if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
-                        if (gm.status == gm.subsystemUninitiated) {
-                            gm.createSubsystem(pr.$scope.model.value.provider.version, pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
-                                pr.$scope.model.value.position.id, pr.$scope.model.value.provider.language);
-                        }
+                                    gm.createSubsystem(config.provider.version, config.provider.apiKey, config.provider.forceHttps,
+                                        model.position.id, config.provider.language);
+                                    count++;
+                                }
+
+                                if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
+                                    go();
+                                } else if (view.div == null || view.gmap == null) {
+                                    gm.destroySubsystem();
+                                    setTimeout(go, 1);
+                                } else {
+                                    view.status = {
+                                        success: true
+                                    };
+                                    clearInterval(scope.superWaiter);
+                                    scope.superWaiter = null;
+                                    updateView();
+                                }
+                            }, gm.timeout);
+                        }, gm.poll);
                     }
-
-                    //  Check that the subsystem is working
-                    count = 0;
-                    var superWaiter = setInterval(function () {
-                        function go() {
-                            //  Error with subsystem, it isn't loading, only thing we can do is try again
-                            if (count > 5) {
-                                pr.$scope.bag.provider.statusError = true;
-                                clearInterval(superWaiter);
-                            }
-
-                            gm.createSubsystem(pr.$scope.model.value.provider.version, pr.$scope.model.value.provider.apiKey, pr.$scope.model.value.provider.forceHttps,
-                                pr.$scope.model.value.position.id, pr.$scope.model.value.provider.language);
-                            count++;
+                },
+                eventZoom: function () {
+                    if (view.ignoreEvents > 0) {
+                        return;
+                    }
+                    //gm.originalConsole.warn(id + ': eventZoom()');
+                    model.zoom = view.gmap.getZoom();
+                },
+                eventRefresh: function () {
+                    if (view.ignoreEvents > 0) {
+                        return;
+                    }
+                    //gm.originalConsole.warn(id + ': eventRefresh()');
+                    view.ignoreEvents++;
+                    view.gmap.setZoom(model.zoom);
+                    scope.setMarker.call(scope);
+                    google.maps.event.trigger(view.gmap, 'resize');
+                    view.ignoreEvents--;
+                },
+                eventCheckRefresh: function () {
+                    if (!view.gmap.getBounds().contains(view.gmarker.getPosition())) {
+                        scope.eventRefresh.call(scope);
+                    }
+                },
+                eventDrag: function (marker) {
+                    if (view.ignoreEvents > 0) {
+                        return;
+                    }
+                    //gm.originalConsole.warn(id + ': eventDrag()');
+                    view.ignoreEvents++;
+                    model.position.datum = {
+                        latitude: marker.latLng.lat(),
+                        longitude: marker.latLng.lng()
+                    };
+                    scope.setMarker.call(scope);
+                    scope.setDatum.call(scope);
+                    updateView();
+                    view.ignoreEvents--;
+                },
+                eventLookup: function (place) {
+                    if (view.ignoreEvents > 0 || !place.geometry) {
+                        return;
+                    }
+                    //gm.originalConsole.warn(id + ': eventDrag()');
+                    view.ignoreEvents++;
+                    model.lookup = place.formatted_address;
+                    model.position.datum = {
+                        latitude: place.geometry.location.lat(),
+                        longitude: place.geometry.location.lng()
+                    };
+                    scope.setMarker.call(scope);
+                    scope.setDatum.call(scope);
+                    updateView();
+                    view.ignoreEvents--;
+                },
+                searchListerners: [],
+                createSearch: function () {
+                    view.gautocomplete = new google.maps.places.Autocomplete(document.getElementById('terratype_' + id + '_googlemapv3_lookup'),
+                    {
+                        autocomplete: config.search.enable == 2
+                    });
+                    if (config.search && config.search.limit &&
+                        config.search.limit.countries && config.search.limit.countries.length != 0) {
+                        view.gautocomplete.setComponentRestrictions({ "country": config.search.limit.countries.join(',') });
+                    }
+                    scope.searchListerners.push(google.maps.event.addListener(view.gautocomplete, 'place_changed', function () {
+                        scope.eventLookup.call(scope, view.gautocomplete.getPlace());
+                    }));
+                    scope.searchListerners.push(google.maps.event.addListener(view.gautocomplete, 'places_changed', function () {
+                        var places = view.gautocomplete.getPlaces();
+                        if (places && places.length > 0) {
+                            scope.eventLookup.call(scope, places[0]);
                         }
+                    }));
 
-                        if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
-                            go();
-                        } else if (pr.div == null || pr.$scope.bag.provider.gmap == null) {
-                            gm.destroySubsystem();
-                            pr.$timeout(go);
+                    if (!scope.haveCheckedSearchFunctionalityExists) {
+                        //  Check to see if places service is enabled
+                        if (google.maps.places) {
+                            var service = new google.maps.places.PlacesService(view.gmap);
+                            service.textSearch({ query: 'paris, france' }, function (results, status) {
+                                if (google) {
+                                    view.status.searchFailed = (status != 'OK');
+                                }
+                            });
                         } else {
-                            pr.$scope.bag.provider.statusReload = false;
-                            clearInterval(superWaiter);
+                            view.status.searchFailed = true;
                         }
-                    }, gm.timeout);
-                }, gm.poll);
-            }
-        },
-        eventZoom: function (pr2) {
-            if (pr2.$scope.bag.provider.ignoreEvents > 0) {
-                return;
-            }
-            //gm.originalConsole.warn(pr2.$scope.identifier + ': eventZoom()');
-            pr2.$scope.model.value.zoom = pr2.$scope.bag.provider.gmap.getZoom();
-        },
-        eventRefresh: function (pr2) {
-            if (pr2.$scope.bag.provider.ignoreEvents > 0) {
-                return;
-            }
-            //gm.originalConsole.warn(pr2.$scope.identifier + ': eventRefresh()');
-            pr2.$scope.bag.provider.ignoreEvents++;
-            pr2.$scope.bag.provider.gmap.setZoom(pr2.$scope.model.value.zoom);
-            pr2.setMarker.call(pr2, pr2);
-            google.maps.event.trigger(pr2.$scope.bag.provider.gmap, 'resize');
-            pr2.$scope.bag.provider.ignoreEvents--;
-        },
-        eventCheckRefresh: function (pr2) {
-            if (!pr2.$scope.bag.provider.gmap.getBounds().contains(pr2.$scope.bag.provider.gmarker.getPosition())) {
-                pr2.eventRefresh.call(pr2, pr2);
-            }
-        },
-        eventDrag: function (pr2, marker) {
-            if (pr2.$scope.bag.provider.ignoreEvents > 0) {
-                return;
-            }
-            //gm.originalConsole.warn(pr2.$scope.identifier + ': eventDrag()');
-            pr2.$scope.bag.provider.ignoreEvents++;
-            pr2.$scope.model.value.position.datum = {
-                latitude: marker.latLng.lat(),
-                longitude: marker.latLng.lng()
-            };
-            pr2.setMarker.call(pr2, pr2);
-            pr2.setDatum.call(pr2, pr2);
-            pr2.$scope.bag.provider.ignoreEvents--;
-        },
-        eventLookup: function (pr2, place) {
-            if (pr2.$scope.bag.provider.ignoreEvents > 0 || !place.geometry) {
-                return;
-            }
-            //gm.originalConsole.warn(pr2.$scope.identifier + ': eventDrag()');
-            pr2.$scope.bag.provider.ignoreEvents++;
-            pr2.$scope.model.value.lookup = place.formatted_address;
-            pr2.$scope.model.value.position.datum = {
-                latitude: place.geometry.location.lat(),
-                longitude: place.geometry.location.lng()
-            };
-            pr2.setMarker.call(pr2, pr2);
-            pr2.setDatum.call(pr2, pr2);
-            pr2.$scope.$apply();
-            pr2.$scope.bag.provider.ignoreEvents--;
-        },
-        searchChange: function (pr2) {
-            if (pr2.$scope.model.value.search.enable != 0) {
-                if (pr2.$scope.bag.provider.gautocomplete) {
-                    //pr2.$scope.bag.provider.gautocomplete.setOptions({
-                    //    autocomplete: pr2.$scope.model.value.search.enable == 2
-                    //});
-                    pr2.deleteSearch.call(pr2, pr2);
-                    pr2.$timeout(function () {
-                        pr2.createSearch.call(pr2, pr2);
-                    });
-                } else {
-                    pr2.createSearch.call(pr2, pr2);
-                }
-            } else {
-                pr2.deleteSearch.call(pr2, pr2);
-            }
-        },
-        searchCountryChange: function (pr2) {
-            if (pr2.$scope.bag.provider.gautocomplete) {
-                pr2.$scope.bag.provider.gautocomplete.setComponentRestrictions({ "country": pr2.$scope.model.value.search.limit.countries.join(',') });
-            }
-        },
-        optionChange: function (pr2) {
-            if (pr2.$scope.bag.provider.gmap) {
-                var mapTypeIds = pr2.mapTypeIds.call(pr2, pr2);
-                pr2.$scope.bag.provider.gmap.setOptions({
-                    mapTypeId: mapTypeIds[0],
-                    mapTypeControl: (mapTypeIds.length > 1),
-                    mapTypeControlOptions: {
-                        style: pr2.$scope.model.value.provider.variety.selector.type,
-                        mapTypeIds: mapTypeIds,
-                        position: pr2.$scope.model.value.provider.variety.selector.position
-                    },
-                    fullScreenControl: pr2.$scope.model.value.provider.fullscreen.enable,
-                    fullscreenControlOptions: pr2.$scope.model.value.provider.fullscreen.position,
-                    scaleControl: pr2.$scope.model.value.provider.scale.enable,
-                    scaleControlOptions: {
-                        position: pr2.$scope.model.value.provider.scale.position
-                    },
-                    streetViewControl: pr2.$scope.model.value.provider.streetView.enable,
-                    streetViewControlOptions: {
-                        position: pr2.$scope.model.value.provider.streetView.position
-                    },
-                    zoomControl: pr2.$scope.model.value.provider.zoomControl.enable,
-                    zoomControlOptions: {
-                        position: pr2.$scope.model.value.provider.zoomControl.position
+                        scope.haveCheckedSearchFunctionalityExists = true;
                     }
-                });
-                //pr2.$timeout(function () {
-                //    pr2.$scope.bag.provider.gmap.setMapTypeId(mapTypeIds[0]);
-                //})
-            }
-        },
-        searchListerners: [],
-        haveCheckedSearchFunctionalityExists: false,
-        createSearch: function (pr2) {
-            pr2.$scope.bag.provider.gautocomplete = new google.maps.places.Autocomplete(document.getElementById('terratype_' + pr2.$scope.identifier + '_googlemapv3_lookup'),
-            {
-                autocomplete: pr2.$scope.model.value.search.enable == 2
-            });
-            if (pr2.$scope.model.value && pr2.$scope.model.value.search && pr2.$scope.model.value.search.limit &&
-                pr2.$scope.model.value.search.limit.countries && pr2.$scope.model.value.search.limit.countries.length != 0) {
-                pr2.$scope.bag.provider.gautocomplete.setComponentRestrictions({ "country": pr2.$scope.model.value.search.limit.countries.join(',') });
-            }
-            pr2.searchListerners.push(google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'place_changed', function () {
-                pr2.$scope.bag.provider.eventLookup.call(pr2, pr2, pr2.$scope.bag.provider.gautocomplete.getPlace());
-            }));
-            pr2.searchListerners.push(google.maps.event.addListener(pr2.$scope.bag.provider.gautocomplete, 'places_changed', function () {
-                var places = pr2.$scope.bag.provider.gautocomplete.getPlaces();
-                if (places && places.length > 0) {
-                    pr2.$scope.bag.provider.eventLookup.call(pr2, pr2, places[0]);
-                }
-            }));
-
-            if (!pr2.haveCheckedSearchFunctionalityExists) {
-                //  Check to see if places service is enabled
-                if (google.maps.places) {
-                    var service = new google.maps.places.PlacesService(pr2.$scope.bag.provider.gmap);
-                    service.textSearch({ query: 'paris, france' }, function (results, status) {
-                        if (google) {
-                            pr2.$scope.bag.provider.statusSearchFailed = (status != 'OK');
-                        }
+                },
+                deleteSearch: function () {
+                    angular.forEach(scope.searchListerners, function (value, index) {
+                        google.maps.event.removeListener(value);
                     });
-                } else {
-                    pr2.$scope.bag.provider.statusSearchFailed = true;
+                    scope.searchListerners = [];
+                    google.maps.event.clearInstanceListeners(view.gautocomplete);
+                    view.gautocomplete = null;
                 }
-                pr2.haveCheckedSearchFunctionalityExists = true;
             }
-        },
-        deleteSearch: function (pr2) {
-            angular.forEach(pr2.searchListerners, function (value, index) {
-                google.maps.event.removeListener(value);
-            });
-            searchListerners = [];
-            google.maps.event.clearInstanceListeners(pr2.$scope.bag.provider.gautocomplete);
-            pr2.$scope.bag.provider.gautocomplete = null;
-        },
-    };
+            return scope.init();
+        }
+    }
 
-    root.terratype.providers['GoogleMapsV3'] = pr;
+    root.terratype.providers[identifier] = provider;
 }(window));

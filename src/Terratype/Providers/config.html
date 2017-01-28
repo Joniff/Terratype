@@ -1,57 +1,57 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="initConfig()">
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="view.initConfig()">
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_provider" class="control-label">
+        <label for="terratype_{{view.identifier}}_provider" class="control-label">
             Map Provider:
             <small>
                 Select which system you wish to use to display maps
             </small>
         </label>
-        <div class="controls" ng-if="bag.providers.length != 0">
-            <select id="terratype_{{identifier}}_provider" ng-model="model.value.provider.id" class="umb-editor" ng-change="setProvider(model.value.provider.id)" ng-options="p.id as p.name for p in bag.providers">
+        <div class="controls" ng-if="view.providers.length != 0">
+            <select id="terratype_{{view.identifier}}_provider" ng-model="view.config.provider.id" class="umb-editor" ng-change="view.setProvider(view.config.provider.id)" ng-options="p.id as p.name for p in view.providers">
             </select>
         </div>
     </div>
     <br />
-    <fieldset ng-show="bag.provider.id && bag.provider.loaded" style="padding-left:15px;">
-        <a href="{{bag.provider.referenceUrl}}" target="_blank">
-            <legend ng-style="{'padding-left':'36px', 'background-image':'url(' + bag.provider.logo + ')', 'background-size': 'auto 32px', 'background-repeat': 'no-repeat'}">
-                {{bag.provider.name}}
+    <fieldset ng-show="view.provider.id && view.provider.loaded" style="padding-left:15px;">
+        <a href="{{view.provider.referenceUrl}}" target="_blank">
+            <legend ng-style="{'padding-left':'36px', 'background-image':'url(' + view.provider.events.files.logo + ')', 'background-size': 'auto 32px', 'background-repeat': 'no-repeat'}">
+                {{view.provider.name}}
             </legend>
         </a>
-        <p>{{bag.provider.description}}</p>
+        <p>{{view.provider.description}}</p>
         <br />
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 Configure
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_coordinatesystem" class="control-label">
+                <label for="terratype_{{view.identifier}}_coordinatesystem" class="control-label">
                     Coordinate System:
                     <small>
                         Which Geodetic Coordinate System do you wish to use to present and store locations
                     </small>
                 </label>
-                <div class="controls" ng-if="bag.provider && bag.provider.coordinateSystems && bag.provider.coordinateSystems.length != 0">
-                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="setCoordinateSystems(model.value.position.id)" ng-disabled="!model.value.provider.id" ng-options="c.id as c.name for c in bag.provider.coordinateSystems">
+                <div class="controls" ng-if="view.config && view.provider.coordinateSystems && view.provider.coordinateSystems.length != 0">
+                    <select id="terratype_{{view.identifier}}_coordinatesystem" ng-model="model.value.position.id" class="umb-editor" ng-change="view.setCoordinateSystem(model.value.position.id)" ng-disabled="!view.config.provider.id" ng-options="c.id as c.name for c in view.provider.coordinateSystems">
                     </select>
                     <div>
                         <small ng-show="model.value.position.id">
-                            <a href="{{bag.position.referenceUrl}}" target="_blank">
-                                {{bag.position.description}}
+                            <a href="{{view.position.referenceUrl}}" target="_blank">
+                                {{view.position.description}}
                             </a>
                         </small>
                     </div>
                 </div>
             </div>
             <br />
-            <ng-include src="bag.provider.views.config.definition">
+            <ng-include src="view.provider.events.files.views.config.definition">
             </ng-include>
         </section>
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 Search
             </h4>
-            <ng-include src="bag.provider.views.config.search">
+            <ng-include src="view.provider.events.files.views.config.search">
             </ng-include>
         </section>
         <section>
@@ -59,17 +59,17 @@
                 Apperance
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_height" class="control-label">
+                <label for="terratype_{{view.identifier}}_height" class="control-label">
                     Height:
                     <small>
                         The height of the map as displayed to the content editor in pixels
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_height" ng-model="model.value.height" class="umb-editor" placeholder="Height of map in pixels" />
+                    <input type="number" id="terratype_{{view.identifier}}_height" ng-model="view.config.height" class="umb-editor" placeholder="Height of map in pixels" />
                 </div>
             </div>
-            <ng-include src="bag.provider.views.config.apperance">
+            <ng-include src="view.provider.events.files.views.config.apperance">
             </ng-include>
         </section>
         <section>
@@ -77,76 +77,76 @@
                 Icon
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_id" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_id" class="control-label">
                     Predefine:
                     <small>
                         Select the Map marker image to display the selected location on the map, you can choose from a predefine list or your own custom attributes
                     </small>
                 </label>
                 <div class="controls">
-                    <select id="terratype_{{identifier}}_icon_predefine" ng-model="model.value.icon.id" class="umb-editor" ng-change="iconPredefineChange(model.value.icon.id)" ng-options="p.id as p.name for p in bag.icon.predefine">
+                    <select id="terratype_{{view.identifier}}_icon_predefine" ng-model="view.config.icon.id" class="umb-editor" ng-change="view.iconPredefineChange(view.config.icon.id)" ng-options="p.id as p.name for p in view.icon.predefine">
                     </select>
                 </div>
             </div>
 
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_url" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_url" class="control-label">
                     Image url:
                     <small>
                         Image location. If you include a protocol (http:// or https://), make sure it matches your website
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="text" id="terratype_{{identifier}}_icon_url" ng-model="model.value.icon.url" class="umb-editor umb-textstring textstring" ng-change="iconImageChange(model.value.icon.url)" placeholder="Url" spellcheck=false />
-                    <div ng-show="bag.icon.urlFailed && bag.icon.urlFailed != ''">
+                    <input type="text" id="terratype_{{view.identifier}}_icon_url" ng-model="view.config.icon.url" class="umb-editor umb-textstring textstring" ng-change="view.iconImageChange(view.config.icon.url)" placeholder="Url" spellcheck=false />
+                    <div ng-show="view.icon.urlFailed && view.icon.urlFailed != ''">
                         <small style="color:red;">
-                            Error: {{bag.icon.urlFailed}}
+                            Error: {{view.icon.urlFailed}}
                         </small>
                     </div>
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_width" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_width" class="control-label">
                     Width:
                     <small>
                         Width of the image in pixels
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_icon_width" ng-model="model.value.icon.size.width" class="umb-editor" ng-change="iconCustom()" placeholder="Numeric value" />
+                    <input type="number" id="terratype_{{view.identifier}}_icon_width" ng-model="view.config.icon.size.width" class="umb-editor" ng-change="view.iconCustom()" placeholder="Numeric value" />
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_height" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_height" class="control-label">
                     Height:
                     <small>
                         Height of the image in pixels
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_icon_height" ng-model="model.value.icon.size.height" class="umb-editor" ng-change="iconCustom()" placeholder="Numeric value" />
+                    <input type="number" id="terratype_{{view.identifier}}_icon_height" ng-model="view.config.icon.size.height" class="umb-editor" ng-change="view.iconCustom()" placeholder="Numeric value" />
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_anchor_horizontal" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_anchor_horizontal" class="control-label">
                     Horizontal Anchor:
                     <small>
                         Focal point of the icon. Ether enter a custom value in pixels from the top edge or choose from a predefine list
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual; iconCustom()" />
-                    <input type="number" ng-model="bag.icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.manual; iconCustom()" />
+                    <input type="radio" name="terratype_{{view.identifier}}_icon_anchor_horizontal" ng-model="view.icon.anchor.horizontal.isManual" ng-value="true" title="Use custom value" ng-change="view.config.icon.anchor.horizontal = view.icon.anchor.horizontal.manual; view.iconCustom()" />
+                    <input type="number" ng-model="view.icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="view.icon.anchor.horizontal.isManual == false" placeholder="Custom numeric value" ng-change="view.config.icon.anchor.horizontal = view.icon.anchor.horizontal.manual; view.iconCustom()" />
                 </div>
                 <div class="controls" style="margin-top:3px;">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="bag.icon.anchor.horizontal.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic; iconCustom()" />
-                    <select ng-model="bag.icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.horizontal.isManual == true" ng-change="model.value.icon.anchor.horizontal = bag.icon.anchor.horizontal.automatic; iconCustom()">
+                    <input type="radio" name="terratype_{{view.identifier}}_icon_anchor_horizontal" ng-model="view.icon.anchor.horizontal.isManual" ng-value="false" title="Use predefine value" ng-change="view.config.icon.anchor.horizontal = view.icon.anchor.horizontal.automatic; view.iconCustom()" />
+                    <select ng-model="view.icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="view.icon.anchor.horizontal.isManual == true" ng-change="view.config.icon.anchor.horizontal = view.icon.anchor.horizontal.automatic; view.iconCustom()">
                         <option value="left">Left</option>
                         <option value="center">Center</option>
                         <option value="right">Right</option>
                     </select>
                 </div>
-                <div ng-show="bag.icon.anchor.horizontal.isManual && bag.icon.anchor.horizontal.manual >= model.value.icon.size.width">
+                <div ng-show="view.icon.anchor.horizontal.isManual && view.icon.anchor.horizontal.manual >= view.config.icon.size.width">
                     <small style="color:red;">
                         Your focal point is now located outside the boundary of the image
                     </small>
@@ -154,35 +154,35 @@
             </div>
 
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_icon_anchor_vertical" class="control-label">
+                <label for="terratype_{{view.identifier}}_icon_anchor_vertical" class="control-label">
                     Vertical Anchor:
                     <small>
                         Focal point of the icon. Ether enter a custom value in pixels from the left hand edge or choose from a predefine list
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="bag.icon.anchor.vertical.isManual" ng-value="true" title="Use custom value" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.manual" />
-                    <input type="number" ng-model="bag.icon.anchor.vertical.manual" class="umb-editor" ng-disabled="bag.icon.anchor.vertical.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.manual" />
+                    <input type="radio" name="terratype_{{view.identifier}}_icon_anchor_vertical" ng-model="view.icon.anchor.vertical.isManual" ng-value="true" title="Use custom value" ng-change="view.config.icon.anchor.vertical = view.icon.anchor.vertical.manual; view.iconCustom()" />
+                    <input type="number" ng-model="view.icon.anchor.vertical.manual" class="umb-editor" ng-disabled="view.icon.anchor.vertical.isManual == false" placeholder="Custom numeric value" ng-change="model.value.icon.anchor.vertical = view.icon.anchor.vertical.manual; view.iconCustom()" />
                 </div>
                 <div class="controls" style="margin-top:3px;">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="bag.icon.anchor.vertical.isManual" ng-value="false" title="Use predefine value" ng-change="model.value.icon.anchor.vertical = 'center'" />
-                    <select ng-model="bag.icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="bag.icon.anchor.vertical.isManual == true" ng-change="model.value.icon.anchor.vertical = bag.icon.anchor.vertical.automatic">
+                    <input type="radio" name="terratype_{{view.identifier}}_icon_anchor_vertical" ng-model="view.icon.anchor.vertical.isManual" ng-value="false" title="Use predefine value" ng-change="view.config.icon.anchor.vertical = view.icon.anchor.vertical.automatic; view.iconCustom()" />
+                    <select ng-model="view.icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="view.icon.anchor.vertical.isManual == true" ng-change="view.config.icon.anchor.vertical = view.icon.anchor.vertical.automatic; view.iconCustom()">
                         <option value="top">Top</option>
                         <option value="center">Center</option>
                         <option value="bottom">Bottom</option>
                     </select>
                 </div>
-                <div ng-show="bag.icon.anchor.vertical.isManual && bag.icon.anchor.vertical.manual >= model.value.icon.size.height">
+                <div ng-show="view.icon.anchor.vertical.isManual && view.icon.anchor.vertical.manual >= view.config.icon.size.height">
                     <small style="color:red;">
                         Your focal point is now located outside the boundary of the image
                     </small>
                 </div>
             </div>
 
-            <div class="umb-el-wrap control-group" ng-show="model.value.icon.url && urlRoot && model.value.icon.size.width && model.value.icon.size.height">
-                <div ng-style="{'background-image':'url(' + bag.provider.mapExample + ')', 'padding-top':'10px 0 10px 25px;'}">
+            <div class="umb-el-wrap control-group" ng-show="view.config.icon.url && urlRoot && view.config.icon.size.width && view.config.icon.size.height">
+                <div ng-style="{'background-image':'url(' + view.urlRoot + view.provider.files.mapExample + ')', 'padding-top':'10px 0 10px 25px;'}">
                     <div style="padding:35px;">
-                        <img ng-src="{{absoluteUrl(model.value.icon.url)}}" ng-style="{'width': model.value.icon.size.width + 'px', 'height': model.value.icon.size.height + 'px'}" />
+                        <img ng-src="{{view.absoluteUrl(view.config.icon.url)}}" ng-style="{'width': view.config.icon.size.width + 'px', 'height': view.config.icon.size.height + 'px'}" />
                     </div>
                 </div>
             </div>
@@ -192,14 +192,14 @@
                 Debugger
             </h4>
             <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_debug" class="control-label">
+                <label for="terratype_{{view.identifier}}_debug" class="control-label">
                     Show Json:
                     <small>
                         Do you want to show the map or a json editor. This is for developer debugging purposes only.
                     </small>
                 </label>
                 <div class="controls">
-                    <select id="terratype_{{identifier}}_debug" ng-model="model.value.debug" class="umb-editor">
+                    <select id="terratype_{{view.identifier}}_debug" ng-model="view.config.debug" class="umb-editor">
                         <option value="0">Always show map</option>
                         <option value="1">Always show json</option>
                         <option value="2">Allow json to be viewable</option>
@@ -209,13 +209,13 @@
         </section>
     </fieldset>
 
-    <div ng-show="error != null" style="color:red;">
-        <p ng-bind-html="error">
+    <div ng-show="view.error != null" style="color:red;">
+        <p ng-bind-html="view.error">
         </p>
     </div>
 
-    <div ng-show="model.value.debug != 0">
-        <textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" json-text></textarea>
+    <div ng-show="view.config.debug != 0">
+        <textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="view.config" json-text></textarea>
     </div>
 
 </div>

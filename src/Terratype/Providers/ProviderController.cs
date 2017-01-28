@@ -62,9 +62,9 @@ namespace Terratype.Providers
         }
 
         [System.Web.Http.HttpGet]
-        public string Parse(string coordinateSystemId, string datum)
+        public string Parse(string id, string datum)
         {
-            var position = CoordinateSystems.Position.Create(coordinateSystemId);
+            var position = CoordinateSystems.Position.Create(id);
             if (position == null || !position.TryParse(datum))
             {
                 return null;
@@ -94,7 +94,7 @@ namespace Terratype.Providers
         private int ReadLittleEndianInt32(BinaryReader binaryReader)
         {
             byte[] bytes = new byte[sizeof(Int32)];
-            for (int i = 0; i != sizeof(Int32); i ++)
+            for (int i = 0; i != sizeof(Int32); i++)
             {
                 bytes[sizeof(int) - 1 - i] = binaryReader.ReadByte();
             }
@@ -249,6 +249,20 @@ namespace Terratype.Providers
                     status = HttpStatusCode.NotFound
                 };
             }
+        }
+
+        [System.Web.Http.HttpGet]
+        public string ConvertCoordinateSystem(string sourceId, string sourceDatum, string destinationId)
+        {
+            var source = CoordinateSystems.Position.Create(sourceId);
+            if (source == null || !source.TryParse(sourceDatum))
+            {
+                return null;
+            }
+            var wgs84 = source.ToWgs84();
+            var destination = CoordinateSystems.Position.Create(destinationId);
+            destination.FromWgs84(wgs84);
+            return destination.Datum.ToString();
         }
     }
 }
