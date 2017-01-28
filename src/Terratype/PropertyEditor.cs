@@ -18,7 +18,7 @@ namespace Terratype
 		{
             _defaultPreVals = new Dictionary<string, object>
             {
-                { "definition", "{\"height\": 400, \"config\": {\"debug\": 0, \"icon\": {\"id\":\"redmarker\"}}}" }
+                { "definition", "{ \"config\": {\"height\": 400, \"debug\": 0, \"icon\": {\"id\":\"redmarker\"}}}" }
             };
 		}
 

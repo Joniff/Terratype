@@ -34,10 +34,10 @@
                     if (newValue != oldValue) {
                         ngModelCtrl.$setViewValue(toUser(newValue));
 
-                        // TODO avoid this causing the focus of the input to be lost..
+                        // TODO avoid this causing the focus of the input to be lost
                         ngModelCtrl.$render();
                     }
-                }, true); // MUST use objectEquality (true) here, for some reason..
+                }, true); // MUST use objectEquality (true) here, for some reason
 
                 function fromUser(text) {
                     // Beware: trim() is not available in old browsers
@@ -63,7 +63,15 @@
     });
 
     angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', function ($scope, $timeout, $http, $injector) {
-        $scope.view = {
+        $scope.config = null;
+        $scope.store = null;
+        $scope.view = function () {
+            return $scope.main;
+        };
+
+        $scope.main = {
+            loading: true,
+            configgering: false,
             urlRoot: packagePath,
             controller: function (a) {
                 return '/umbraco/backoffice/terratype/provider/' + a;
@@ -71,13 +79,13 @@
             poll: 250,
             identifier: $scope.$id,
             error: null,
+            isPreview: false,
             providers: [],
             provider: {
                 id: null,
                 referenceUrl: null,
                 name: null
             },
-            config: {},
             mapId: function (array, id) {
                 for (var i = 0; i != array.length; i++) {
                     if (array[i].id == id) {
@@ -87,18 +95,28 @@
                 return -1;
             },
             initConfig: function () {
+                $scope.view().configgering = true;
                 if (typeof ($scope.model.value) === 'string') {
                     $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
                 }
-                $scope.view.config = $scope.model.value.config;
-                $scope.view.setIcon();
-                $http.get($scope.view.controller('providers')).then(function success(response) {
-                    $scope.view.providers = response.data;
-                    if ($scope.model.value && $scope.model.value.config && $scope.model.value.config.provider && $scope.model.value.config.provider.id != null) {
-                        $scope.view.setProvider($scope.model.value.config.provider.id);
+                $scope.config = function () {
+                    return $scope.model.value.config;
+                }
+                $scope.store = function () {
+                    return $scope.model.value;
+                }
+
+                $scope.view().setIcon();
+                $http.get($scope.view().controller('providers')).then(function success(response) {
+                    $scope.view().providers = response.data;
+                    if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
+                        $scope.view().setProvider($scope.config().provider.id);
                     }
+                    $timeout(function () {
+                        $scope.view().loading = false;
+                    }, 1);
                 }, function error(response) {
-                    $scope.view.error = '<b>Unable to retrieve providers</b><br />' + response.data;
+                    $scope.view().error = '<b>Unable to retrieve providers</b><br />' + response.data;
                 });
             },
             loadProvider: function (id, done) {
@@ -110,7 +128,7 @@
                             done();
                         } else {
                             root.terratype.loading = true;
-                            var script = $scope.view.urlRoot + 'scripts/' + id + '/' + id + '.js';
+                            var script = $scope.view().urlRoot + 'scripts/' + id + '/' + id + '.js';
                             LazyLoad.js(script, function () {
                                 $timeout(function () {
                                     if (angular.isUndefined(root.terratype.providers[id])) {
@@ -123,77 +141,81 @@
                             });
                         }
                     }
-                }, $scope.view.poll);
+                }, $scope.view().poll);
             },
             setIcon: function () {
-                if ($scope.view.config.icon && $scope.view.config.icon.id) {
-                    $scope.view.iconPredefineChangeInternal($scope.view.config.icon.id);
+                if ($scope.config().icon && $scope.config().icon.id) {
+                    $scope.view().iconPredefineChangeInternal($scope.config().icon.id);
                 }
-                $scope.view.iconAnchor();
-                if ($scope.view.config.icon && !$scope.view.config.icon.id) {
-                    $scope.view.iconCustom();
+                $scope.view().iconAnchor();
+                if ($scope.config().icon && !$scope.config().icon.id) {
+                    $scope.view().iconCustom();
                 }
             },
             setProvider: function (id) {
-                var index = $scope.view.mapId($scope.view.providers, id);
+                var index = $scope.view().mapId($scope.view().providers, id);
                 if (index == -1) {
                     //  Asked for a provider we don't have
                     return;
                 }
-                $scope.view.loadProvider(id, function () {
-                    if (!$scope.view.providers[index].loaded) {
-                        $scope.view.providers[index] = angular.extend($scope.view.providers[index], root.terratype.providers[id]);
-                        $scope.view.providers[index].loaded = true;
-                        $scope.view.providers[index].events = $scope.view.providers[index].init($scope.view.identifier, packagePath, $scope.model.value, $scope.view.config, $scope.view, function () {
+                $scope.view().loadProvider(id, function () {
+                    if (!$scope.view().providers[index].loaded) {
+                        $scope.view().providers[index] = angular.extend($scope.view().providers[index], root.terratype.providers[id]);
+                        $scope.view().providers[index].loaded = true;
+                        $scope.view().providers[index].events = $scope.view().providers[index].init($scope.view().identifier, packagePath, $scope.store, $scope.config, $scope.view, function () {
                             $scope.$apply();
                         });
                     }
-
-                    $scope.view.provider = $scope.view.providers[index];
-                    $scope.view.provider.events.setProvider();
-                    if ($scope.view.config.position && $scope.view.config.position.id != null) {
-                        $scope.view.setCoordinateSystem($scope.view.config.position.id);
+                    $scope.view().provider = $scope.view().providers[index];
+                    if (!$scope.view().isPreview) {
+                        $scope.view().provider.events.setProvider();
+                        if ($scope.store().position && $scope.store().position.id != null) {
+                            $scope.view().setCoordinateSystem($scope.store().position.id);
+                        }
                     }
                 });
             },
             setCoordinateSystem: function (id) {
-                var index = $scope.view.mapId($scope.view.provider.coordinateSystems, id);
-                $scope.view.position = (index != -1) ? $scope.view.provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null };
-                $scope.view.provider.events.setCoordinateSystem();
+                var index = $scope.view().mapId($scope.view().provider.coordinateSystems, id);
+                $scope.view().position = (index != -1) ? $scope.view().provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null, precision: 6 };
+                if ($scope.view().configgering) {
+                    $scope.store().position.precision = $scope.view().position.precision;
+                }
+                $scope.view().provider.events.setCoordinateSystem();
             },
             iconAnchor: function () {
-                if (isNaN($scope.view.config.icon.anchor.horizontal)) {
-                    $scope.view.icon.anchor.horizontal.isManual = false;
-                    $scope.view.icon.anchor.horizontal.automatic = $scope.view.config.icon.anchor.horizontal;
+                if (isNaN($scope.config().icon.anchor.horizontal)) {
+                    $scope.view().icon.anchor.horizontal.isManual = false;
+                    $scope.view().icon.anchor.horizontal.automatic = $scope.config().icon.anchor.horizontal;
                 } else {
-                    $scope.view.icon.anchor.horizontal.isManual = true;
-                    $scope.view.icon.anchor.horizontal.manual = $scope.view.config.icon.anchor.horizontal;
+                    $scope.view().icon.anchor.horizontal.isManual = true;
+                    $scope.view().icon.anchor.horizontal.manual = $scope.config().icon.anchor.horizontal;
                 }
-                if (isNaN($scope.view.config.icon.anchor.vertical)) {
-                    $scope.view.icon.anchor.vertical.isManual = false;
-                    $scope.view.icon.anchor.vertical.automatic = $scope.view.config.icon.anchor.vertical;
+                if (isNaN($scope.config().icon.anchor.vertical)) {
+                    $scope.view().icon.anchor.vertical.isManual = false;
+                    $scope.view().icon.anchor.vertical.automatic = $scope.config().icon.anchor.vertical;
                 } else {
-                    $scope.view.icon.anchor.vertical.isManual = true;
-                    $scope.view.icon.anchor.vertical.manual = $scope.view.config.icon.anchor.vertical;
+                    $scope.view().icon.anchor.vertical.isManual = true;
+                    $scope.view().icon.anchor.vertical.manual = $scope.config().icon.anchor.vertical;
                 }
             },
             iconPredefineChangeInternal: function (id) {
                 var index = 0;
                 if (id) {
-                    var index = $scope.view.mapId($scope.view.icon.predefine, id);
+                    var index = $scope.view().mapId($scope.view().icon.predefine, id);
                     if (id == -1) {
                         index = 0;
                     }
                 }
-                $scope.view.config.icon.id = id;
-                $scope.view.config.icon.url = $scope.view.icon.predefine[index].url;
-                $scope.view.config.icon.size = $scope.view.icon.predefine[index].size;
-                $scope.view.config.icon.anchor = $scope.view.icon.predefine[index].anchor;
-                $scope.view.iconAnchor();
+                $scope.config().icon.id = id;
+                $scope.config().icon.url = $scope.view().icon.predefine[index].url;
+                $scope.config().icon.size = $scope.view().icon.predefine[index].size;
+                $scope.config().icon.anchor = $scope.view().icon.predefine[index].anchor;
+                $scope.view().iconAnchor();
             },
             iconPredefineChange: function (id) {
-                $scope.view.iconPredefineChangeInternal(id);
-                $scope.view.config.provider.events.setIcon();
+                $scope.view().iconPredefineChangeInternal(id);
+                $scope.view().provider.events.setIcon();
             },
             absoluteUrl: function (url) {
                 if (!url) {
@@ -211,56 +233,56 @@
                 return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
             },
             iconCustom: function () {
-                $scope.view.config.icon.id = $scope.view.config.predefine[0].id;
-                if (!$scope.view.icon.anchor.horizontal.isManual) {
-                    switch ($scope.view.icon.anchor.horizontal.automatic) {
+                $scope.config().icon.id = $scope.config().predefine[0].id;
+                if (!$scope.view().icon.anchor.horizontal.isManual) {
+                    switch ($scope.view().icon.anchor.horizontal.automatic) {
                         case 'left':
-                            $scope.view.icon.anchor.horizontal.manual = 0;
+                            $scope.view().icon.anchor.horizontal.manual = 0;
                             break;
                         case 'center':
-                            $scope.view.icon.anchor.horizontal.manual = (($scope.view.config.icon.size.width - 1) / 2) | 0;
+                            $scope.view().icon.anchor.horizontal.manual = (($scope.config().icon.size.width - 1) / 2) | 0;
                             break;
                         case 'right':
-                            $scope.view.icon.anchor.horizontal.manual = $scope.view.config.icon.size.width - 1;
+                            $scope.view().icon.anchor.horizontal.manual = $scope.config().icon.size.width - 1;
                             break;
                     }
                 }
-                if (!$scope.view.icon.anchor.vertical.isManual) {
-                    switch ($scope.view.icon.anchor.vertical.automatic) {
+                if (!$scope.view().icon.anchor.vertical.isManual) {
+                    switch ($scope.view().icon.anchor.vertical.automatic) {
                         case 'top':
-                            $scope.view.icon.anchor.vertical.manual = 0;
+                            $scope.view().icon.anchor.vertical.manual = 0;
                             break;
                         case 'center':
-                            $scope.view.icon.anchor.vertical.manual = (($scope.view.config.icon.size.height - 1) / 2) | 0;
+                            $scope.view().icon.anchor.vertical.manual = (($scope.config().icon.size.height - 1) / 2) | 0;
                             break;
                         case 'bottom':
-                            $scope.view.icon.anchor.vertical.manual = $scope.view.config.icon.size.height - 1;
+                            $scope.view().icon.anchor.vertical.manual = $scope.config().icon.size.height - 1;
                             break;
                     }
                 }
             },
             iconImageChange: function () {
-                $scope.view.icon.urlFailed = '';
+                $scope.view().icon.urlFailed = '';
                 $http({
-                    url: $scope.view.controller('image'),
+                    url: $scope.view().controller('image'),
                     method: 'GET',
                     params: {
-                        url: $scope.view.config.icon.url
+                        url: $scope.config().icon.url
                     }
                 }).then(function success(response) {
                     if (response.data.status == 200) {
-                        $scope.view.config.icon.size = {
+                        $scope.config().icon.size = {
                             width: response.data.width,
                             height: response.data.height
                         };
-                        $scope.view.config.icon.format = response.data.format;
+                        $scope.config().icon.format = response.data.format;
                     } else {
-                        $scope.view.icon.urlFailed = response.data.error;
+                        $scope.view().icon.urlFailed = response.data.error;
                     }
                 }, function fail(response) {
-                    $scope.view.icon.urlFailed = response.data;
+                    $scope.view().icon.urlFailed = response.data;
                 });
-                $scope.view.iconCustom();
+                $scope.view().iconCustom();
             },
             icon: {
                 anchor: {
@@ -636,49 +658,64 @@
             },
             initEditor: function () {
                 try {
-                    $scope.view.error = false;
+                    $scope.view().error = false;
                     if (typeof ($scope.model.value) === 'string') {
                         $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
                     }
                     if (!$scope.model.value) {
                         $scope.model.value = {};
                     }
-                    $scope.view.config = $scope.model.config.definition;
-                    if ($scope.model.value.position.id != $scope.view.config.position.id) {
-                        //  Have changed coordinate system
+                    $scope.config = function () {
+                        return $scope.model.config.definition.config;
+                    }
+                    $scope.store = function () {
+                        return $scope.model.value;
+                    }
+                    if (!$scope.store().zoom) {
+                        $scope.store().zoom = $scope.model.config.definition.zoom;
+                    }
+                    if (!$scope.store().position || !$scope.store().position.id || !$scope.store().position.datum) {
+                        $scope.store().position = $scope.model.config.definition.position;
+                        delete $scope.store().position.precision;
+                        done();
+                    } else if ($scope.store().position.id != $scope.model.config.definition.position) {
+                        //  Convert coords from old system to new
                         $http({
-                            url: $scope.view.controller('convertcoordinatesystem'),
+                            url: $scope.view().controller('convertcoordinatesystem'),
                             method: 'GET',
                             params: {
-                                sourceId: $scope.model.value.position.id,
-                                sourceDatum: $scope.model.value.position.datum,
-                                destinationId: $scope.view.config.position.id
+                                sourceId: $scope.store().position.id,
+                                sourceDatum: $scope.store().position.datum,
+                                destinationId: $scope.model.config.definition.position.id
                             }
                         }).then(function success(response) {
-                            $scope.model.value.position.datum = response.data;
-                            $scope.model.value.position.id = $scope.model.config.definition.position.id;
+                            $scope.store().position.datum = response.data;
+                            $scope.store().position.id = $scope.model.config.definition.position.id;
                             done();
                         });
                     } else {
                         done();
                     }
                     function done () {
-                        $scope.view.loadProvider($scope.model.value.position.id, function () {
-                            $scope.view.isPreview = !angular.isUndefined($scope.model.sortOrder);
-                            $scope.view.providers = [];
-                            $scope.view.providers.push($scope.view.config.provider);
-                            $scope.view.providers[0].coordinateSystems = [];
-                            $scope.view.providers[0].coordinateSystems.push($scope.model.value.position);
-                            if ($scope.model.value && $scope.model.value.provider && $scope.model.value.provider.id != null && !$scope.view.isPreview) {
-                                $scope.view.setProvider($scope.model.value.provider.id);
-                            }
+                        $scope.view().loadProvider($scope.config().provider.id, function () {
+                            $scope.view().isPreview = !angular.isUndefined($scope.model.sortOrder);
+                            $scope.view().providers = [];
+                            $scope.view().providers.push($scope.config().provider);
+                            $scope.view().providers[0].coordinateSystems = [];
+                            $scope.view().providers[0].coordinateSystems.push($scope.store().position);
+                            $scope.view().position = $scope.store().position;
+                            $scope.view().position.precision = $scope.model.config.definition.position.precision;
+                            $scope.view().setProvider($scope.config().provider.id);
+                            $timeout(function () {
+                                $scope.view().loading = false;
+                            }, 1);
                         });
                     }
                 }
                 catch (oh) {
                     //  Error so might as well show debug
-                    $scope.view.error = true;
-                    $scope.view.config.debug = 1;
+                    $scope.view().error = true;
+                    $scope.config().debug = 1;
                 }
             }
         }

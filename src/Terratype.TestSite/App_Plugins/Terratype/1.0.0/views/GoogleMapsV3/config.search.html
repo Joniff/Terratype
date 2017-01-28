@@ -1,38 +1,38 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{view.identifier}}_googlemapv3_search_enable" class="control-label">
+    <label for="terratype_{{view().identifier}}_googlemapv3_search_enable" class="control-label">
         Search:
         <small>
             Do you want to include a text box, to lookup locations
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{view.identifier}}_googlemapv3_search_enable" ng-model="view.config.search.enable" ng-change="view.provider.events.searchChange()" class="umb-editor" convert-to-number>
+        <select id="terratype_{{view().identifier}}_googlemapv3_search_enable" ng-model="config().search.enable" ng-change="view().provider.events.searchChange()" class="umb-editor" convert-to-number>
             <option value="0">Hide Search</option>
             <option value="1">Enable Search</option>
             <option value="2">Enable Search with Autocomplete</option>
         </select>
         <div class="comment">
-            <div ng-show="view.status.searchFailed">
+            <div ng-show="view().status.searchFailed">
                 <img src="/umbraco/images/false.png" />
                 <span style="color:red;padding-right:10px;">Need to enable <a href="https://console.developers.google.com/apis" target="_blank">Google Places API Web Service</a> for your Google API Key</span>
             </div>
         </div>
     </div>
 </div>
-<div class="umb-el-wrap control-group" ng-show="view.config.search.enable != 0">
-    <label for="terratype_{{view.identifier}}_googlemapv3_searchcountry" class="control-label">
+<div class="umb-el-wrap control-group" ng-show="config().search.enable != 0">
+    <label for="terratype_{{view().identifier}}_googlemapv3_searchcountry" class="control-label">
         Restrict results:
         <small>
             Limited all search results to a particular country or countries.
         </small>
     </label>
     <div class="controls">
-        <div ng-show="view.provider.version">
-            <small ng-show="view.provider.versionMajor < 27">
-                NOTE: Google Maps V{{view.provider.version}} has a limited of only allowing search restrictions to one country. From version 3.27 onwards, this restriction has been increased to five
+        <div ng-show="view().provider.version">
+            <small ng-show="view().provider.versionMajor < 27">
+                NOTE: Google Maps V{{view().provider.version}} has a limited of only allowing search restrictions to one country. From version 3.27 onwards, this restriction has been increased to five
             </small>
         </div>
-        <select id="terratype_{{view.identifier}}_googlemapv3_searchcountry" ng-model="view.config.search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="view.provider.events.searchCountryChange()">
+        <select id="terratype_{{view().identifier}}_googlemapv3_searchcountry" ng-model="config().search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="view().provider.events.searchCountryChange()">
             <option value="AF">Afghanistan</option>
             <option value="AX">Åland Islands</option>
             <option value="AL">Albania</option>
@@ -283,17 +283,17 @@
             <option value="ZM">Zambia</option>
             <option value="ZW">Zimbabwe</option>
         </select>
-        <div style="padding-top:5px;" ng-show="view.config.search.limit.countries.length != 0">
-            <button type="button" ng-click="view.config.search.limit.countries=[]" title="Clear selected countries">Clear</button>
+        <div style="padding-top:5px;" ng-show="config().search.limit.countries.length != 0">
+            <button type="button" ng-click="config().search.limit.countries=[]" title="Clear selected countries">Clear</button>
         </div>
-        <div ng-show="view.provider.versionMajor < 27 && view.config.search.limit.countries.length > 1">
+        <div ng-show="view().provider.versionMajor < 27 && config().search.limit.countries.length > 1">
             <small style="color:red;">
-                Google Maps V3.{{view.provider.versionMajor}} and a limit of only 1 country that can be selected
+                Google Maps V3.{{view().provider.versionMajor}} and a limit of only 1 country that can be selected
             </small>
         </div>
-        <div ng-show="view.provider.versionMajor >= 27 && view.config.search.limit.countries.length > 5">
+        <div ng-show="view().provider.versionMajor >= 27 && config().search.limit.countries.length > 5">
             <small style="color:red;">
-                Google Maps V3.{{view.provider.versionMajor}} has a limit of 5 countries that can be selected
+                Google Maps V3.{{view().provider.versionMajor}} has a limit of 5 countries that can be selected
             </small>
         </div>
     </div>

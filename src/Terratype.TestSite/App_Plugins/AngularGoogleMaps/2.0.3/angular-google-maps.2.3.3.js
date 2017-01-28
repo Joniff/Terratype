@@ -5208,7 +5208,7 @@
                         var d, e, f, g, h, i, j, k, m, n, o, p, q;
                         if (k = null != b._omsData, k && this.keepSpiderfied || ("mouseover" === this.event ? (d = this, e = function() {
                                 return d.unspiderfy()
-                            }, a.clearTimeout(l.timeout), l.timeout = setTimeout(e, 3e3)) : this.unspiderfy()), k || this.map.getStreetView().getVisible() || "GoogleEarthAPI" === this.map.getMapTypeId()) return this.trigger("click", b, c);
+                            }, a.clearTimeout(l.timeout), l.timeout = setTimeout(e, 3e3)) : this.unspiderfy()), k || this.map.getstreetview.getVisible() || "GoogleEarthAPI" === this.map.getMapTypeId()) return this.trigger("click", b, c);
                         for (n = [], o = [], m = this.nearbyDistance, p = m * m, j = this.llToPt(b.position), q = this.markers, f = 0, g = q.length; g > f; f++) h = q[f], null != h.map && h.getVisible() && (i = this.llToPt(h.position), this.ptDistanceSq(i, j) < p ? n.push({
                             marker: h,
                             markerPt: i
