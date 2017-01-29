@@ -111,7 +111,7 @@
                 $http.get($scope.view().controller('providers')).then(function success(response) {
                     $scope.view().providers = response.data;
                     if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
-                        $scope.view().setProvider($scope.config().provider.id);
+                        $scope.view().setProvider($scope.config().provider.id, true);
                     }
                     $timeout(function () {
                         $scope.view().loading = false;
@@ -153,7 +153,7 @@
                     $scope.view().iconCustom();
                 }
             },
-            setProvider: function (id) {
+            setProvider: function (id, disableUpdateMap) {
                 var index = $scope.view().mapId($scope.view().providers, id);
                 if (index == -1) {
                     //  Asked for a provider we don't have
@@ -169,20 +169,24 @@
                     }
                     $scope.view().provider = $scope.view().providers[index];
                     if (!$scope.view().isPreview) {
-                        $scope.view().provider.events.setProvider();
+                        if (!disableUpdateMap) {
+                            $scope.view().provider.events.setProvider();
+                        }
                         if ($scope.store().position && $scope.store().position.id != null) {
-                            $scope.view().setCoordinateSystem($scope.store().position.id);
+                            $scope.view().setCoordinateSystem($scope.store().position.id, disableUpdateMap);
                         }
                     }
                 });
             },
-            setCoordinateSystem: function (id) {
+            setCoordinateSystem: function (id, disableUpdateMap) {
                 var index = $scope.view().mapId($scope.view().provider.coordinateSystems, id);
                 $scope.view().position = (index != -1) ? angular.copy($scope.view().provider.coordinateSystems[index]) : { id: null, referenceUrl: null, name: null, datum: null, precision: 6 };
                 if ($scope.view().configgering) {
                     $scope.store().position.precision = $scope.view().position.precision;
                 }
-                $scope.view().provider.events.setCoordinateSystem();
+                if (!disableUpdateMap) {
+                    $scope.view().provider.events.setCoordinateSystem();
+                }
             },
             iconAnchor: function () {
                 if (isNaN($scope.config().icon.anchor.horizontal)) {
@@ -658,14 +662,20 @@
                 ]
             },
             initEditor: function () {
+                $scope.view().error = false;
                 try {
-                    $scope.view().error = false;
                     if (typeof ($scope.model.value) === 'string') {
                         $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
                     }
                     if (!$scope.model.value) {
                         $scope.model.value = {};
                     }
+                }
+                catch (oh) {
+                    //  Can't even read our values
+                    $scope.model.value = {};
+                }
+                try {
                     $scope.config = function () {
                         return $scope.model.config.definition.config;
                     }
@@ -708,7 +718,7 @@
                             $scope.view().providers[0].coordinateSystems.push($scope.store().position);
                             $scope.view().position = angular.copy($scope.store().position);
                             $scope.view().position.precision = $scope.model.config.definition.position.precision;
-                            $scope.view().setProvider($scope.config().provider.id);
+                            $scope.view().setProvider($scope.config().provider.id, true);
                             $timeout(function () {
                                 $scope.view().loading = false;
                             }, 1);

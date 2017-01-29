@@ -60,7 +60,7 @@
         subsystemCompleted: 6,
         status: 0,
         killswitch: false,
-        poll: 330,
+        poll: 500,
         timeout: 10000,
         fakeConsole: {
             isFake: true,
@@ -727,6 +727,20 @@
                 styles = setVisibilityOff(styles, 'administrative.neighborhood');
             }
             return styles;
+        },
+        searchCountries: function (countries) {
+            if (!countries || !(countries instanceof Array) || countries.length == 0) {
+                return null;
+            }
+            if (countries.length == 1) {
+                return countries[0];
+            }
+            return countries;
+        },
+        round: function (num, decimals) {
+            var sign = num >= 0 ? 1 : -1;
+            var pow = Math.pow(10, decimals);
+            return parseFloat((Math.round((num * pow) + (sign * 0.001)) / pow).toFixed(decimals));
         }
     }
 
@@ -737,14 +751,6 @@
         timeout: 15000,
         datumWait: 330,
         init: function (id, urlRoot, model, config, view, updateView) {
-
-
-            view().position.test = 'gg';
-            if (model().position.test == 'gg') {
-                alert('gg');
-            }
-
-
             var scope = {
                 defaultConfig: {
                     position: {
@@ -882,13 +888,6 @@
                             model().position.datum = scope.parse.call(scope, model().position.datum);
                         }
                     }
-
-                    view().position.test = 'fraaaed';
-                    if (model().position.test == 'fraaaed') {
-                        alert('fraaaed');
-                    }
-
-
                     if (view().isPreview == false && config().provider && config().provider.version && model().position && model().position.id) {
                         scope.loadMap.call(scope);
                     }
@@ -964,7 +963,7 @@
                         },
                         optionChange: function () {
                             if (scope.gmap) {
-                                var mapTypeIds = gm.mapTypeIds.call(config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
+                                var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
                                 scope.gmap.setOptions({
                                     mapTypeId: mapTypeIds[0],
                                     mapTypeControl: (mapTypeIds.length > 1),
@@ -1006,7 +1005,7 @@
                         },
                         searchCountryChange: function () {
                             if (scope.gautocomplete) {
-                                scope.gautocomplete.setComponentRestrictions({ "country": config().search.limit.countries.join(',') });
+                                scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
                             }
                         },
                         reload: function () {
@@ -1014,14 +1013,23 @@
                         }
                     }
                 },
-                reloadMap: function () {
+                destroyMap: function () {
                     if (scope.loadMapWait) {
                         clearTimeout(scope.loadMapWait);
                         scope.loadMapWait = null;
                     }
                     event.cancel(id);
                     gm.destroySubsystem();
+                    if (scope.div) {
+                        var div = document.getElementById(scope.div);
+                        while (div.firstChild) {
+                            div.removeChild(div.firstChild);
+                        }
+                    }
                     scope.haveCheckedSearchFunctionalityExists = false;
+                },
+                reloadMap: function () {
+                    scope.destroyMap.call(scope);
                     setTimeout(function () {
                         scope.loadMap.call(scope)
                     }, 1);
@@ -1031,11 +1039,11 @@
                     if (args.length < 2) {
                         return false;
                     }
-                    var lat = parseFloat(args[0]);
+                    var lat = parseFloat(args[0].substring(0, 10));
                     if (isNaN(lat) || lat > 90 || lat < -90) {
                         return false;
                     }
-                    var lng = parseFloat(args[1]);
+                    var lng = parseFloat(args[1].substring(0, 10));
                     if (isNaN(lng) || lng > 180 || lng < -180) {
                         return false;
                     }
@@ -1071,13 +1079,6 @@
                 divoldsize: 0,
                 superWaiter: null,
                 loadMap: function () {
-
-                    view().position.test = 'fred';
-                    if (model().position.test == 'fred') {
-                        alert('fred');
-                    }
-
-
                     if (scope.loadMapWait == null) {
                         scope.loadMapWait = setTimeout(function () {
                             //gm.originalConsole.warn(id + ': Loading map');
@@ -1143,7 +1144,7 @@
                                     updateView();
                                 } else if (scope.gmap == null) {
                                     var latlng = new google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
-                                    var mapTypeIds = gm.mapTypeIds.call(config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
+                                    var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
                                     scope.gmap = new google.maps.Map(document.getElementById(scope.div), {
                                         disableDefaultUI: false,
                                         scrollwheel: false,
@@ -1154,7 +1155,7 @@
                                         fullScreenControl: config().provider.fullscreen.enable,
                                         fullscreenControlOptions: config().provider.fullscreen.position,
                                         styles: gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
-                                            config().showLandmarks, config().provider.showLabels),
+                                            config().provider.showLandmarks, config().provider.showLabels),
                                         mapTypeId: mapTypeIds[0],
                                         mapTypeControl: (mapTypeIds.length > 1),
                                         mapTypeControlOptions: {
@@ -1208,13 +1209,15 @@
                                         delete scope.gmap;
                                         return;
                                     }
-                                    var newValue = element.offsetTop;
+                                    var newValue = element.parentElement.offsetTop;
                                     var newSize = element.clientHeight * element.clientWidth;
                                     if (newValue != 0 && view().showMap == false) {
                                         //  Was hidden, now being shown
                                         view().showMap = true;
-                                        scope.eventRefresh.call(scope);
                                         updateView();
+                                        setTimeout(function () {
+                                            scope.eventRefresh.call(scope);
+                                        }, 1);
                                     } else if (newValue == 0 && view().showMap == true) {
                                         //  Was shown, now being hidden
                                         view().showMap = false;
@@ -1254,7 +1257,7 @@
 
                                 if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
                                     go();
-                                } else if (scope.div == null || scope.gmap == null) {
+                                } else if (scope.div == null || scope.gmap == null || document.getElementById(scope.div).hasChildNodes() == false) {
                                     gm.destroySubsystem();
                                     setTimeout(go, 1);
                                 } else {
@@ -1299,8 +1302,8 @@
                     //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
                     model().position.datum = {
-                        latitude: marker.latLng.lat(),
-                        longitude: marker.latLng.lng()
+                        latitude: gm.round(marker.latLng.lat(), view().position.precision),
+                        longitude: gm.round(marker.latLng.lng(), view().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);
@@ -1315,8 +1318,8 @@
                     scope.ignoreEvents++;
                     model().lookup = place.formatted_address;
                     model().position.datum = {
-                        latitude: place.geometry.location.lat(),
-                        longitude: place.geometry.location.lng()
+                        latitude: gm.round(place.geometry.location.lat(), view().position.precision),
+                        longitude: gm.round(place.geometry.location.lng(), view().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);
@@ -1331,7 +1334,7 @@
                     });
                     if (config().search && config().search.limit &&
                         config().search.limit.countries && config().search.limit.countries.length != 0) {
-                        scope.gautocomplete.setComponentRestrictions({ "country": config().search.limit.countries.join(',') });
+                        scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
                     }
                     scope.searchListerners.push(google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
                         scope.eventLookup.call(scope, scope.gautocomplete.getPlace());
