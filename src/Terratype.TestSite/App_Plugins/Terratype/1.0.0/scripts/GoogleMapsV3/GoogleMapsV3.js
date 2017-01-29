@@ -737,6 +737,14 @@
         timeout: 15000,
         datumWait: 330,
         init: function (id, urlRoot, model, config, view, updateView) {
+
+
+            view().position.test = 'gg';
+            if (model().position.test == 'gg') {
+                alert('gg');
+            }
+
+
             var scope = {
                 defaultConfig: {
                     position: {
@@ -874,6 +882,13 @@
                             model().position.datum = scope.parse.call(scope, model().position.datum);
                         }
                     }
+
+                    view().position.test = 'fraaaed';
+                    if (model().position.test == 'fraaaed') {
+                        alert('fraaaed');
+                    }
+
+
                     if (view().isPreview == false && config().provider && config().provider.version && model().position && model().position.id) {
                         scope.loadMap.call(scope);
                     }
@@ -1056,6 +1071,13 @@
                 divoldsize: 0,
                 superWaiter: null,
                 loadMap: function () {
+
+                    view().position.test = 'fred';
+                    if (model().position.test == 'fred') {
+                        alert('fred');
+                    }
+
+
                     if (scope.loadMapWait == null) {
                         scope.loadMapWait = setTimeout(function () {
                             //gm.originalConsole.warn(id + ': Loading map');

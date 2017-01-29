@@ -80,6 +80,7 @@
             identifier: $scope.$id,
             error: null,
             isPreview: false,
+            position: [],
             providers: [],
             provider: {
                 id: null,
@@ -177,7 +178,7 @@
             },
             setCoordinateSystem: function (id) {
                 var index = $scope.view().mapId($scope.view().provider.coordinateSystems, id);
-                $scope.view().position = (index != -1) ? $scope.view().provider.coordinateSystems[index] : { id: null, referenceUrl: null, name: null, datum: null, precision: 6 };
+                $scope.view().position = (index != -1) ? angular.copy($scope.view().provider.coordinateSystems[index]) : { id: null, referenceUrl: null, name: null, datum: null, precision: 6 };
                 if ($scope.view().configgering) {
                     $scope.store().position.precision = $scope.view().position.precision;
                 }
@@ -675,10 +676,12 @@
                         $scope.store().zoom = $scope.model.config.definition.zoom;
                     }
                     if (!$scope.store().position || !$scope.store().position.id || !$scope.store().position.datum) {
-                        $scope.store().position = $scope.model.config.definition.position;
-                        delete $scope.store().position.precision;
+                        $scope.store().position = {
+                            id: $scope.model.config.definition.position.id,
+                            datum: $scope.model.config.definition.position.datum
+                        }
                         done();
-                    } else if ($scope.store().position.id != $scope.model.config.definition.position) {
+                    } else if ($scope.store().position.id != $scope.model.config.definition.position.id) {
                         //  Convert coords from old system to new
                         $http({
                             url: $scope.view().controller('convertcoordinatesystem'),
@@ -703,7 +706,7 @@
                             $scope.view().providers.push($scope.config().provider);
                             $scope.view().providers[0].coordinateSystems = [];
                             $scope.view().providers[0].coordinateSystems.push($scope.store().position);
-                            $scope.view().position = $scope.store().position;
+                            $scope.view().position = angular.copy($scope.store().position);
                             $scope.view().position.precision = $scope.model.config.definition.position.precision;
                             $scope.view().setProvider($scope.config().provider.id);
                             $timeout(function () {
