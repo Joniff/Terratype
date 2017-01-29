@@ -874,8 +874,14 @@
                     if (!model().zoom) {
                         model().zoom = scope.defaultConfig.zoom;
                     }
-                    if (!config().provider || Object.keys(config().provider).length == 1) {
+                    if (!config().provider) {
                         config().provider = scope.defaultConfig.provider;
+                    } else {
+                        for (var attr in scope.defaultConfig.provider) {
+                            if (!config().provider[attr]) {
+                                config().provider[attr] = scope.defaultConfig.provider[attr];
+                            }
+                        }
                     }
                     if (!config().search) {
                         config().search = scope.defaultConfig.search;
@@ -1013,26 +1019,34 @@
                         }
                     }
                 },
-                destroyMap: function () {
+                reloadMap: function () {
                     if (scope.loadMapWait) {
                         clearTimeout(scope.loadMapWait);
                         scope.loadMapWait = null;
                     }
                     event.cancel(id);
                     gm.destroySubsystem();
+                    scope.haveCheckedSearchFunctionalityExists = false;
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        while (div.firstChild) {
-                            div.removeChild(div.firstChild);
-                        }
+                        var counter = 100;      //  Put in place incase of horrible errors
+
+                        var timer = setInterval(function () {
+                            var child = div.firstChild;
+                            if (child && counter != 0) {
+                                counter--;
+                                try {
+                                    div.removeChild(child);
+                                }
+                                catch (oh) {
+                                    //  Swallow errors
+                                }
+                            } else {
+                                clearInterval(timer);
+                                scope.loadMap.call(scope);
+                            }
+                        }, 1);
                     }
-                    scope.haveCheckedSearchFunctionalityExists = false;
-                },
-                reloadMap: function () {
-                    scope.destroyMap.call(scope);
-                    setTimeout(function () {
-                        scope.loadMap.call(scope)
-                    }, 1);
                 },
                 parse: function (text) {
                     var args = text.trim().split(',');

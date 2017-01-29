@@ -715,9 +715,10 @@
                             $scope.view().providers = [];
                             $scope.view().providers.push($scope.config().provider);
                             $scope.view().providers[0].coordinateSystems = [];
-                            $scope.view().providers[0].coordinateSystems.push($scope.store().position);
-                            $scope.view().position = angular.copy($scope.store().position);
-                            $scope.view().position.precision = $scope.model.config.definition.position.precision;
+                            var position = angular.copy($scope.store().position);
+                            position.precision = $scope.model.config.definition.position.precision;
+                            $scope.view().providers[0].coordinateSystems.push(position);
+                            $scope.view().position = angular.copy(position);
                             $scope.view().setProvider($scope.config().provider.id, true);
                             $timeout(function () {
                                 $scope.view().loading = false;
