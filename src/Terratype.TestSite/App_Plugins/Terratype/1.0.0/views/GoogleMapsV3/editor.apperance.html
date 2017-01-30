@@ -20,16 +20,27 @@
     </div>
 
     <div ng-show="view().status.success" class="umb-editor">
-        <div ng-show="store().search.enable != 0 && config().search.enable != 0" style="margin-bottom:5px;">
-            <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="store().lookup" spellcheck=false>
-        </div>
-        <div style="overflow:hidden;">
-            <div id="terratype_{{view().identifier}}_googlemapv3_map" style="height:{{config().height}}px" ng-show="view().showMap">
+        <div>
+            <div ng-show="store().search.enable != 0 && config().search.enable != 0">
+                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="store().lookup" spellcheck=false>
             </div>
         </div>
-
-        <div style="margin-top:5px">
-            <input type="text" id="terratype_{{view().identifier}}_googlemapv3_defaultlocation" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0)" ng-model="view().position.datumText" ng-change="view().provider.events.datumChange(view().position.datumText)" ng-style="view().position.datumStyle" />
+        <div style="height:1px;width:206px;display:inline-block;">
+             &nbsp;
+        </div>
+        <div style="margin-top:-15px;">
+            <div style="overflow:hidden;">
+                <div id="terratype_{{view().identifier}}_googlemapv3_map" style="height:{{config().height}}px" ng-show="view().showMap">
+                </div>
+            </div>
+        </div>
+        <div style="height:1px;width:206px;display:inline-block;">
+            &nbsp;
+        </div>
+        <div style="margin-top:-15px;">
+            <div>
+                <input type="text" id="terratype_{{view().identifier}}_googlemapv3_defaultlocation" class="umb-editor umb-textstring textstring" placeholder="latitude (-90.0 to 90.0), longitude (-180.0 to 180.0)" ng-model="view().position.datumText" ng-change="view().provider.events.datumChange(view().position.datumText)" ng-style="view().position.datumStyle" />
+            </div>
         </div>
     </div>
 </div>

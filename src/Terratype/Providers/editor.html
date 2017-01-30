@@ -1,28 +1,31 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="view().initEditor()" ng-show="!view().loading">
-    <div ng-show="view().isPreview">
-        <div ng-style="{'background-image':'url(' + view().provider.events.files.mapExample + ')','padding-top': '10px 0 10px 25px', 'margin':'-40px 0 0 -10px', 'height':'100px'}">
-            <div style="text-align:center">
-                <div ng-show="store().debug != 1">
-                    <img ng-src="{{view().absoluteUrl(config().icon.url)}}" ng-style="{'width': config().icon.size.width + 'px', 'height': config().icon.size.height + 'px', 'margin-top':'25px'}" />
-                </div>
-                <div ng-show="config().debug == 1">
-                    <h2 style="padding-top:25px;">
-                        DEBUG MODE
-                    </h2>
+﻿<!-- Terratype -->
+<div class="ng-cloak terratype" ng-controller="terratype" ng-init="view().initEditor()" ng-show="!view().loading">
+    <div>
+        <div ng-show="view().isPreview">
+            <div ng-style="{'background-image':'url(' + view().provider.events.files.mapExample + ')','padding-top': '10px 0 10px 25px', 'margin':'-40px 0 0 -10px', 'height':'100px'}">
+                <div style="text-align:center">
+                    <div ng-show="config().debug != 1">
+                        <img ng-src="{{view().absoluteUrl(config().icon.url)}}" ng-style="{'width': config().icon.size.width + 'px', 'height': config().icon.size.height + 'px', 'margin-top':'25px'}" />
+                    </div>
+                    <div ng-show="config().debug == 1">
+                        <h2 style="padding-top:25px;">
+                            DEBUG MODE
+                        </h2>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div ng-show="!view().isPreview">
-        <div ng-show="config().debug != 1">
-            <ng-include src="view().provider.events.files.views.editor.apperance">
-            </ng-include>
-        </div>
-        <div ng-show="config().debug != 0">
-            <div ng-show="error" style="color:red;">
-                Error loading Terratype control, the json below is corrupt
+        <div ng-show="!view().isPreview">
+            <div ng-show="config().debug != 1">
+                <ng-include src="view().provider.events.files.views.editor.apperance">
+                </ng-include>
             </div>
-            <textarea style="height:300px;width:100%;margin:20px 10px 0 0;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" json-text></textarea>
+            <div ng-show="config().debug != 0">
+                <div ng-show="error" style="color:red;">
+                    Error loading Terratype control, the json below is corrupt
+                </div>
+                <textarea style="height:300px;width:100%;margin:20px 10px 0 0;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" json-text></textarea>
+            </div>
         </div>
     </div>
 </div>
