@@ -77,7 +77,7 @@
                 return '/umbraco/backoffice/terratype/provider/' + a;
             },
             poll: 250,
-            identifier: $scope.$id,
+            identifier: $scope.$id + (new Date().getTime()),
             error: null,
             isPreview: false,
             position: [],
@@ -153,40 +153,31 @@
                     $scope.view().iconCustom();
                 }
             },
-            setProvider: function (id, disableUpdateMap) {
+            setProvider: function (id) {
                 var index = $scope.view().mapId($scope.view().providers, id);
                 if (index == -1) {
                     //  Asked for a provider we don't have
                     return;
                 }
                 $scope.view().loadProvider(id, function () {
-                    if (!$scope.view().providers[index].loaded) {
-                        $scope.view().providers[index] = angular.extend($scope.view().providers[index], root.terratype.providers[id]);
-                        $scope.view().providers[index].loaded = true;
-                        $scope.view().providers[index].events = $scope.view().providers[index].init($scope.view().identifier, packagePath, $scope.store, $scope.config, $scope.view, function () {
-                            $scope.$apply();
-                        });
-                    }
+                    $scope.view().providers[index] = angular.extend($scope.view().providers[index], root.terratype.providers[id]);
+                    $scope.view().providers[index].events = $scope.view().providers[index].init($scope.view().identifier, packagePath, $scope.store, $scope.config, $scope.view, function () {
+                        $scope.$apply();
+                    });
                     $scope.view().provider = $scope.view().providers[index];
-                    if (!$scope.view().isPreview) {
-                        if (!disableUpdateMap) {
-                            $scope.view().provider.events.setProvider();
-                        }
-                        if ($scope.store().position && $scope.store().position.id != null) {
-                            $scope.view().setCoordinateSystem($scope.store().position.id, disableUpdateMap);
-                        }
+                    $scope.view().provider.events.setProvider();
+                    if ($scope.store().position && $scope.store().position.id != null) {
+                        $scope.view().setCoordinateSystem($scope.store().position.id);
                     }
                 });
             },
-            setCoordinateSystem: function (id, disableUpdateMap) {
+            setCoordinateSystem: function (id) {
                 var index = $scope.view().mapId($scope.view().provider.coordinateSystems, id);
                 $scope.view().position = (index != -1) ? angular.copy($scope.view().provider.coordinateSystems[index]) : { id: null, referenceUrl: null, name: null, datum: null, precision: 6 };
                 if ($scope.view().configgering) {
                     $scope.store().position.precision = $scope.view().position.precision;
                 }
-                if (!disableUpdateMap) {
-                    $scope.view().provider.events.setCoordinateSystem();
-                }
+                $scope.view().provider.events.setCoordinateSystem();
             },
             iconAnchor: function () {
                 if (isNaN($scope.config().icon.anchor.horizontal)) {
@@ -662,6 +653,7 @@
                 ]
             },
             initEditor: function () {
+                console.log('initEditor() ' + $scope.view().identifier);
                 $scope.view().error = false;
                 try {
                     if (typeof ($scope.model.value) === 'string') {
@@ -672,7 +664,7 @@
                     }
                 }
                 catch (oh) {
-                    //  Can't even read our values
+                    //  Can't even read our own values
                     $scope.model.value = {};
                 }
                 try {
@@ -712,17 +704,19 @@
                     function done () {
                         $scope.view().loadProvider($scope.config().provider.id, function () {
                             $scope.view().isPreview = !angular.isUndefined($scope.model.sortOrder);
-                            $scope.view().providers = [];
-                            $scope.view().providers.push($scope.config().provider);
-                            $scope.view().providers[0].coordinateSystems = [];
+                            $scope.view().provider = angular.copy(root.terratype.providers[$scope.config().provider.id]);
                             var position = angular.copy($scope.store().position);
                             position.precision = $scope.model.config.definition.position.precision;
-                            $scope.view().providers[0].coordinateSystems.push(position);
+                            $scope.view().provider.coordinateSystems = [];
+                            $scope.view().provider.coordinateSystems.push(position);
                             $scope.view().position = angular.copy(position);
-                            $scope.view().setProvider($scope.config().provider.id, true);
-                            $timeout(function () {
-                                $scope.view().loading = false;
-                            }, 1);
+                            $scope.view().loading = false;
+                            setTimeout(function () {
+                                //  Simple way to wait for any destroy to have finished
+                                $scope.view().provider.events = $scope.view().provider.init($scope.view().identifier, packagePath, $scope.store, $scope.config, $scope.view, function () {
+                                    $scope.$apply();
+                                });
+                            }, 150);
                         });
                     }
                 }

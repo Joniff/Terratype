@@ -22,7 +22,7 @@
     <div ng-show="view().status.success" class="umb-editor">
         <div>
             <div ng-show="store().search.enable != 0 && config().search.enable != 0">
-                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="store().lookup" spellcheck=false>
+                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" placeholder="Search" ng-model="store().lookup" spellcheck=false style="z-index: 10000 !important;">
             </div>
         </div>
         <div style="height:1px;width:206px;display:inline-block;">

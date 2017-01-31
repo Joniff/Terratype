@@ -4,6 +4,8 @@
     var event = {
         events: [],
         register: function (id, name, scope, object, func) {
+            gm.originalConsole.log("Register " + name + ":" + id);
+
             event.events.push({
                 id: id,
                 name: name,
@@ -17,16 +19,38 @@
             angular.forEach(event.events, function (e, i) {
                 if (e.id != id) {
                     newEvents.push(e);
+                } else {
+                    gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
                 }
             });
             event.events = newEvents;
         },
         broadcast: function (name) {
+            var log = 'Broadcast ' + name + ' ';
             angular.forEach(event.events, function (e, i) {
                 if (e.name == name) {
+                    log += e.id + ',';
                     e.func.call(e.scope, e.object);
                 }
             });
+            gm.originalConsole.log(log);
+        },
+        broadcastSingle: function (name, counter) {
+            var loop = 0;
+            while (loop != 2) {
+                if (counter >= event.events.length) {
+                    counter = 0;
+                    loop++;
+                }
+
+                var e = event.events[counter++];
+                if (e.name == name) {
+                    e.func.call(e.scope, e.object);
+                    gm.originalConsole.log("Broadcast single " + e.name + ":" + e.id);
+                    return counter;
+                }
+            }
+            return null;
         },
         present: function (id) {
             if (id) {
@@ -60,7 +84,7 @@
         subsystemCompleted: 6,
         status: 0,
         killswitch: false,
-        poll: 500,
+        poll: 100,
         timeout: 10000,
         fakeConsole: {
             isFake: true,
@@ -113,23 +137,32 @@
             }
         },
         destroySubsystem: function () {
+            gm.originalConsole.log('Destroying subsystem');
+
             gm.uninstallFakeConsole();
-            delete google;
+            delete root.google;
             if (gm.domain) {
                 gm.uninstallScript(gm.domain);
                 gm.domain = null;
             }
             gm.status = gm.subsystemUninitiated;
             gm.killswitch = true;
+            gm.version = null;
+            gm.apiKey = null;
+            gm.coordinateSystem = null;
+            gm.forceHttps = false;
+            gm.language = null;
         },
         ticks: function () {
             return (new Date().getTime());
         },
         createSubsystem: function (version, apiKey, forceHttps, coordinateSystem, language) {
-            root.TerratypeGoogleMapsV3Callback = function  () {
+            gm.originalConsole.log('Creating subsystem');
+            root.TerratypeGoogleMapsV3Callback = function () {
                 gm.status = gm.subsystemCheckGoogleJs;
             }
             var start = gm.ticks() + gm.timeout;
+            var single = 0;
             var wait = setInterval(function () {
                 //gm.originalConsole.warn('Waiting for previous subsystem to die');
                 if (gm.ticks() > start) {
@@ -175,7 +208,7 @@
                         if (gm.killswitch) {
                             clearInterval(timer);
                         } else {
-                            gm.originalConsole.warn('Subsystem status ' + gm.status);
+                            //gm.originalConsole.warn('Subsystem status ' + gm.status);
                             switch (gm.status)
                             {
                                 case gm.subsystemInit:
@@ -209,19 +242,16 @@
                                     break;
 
                                 case gm.subsystemCooloff:
-                                    event.broadcast('gmaprefresh');
-                                    if (gm.ticks() > start) {
+                                case gm.subsystemCompleted:
+                                    single = event.broadcastSingle('gmaprefresh', single);
+                                    if (single == null) {
+                                        clearInterval(timer);
+                                        gm.destroySubsystem();
+                                    } else if (gm.status == gm.subsystemCooloff && gm.ticks() > start) {
                                         gm.status = gm.subsystemCompleted;
                                         gm.uninstallFakeConsole();
                                     }
                                     break;
-
-                                case gm.subsystemCompleted:
-                                    if (event.present() == 0) {
-                                        clearInterval(timer);
-                                    } else {
-                                        event.broadcast('gmaprefresh');
-                                    }
                             }
                         }
                     }, gm.poll);
@@ -289,8 +319,8 @@
             if (icon.url && icon.size.width && icon.size.height) {
                 return {
                     url: gm.configIconUrl(icon.url),
-                    scaledSize: new google.maps.Size(icon.size.width, icon.size.height),
-                    anchor: new google.maps.Point(
+                    scaledSize: new root.google.maps.Size(icon.size.width, icon.size.height),
+                    anchor: new root.google.maps.Point(
                         gm.getAnchorHorizontal(icon.anchor.horizontal, icon.size.width),
                         gm.getAnchorVertical(icon.anchor.vertical, icon.size.height)),
                     shadow: icon.shadowImage        /* This has been deprecated */
@@ -888,7 +918,7 @@
                     }
                 },
                 init: function () {
-                    event.cancel(id);
+                    //event.cancel(id);
                     if (model().position) {
                         if (typeof model().position.datum === 'string') {
                             model().position.datum = scope.parse.call(scope, model().position.datum);
@@ -903,12 +933,12 @@
                             mapExample: urlRoot + 'images/' + identifier + '/' + identifier + '-Example.png',
                             views: {
                                 config: {
-                                    definition: urlRoot + 'views/' + identifier + '/config.definition.html',
-                                    apperance: urlRoot + 'views/' + identifier + '/config.apperance.html',
-                                    search: urlRoot + 'views/' + identifier + '/config.search.html'
+                                    definition: urlRoot + 'views/' + identifier + '/config.definition.html?timestamp=' + Date.now(),
+                                    apperance: urlRoot + 'views/' + identifier + '/config.apperance.html?timestamp=' + Date.now(),
+                                    search: urlRoot + 'views/' + identifier + '/config.search.html?timestamp=' + Date.now()
                                 },
                                 editor: {
-                                    apperance: urlRoot + 'views/' + identifier + '/editor.apperance.html'
+                                    apperance: urlRoot + 'views/' + identifier + '/editor.apperance.html?timestamp=' + Date.now()
                                 }
                             }
                         },
@@ -943,10 +973,11 @@
                             }
                         },
                         styleChange: function () {
+                            config().provider.styles = gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
+                                    config().provider.showLandmarks, config().provider.showLabels);
                             if (scope.gmap) {
                                 scope.gmap.setOptions({
-                                    styles: gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
-                                        config().provider.showLandmarks, config().provider.showLabels)
+                                    styles: config().provider.styles
                                 });
                             }
                         },
@@ -1019,12 +1050,26 @@
                         }
                     }
                 },
-                reloadMap: function () {
+                destroy: function () {
+                    event.cancel(id);
                     if (scope.loadMapWait) {
                         clearTimeout(scope.loadMapWait);
                         scope.loadMapWait = null;
                     }
-                    event.cancel(id);
+                    if (scope.superWaiter) {
+                        clearInterval(scope.superWaiter);
+                        scope.superWaiter = null;
+                    }
+                    angular.forEach(scope.gevents, function (gevent) {
+                        root.google.maps.event.removeListener(gevent);
+                    });
+                    delete scope.gevents;
+                    delete scope.gmap;
+                    delete scope.gmarker;
+                    scope.deleteSearch.call(scope);
+                },
+                reloadMap: function () {
+                    scope.destroy();
                     gm.destroySubsystem();
                     scope.haveCheckedSearchFunctionalityExists = false;
                     if (scope.div) {
@@ -1046,6 +1091,8 @@
                                 scope.loadMap.call(scope);
                             }
                         }, 1);
+                    } else {
+                        scope.loadMap.call(scope);
                     }
                 },
                 parse: function (text) {
@@ -1083,7 +1130,7 @@
                 },
                 setMarker: function () {
                     if (scope.gmap && scope.gmarker) {
-                        var latlng = new google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
+                        var latlng = new root.google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
                         scope.gmarker.setPosition(latlng);
                         scope.gmap.panTo(latlng);
                     }
@@ -1106,6 +1153,7 @@
                             scope.gmap = null;
                             scope.gmarker = null;
                             scope.gautocomplete = null;
+                            scope.gevents = [],
                             scope.div = null;
                             scope.divoldsize = 0;
                             event.register(id, 'gmaperror', scope, this, function (s) {
@@ -1131,7 +1179,9 @@
                             });
                             event.register(id, 'gmaprefresh', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map refresh(). div=' + scope.div + ', gmap=' + scope.gmap);
-                                if (scope.div == null) {
+                                if (!root.google) {
+                                    scope.reloadMap.call(scope);
+                                } else if (scope.div == null) {
                                     view().status = {
                                         success: true,
                                         reload: true
@@ -1156,91 +1206,97 @@
                                     scope.div = 'terratype_' + id + '_googlemapv3_map';
                                     view().showMap = true;
                                     updateView();
-                                } else if (scope.gmap == null) {
-                                    var latlng = new google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
-                                    var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
-                                    scope.gmap = new google.maps.Map(document.getElementById(scope.div), {
-                                        disableDefaultUI: false,
-                                        scrollwheel: false,
-                                        panControl: false,      //   Has been depricated
-                                        center: latlng,
-                                        zoom: model().zoom,
-                                        draggable: config().draggable,
-                                        fullScreenControl: config().provider.fullscreen.enable,
-                                        fullscreenControlOptions: config().provider.fullscreen.position,
-                                        styles: gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
-                                            config().provider.showLandmarks, config().provider.showLabels),
-                                        mapTypeId: mapTypeIds[0],
-                                        mapTypeControl: (mapTypeIds.length > 1),
-                                        mapTypeControlOptions: {
-                                            style: config().provider.variety.selector.type,
-                                            mapTypeIds: mapTypeIds,
-                                            position: config().provider.variety.selector.position
-                                        },
-                                        scaleControl: config().provider.scale.enable,
-                                        scaleControlOptions: {
-                                            position: config().provider.scale.position
-                                        },
-                                        streetViewControl: config().provider.streetView.enable,
-                                        streetViewControlOptions: {
-                                            position: config().provider.streetView.position
-                                        },
-                                        zoomControl: config().provider.zoomControl.enable,
-                                        zoomControlOptions: {
-                                            position: config().provider.zoomControl.position
-                                        }
-                                    });
-                                    google.maps.event.addListener(scope.gmap, 'zoom_changed', function () {
-                                        scope.eventZoom.call(scope);
-                                    });
-                                    google.maps.event.addListenerOnce(scope.gmap, 'tilesloaded', function () {
-                                        scope.eventRefresh.call(scope);
-                                    });
-                                    google.maps.event.addListener(scope.gmap, 'resize', function () {
-                                        scope.eventCheckRefresh.call(scope);
-                                    });
-                                    scope.gmarker = new google.maps.Marker({
-                                        map: scope.gmap,
-                                        position: latlng,
-                                        id: 'terratype_' + id + '_marker',
-                                        draggable: true,
-                                        icon: gm.icon.call(gm, config().icon)
-                                    })
-                                    google.maps.event.addListener(scope.gmarker, 'dragend', function (marker) {
-                                        scope.eventDrag.call(scope, marker);
-                                    });
-
-                                    if (config().search.enable != 0) {
-                                        scope.createSearch.call(scope);
-                                    }
-                                    scope.setDatum.call(scope);
-
-                                    updateView();
                                 } else {
                                     var element = document.getElementById(scope.div);
                                     if (element == null) {
-                                        event.cancel(id);
-                                        delete scope.gmap;
-                                        return;
-                                    }
-                                    var newValue = element.parentElement.offsetTop;
-                                    var newSize = element.clientHeight * element.clientWidth;
-                                    if (newValue != 0 && view().showMap == false) {
-                                        //  Was hidden, now being shown
-                                        view().showMap = true;
-                                        updateView();
-                                        setTimeout(function () {
+                                        gm.originalConsole.log(id + ' ' + scope.div + ' not present');
+                                        scope.destroy.call(scope);
+                                    } else if (scope.gmap == null) {
+                                        scope.gevents = [];
+                                        var latlng = new root.google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
+                                        var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
+                                        config().provider.styles = gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
+                                                config().provider.showLandmarks, config().provider.showLabels);
+                                        scope.gmap = new root.google.maps.Map(element, {
+                                            disableDefaultUI: false,
+                                            scrollwheel: false,
+                                            panControl: false,      //   Has been depricated
+                                            center: latlng,
+                                            zoom: model().zoom,
+                                            draggable: config().draggable,
+                                            fullScreenControl: config().provider.fullscreen.enable,
+                                            fullscreenControlOptions: config().provider.fullscreen.position,
+                                            styles: config().provider.styles,
+                                            mapTypeId: mapTypeIds[0],
+                                            mapTypeControl: (mapTypeIds.length > 1),
+                                            mapTypeControlOptions: {
+                                                style: config().provider.variety.selector.type,
+                                                mapTypeIds: mapTypeIds,
+                                                position: config().provider.variety.selector.position
+                                            },
+                                            scaleControl: config().provider.scale.enable,
+                                            scaleControlOptions: {
+                                                position: config().provider.scale.position
+                                            },
+                                            streetViewControl: config().provider.streetView.enable,
+                                            streetViewControlOptions: {
+                                                position: config().provider.streetView.position
+                                            },
+                                            zoomControl: config().provider.zoomControl.enable,
+                                            zoomControlOptions: {
+                                                position: config().provider.zoomControl.position
+                                            }
+                                        });
+                                        scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'zoom_changed', function () {
+                                            scope.eventZoom.call(scope);
+                                        }));
+                                        scope.gevents.push(root.google.maps.event.addListenerOnce(scope.gmap, 'tilesloaded', function () {
                                             scope.eventRefresh.call(scope);
-                                        }, 1);
-                                    } else if (newValue == 0 && view().showMap == true) {
-                                        //  Was shown, now being hidden
-                                        view().showMap = false;
+                                        }));
+                                        scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'resize', function () {
+                                            scope.eventCheckRefresh.call(scope);
+                                        }));
+                                        scope.gmarker = new root.google.maps.Marker({
+                                            map: scope.gmap,
+                                            position: latlng,
+                                            id: 'terratype_' + id + '_marker',
+                                            draggable: true,
+                                            icon: gm.icon.call(gm, config().icon)
+                                        })
+                                        scope.gevents.push(root.google.maps.event.addListener(scope.gmarker, 'dragend', function (marker) {
+                                            scope.eventDrag.call(scope, marker);
+                                        }));
+
+                                        if (config().search.enable != 0) {
+                                            scope.createSearch.call(scope);
+                                        }
+                                        scope.setDatum.call(scope);
+
                                         updateView();
+                                    } else {
+                                        var newValue = element.parentElement.offsetTop;
+                                        var newSize = element.clientHeight * element.clientWidth;
+                                        if (newValue != 0 && view().showMap == false) {
+                                            //  Was hidden, now being shown
+                                            view().showMap = true;
+                                            updateView();
+                                            setTimeout(function () {
+                                                if (document.getElementById(scope.div).hasChildNodes() == false) {
+                                                    scope.reloadMap.call(scope);
+                                                } else {
+                                                    scope.eventRefresh.call(scope);
+                                                }
+                                            }, 1);
+                                        } else if (newValue == 0 && view().showMap == true) {
+                                            //  Was shown, now being hidden
+                                            view().showMap = false;
+                                            updateView();
+                                        }
+                                        else if (view().showMap == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
+                                            scope.eventCheckRefresh.call(scope);
+                                        }
+                                        scope.divoldsize = newSize;
                                     }
-                                    else if (view().showMap == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
-                                        scope.eventCheckRefresh.call(scope);
-                                    }
-                                    scope.divoldsize = newSize;
                                 }
                             });
 
@@ -1271,7 +1327,7 @@
 
                                 if (gm.status != gm.subsystemCooloff && gm.status != gm.subsystemCompleted) {
                                     go();
-                                } else if (scope.div == null || scope.gmap == null || document.getElementById(scope.div).hasChildNodes() == false) {
+                                } else if (scope.div == null || scope.gmap == null || document.getElementById(scope.div) == null || document.getElementById(scope.div).hasChildNodes() == false) {
                                     gm.destroySubsystem();
                                     setTimeout(go, 1);
                                 } else {
@@ -1301,7 +1357,7 @@
                     scope.ignoreEvents++;
                     scope.gmap.setZoom(model().zoom);
                     scope.setMarker.call(scope);
-                    google.maps.event.trigger(scope.gmap, 'resize');
+                    root.google.maps.event.trigger(scope.gmap, 'resize');
                     scope.ignoreEvents--;
                 },
                 eventCheckRefresh: function () {
@@ -1342,7 +1398,7 @@
                 },
                 searchListerners: [],
                 createSearch: function () {
-                    scope.gautocomplete = new google.maps.places.Autocomplete(document.getElementById('terratype_' + id + '_googlemapv3_lookup'),
+                    scope.gautocomplete = new root.google.maps.places.Autocomplete(document.getElementById('terratype_' + id + '_googlemapv3_lookup'),
                     {
                         autocomplete: config().search.enable == 2
                     });
@@ -1350,10 +1406,10 @@
                         config().search.limit.countries && config().search.limit.countries.length != 0) {
                         scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
                     }
-                    scope.searchListerners.push(google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
+                    scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
                         scope.eventLookup.call(scope, scope.gautocomplete.getPlace());
                     }));
-                    scope.searchListerners.push(google.maps.event.addListener(scope.gautocomplete, 'places_changed', function () {
+                    scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'places_changed', function () {
                         var places = scope.gautocomplete.getPlaces();
                         if (places && places.length > 0) {
                             scope.eventLookup.call(scope, places[0]);
@@ -1362,10 +1418,10 @@
 
                     if (!scope.haveCheckedSearchFunctionalityExists) {
                         //  Check to see if places service is enabled
-                        if (google.maps.places) {
-                            var service = new google.maps.places.PlacesService(scope.gmap);
+                        if (root.google.maps.places) {
+                            var service = new root.google.maps.places.PlacesService(scope.gmap);
                             service.textSearch({ query: 'paris, france' }, function (results, status) {
-                                if (google) {
+                                if (root.google) {
                                     view().status.searchFailed = (status != 'OK');
                                 }
                             });
@@ -1377,11 +1433,13 @@
                 },
                 deleteSearch: function () {
                     angular.forEach(scope.searchListerners, function (value, index) {
-                        google.maps.event.removeListener(value);
+                        root.google.maps.event.removeListener(value);
                     });
                     scope.searchListerners = [];
-                    google.maps.event.clearInstanceListeners(scope.gautocomplete);
-                    scope.gautocomplete = null;
+                    if (scope.gautocomplete) {
+                        root.google.maps.event.clearInstanceListeners(scope.gautocomplete);
+                        scope.gautocomplete = null;
+                    }
                 }
             }
             return scope.init();
