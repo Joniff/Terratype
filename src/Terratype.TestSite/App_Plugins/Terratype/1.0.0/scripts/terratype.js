@@ -111,11 +111,11 @@
                 $http.get($scope.view().controller('providers')).then(function success(response) {
                     $scope.view().providers = response.data;
                     if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
-                        $scope.view().setProvider($scope.config().provider.id, true);
+                        $scope.view().setProvider($scope.config().provider.id);
                     }
                     $timeout(function () {
                         $scope.view().loading = false;
-                    }, 1);
+                    });
                 }, function error(response) {
                     $scope.view().error = '<b>Unable to retrieve providers</b><br />' + response.data;
                 });

@@ -37,7 +37,7 @@
         },
         broadcastSingle: function (name, counter) {
             var loop = 0;
-            while (loop != 2) {
+            while (loop != 2 && event.events.length != 0) {
                 if (counter >= event.events.length) {
                     counter = 0;
                     loop++;
@@ -85,7 +85,7 @@
         status: 0,
         killswitch: false,
         poll: 100,
-        timeout: 10000,
+        timeout: 15000,
         fakeConsole: {
             isFake: true,
             error: function (a) {
@@ -1138,6 +1138,7 @@
                 loadMapWait: null,
                 div: null,
                 divoldsize: 0,
+                divwait: 0,
                 superWaiter: null,
                 loadMap: function () {
                     if (scope.loadMapWait == null) {
@@ -1156,6 +1157,7 @@
                             scope.gevents = [],
                             scope.div = null;
                             scope.divoldsize = 0;
+                            scope.divwait = gm.timeout / gm.poll;
                             event.register(id, 'gmaperror', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map error');
                                 view().status = {
@@ -1209,8 +1211,12 @@
                                 } else {
                                     var element = document.getElementById(scope.div);
                                     if (element == null) {
-                                        gm.originalConsole.log(id + ' ' + scope.div + ' not present');
-                                        scope.destroy.call(scope);
+                                        if (scope.gmap == null && scope.divwait != 0) {
+                                            scope.divwait--;
+                                        } else {
+                                            gm.originalConsole.log(id + ' ' + scope.div + ' not present');
+                                            scope.destroy.call(scope);
+                                        }
                                     } else if (scope.gmap == null) {
                                         scope.gevents = [];
                                         var latlng = new root.google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
