@@ -25,10 +25,10 @@
 	    "render": "media",
 	    "icon": "icon-picture",
 	    "config": {
-	    	"size": {
-	    		"width": 1920,
-	    		"height": 700
-	    	}
+	        "size": {
+	            "width": 1920,
+	            "height": 700
+	        }
 	    }
 	},
 	{
@@ -59,15 +59,15 @@
 	    "icon": "icon-movie-alt"
 	},
 	{
-        "name": "Banner Headline",
-        "alias": "banner_headline",
-        "view": "textstring",
-        "icon": "icon-coin",
-        "config": {
-            "style": "font-size: 36px; line-height: 45px; font-weight: bold; text-align:center",
-            "markup": "<h1 style='font-size:62px;text-align:center'>#value#</h1>"
-        }
-    },
+	    "name": "Banner Headline",
+	    "alias": "banner_headline",
+	    "view": "textstring",
+	    "icon": "icon-coin",
+	    "config": {
+	        "style": "font-size: 36px; line-height: 45px; font-weight: bold; text-align:center",
+	        "markup": "<h1 style='font-size:62px;text-align:center'>#value#</h1>"
+	    }
+	},
     {
         "name": "Banner Tagline",
         "alias": "banner_tagline",

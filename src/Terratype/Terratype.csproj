@@ -57,6 +57,8 @@
     <Compile Include="TerratypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Language\en-us.xml" />
+    <Content Include="Providers\grid.html" />
     <Content Include="Providers\GoogleMapsV3\editor.apperance.html" />
     <Content Include="Providers\GoogleMapsV3\GoogleMapsV3-Example.png" />
     <Content Include="Providers\BingMapsV8\BingMapsV8.png" />
@@ -71,6 +73,7 @@
     <Content Include="Providers\OSOpenSpaceV4\OSOpenSpaceV4-Logo.png" />
     <Content Include="Providers\terratype.js" />
     <None Include="app.config" />
+    <None Include="package.manifest" />
     <None Include="packages.config" />
     <Content Include="Providers\GoogleMapsV3\config.search.html" />
   </ItemGroup>

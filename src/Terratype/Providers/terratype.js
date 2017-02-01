@@ -62,6 +62,16 @@
         };
     });
 
+    angular.module("umbraco.directives").directive('localizePlaceholder', ['localizationService', function (localizationService) {
+        return function (scope, element, attr) {
+            attr.$observe('localizePlaceholder', function (key) {
+                localizationService.localize(key).then(function (value) {
+                    attr.$set('placeholder', value);
+                });
+            })
+        }
+    }]);
+
     angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', function ($scope, $timeout, $http, $injector) {
         $scope.config = null;
         $scope.store = null;

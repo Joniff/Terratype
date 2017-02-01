@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+
+  <area alias="terratypeEditor">
+    <key alias="debugMode">DEBUG MODE</key>
+    <key alias="reviewDate">Review Date</key>
+    <key alias="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</key>
+  </area>
+
+  <area alias="terratypeConfig">
+    <key alias="mapProviderLabel">Map Provider:</key>
+    <key alias="mapProviderDescription">Select which system you wish to use to display maps</key>
+
+    <key alias="definitionHeading">Configure</key>
+    <key alias="definitionCoordinateSystemLabel">Coordinate System:</key>
+    <key alias="definitionCoordinateSystemDescription">Which Geodetic Coordinate System do you wish to use to present and store locations</key>
+
+    <key alias="searchHeading">Search</key>
+
+    <key alias="apperanceHeading">Apperance</key>
+    <key alias="apperanceHeightLabel">Height:</key>
+    <key alias="apperanceHeightDescription">The height of the map as displayed to the content editor in pixels</key>
+    <key alias="apperanceHeightPlaceholder">Height of map in pixels</key>
+
+
+  </area>
+
+  <area alias="terratypeGrid">
+    <key alias="debugMode">DEBUG MODE</key>
+    <key alias="reviewDate">Review Date</key>
+    <key alias="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</key>
+  </area>
+</language>

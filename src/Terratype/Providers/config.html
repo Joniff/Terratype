@@ -1,9 +1,9 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="view().initConfig()" ng-show="!view().loading">
     <div class="umb-el-wrap control-group">
         <label for="terratype_{{view().identifier}}_provider" class="control-label">
-            Map Provider:
+            <localize key="terratypeConfig_mapProviderLabel">Map Provider:</localize>
             <small>
-                Select which system you wish to use to display maps
+                <localize key="terratypeConfig_mapProviderDescription">Select which system you wish to use to display maps</localize>
             </small>
         </label>
         <div class="controls" ng-if="view().providers.length != 0">
@@ -22,13 +22,13 @@
         <br />
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
-                Configure
+                <localize key="terratypeConfig_definitionHeading">Configure</localize>
             </h4>
             <div class="umb-el-wrap control-group">
                 <label for="terratype_{{view().identifier}}_coordinatesystem" class="control-label">
-                    Coordinate System:
+                    <localize key="terratypeConfig_definitionCoordinateSystemLabel">Coordinate System:</localize>
                     <small>
-                        Which Geodetic Coordinate System do you wish to use to present and store locations
+                        <localize key="terratypeConfig_definitionCoordinateSystemDescription">Which Geodetic Coordinate System do you wish to use to present and store locations</localize>
                     </small>
                 </label>
                 <div class="controls" ng-if="config && view().provider.coordinateSystems && view().provider.coordinateSystems.length != 0">
@@ -49,24 +49,24 @@
         </section>
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
-                Search
+                <localize key="terratypeConfig_searchHeading">Search</localize>
             </h4>
             <ng-include src="view().provider.events.files.views.config.search">
             </ng-include>
         </section>
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
-                Apperance
+                <localize key="terratypeConfig_apperanceHeading">Apperance</localize>
             </h4>
             <div class="umb-el-wrap control-group">
                 <label for="terratype_{{view().identifier}}_height" class="control-label">
-                    Height:
+                    <localize key="terratypeConfig_apperanceHeightLabel">Height:</localize>
                     <small>
-                        The height of the map as displayed to the content editor in pixels
+                        <localize key="terratypeConfig_apperanceHeightDescription">The height of the map as displayed to the content editor in pixels</localize>
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{view().identifier}}_height" ng-model="config().height" class="umb-editor" placeholder="Height of map in pixels" />
+                    <input type="number" id="terratype_{{view().identifier}}_height" ng-model="config().height" class="umb-editor" localize-placeholder="terratypeConfig_apperanceHeightPlaceholder" />
                 </div>
             </div>
             <ng-include src="view().provider.events.files.views.config.apperance">

@@ -342,6 +342,9 @@
     <Content Include="App_Plugins\Archetype\views\archetype.config.stylescript.dialog.html" />
     <Content Include="App_Plugins\Archetype\views\archetype.default.html" />
     <Content Include="App_Plugins\Archetype\views\archetype.html" />
+    <Content Include="App_Plugins\Grid\Config\FanoeConfig.txt" />
+    <Content Include="App_Plugins\Grid\Editors\Views\media_with_description.html" />
+    <Content Include="App_Plugins\Grid\Editors\Views\quote_with_description.html" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.htm" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
@@ -418,6 +421,11 @@
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
     <Content Include="App_Plugins\NestedContent\package.manifest" />
+    <Content Include="App_Plugins\Grid\Editors\Render\embed_videowrapper.cshtml" />
+    <Content Include="App_Plugins\Grid\Editors\Render\media_round.cshtml" />
+    <Content Include="App_Plugins\Grid\Editors\Render\media_text_right.cshtml" />
+    <Content Include="App_Plugins\Grid\Editors\Render\media_wide.cshtml" />
+    <Content Include="App_Plugins\Grid\Editors\Render\quote_with_description.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -480,9 +488,11 @@
   <Import Project="..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <Import Project="..\..\packages\UmbracoCms.7.5.8\build\UmbracoCms.targets" Condition="Exists('..\..\packages\UmbracoCms.7.5.8\build\UmbracoCms.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\Providers\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
+    <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype\" /Y
+xcopy "$(solutiondir)src\Terratype\Providers\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
 xcopy "$(solutiondir)src\Terratype\Providers\*.js" "$(ProjectDir)App_Plugins\Terratype\1.0.0\scripts\" /Y /e
-xcopy "$(solutiondir)src\Terratype\Providers\*.png" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y /e</PostBuildEvent>
+xcopy "$(solutiondir)src\Terratype\Providers\*.png" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y /e
+xcopy "$(solutiondir)src\Terratype\Language\*.xml" "$(ProjectDir)App_Plugins\Terratype\Lang\" /Y /e</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
