@@ -39,7 +39,7 @@ namespace Terratype.Providers
             public IEnumerable<CoordinateSystemsJson> coordinateSystems { get; set; }
             public bool canSearch { get; set; }
 
-            public ProviderJson(ProviderBase provider)
+            public ProviderJson(Provider provider)
             {
                 id = provider.Id;
                 name = provider.Name;
@@ -54,9 +54,9 @@ namespace Terratype.Providers
         public IEnumerable<ProviderJson> Providers()
         {
             var providers = new List<ProviderJson>();
-            foreach (var item in ProviderBase.Providers)
+            foreach (var item in Provider.Providers)
             {
-                providers.Add(new ProviderJson(ProviderBase.Create(item.Value)));
+                providers.Add(new ProviderJson(Provider.Create(item.Value)));
             }
             return providers;
         }
@@ -69,7 +69,7 @@ namespace Terratype.Providers
             {
                 return null;
             }
-            return position.Datum.ToString();
+            return position.datum.ToString();
         }
 
         public class ImageInfo
@@ -262,7 +262,7 @@ namespace Terratype.Providers
             var wgs84 = source.ToWgs84();
             var destination = CoordinateSystems.Position.Create(destinationId);
             destination.FromWgs84(wgs84);
-            return destination.Datum.ToString();
+            return destination.datum.ToString();
         }
     }
 }

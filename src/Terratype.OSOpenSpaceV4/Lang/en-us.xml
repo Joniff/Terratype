@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alais="terratypeOSOpenSpaceV4">
+    <key alias="description">Grid based Ordnance Survey system that only works in the UK</key>
+  </area>
+  
+  <area alias="terratypeOSOpenSpaceV4ConfigApperance">
+  </area>
+
+</language>

@@ -139,8 +139,7 @@
 
     <Copy SourceFiles="@(CoreBinFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
     <Copy SourceFiles="@(CorePdbFile)" DestinationFolder="$(BuildNuGetDir)\lib\net45" />
-    <Copy SourceFiles="@(SrcFiles)"
-   DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" />    
+    <Copy SourceFiles="@(SrcFiles)" DestinationFiles="@(SrcFiles->'$(BuildNuGetDir)\src\%(RecursiveDir)%(Filename)%(Extension)')" />    
     <Copy SourceFiles="@(NuSpecFile)" DestinationFolder="$(BuildNuGetDir)" />
     <Copy SourceFiles="@(CssFiles)" DestinationFolder="$(BuildNuGetDir)\Content$(PropertyEditorDir)" />
     <Copy SourceFiles="@(HtmlFiles)" DestinationFolder="$(BuildNuGetDir)\Content$(PropertyEditorDir)" />

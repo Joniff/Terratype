@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alias="terratypeGoogleMapsV3">
+    <key alias="description">Mapping system operated by Google. Requires an API key and is free upto 25,000 map loads per 24 hour period, then $0.50 per 1000 addition requests</key>
+  </area>
+  
+  <area alias="terratypeGoogleMapsV3ConfigApperance">
+
+    <key alias="basicMapLabel">Show Basic Map:</key>
+    <key alias="basicMapDescription">Do you want to see the standard map</key>
+    
+    <key alias="terrainMapLabel">Show Terrain Map:</key>
+    <key alias="terrainMapDescription">Do you want to see the standard map with terrain features</key>
+    
+    <key alias="satelliteMapLabel">Show Satellite Map:</key>
+    <key alias="satelliteMapDescription">Do you want to see the satellite map</key>
+
+    <key alias="mapSelectorLabel">Map Selector Type:</key>
+    <key alias="mapSelectorDescription">How do you want the user to select between viewing a standard, terrain and satellite map</key>
+    <key alias="mapSelectorHorizontalBar">Horizontal Bar</key>
+    <key alias="mapSelectorDropdownMenu">Dropdown Menu</key>
+    <key alias="mapSelectorPositionLabel">Map Selector Position:</key>
+    <key alias="mapSelectorPositionDescription">Where do you want the map selector to be positioned on the map</key>
+
+    <key alias="positionDefault">[Default]</key>
+    <key alias="positionTopLeft">Top Left</key>
+    <key alias="positionTopCenter">Top Center</key>
+    <key alias="positionTopRight">Top Right</key>
+    <key alias="positionLeftTop">Left Top</key>
+    <key alias="positionRightTop">Right Top</key>
+    <key alias="positionLeftCenter">Left Center</key>
+    <key alias="positionCenter">Center</key>
+    <key alias="positionRightCenter">Right Center</key>
+    <key alias="positionLeftBottom">Left Bottom</key>
+    <key alias="positionRightBottom">Right Bottom</key>
+    <key alias="positionBottomLeft">Bottom Left</key>
+    <key alias="positionBottomCenter">Bottom Center</key>
+    <key alias="positionBottomRight">Bottom Right</key>
+    
+    <key alias="fullscreenLabel">Fullscreen:</key>
+    <key alias="fullscreenDescription">Allow the map to take up the whole screen. Only available on certain browsers / devices.</key>
+    <key alias="fullscreenPositionLabel">Fullscreen Button Position:</key>
+    <key alias="fullscreenPositionDescription">Where do you want the fullscreen button to be positioned on the map</key>
+    <key alias="scaleLabel">Scale:</key>
+    <key alias="scaleDescription">Allow the map to show the current scale being used</key>
+    <key alias="streetviewLabel">Streetview:</key>
+    <key alias="streetviewDescription">Allow user to select streetview mode</key>
+    <key alias="streetviewPositionLabel">Streetview Position:</key>
+    <key alias="streetviewPositionDescription">Allow user to select streetview mode</key>
+    <key alias="streetviewPositionDescription">Where do you want the streetview 'pegman' to be positioned on the map</key>
+    <key alias="zoomLabel">Zoom:</key>
+    <key alias="zoomDescription">Show zoom control</key>
+    <key alias="zoomPositionLabel">Zoom Position:</key>
+  </area>
+
+</language>

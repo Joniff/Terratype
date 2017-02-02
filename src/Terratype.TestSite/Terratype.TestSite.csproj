@@ -443,6 +443,10 @@
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Terratype.GoogleMapsV3\GoogleMapsV3.csproj">
+      <Project>{5e9bcc16-68c8-4f1d-b203-d54079e0cec3}</Project>
+      <Name>GoogleMapsV3</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
       <Project>{5034528f-401c-4fd4-8f42-23b378c7140d}</Project>
       <Name>Terratype</Name>
@@ -489,10 +493,35 @@
   <Import Project="..\..\packages\UmbracoCms.7.5.8\build\UmbracoCms.targets" Condition="Exists('..\..\packages\UmbracoCms.7.5.8\build\UmbracoCms.targets')" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype\" /Y
-xcopy "$(solutiondir)src\Terratype\Providers\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
-xcopy "$(solutiondir)src\Terratype\Providers\*.js" "$(ProjectDir)App_Plugins\Terratype\1.0.0\scripts\" /Y /e
-xcopy "$(solutiondir)src\Terratype\Providers\*.png" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y /e
-xcopy "$(solutiondir)src\Terratype\Language\*.xml" "$(ProjectDir)App_Plugins\Terratype\Lang\" /Y /e</PostBuildEvent>
+xcopy "$(solutiondir)src\Terratype\Lang\*.xml" "$(ProjectDir)App_Plugins\Terratype\Lang\" /Y /e
+xcopy "$(solutiondir)src\Terratype\Views\*.html" "$(ProjectDir)App_Plugins\Terratype\1.0.0\views\" /Y /e
+xcopy "$(solutiondir)src\Terratype\Scripts\*.js" "$(ProjectDir)App_Plugins\Terratype\1.0.0\scripts\" /Y /e
+xcopy "$(solutiondir)src\Terratype\Images\*.png" "$(ProjectDir)App_Plugins\Terratype\1.0.0\images\" /Y /e
+
+rem xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype.GoogleMapsV3\" /Y
+xcopy "$(solutiondir)src\Terratype.GoogleMapsV3\Lang\*.xml" "$(ProjectDir)App_Plugins\Terratype.GoogleMapsV3\Lang\" /Y /e
+xcopy "$(solutiondir)src\Terratype.GoogleMapsV3\Views\*.html" "$(ProjectDir)App_Plugins\Terratype.GoogleMapsV3\1.0.0\views\" /Y /e
+xcopy "$(solutiondir)src\Terratype.GoogleMapsV3\Scripts\*.js" "$(ProjectDir)App_Plugins\Terratype.GoogleMapsV3\1.0.0\scripts\" /Y /e
+xcopy "$(solutiondir)src\Terratype.GoogleMapsV3\Images\*.png" "$(ProjectDir)App_Plugins\Terratype.GoogleMapsV3\1.0.0\images\" /Y /e
+
+rem xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype.BingMapsV8\" /Y
+xcopy "$(solutiondir)src\Terratype.BingMapsV8\Lang\*.xml" "$(ProjectDir)App_Plugins\Terratype.BingMapsV8\Lang\" /Y /e
+xcopy "$(solutiondir)src\Terratype.BingMapsV8\Views\*.html" "$(ProjectDir)App_Plugins\Terratype.BingMapsV8\1.0.0\views\" /Y /e
+xcopy "$(solutiondir)src\Terratype.BingMapsV8\Scripts\*.js" "$(ProjectDir)App_Plugins\Terratype.BingMapsV8\1.0.0\scripts\" /Y /e
+xcopy "$(solutiondir)src\Terratype.BingMapsV8\Images\*.png" "$(ProjectDir)App_Plugins\Terratype.BingMapsV8\1.0.0\images\" /Y /e
+
+rem xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype.LeafletV1\" /Y
+xcopy "$(solutiondir)src\Terratype.LeafletV1\Lang\*.xml" "$(ProjectDir)App_Plugins\Terratype.LeafletV1\Lang\" /Y /e
+xcopy "$(solutiondir)src\Terratype.LeafletV1\Views\*.html" "$(ProjectDir)App_Plugins\Terratype.LeafletV1\1.0.0\views\" /Y /e
+xcopy "$(solutiondir)src\Terratype.LeafletV1\Scripts\*.js" "$(ProjectDir)App_Plugins\Terratype.LeafletV1\1.0.0\scripts\" /Y /e
+xcopy "$(solutiondir)src\Terratype.LeafletV1\Images\*.png" "$(ProjectDir)App_Plugins\Terratype.LeafletV1\1.0.0\images\" /Y /e
+
+rem xcopy "$(solutiondir)src\Terratype\package.manifest" "$(ProjectDir)App_Plugins\Terratype.OSOpenSpaceV4\" /Y
+xcopy "$(solutiondir)src\Terratype.OSOpenSpaceV4\Lang\*.xml" "$(ProjectDir)App_Plugins\Terratype.OSOpenSpaceV4\Lang\" /Y /e
+xcopy "$(solutiondir)src\Terratype.OSOpenSpaceV4\Views\*.html" "$(ProjectDir)App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\views\" /Y /e
+xcopy "$(solutiondir)src\Terratype.OSOpenSpaceV4\Scripts\*.js" "$(ProjectDir)App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\scripts\" /Y /e
+xcopy "$(solutiondir)src\Terratype.OSOpenSpaceV4\Images\*.png" "$(ProjectDir)App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\images\" /Y /e
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -33,7 +33,9 @@ namespace Terratype.CoordinateSystems
         public abstract string ReferenceUrl { get; }
 
         [JsonProperty]
-        internal object Datum { get; set; }
+        internal object datum { get; set; }
+
+        protected object Datum { get; set; }
 
         public virtual int Precision
         {
@@ -103,22 +105,23 @@ namespace Terratype.CoordinateSystems
             new Lazy<Dictionary<string, Type>>(() =>
             {
                 Dictionary<string, Type> installed = new Dictionary<string, Type>();
-                Assembly currAssembly = Assembly.GetExecutingAssembly();
 
                 Type baseType = typeof(Position);
-
-                foreach (Type type in currAssembly.GetTypes())
+                foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (!type.IsClass || type.IsAbstract ||
-                        !type.IsSubclassOf(baseType))
+                    foreach (Type type in currAssembly.GetTypes())
                     {
-                        continue;
-                    }
+                        if (!type.IsClass || type.IsAbstract ||
+                            !type.IsSubclassOf(baseType))
+                        {
+                            continue;
+                        }
 
-                    var derivedObject = System.Activator.CreateInstance(type) as Position;
-                    if (derivedObject != null)
-                    {
-                        installed.Add(derivedObject.Id, derivedObject.GetType());
+                        var derivedObject = System.Activator.CreateInstance(type) as Position;
+                        if (derivedObject != null)
+                        {
+                            installed.Add(derivedObject.Id, derivedObject.GetType());
+                        }
                     }
                 }
 

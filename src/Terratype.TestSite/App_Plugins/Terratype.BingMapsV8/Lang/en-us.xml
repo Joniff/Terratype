@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alais="terratypeBingMapsV8">
+    <key alias="description">Mapping system operated by Microsoft. Requires an API key with entry level costs of 100K tranactions per month for $4,500</key>
+  </area>
+  
+  <area alias="terratypeBingMapsV8ConfigApperance">
+  </area>
+
+</language>

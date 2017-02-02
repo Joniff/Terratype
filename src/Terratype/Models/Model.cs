@@ -19,7 +19,7 @@ namespace Terratype
         /// Which provider is this map using to render
         /// </summary>
         [JsonProperty]
-        public Providers.ProviderBase Provider { get; set; }
+        public Providers.Provider Provider { get; set; }
 
         /// <summary>
         /// Where is this map point to

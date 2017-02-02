@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alais="terratypeLeafletV1">
+    <key alias="description">Open source map library that allows various Map providers, including OpenStreetMap, via Leaflet plugins</key>
+  </area>
+  
+  <area alias="terratypeLeafletV1ConfigApperance">
+  </area>
+
+</language>

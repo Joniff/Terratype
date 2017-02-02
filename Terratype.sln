@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{27002E17-BDAD-4E17-93C4-20549B124402}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		build\Tools\AppVeyorUmbraco\AppVeyorUmbraco.Targets = build\Tools\AppVeyorUmbraco\AppVeyorUmbraco.Targets
 		build-appveyor.cmd = build-appveyor.cmd
 		build.cmd = build.cmd
 		build\package.nuspec = build\package.nuspec
@@ -27,6 +28,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.TestSite", "src\T
 		{5034528F-401C-4FD4-8F42-23B378C7140D} = {5034528F-401C-4FD4-8F42-23B378C7140D}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Providers", "Providers", "{85D353DE-D775-4584-B473-0C8368BD3472}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleMapsV3", "src\Terratype.GoogleMapsV3\GoogleMapsV3.csproj", "{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingMapsV8", "src\Terratype.BingMapsV8\BingMapsV8.csproj", "{9F656D03-2D08-41DD-BEF8-A4C8C02D3368}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeafletV1", "src\Terratype.LeafletV1\LeafletV1.csproj", "{3146AD87-4CB5-4743-92D0-88558C727E2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSOpenSpaceV4", "src\Terratype.OSOpenSpaceV4\OSOpenSpaceV4.csproj", "{27FD61EE-3174-4827-8F6D-5FF66F6D1446}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +56,22 @@ Global
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3146AD87-4CB5-4743-92D0-88558C727E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3146AD87-4CB5-4743-92D0-88558C727E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3146AD87-4CB5-4743-92D0-88558C727E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3146AD87-4CB5-4743-92D0-88558C727E2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27FD61EE-3174-4827-8F6D-5FF66F6D1446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27FD61EE-3174-4827-8F6D-5FF66F6D1446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27FD61EE-3174-4827-8F6D-5FF66F6D1446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27FD61EE-3174-4827-8F6D-5FF66F6D1446}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,5 +79,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C} = {A044B1B9-8024-46CC-9E83-908226E3A742}
 		{5F1EAA97-8410-4A39-8382-038DE439079E} = {A044B1B9-8024-46CC-9E83-908226E3A742}
+		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3} = {85D353DE-D775-4584-B473-0C8368BD3472}
+		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368} = {85D353DE-D775-4584-B473-0C8368BD3472}
+		{3146AD87-4CB5-4743-92D0-88558C727E2E} = {85D353DE-D775-4584-B473-0C8368BD3472}
+		{27FD61EE-3174-4827-8F6D-5FF66F6D1446} = {85D353DE-D775-4584-B473-0C8368BD3472}
 	EndGlobalSection
 EndGlobal

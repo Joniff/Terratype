@@ -14,7 +14,7 @@
       <Using Namespace="System.IO"/>
       <Code Type="Fragment" Language="cs">
 <![CDATA[
-			ProductVersion = "2.0.3";
+			ProductVersion = "1.0.0";
 ]]>
       </Code>
     </Task>
