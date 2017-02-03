@@ -736,7 +736,7 @@
                             $scope.view().loading = false;
                             setTimeout(function () {
                                 //  Simple way to wait for any destroy to have finished
-                                $scope.view().provider.events = $scope.view().provider.init($scope.view().identifier, packagePath, $scope.store, $scope.config, $scope.view, function () {
+                                $scope.view().provider.events = $scope.view().provider.init($scope.view().identifier, $scope.view().provider.urlRoot, $scope.store, $scope.config, $scope.view, function () {
                                     $scope.$apply();
                                 });
                             }, 150);
