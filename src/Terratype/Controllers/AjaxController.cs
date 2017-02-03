@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 
-namespace Terratype.Providers
+namespace Terratype.Controllers
 {
     [Umbraco.Web.Mvc.PluginController("terratype")]
-    public class ProviderController : Umbraco.Web.Editors.UmbracoAuthorizedJsonController
+    public class AjaxController : Umbraco.Web.Editors.UmbracoAuthorizedJsonController
     {
         public class CoordinateSystemsJson
         {
@@ -19,7 +19,7 @@ namespace Terratype.Providers
 
             public int precision { get; set; }
 
-            public CoordinateSystemsJson(CoordinateSystems.Position position)
+            public CoordinateSystemsJson(Models.Position position)
             {
                 id = position.Id;
                 name = position.Name;
@@ -39,13 +39,13 @@ namespace Terratype.Providers
             public IEnumerable<CoordinateSystemsJson> coordinateSystems { get; set; }
             public bool canSearch { get; set; }
 
-            public ProviderJson(Provider provider)
+            public ProviderJson(Models.Provider provider)
             {
                 id = provider.Id;
                 name = provider.Name;
                 description = provider.Description;
                 referenceUrl = provider.ReferenceUrl;
-                coordinateSystems = provider.CoordinateSystems.Select(x => new CoordinateSystemsJson(CoordinateSystems.Position.Create(x.Key)));
+                coordinateSystems = provider.CoordinateSystems.Select(x => new CoordinateSystemsJson(Models.Position.Create(x.Key)));
                 canSearch = provider.CanSearch;
             }
         }
@@ -54,9 +54,9 @@ namespace Terratype.Providers
         public IEnumerable<ProviderJson> Providers()
         {
             var providers = new List<ProviderJson>();
-            foreach (var item in Provider.Providers)
+            foreach (var item in Models.Provider.Providers)
             {
-                providers.Add(new ProviderJson(Provider.Create(item.Value)));
+                providers.Add(new ProviderJson(Models.Provider.Create(item.Value)));
             }
             return providers;
         }
@@ -64,7 +64,7 @@ namespace Terratype.Providers
         [System.Web.Http.HttpGet]
         public string Parse(string id, string datum)
         {
-            var position = CoordinateSystems.Position.Create(id);
+            var position = Models.Position.Create(id);
             if (position == null || !position.TryParse(datum))
             {
                 return null;
@@ -254,13 +254,13 @@ namespace Terratype.Providers
         [System.Web.Http.HttpGet]
         public string ConvertCoordinateSystem(string sourceId, string sourceDatum, string destinationId)
         {
-            var source = CoordinateSystems.Position.Create(sourceId);
+            var source = Models.Position.Create(sourceId);
             if (source == null || !source.TryParse(sourceDatum))
             {
                 return null;
             }
             var wgs84 = source.ToWgs84();
-            var destination = CoordinateSystems.Position.Create(destinationId);
+            var destination = Models.Position.Create(destinationId);
             destination.FromWgs84(wgs84);
             return destination.datum.ToString();
         }

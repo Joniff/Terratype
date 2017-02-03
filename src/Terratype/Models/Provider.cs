@@ -1,12 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace Terratype.Providers
+namespace Terratype.Models
 {
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{Id}")]
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class Provider
     {
@@ -107,4 +108,27 @@ namespace Terratype.Providers
         }
 
     }
+
+    public class ProviderConvertor : JsonConverter
+    {
+        public override bool CanWrite { get { return false; } }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(Provider).IsAssignableFrom(objectType);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject item = JObject.Load(reader);
+            System.Type providerType = Provider.Providers[item[nameof(Provider.Id)].Value<string>()];
+            return item.ToObject(providerType);
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

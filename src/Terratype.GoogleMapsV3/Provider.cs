@@ -2,10 +2,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace Terratype.Providers.GoogleMapsV3
+namespace Terratype.Providers
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Terratype.Providers.Provider
+    public class GoogleMapsV3 : Models.Provider
     {
         [JsonProperty]
         public override string Id
@@ -20,7 +20,7 @@ namespace Terratype.Providers.GoogleMapsV3
         {
             get
             {
-                return "Google Maps V3";
+                return "terratypeGoogleMapsV3_name";            //  Value is in the language file
             }
         }
 
@@ -36,7 +36,7 @@ namespace Terratype.Providers.GoogleMapsV3
         {
             get
             {
-                return "https://developers.google.com/maps/documentation/javascript/";
+                return "terratypeGoogleMapsV3_referenceUrl";    //  Value is in the language file
             }
         }
 
@@ -63,20 +63,8 @@ namespace Terratype.Providers.GoogleMapsV3
             }
         }
 
-        public class Search
-        {
-            public string Status { get; set; }
-
-            public Limit Limit { get; set; }
-        }
-
-        public class Limit
-        {
-            public string Country { get; set; }
-        }
-
         [JsonProperty]
-        public Search SearchCriteria { get; set; }
+        public string Version { get; set; }
 
         /// <summary>
         /// API Key from https://console.developers.google.com/apis/credentials
@@ -86,6 +74,22 @@ namespace Terratype.Providers.GoogleMapsV3
 
         [JsonProperty]
         public bool ForceHttps { get; set; }
+
+        [JsonProperty]
+        public string Language { get; set; }
+
+        [JsonProperty]
+        public string PredefineStyling { get; set; }
+
+        [JsonProperty]
+        public bool ShowRoads { get; set; }
+
+        [JsonProperty]
+        public bool ShowLandmarks { get; set; }
+
+        [JsonProperty]
+        public bool ShowLabels { get; set; }
+
 
         /// <summary>
         /// Where are the controls situation
@@ -116,11 +120,20 @@ namespace Terratype.Providers.GoogleMapsV3
         [JsonObject(MemberSerialization.OptIn)]
         public class VarietyDefinition
         {
-            public enum Selectors
+            public enum SelectorType
             {
                 Default = 0,
                 HorizontalBar = 1,
                 DropdownMenu = 2
+            }
+
+            public class SelectorDefinition
+            {
+                [JsonProperty]
+                public SelectorType Type { get; set; }
+
+                [JsonProperty]
+                public ControlPositions Position { get; set; }
             }
 
             [JsonProperty]
@@ -131,31 +144,14 @@ namespace Terratype.Providers.GoogleMapsV3
             public bool Terrain { get; set; }
 
             [JsonProperty]
-            public Selectors Selector { get; set; }
-
-            [JsonProperty]
-            public ControlPositions Position { get; set; }
-
+            public SelectorDefinition Selector { get; set; }
         }
 
         [JsonProperty]
         public VarietyDefinition Variety { get; set; }
 
-        [JsonProperty]
-        public string PredefineStyling { get; set; }
-
-        [JsonProperty]
-        public bool ShowRoads { get; set; }
-
-        [JsonProperty]
-        public bool ShowLandmarks { get; set; }
-
-        [JsonProperty]
-        public bool ShowLabels { get; set; }
-
-
         [JsonObject(MemberSerialization.OptIn)]
-        public class StreetViewControlDefinition
+        public class Control
         {
             [JsonProperty]
             public bool Enable { get; set; }
@@ -164,56 +160,32 @@ namespace Terratype.Providers.GoogleMapsV3
         }
 
         [JsonProperty]
-        public StreetViewControlDefinition StreetViewControl { get; set; }
+        public Control StreetView { get; set; }
 
-        public bool MapScaleControl { get; set; }
+        [JsonProperty]
+        public Control Fullscreen { get; set; }
 
-        public bool FullScreenControl { get; set; }
+        [JsonProperty]
+        public Control Scale { get; set; }
+
+        [JsonProperty]
+        public Control ZoomControl { get; set; }
 
 
-        [JsonObject(MemberSerialization.OptIn)]
-        public class ZoomControlDefinition
+        public class SearchDefinition
         {
-            public enum ZoomControlStyles
+            public enum SearchStatus { Disable = 0, Enable, Autocomplete };
+
+            public SearchStatus Enable { get; set; }
+
+            public class LimitDefinition
             {
-                Default = 0,
-                Large = 1,
-                Small = 2
-            };
-
-            [JsonProperty]
-            public bool Enable { get; set; }
-            [JsonProperty]
-            public ControlPositions Position { get; set; }
-
-            public ZoomControlStyles ZoomControlStyle { get; set; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [JsonProperty]
-        public ZoomControlDefinition ZoomControl { get; set; }
-
-
-        [JsonObject(MemberSerialization.OptIn)]
-        public class PanControlDefinition
-        {
-            [JsonProperty]
-            public bool Enable { get; set; }
-
-            [JsonProperty]
-            public ControlPositions Position { get; set; }
+                public IEnumerable<string> Countries { get; set; }
+            }
+            public LimitDefinition Limit { get; set; }
         }
 
         [JsonProperty]
-        public PanControlDefinition PanControl { get; set; }
-
-        [JsonProperty]
-        public bool Draggable { get; set; }
-
-        [JsonProperty]
-        public string Language { get; set; }
-
+        public SearchDefinition Search { get; set; }
     }
 }

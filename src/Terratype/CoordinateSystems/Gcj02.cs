@@ -6,7 +6,7 @@ namespace Terratype.CoordinateSystems
     ///  https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China#GCJ-02
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Gcj02 : Position
+    public class Gcj02 : Models.Position
     {
         [JsonProperty]
         public override string Id
@@ -21,7 +21,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "GCJ-02 (China only)";
+                return "terratypeGcj02_name";
             }
         }
 
@@ -29,7 +29,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "Under Chinese state law regarding restrictions on geographic data, you must use GCJ-02 encoded coordinates in China or for displaying Chinese coordinates correctly. Display format is Latitude,Longitude";
+                return "terratypeGcj02_description";
             }
         }
 
@@ -37,17 +37,17 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China#GCJ-02";
+                return "terratypeGcj02_referenceUrl";
             }
         }
 
-        public override LatLng ToWgs84()
+        public override Models.LatLng ToWgs84()
         {
             throw new NotImplementedException(); 
 
         }
 
-        public override void FromWgs84(LatLng wgs84Position)
+        public override void FromWgs84(Models.LatLng wgs84Position)
         {
             throw new NotImplementedException();
         }

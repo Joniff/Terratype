@@ -4,8 +4,17 @@
     <name>Jonathan Richards</name>
   </creator>
 
+  <area alias="terratypeOsgb36">
+    <key alias="name">OSGB36</key>
+    <key alias="description">UK only Ordnance Survey grid system. Display format is a grid reference AA 000 000</key>
+    <key alias="referenceUrl">https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid</key>
+  </area>
+
+
   <area alais="terratypeOSOpenSpaceV4">
+    <key alias="name">OS OpenSpace V4 (UK only)</key>
     <key alias="description">Grid based Ordnance Survey system that only works in the UK</key>
+    <key alias="referenceUrl">https://www.ordnancesurvey.co.uk/innovate/innovate-with-open-space.html</key>
   </area>
   
   <area alias="terratypeOSOpenSpaceV4ConfigApperance">

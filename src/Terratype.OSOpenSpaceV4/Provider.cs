@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Terratype.Providers.OSOpenSpaceV4
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Terratype.Providers.Provider
+    public class Provider : Models.Provider
     {
         [JsonProperty]
         public override string Id
@@ -20,7 +20,7 @@ namespace Terratype.Providers.OSOpenSpaceV4
         {
             get
             {
-                return "OS OpenSpace V4 (UK only)";
+                return "terratypeOSOpenSpaceV4_name";               //  Value in language file
             }
         }
 
@@ -37,7 +37,7 @@ namespace Terratype.Providers.OSOpenSpaceV4
         {
             get
             {
-                return "https://www.ordnancesurvey.co.uk/innovate/innovate-with-open-space.html";
+                return "terratypeOSOpenSpaceV4_referenceUrl";       //  Value in language file
             }
         }
         public override IDictionary<string, Type> CoordinateSystems

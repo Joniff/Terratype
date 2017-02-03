@@ -1,0 +1,54 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Single>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+    Layout = null;
+    var map = new Terratype.Models.Model<Terratype.Providers.GoogleMapsV3, Terratype.CoordinateSystems.Wgs84>(Model.Content.Map);
+}
+
+<fieldset>
+    <legend>
+        Map 1
+    </legend>
+    <dl>
+        <dt>
+            Zoom
+        </dt>
+        <dd>
+            @Model.Content.Map.Zoom
+        </dd>
+        <dt>
+            Lookup
+        </dt>
+        <dd>
+            @Model.Content.Map.Lookup
+        </dd>
+
+        <dt>
+            Position
+        </dt>
+        <dd>
+            @Model.Content.Map.Position.ToString()
+        </dd>
+
+        <dt>
+            Coordinate System
+        </dt>
+        <dd>
+            @Model.Content.Map.Position.Id
+        </dd>
+
+        <dt>
+            Provider
+        </dt>
+        <dd>
+            @Model.Content.Map.Provider.Id
+        </dd>
+        <dt>
+            Provider
+        </dt>
+        <dd>
+            @map.Provider.ApiKey
+        </dd>
+
+    </dl>
+</fieldset>

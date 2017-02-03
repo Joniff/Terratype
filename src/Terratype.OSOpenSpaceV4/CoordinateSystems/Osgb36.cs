@@ -7,7 +7,7 @@ namespace Terratype.CoordinateSystems
     //  https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Osgb36 : Position
+    public class Osgb36 : Models.Position
     {
         internal class Grid
         {
@@ -28,7 +28,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "OSGB36";
+                return "terratypeOsgb36_name";
             }
         }
 
@@ -36,7 +36,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "UK only Ordnance Survey grid system. Display format is a grid reference AA 000 000";
+                return "terratypeOsgb36_description";
             }
         }
 
@@ -44,7 +44,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "https://en.wikipedia.org/wiki/Ordnance_Survey_National_Grid";
+                return "terratypeOsgb36_referenceUrl";
             }
         }
 
@@ -98,7 +98,7 @@ namespace Terratype.CoordinateSystems
             throw new NotImplementedException();
         }
 
-        public override LatLng ToWgs84()
+        public override Models.LatLng ToWgs84()
         {
             Grid grid = Datum as Grid;
 
@@ -146,14 +146,14 @@ namespace Terratype.CoordinateSystems
             φ = φ - VII * dE2 + VIII * dE4 - IX * dE6;
             var λ = λ0 + X * dE - XI * dE3 + XII * dE5 - XIIA * dE7;
 
-            return new LatLng
+            return new Models.LatLng
             {
                 Latitude = φ * 180 / Math.PI,
                 Longitude = λ * 180 / Math.PI
             };
         }
 
-        public override void FromWgs84(LatLng wgs84Position)
+        public override void FromWgs84(Models.LatLng wgs84Position)
         {
             var latitude = wgs84Position.Latitude * Math.PI / 180.0;
             var longitude = wgs84Position.Longitude * Math.PI / 180.0;

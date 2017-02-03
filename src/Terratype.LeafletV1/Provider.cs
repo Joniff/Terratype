@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Terratype.Providers.LeafletV1
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Terratype.Providers.Provider
+    public class Provider : Models.Provider
     {
         [JsonProperty]
         public override string Id

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Diagnostics;
 
-namespace Terratype.CoordinateSystems
+namespace Terratype.Models
 {
-    [DebuggerDisplay("{Latitude:##0.0#####},{Longitude:##0.0#####}")]
+    [DebuggerDisplay("{Latitude},{Longitude}")]
     [JsonObject(MemberSerialization.OptIn)]
     public class LatLng
     {

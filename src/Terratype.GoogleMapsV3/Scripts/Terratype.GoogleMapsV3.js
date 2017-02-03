@@ -782,64 +782,6 @@
         datumWait: 330,
         init: function (id, urlRoot, model, config, view, updateView) {
             var scope = {
-                defaultConfig: {
-                    position: {
-                        datum: {
-                            latitude: 55.4063207,
-                            longitude: 10.3870147
-                        }
-                    },
-                    height: 400,
-                    zoom: 12,
-                    icon: {
-                        id: 'redmarker'
-                    },
-                    provider: {
-                        version: 3,
-                        forceHttps: true,
-                        language: '',
-                        predefineStyling: 'retro',
-                        showRoads: true,
-                        showLandmarks: true,
-                        showLabels: true,
-                        variety: {
-                            basic: true,
-                            satellite: false,
-                            terrain: false,
-                            selector: {
-                                type: 1,     // Horizontal Bar
-                                position: 0  // Default
-                            }
-                        },
-                        streetView: {
-                            enable: false,
-                            position: 0
-                        },
-                        mapScaleControl: false,
-                        fullscreen: {
-                            enable: false,
-                            position: 0
-                        },
-                        scale: {
-                            enable: false,
-                            position: 0
-                        },
-                        zoomControl: {
-                            enable: true,
-                            position: 0,
-                        },
-                        panControl: {
-                            enable: false
-                        },
-                        draggable: true
-                    },
-                    search: {
-                        enable: 0,
-                        limit: {
-                            countries: []
-                        }
-                    }
-                },
                 haveCheckedSearchFunctionalityExists: null,
                 datumChangeWait: null,
                 defaultConfig: {
@@ -872,7 +814,6 @@
                             enable: false,
                             position: 0
                         },
-                        mapScaleControl: false,
                         fullscreen: {
                             enable: false,
                             position: 0

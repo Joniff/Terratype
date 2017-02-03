@@ -90,7 +90,7 @@
             configgering: false,
             urlRoot: providerPath('terratype'),
             controller: function (a) {
-                return '/umbraco/backoffice/terratype/provider/' + a;
+                return '/umbraco/backoffice/terratype/ajax/' + a;
             },
             poll: 250,
             identifier: $scope.$id + (new Date().getTime()),
@@ -111,6 +111,17 @@
                 }
                 return -1;
             },
+            translate: function (m) {
+                localizationService.localize(m.name).then(function (value) {
+                    m.name = value;
+                });
+                localizationService.localize(m.description).then(function (value) {
+                    m.description = value;
+                });
+                localizationService.localize(m.referenceUrl).then(function (value) {
+                    m.referenceUrl = value;
+                });
+            },
             initConfig: function () {
                 $scope.view().configgering = true;
                 if (typeof ($scope.model.value) === 'string') {
@@ -125,21 +136,24 @@
 
                 $scope.view().setIcon();
                 $http.get($scope.view().controller('providers')).then(function success(response) {
-                    $scope.view().providers = response.data;
-                    angular.forEach($scope.view().providers, function (p) {
-                        localizationService.localize(p.description).then(function (value) {
-                            p.description = value;
+                    angular.forEach(response.data, function (p) {
+                        $scope.view().translate(p);
+                        angular.forEach(p.coordinateSystems, function (c) {
+                            $scope.view().translate(c);
                         });
                     });
-
-                    if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
-                        $scope.view().setProvider($scope.config().provider.id);
-                    }
                     $timeout(function () {
-                        $scope.view().loading = false;
-                    });
+                        $scope.view().providers = response.data;
+
+                        if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
+                            $scope.view().setProvider($scope.config().provider.id);
+                        }
+                        $timeout(function () {
+                            $scope.view().loading = false;
+                        });
+                    })
                 }, function error(response) {
-                    $scope.view().error = '<b>Unable to retrieve providers</b><br />' + response.data;
+                    $scope.view().loading = false;
                 });
             },
             loadProvider: function (id, done) {

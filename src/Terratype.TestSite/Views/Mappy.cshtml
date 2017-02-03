@@ -2,4 +2,36 @@
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
 	Layout = null;
+    var map = Model.Content.Map1;
 }
+
+
+<fieldset>
+    <legend>
+        Map 1
+    </legend>
+
+    <dl>
+        <dt>
+            Zoom
+        </dt>
+        <dd>
+            @Model.Content.Map1.Zoom
+        </dd>
+
+        <dt>
+            Lookup
+        </dt>
+        <dd>
+            @Model.Content.Map1.Lookup
+        </dd>
+
+        <dt>
+            Position
+        </dt>
+        <dd>
+            @Model.Content.Map1.Position.ToString()
+        </dd>
+    </dl>
+
+</fieldset>

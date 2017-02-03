@@ -5,7 +5,9 @@
   </creator>
 
   <area alias="terratypeGoogleMapsV3">
+    <key alias="name">Google Maps V3</key>
     <key alias="description">Mapping system operated by Google. Requires an API key and is free upto 25,000 map loads per 24 hour period, then $0.50 per 1000 addition requests</key>
+    <key alias="referenceUrl">https://developers.google.com/maps/documentation/javascript/</key>
   </area>
 
   <area alias="terratypeGoogleMapsV3ConfigApperance">

@@ -3,7 +3,25 @@
   <creator>
     <name>Jonathan Richards</name>
   </creator>
-  
+
+  <area alias="terratypeBd09">
+    <key alias="name">BD-09</key>
+    <key alias="description">Variant of GCJ-02, as required by Chinese State Law. Display format is Latitude,Longitude</key>
+    <key alias="referenceUrl">https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China#BD-09</key>
+  </area>
+
+  <area alias="terratypeGcj02">
+    <key alias="name">GCJ-02</key>
+    <key alias="description">Under Chinese state law regarding restrictions on geographic data, you must use GCJ-02 encoded coordinates in China or for displaying Chinese coordinates correctly. Display format is Latitude,Longitude</key>
+    <key alias="referenceUrl">https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China#GCJ-02</key>
+  </area>
+
+  <area alias="terratypeWgs84">
+    <key alias="name">WGS-84</key>
+    <key alias="description">Standard World Geodetic System as used by GPS system, and adopted worldwide except for China (see GCJ-02). Display format is Latitude,Longitude</key>
+    <key alias="referenceUrl">https://en.wikipedia.org/wiki/World_Geodetic_System#Longitudes_on_WGS_84</key>
+  </area>
+
   <area alias="terratypeEditor">
     <key alias="debugMode">DEBUG MODE</key>
     <key alias="reviewDate">Review Date</key>
@@ -15,7 +33,6 @@
     <key alias="mapProviderDescription">Select which system you wish to use to display maps</key>
     <key alias="mapProviderError"><![CDATA[No Terratype map providers have been installed. Please read the <a href="http://to.do#installing-providers">documentation</a> for details on how to install providers]]></key>
 
-    terratypeConfig_mapProviderError
     <key alias="definitionHeading">Configure</key>
     <key alias="definitionCoordinateSystemLabel">Coordinate System:</key>
     <key alias="definitionCoordinateSystemDescription">Which Geodetic Coordinate System do you wish to use to present and store locations</key>

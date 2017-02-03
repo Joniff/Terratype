@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 
-namespace Terratype.CoordinateSystems
+namespace Terratype.Models
 {
-    [DebuggerDisplay("{Name}:{Datum}")]
+    [DebuggerDisplay("{DebugValue} ({Id})")]
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class Position
     {
@@ -96,6 +97,35 @@ namespace Terratype.CoordinateSystems
             return true;
         }
 
+        /// <summary>
+        /// Parses human readable position if possible
+        /// </summary>
+        public virtual bool TryParse(JObject datum)
+        {
+            if (datum == null)
+            {
+                return false;
+            }
+
+            var latitude = datum.GetValue(nameof(Models.LatLng.Latitude), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
+            var longitude = datum.GetValue(nameof(Models.LatLng.Longitude), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
+
+            double lat = 0.0, lng = 0.0;
+            if (String.IsNullOrWhiteSpace(latitude) ||
+                String.IsNullOrWhiteSpace(longitude) ||
+                !double.TryParse(latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out lat) ||
+                !double.TryParse(longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out lng))
+            {
+                return false;
+            }
+            Datum = new LatLng
+            {
+                Latitude = lat,
+                Longitude = lng
+            };
+            return true;
+        }
+
         public abstract LatLng ToWgs84();
 
         public abstract void FromWgs84(LatLng wgs84Position);
@@ -150,5 +180,42 @@ namespace Terratype.CoordinateSystems
             }
             return null;
         }
+        private string DebugValue
+        {
+            get
+            {
+                return ToString();
+            }
+        }
+
     }
+
+    public class PositionConvertor : JsonConverter
+    {
+        public override bool CanWrite { get { return false; } }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return typeof(Position).IsAssignableFrom(objectType);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            JObject item = JObject.Load(reader);
+            var id = item.GetValue(nameof(Position.Id), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
+            if (String.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+            var position = Position.Create(id);
+            position.TryParse(item.GetValue(nameof(Position.datum), StringComparison.InvariantCultureIgnoreCase) as JObject);
+            return position;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

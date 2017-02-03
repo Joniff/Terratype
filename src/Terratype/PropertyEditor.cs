@@ -32,7 +32,7 @@ namespace Terratype
 		internal class TerratypePreValueEditor : PreValueEditor
 		{
 			[PreValueField("definition", "Config", "/App_Plugins/Terratype/1.0.0/views/config.html", Description = "", HideLabel = true)]
-            public Model Definition { get; set; }
+            public Models.Model Definition { get; set; }
 
         }
 	}

@@ -6,7 +6,7 @@ namespace Terratype.CoordinateSystems
 {
     //  https://en.wikipedia.org/wiki/World_Geodetic_System#Longitudes_on_WGS_84
     [JsonObject(MemberSerialization.OptIn)]
-    public class Wgs84 : Position
+    public class Wgs84 : Models.Position
     {
         [JsonProperty]
         public override string Id
@@ -21,7 +21,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "WGS-84";
+                return "terratypeWgs84_name";
             }
         }
 
@@ -29,7 +29,7 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "Standard World Geodetic System as used by GPS system, and adopted worldwide except for China (see GCJ-02). Display format is Latitude,Longitude";
+                return "terratypeWgs84_description";
             }
         }
 
@@ -37,20 +37,20 @@ namespace Terratype.CoordinateSystems
         {
             get
             {
-                return "https://en.wikipedia.org/wiki/World_Geodetic_System#Longitudes_on_WGS_84";
+                return "terratypeWgs84_referenceUrl";
             }
         }
 
-        public override LatLng ToWgs84()
+        public override Models.LatLng ToWgs84()
         {
-            if (Datum is LatLng)
+            if (Datum is Models.LatLng)
             {
-                return Datum as LatLng;
+                return Datum as Models.LatLng;
             }
             throw new NotImplementedException();
         }
 
-        public override void FromWgs84(LatLng wgs84Position)
+        public override void FromWgs84(Models.LatLng wgs84Position)
         {
             Datum = wgs84Position;
         }
