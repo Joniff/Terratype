@@ -145,9 +145,9 @@
                 <div class="controls" style="margin-top:3px;">
                     <input type="radio" name="terratype_{{view().identifier}}_icon_anchor_horizontal" ng-model="view().icon.anchor.horizontal.isManual" ng-value="false" localize="title" title="@terratypeConfig_iconHorizontalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.horizontal = view().icon.anchor.horizontal.automatic; view().iconCustom()" />
                     <select ng-model="view().icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="view().icon.anchor.horizontal.isManual == true" ng-change="config().icon.anchor.horizontal = view().icon.anchor.horizontal.automatic; view().iconCustom()">
-                        <option value="left"><localize key="terratypeConfig_iconHorizontalAnchorLeft">Left</localize></option>
-                        <option value="center"><localize key="terratypeConfig_iconHorizontalAnchorCenter">Center</localize></option>
-                        <option value="right"><localize key="terratypeConfig_iconHorizontalAnchorRight">Right</localize></option>
+                        <option value="left" localize="label" label="@terratypeConfig_iconHorizontalAnchorLeft"></option>
+                        <option value="center" localize="label" label="@terratypeConfig_iconHorizontalAnchorCenter"></option>
+                        <option value="right" localize="label" label="@terratypeConfig_iconHorizontalAnchorRight"></option>
                     </select>
                 </div>
                 <div ng-show="view().icon.anchor.horizontal.isManual && view().icon.anchor.horizontal.manual >= config().icon.size.width">
@@ -171,9 +171,9 @@
                 <div class="controls" style="margin-top:3px;">
                     <input type="radio" name="terratype_{{view().identifier}}_icon_anchor_vertical" ng-model="view().icon.anchor.vertical.isManual" ng-value="false" localize="title" title="@iconVerticalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.vertical = view().icon.anchor.vertical.automatic; view().iconCustom()" />
                     <select ng-model="view().icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="view().icon.anchor.vertical.isManual == true" ng-change="config().icon.anchor.vertical = view().icon.anchor.vertical.automatic; view().iconCustom()">
-                        <option value="top"><localize key="terratypeConfig_iconVerticalAnchorTop">Top</localize></option>
-                        <option value="center"><localize key="terratypeConfig_iconVerticalAnchorCenter">Center</localize></option>
-                        <option value="bottom"><localize key="terratypeConfig_iconVerticalAnchorBottom">Bottom</localize></option>
+                        <option value="top" localize="label" label="@terratypeConfig_iconVerticalAnchorTop"></option>
+                        <option value="center" localize="label" label="@terratypeConfig_iconVerticalAnchorCenter"></option>
+                        <option value="bottom" localize="label" label="@terratypeConfig_iconVerticalAnchorBottom"></option>
                     </select>
                 </div>
                 <div ng-show="view().icon.anchor.vertical.isManual && view().icon.anchor.vertical.manual >= config().icon.size.height">
@@ -207,9 +207,9 @@
                 </label>
                 <div class="controls">
                     <select id="terratype_{{view().identifier}}_debug" ng-model="config().debug" class="umb-editor">
-                        <option value="0"><localize key="terratypeConfig_debugJsonDisable">Show map only</localize></option>
-                        <option value="1"><localize key="terratypeConfig_debugJsonEnable">Show json only</localize></option>
-                        <option value="2"><localize key="terratypeConfig_debugJsonBoth">Show both map and json</localize></option>
+                        <option value="0" localize="label" label="@terratypeConfig_debugJsonDisable"></option>
+                        <option value="1" localize="label" label="@terratypeConfig_debugJsonEnable"></option>
+                        <option value="2" localize="label" label="@terratypeConfig_debugJsonBoth"></option>
                     </select>
                 </div>
             </div>

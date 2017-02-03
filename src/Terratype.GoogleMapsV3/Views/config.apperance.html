@@ -41,8 +41,8 @@
         </label>
         <div class="controls">
             <select id="terratype_{{view().identifier}}_googlemapv3_variety_selector_type" ng-model="config().provider.variety.selector.type" class="umb-editor" ng-change="view().provider.events.optionChange()">
-                <option value="1"><localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorHorizontalBar">Horizontal Bar</localize></option>
-                <option value="2"><localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorDropdownMenu">Dropdown Menu</localize></option>
+                <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_mapSelectorHorizontalBar"></option>
+                <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_mapSelectorDropdownMenu"></option>
             </select>
         </div>
     </div>
@@ -55,20 +55,20 @@
         </label>
         <div class="controls">
             <select id="terratype_{{view().identifier}}_googlemapv3_variety_selector_position" ng-model="config().provider.variety.selector.position" class="umb-editor" ng-change="view().provider.events.optionChange()" convert-to-number>
-                <option value="0"><localize key="terratypeGoogleMapsV3ConfigApperance_positionDefault">[Default]</localize></option>
-                <option value="1"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopLeft">Top Left</localize></option>
-                <option value="2"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopCenter">Top Center</localize></option>
-                <option value="3"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopRight">Top Right</localize></option>
-                <option value="5"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftTop">Left Top</localize></option>
-                <option value="7"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightTop">Right Top</localize></option>
-                <option value="4"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftCenter">Left Center</localize></option>
-                <option value="13"><localize key="terratypeGoogleMapsV3ConfigApperance_positionCenter">Center</localize></option>
-                <option value="8"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightCenter">Right Center</localize></option>
-                <option value="6"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftBottom">Left Bottom</localize></option>
-                <option value="9"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightBottom">Right Bottom</localize></option>
-                <option value="10"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomLeft">Bottom Left</localize></option>
-                <option value="11"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomCenter">Bottom Center</localize></option>
-                <option value="12"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomRight">Bottom Right</localize></option>
+                <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
+                <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
+                <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
+                <option value="3" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopRight"></option>
+                <option value="5" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftTop"></option>
+                <option value="7" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightTop"></option>
+                <option value="4" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftCenter"></option>
+                <option value="13" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionCenter"></option>
+                <option value="8" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightCenter"></option>
+                <option value="6" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftBottom"></option>
+                <option value="9" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightBottom"></option>
+                <option value="10" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomLeft"></option>
+                <option value="11" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomCenter"></option>
+                <option value="12" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomRight"></option>
             </select>
         </div>
     </div>
@@ -94,20 +94,20 @@
     </label>
     <div class="controls">
         <select id="terratype_{{view().identifier}}_googlemapv3_fullscreen_position" ng-model="config().provider.fullscreen.position" class="umb-editor" ng-change="view().provider.events.optionChange()" convert-to-number>
-            <option value="0"><localize key="terratypeGoogleMapsV3ConfigApperance_positionDefault">[Default]</localize></option>
-            <option value="1"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopLeft">Top Left</localize></option>
-            <option value="2"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopCenter">Top Center</localize></option>
-            <option value="3"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopRight">Top Right</localize></option>
-            <option value="5"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftTop">Left Top</localize></option>
-            <option value="7"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightTop">Right Top</localize></option>
-            <option value="4"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftCenter">Left Center</localize></option>
-            <option value="13"><localize key="terratypeGoogleMapsV3ConfigApperance_positionCenter">Center</localize></option>
-            <option value="8"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightCenter">Right Center</localize></option>
-            <option value="6"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftBottom">Left Bottom</localize></option>
-            <option value="9"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightBottom">Right Bottom</localize></option>
-            <option value="10"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomLeft">Bottom Left</localize></option>
-            <option value="11"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomCenter">Bottom Center</localize></option>
-            <option value="12"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomRight">Bottom Right</localize></option>
+            <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
+            <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
+            <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
+            <option value="3" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopRight"></option>
+            <option value="5" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftTop"></option>
+            <option value="7" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightTop"></option>
+            <option value="4" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftCenter"></option>
+            <option value="13" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionCenter"></option>
+            <option value="8" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightCenter"></option>
+            <option value="6" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftBottom"></option>
+            <option value="9" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightBottom"></option>
+            <option value="10" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomLeft"></option>
+            <option value="11" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomCenter"></option>
+            <option value="12" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomRight"></option>
         </select>
     </div>
 </div>
@@ -144,20 +144,20 @@
     </label>
     <div class="controls">
         <select id="terratype_{{view().identifier}}_googlemapv3_streetview_position" ng-model="config().provider.streetView.position" class="umb-editor" ng-change="view().provider.events.optionChange()" convert-to-number>
-            <option value="0"><localize key="terratypeGoogleMapsV3ConfigApperance_positionDefault">[Default]</localize></option>
-            <option value="1"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopLeft">Top Left</localize></option>
-            <option value="2"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopCenter">Top Center</localize></option>
-            <option value="3"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopRight">Top Right</localize></option>
-            <option value="5"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftTop">Left Top</localize></option>
-            <option value="7"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightTop">Right Top</localize></option>
-            <option value="4"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftCenter">Left Center</localize></option>
-            <option value="13"><localize key="terratypeGoogleMapsV3ConfigApperance_positionCenter">Center</localize></option>
-            <option value="8"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightCenter">Right Center</localize></option>
-            <option value="6"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftBottom">Left Bottom</localize></option>
-            <option value="9"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightBottom">Right Bottom</localize></option>
-            <option value="10"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomLeft">Bottom Left</localize></option>
-            <option value="11"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomCenter">Bottom Center</localize></option>
-            <option value="12"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomRight">Bottom Right</localize></option>
+            <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
+            <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
+            <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
+            <option value="3" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopRight"></option>
+            <option value="5" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftTop"></option>
+            <option value="7" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightTop"></option>
+            <option value="4" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftCenter"></option>
+            <option value="13" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionCenter"></option>
+            <option value="8" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightCenter"></option>
+            <option value="6" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftBottom"></option>
+            <option value="9" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightBottom"></option>
+            <option value="10" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomLeft"></option>
+            <option value="11" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomCenter"></option>
+            <option value="12" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomRight"></option>
         </select>
     </div>
 </div>
@@ -177,70 +177,70 @@
     <label for="terratype_{{view().identifier}}_googlemapv3_zoomcontrol_position" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_zoomPositionLabel">Zoom Position:</localize>
         <small>
-            Where do you want the zoom control buttons to be positioned on the map
+            <localize key="terratypeGoogleMapsV3ConfigApperance_zoomPositionDescription">Where do you want the zoom control buttons to be positioned on the map</localize>
         </small>
     </label>
     <div class="controls">
         <select id="terratype_{{view().identifier}}_googlemapv3_zoomcontrol_position" ng-model="config().provider.zoomControl.position" class="umb-editor" ng-change="view().provider.events.optionChange()" convert-to-number>
-            <option value="0"><localize key="terratypeGoogleMapsV3ConfigApperance_positionDefault">[Default]</localize></option>
-            <option value="1"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopLeft">Top Left</localize></option>
-            <option value="2"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopCenter">Top Center</localize></option>
-            <option value="3"><localize key="terratypeGoogleMapsV3ConfigApperance_positionTopRight">Top Right</localize></option>
-            <option value="5"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftTop">Left Top</localize></option>
-            <option value="7"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightTop">Right Top</localize></option>
-            <option value="4"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftCenter">Left Center</localize></option>
-            <option value="13"><localize key="terratypeGoogleMapsV3ConfigApperance_positionCenter">Center</localize></option>
-            <option value="8"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightCenter">Right Center</localize></option>
-            <option value="6"><localize key="terratypeGoogleMapsV3ConfigApperance_positionLeftBottom">Left Bottom</localize></option>
-            <option value="9"><localize key="terratypeGoogleMapsV3ConfigApperance_positionRightBottom">Right Bottom</localize></option>
-            <option value="10"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomLeft">Bottom Left</localize></option>
-            <option value="11"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomCenter">Bottom Center</localize></option>
-            <option value="12"><localize key="terratypeGoogleMapsV3ConfigApperance_positionBottomRight">Bottom Right</localize></option>
+            <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
+            <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
+            <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
+            <option value="3" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopRight"></option>
+            <option value="5" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftTop"></option>
+            <option value="7" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightTop"></option>
+            <option value="4" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftCenter"></option>
+            <option value="13" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionCenter"></option>
+            <option value="8" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightCenter"></option>
+            <option value="6" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionLeftBottom"></option>
+            <option value="9" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionRightBottom"></option>
+            <option value="10" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomLeft"></option>
+            <option value="11" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomCenter"></option>
+            <option value="12" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionBottomRight"></option>
         </select>
     </div>
 </div>
 
 <div class="umb-el-wrap control-group" ng-show="config().provider.variety.basic == true || config().provider.variety.terrain == true">
     <label for="terratype_{{view().identifier}}_googlemapv3_style" class="control-label">
-        Styling:
+        <localize key="terratypeGoogleMapsV3ConfigApperance_stylingLabel">Styling:</localize>
         <small>
-            Predefined map styles
+            <localize key="terratypeGoogleMapsV3ConfigApperance_stylingDescription">Predefined map styles</localize>
         </small>
     </label>
     <div class="controls">
         <select id="terratype_{{view().identifier}}_googlemapv3_style" ng-model="config().provider.predefineStyling" class="umb-editor" ng-change="view().provider.events.styleChange()">
-            <option value="">Standard</option>
-            <option value="avocado">Avocado</option>
-            <option value="blush">Blush</option>
-            <option value="brightandbubbly">Bright and Bubbly</option>
-            <option value="colbalt">Colbalt</option>
-            <option value="crisp">Crisp</option>
-            <option value="dark">Dark</option>
-            <option value="desert">Desert</option>
-            <option value="flat">Flat</option>
-            <option value="hopper">Hopper</option>
-            <option value="hotel">Hotel</option>
-            <option value="ice">Ice</option>
-            <option value="lightdream">Light Dream</option>
-            <option value="lost">Lost</option>
-            <option value="mapbox">MapBox</option>
-            <option value="mutedblue">Muted Blue</option>
-            <option value="night">Night</option>
-            <option value="olddrymud">Old Dry Mud</option>
-            <option value="paledawn">Pale Dawn</option>
-            <option value="redalert">Red Alert</option>
-            <option value="retro">Retro</option>
-            <option value="shiftworker">Shift Worker</option>
-            <option value="silver">Silver</option>
-            <option value="unsaturatedbrowns">Unsaturated Browns</option>
+            <option value="" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingStandard"></option>
+            <option value="avocado" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingAvocado"></option>
+            <option value="blush" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingBlush"></option>
+            <option value="brightandbubbly" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingBrightAndBubbly"></option>
+            <option value="colbalt" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingColbalt"></option>
+            <option value="crisp" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingCrisp"></option>
+            <option value="dark" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingDark"></option>
+            <option value="desert" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingDesert"></option>
+            <option value="flat" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingFlat"></option>
+            <option value="hopper" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingHopper"></option>
+            <option value="hotel" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingHotel"></option>
+            <option value="ice" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingIce"></option>
+            <option value="lightdream" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingLightDream"></option>
+            <option value="lost" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingLost"></option>
+            <option value="mapbox" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingMapBox"></option>
+            <option value="mutedblue" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingMutedBlue"></option>
+            <option value="night" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingNight"></option>
+            <option value="olddrymud" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingOldDryMud"></option>
+            <option value="paledawn" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingPaleDawn"></option>
+            <option value="redalert" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingRedAlert"></option>
+            <option value="retro" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingRetro"></option>
+            <option value="shiftworker" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingShiftWorker"></option>
+            <option value="silver" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingSilver"></option>
+            <option value="unsaturatedbrowns" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingUnsaturatedBrowns"></option>
         </select>
     </div>
 </div>
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{view().identifier}}_googlemapv3_showroads" class="control-label">
-        Show Roads:
+        <localize key="terratypeGoogleMapsV3ConfigApperance_roadsLabel">Show Roads:</localize>
         <small>
-            Do you want roads to appear on the map
+            <localize key="terratypeGoogleMapsV3ConfigApperance_roadsDescription">Do you want roads to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
@@ -249,9 +249,9 @@
 </div>
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{view().identifier}}_googlemapv3_showlandmarks" class="control-label">
-        Show Landmarks:
+        <localize key="terratypeGoogleMapsV3ConfigApperance_landmarksLabel">Show Landmarks:</localize>
         <small>
-            Do you want landmarks to appear on the map
+            <localize key="terratypeGoogleMapsV3ConfigApperance_landmarksDescription">Do you want landmarks to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
@@ -260,9 +260,10 @@
 </div>
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{view().identifier}}_googlemapv3_showlabels" class="control-label">
+        <localize key="terratypeGoogleMapsV3ConfigApperance_labelsLabel">Show Labels:</localize>
         Show Labels:
         <small>
-            Do you want labels (names of countries, regions, areas, etc) to appear on the map
+            <localize key="terratypeGoogleMapsV3ConfigApperance_labelsDescription">Do you want labels (names of countries, regions, areas, etc) to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
@@ -271,9 +272,9 @@
 </div>
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{view().identifier}}_googlemapv3_defaultlocation" class="control-label">
-        Default location:
+        <localize key="terratypeGoogleMapsV3ConfigApperance_positionLabel">Default location:</localize>
         <small>
-            Select the default location when displaying this map to a content editor
+            <localize key="terratypeGoogleMapsV3ConfigApperance_positionDescription">Select the default location when displaying this map to a content editor</localize>
         </small>
     </label>
     <div class="controls">

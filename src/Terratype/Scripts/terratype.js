@@ -65,6 +65,19 @@
         };
     });
 
+
+    //  Display language values that contain {{}} variables. The language values need to contain html tags
+    angular.module("umbraco.directives").directive('terratypeTranslate', ['$compile', 'localizationService', function ($compile, localizationService) {
+        return function (scope, element, attr) {
+            attr.$observe('terratypeTranslate', function (key) {
+                localizationService.localize(key).then(function (value) {
+                    var c = $compile('<span>' + value + '</span>')(scope);
+                    element.append(c);
+                });
+            })
+        }
+    }]);
+
     angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', '$injector', 'localizationService', function ($scope, $timeout, $http, $injector, localizationService) {
         $scope.config = null;
         $scope.store = null;
