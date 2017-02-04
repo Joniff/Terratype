@@ -1,26 +1,26 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
-namespace Terratype.Providers.LeafletV1
+namespace Terratype.Providers
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Models.Provider
+    public class BingMapsV8 : Models.Provider
     {
         [JsonProperty]
         public override string Id
         {
             get
             {
-                return "Terratype.LeafletV1";
+                return "Terratype.BingMapsV8";
             }
         }
-
         public override string Name
         {
             get
             {
-                return "Leaflet V1";
+                return "Bing Maps V8";
             }
         }
 
@@ -28,7 +28,7 @@ namespace Terratype.Providers.LeafletV1
         {
             get
             {
-                return "terratypeLeafletV1_description";            //  Value in language file
+                return "terratypeBingMapsV8_description";       //  Value is in language file
             }
         }
 
@@ -36,9 +36,10 @@ namespace Terratype.Providers.LeafletV1
         {
             get
             {
-                return "http://leafletjs.com/index.html";
+                return "https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx";
             }
         }
+
         public override IDictionary<string, Type> CoordinateSystems
         {
             get
@@ -52,5 +53,9 @@ namespace Terratype.Providers.LeafletV1
             }
         }
 
+        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

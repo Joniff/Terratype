@@ -842,6 +842,8 @@
                     if (!model().position.datum) {
                         model().position.datum = scope.defaultConfig.position.datum;
                     }
+                    view().position.datum = scope.parse.call(scope, model().position.datum);
+
                     if (!model().zoom) {
                         model().zoom = scope.defaultConfig.zoom;
                     }
@@ -862,7 +864,7 @@
                     //event.cancel(id);
                     if (model().position) {
                         if (typeof model().position.datum === 'string') {
-                            model().position.datum = scope.parse.call(scope, model().position.datum);
+                            view().position.datum = scope.parse.call(scope, model().position.datum);
                         }
                     }
                     if (view().isPreview == false && config().provider && config().provider.version && model().position && model().position.id) {
@@ -1061,8 +1063,9 @@
                     return encodelatlng(datum.latitude) + ',' + encodelatlng(datum.longitude);
                 },
                 setDatum: function () {
-                    var datum = scope.toString.call(scope, model().position.datum, view().position.precision);
+                    var datum = scope.toString.call(scope, view().position.datum, view().position.precision);
                     if (typeof datum !== 'boolean') {
+                        model().position.datum = datum;
                         view().position.datumText = datum;
                         view().position.datumStyle = {};
                     } else {
@@ -1071,7 +1074,7 @@
                 },
                 setMarker: function () {
                     if (scope.gmap && scope.gmarker) {
-                        var latlng = new root.google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
+                        var latlng = new root.google.maps.LatLng(view().position.datum.latitude, view().position.datum.longitude);
                         scope.gmarker.setPosition(latlng);
                         scope.gmap.panTo(latlng);
                     }
@@ -1160,7 +1163,7 @@
                                         }
                                     } else if (scope.gmap == null) {
                                         scope.gevents = [];
-                                        var latlng = new root.google.maps.LatLng(model().position.datum.latitude, model().position.datum.longitude);
+                                        var latlng = new root.google.maps.LatLng(view().position.datum.latitude, view().position.datum.longitude);
                                         var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
                                         config().provider.styles = gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
                                                 config().provider.showLandmarks, config().provider.showLabels);
@@ -1318,7 +1321,7 @@
                     }
                     //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
-                    model().position.datum = {
+                    view().position.datum = {
                         latitude: gm.round(marker.latLng.lat(), view().position.precision),
                         longitude: gm.round(marker.latLng.lng(), view().position.precision)
                     };
@@ -1334,7 +1337,7 @@
                     //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
                     model().lookup = place.formatted_address;
-                    model().position.datum = {
+                    view().position.datum = {
                         latitude: gm.round(place.geometry.location.lat(), view().position.precision),
                         longitude: gm.round(place.geometry.location.lng(), view().position.precision)
                     };

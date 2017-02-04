@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Terratype.Models
 {
@@ -54,6 +56,15 @@ namespace Terratype.Models
         {        
         }
 
+        public IHtmlString GetHtml(int height = 400, string language = null)
+        {
+            if (Provider == null)
+            {
+                throw new ArgumentNullException(nameof(Provider));
+            }
+
+            return Provider.GetHtml(this, height, language);
+        }
     }
 
     [DebuggerDisplay("{Position},{Zoom}")]

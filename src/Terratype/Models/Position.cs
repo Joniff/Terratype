@@ -58,7 +58,7 @@ namespace Terratype.Models
                 return Math.Round(datum.Latitude, 6).ToString(CultureInfo.InvariantCulture) + "," +
                     Math.Round(datum.Longitude, 6).ToString(CultureInfo.InvariantCulture);
             }
-            throw new NotImplementedException();
+            return null;
         }
 
         /// <summary>
@@ -192,8 +192,6 @@ namespace Terratype.Models
 
     public class PositionConvertor : JsonConverter
     {
-        public override bool CanWrite { get { return false; } }
-
         public override bool CanConvert(Type objectType)
         {
             return typeof(Position).IsAssignableFrom(objectType);
@@ -208,12 +206,22 @@ namespace Terratype.Models
                 return null;
             }
             var position = Position.Create(id);
-            position.TryParse(item.GetValue(nameof(Position.datum), StringComparison.InvariantCultureIgnoreCase) as JObject);
+            position.TryParse(item.GetValue(nameof(Position.datum), StringComparison.InvariantCultureIgnoreCase)?.Value<string>());
             return position;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
+            var position = value as Position;
+
+            writer.WriteStartObject();
+
+            writer.WritePropertyName(nameof(Position.Id));
+            writer.WriteValue(position.Id);
+
+            writer.WritePropertyName(nameof(Position.datum));
+            writer.WriteValue(position.datum.ToString());
+
             throw new NotImplementedException();
         }
     }

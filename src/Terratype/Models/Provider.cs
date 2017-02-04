@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Terratype.Models
 {
@@ -107,6 +109,7 @@ namespace Terratype.Models
             return System.Activator.CreateInstance(type) as Provider;
         }
 
+        public abstract IHtmlString GetHtml(Models.Model model, int height = 400, string language = null);
     }
 
     public class ProviderConvertor : JsonConverter

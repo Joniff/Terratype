@@ -1,25 +1,27 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
-namespace Terratype.Providers.BingMapsV8
+namespace Terratype.Providers
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Models.Provider
+    public class OSOpenSpaceV4 : Models.Provider
     {
         [JsonProperty]
         public override string Id
         {
             get
             {
-                return "Terratype.BingMapsV8";
+                return "Terratype.OSOpenSpaceV4";
             }
         }
+
         public override string Name
         {
             get
             {
-                return "Bing Maps V8";
+                return "terratypeOSOpenSpaceV4_name";               //  Value in language file
             }
         }
 
@@ -27,29 +29,34 @@ namespace Terratype.Providers.BingMapsV8
         {
             get
             {
-                return "terratypeBingMapsV8_description";       //  Value is in language file
+                return "terratypeOSOpenSpaceV4_description";        //  Value in language file
             }
         }
+
 
         public override string ReferenceUrl
         {
             get
             {
-                return "https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx";
+                return "terratypeOSOpenSpaceV4_referenceUrl";       //  Value in language file
             }
         }
-
         public override IDictionary<string, Type> CoordinateSystems
         {
             get
             {
-                var wgs84 = new CoordinateSystems.Wgs84();
+                var osdb36 = new CoordinateSystems.Osgb36();
 
                 return new Dictionary<string, Type>
                 {
-                    { wgs84.Id, wgs84.GetType() }
+                    { osdb36.Id, osdb36.GetType() }
                 };
             }
+        }
+
+        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        {
+            throw new NotImplementedException();
         }
 
     }

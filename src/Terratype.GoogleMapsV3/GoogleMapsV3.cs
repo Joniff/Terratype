@@ -1,6 +1,12 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.UI;
 
 namespace Terratype.Providers
 {
@@ -90,6 +96,8 @@ namespace Terratype.Providers
         [JsonProperty]
         public bool ShowLabels { get; set; }
 
+        [JsonProperty]
+        public dynamic Styling { get; set; }
 
         /// <summary>
         /// Where are the controls situation
@@ -187,5 +195,94 @@ namespace Terratype.Providers
 
         [JsonProperty]
         public SearchDefinition Search { get; set; }
+
+        private string GoogleScript(Models.Model model)
+        {
+            var url = new StringBuilder();
+
+            var provider = model.Provider as GoogleMapsV3;
+
+            if (provider.ForceHttps)
+            {
+                url.Append("https:");
+            }
+
+            url.Append(String.Equals(model.Position.Id, Terratype.CoordinateSystems.Gcj02._Id, StringComparison.InvariantCultureIgnoreCase) ?
+                "//maps.google.cn" : "//maps.googleapis.com/");
+
+            url.Append("maps/api/js?v=");
+            url.Append(String.IsNullOrWhiteSpace(provider.Version) ? "3" : provider.Version);
+            url.Append(@"&libraries=places&callback=TerratypeGoogleMapsV3CallbackRender");
+            if (!String.IsNullOrWhiteSpace(provider.ApiKey))
+            {
+                url.Append(@"&key=");
+                url.Append(provider.ApiKey);
+            }
+            if (!String.IsNullOrWhiteSpace(provider.Language))
+            {
+                url.Append(@"&language=");
+                url.Append(provider.Language);
+            }
+            return url.ToString();
+        }
+
+        private void Resource(string resourceName, HtmlTextWriter writer)
+        {
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    writer.Write(reader.ReadToEnd());
+                }
+            }
+        }
+
+        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        {
+            var guid = new Guid("b72310d2-7041-4234-a6c5-6c5c2fdd708e");
+            var id = "gmapv3_" + DateTime.Now.Ticks.ToString();
+
+            var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+            using (var writer = new HtmlTextWriter(builder))
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                if (!HttpContext.Current.Items.Contains(guid))
+                {
+                    HttpContext.Current.Items.Add(guid, true);
+                    writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                    Resource("Terratype.GoogleMapsV3.Scripts.Render.js", writer);
+                    writer.RenderEndTag();
+
+                    writer.AddAttribute(HtmlTextWriterAttribute.Src, GoogleScript(model));
+                    writer.AddAttribute("defer", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                    writer.RenderEndTag();
+                }
+
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                writer.Write("var ");
+                writer.Write(id);
+                writer.Write("=");
+                writer.WriteLine(JsonConvert.SerializeObject(model));
+                writer.Write(";");
+                writer.Write(id);
+                writer.Write(".id='");
+                writer.Write(id);
+                writer.Write("';window.terratype_gmapsv3.maps.push(");
+                writer.Write(id);
+                writer.WriteLine(");");
+                writer.RenderEndTag();
+
+                writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
+                writer.AddStyleAttribute(HtmlTextWriterStyle.Height, height.ToString() + "px");
+                writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                writer.RenderEndTag();
+
+                writer.RenderEndTag();
+            }
+
+            return new HtmlString(builder.ToString());
+        }
+
     }
 }

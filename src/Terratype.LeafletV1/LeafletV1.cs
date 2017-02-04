@@ -1,18 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Web;
 
-namespace Terratype.Providers.OSOpenSpaceV4
+namespace Terratype.Providers
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Provider : Models.Provider
+    public class LeafletV1 : Models.Provider
     {
         [JsonProperty]
         public override string Id
         {
             get
             {
-                return "Terratype.OSOpenSpaceV4";
+                return "Terratype.LeafletV1";
             }
         }
 
@@ -20,7 +21,7 @@ namespace Terratype.Providers.OSOpenSpaceV4
         {
             get
             {
-                return "terratypeOSOpenSpaceV4_name";               //  Value in language file
+                return "Leaflet V1";
             }
         }
 
@@ -28,29 +29,33 @@ namespace Terratype.Providers.OSOpenSpaceV4
         {
             get
             {
-                return "terratypeOSOpenSpaceV4_description";        //  Value in language file
+                return "terratypeLeafletV1_description";            //  Value in language file
             }
         }
-
 
         public override string ReferenceUrl
         {
             get
             {
-                return "terratypeOSOpenSpaceV4_referenceUrl";       //  Value in language file
+                return "http://leafletjs.com/index.html";
             }
         }
         public override IDictionary<string, Type> CoordinateSystems
         {
             get
             {
-                var osdb36 = new CoordinateSystems.Osgb36();
+                var wgs84 = new CoordinateSystems.Wgs84();
 
                 return new Dictionary<string, Type>
                 {
-                    { osdb36.Id, osdb36.GetType() }
+                    { wgs84.Id, wgs84.GetType() }
                 };
             }
+        }
+
+        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        {
+            throw new NotImplementedException();
         }
 
     }

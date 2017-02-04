@@ -8,12 +8,14 @@ namespace Terratype.CoordinateSystems
     [JsonObject(MemberSerialization.OptIn)]
     public class Gcj02 : Models.Position
     {
+        public static string _Id = "GCJ02";
+
         [JsonProperty]
         public override string Id
         {
             get
             {
-                return "GCJ02";
+                return _Id;
             }
         }
 
