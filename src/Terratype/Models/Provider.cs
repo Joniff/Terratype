@@ -6,17 +6,18 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace Terratype.Models
 {
     [DebuggerDisplay("{Id}")]
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
     public abstract class Provider
     {
         /// <summary>
         /// Unique identifier of provider
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public abstract string Id { get; }
 
         /// <summary>
@@ -109,29 +110,6 @@ namespace Terratype.Models
             return System.Activator.CreateInstance(type) as Provider;
         }
 
-        public abstract IHtmlString GetHtml(Models.Model model, int height = 400, string language = null);
+        public abstract void GetHtml(HtmlTextWriter writer, int id, Models.Model model, int height, string language, string labelId);
     }
-
-    public class ProviderConvertor : JsonConverter
-    {
-        public override bool CanWrite { get { return false; } }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(Provider).IsAssignableFrom(objectType);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            JObject item = JObject.Load(reader);
-            System.Type providerType = Provider.Providers[item[nameof(Provider.Id)].Value<string>()];
-            return item.ToObject(providerType);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }

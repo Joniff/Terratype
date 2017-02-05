@@ -1,8 +1,8 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Single>
 @using ContentModels = Umbraco.Web.PublishedContentModels;
+@using Terratype;
 @{
     Layout = null;
-    var map = new Terratype.Models.Model<Terratype.Providers.GoogleMapsV3, Terratype.CoordinateSystems.Wgs84>(Model.Content.Map);
 }
 
 <fieldset>
@@ -27,7 +27,7 @@
             Position
         </dt>
         <dd>
-            @Model.Content.Map.Position.ToString()
+            @Model.Content.Map.Position
         </dd>
 
         <dt>
@@ -44,13 +44,24 @@
             @Model.Content.Map.Provider.Id
         </dd>
         <dt>
-            Provider
+            Icon Url
         </dt>
         <dd>
-            @map.Provider.ApiKey
+            @Model.Content.Map.Icon.Url
         </dd>
     </dl>
 
-    @Model.Content.Map.GetHtml()
+    <div id="pretent-accordion" style="display:none;">
+        @Html.Terratype(Model.Content.Map,
+            @<text>
+                <div style="background-color:yellow;">
+                    This icon is at @Model.Content.Map.Position
+                </div>
+            </text>
+        )
+    </div>
+
+    <button onclick="var a = document.getElementById('pretent-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
 
 </fieldset>

@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Json\Json.cs" />
     <Compile Include="Models\LatLng.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="CoordinateSystems\Bd09.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="TerratypeConverter.cs" />
+    <Compile Include="TerratypeHtml.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Lang\en-us.xml" />

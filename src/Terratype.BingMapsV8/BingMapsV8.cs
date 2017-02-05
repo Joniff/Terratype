@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Web.UI;
 
 namespace Terratype.Providers
 {
@@ -53,7 +54,7 @@ namespace Terratype.Providers
             }
         }
 
-        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, int height, string language, string labelId)
         {
             throw new NotImplementedException();
         }

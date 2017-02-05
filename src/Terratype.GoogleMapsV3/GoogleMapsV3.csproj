@@ -82,13 +82,20 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Scripts\Render.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\Example.png" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Images\m1.png" />
+    <Content Include="Images\m2.png" />
+    <Content Include="Images\m3.png" />
+    <Content Include="Images\m4.png" />
+    <Content Include="Images\m5.png" />
     <Content Include="Lang\en-us.xml" />
+    <Content Include="Scripts\markerclusterer.js" />
+    <Content Include="Scripts\markerclusterer.min.js" />
     <Content Include="Scripts\Terratype.GoogleMapsV3.js" />
+    <Content Include="Scripts\Terratype.Renderer.js" />
     <Content Include="Views\config.apperance.html" />
     <Content Include="Views\config.definition.html" />
     <Content Include="Views\config.search.html" />

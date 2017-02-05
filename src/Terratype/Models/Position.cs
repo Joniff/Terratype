@@ -9,13 +9,13 @@ using System.Reflection;
 namespace Terratype.Models
 {
     [DebuggerDisplay("{DebugValue} ({Id})")]
-    [JsonObject(MemberSerialization.OptIn)]
+    [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
     public abstract class Position
     {
         /// <summary>
         /// Unique identifier of coordinate system
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public abstract string Id { get; }
 
         /// <summary>
@@ -33,10 +33,20 @@ namespace Terratype.Models
         /// </summary>
         public abstract string ReferenceUrl { get; }
 
-        [JsonProperty]
-        internal object datum { get; set; }
+        [JsonProperty(PropertyName = "datum")]
+        internal object _datum { get; set; }
 
-        protected object Datum { get; set; }
+        protected object Datum
+        {
+            get
+            {
+                return _datum;
+            }
+            set
+            {
+                _datum = value;
+            }
+        }
 
         public virtual int Precision
         {
@@ -52,11 +62,15 @@ namespace Terratype.Models
         /// <returns></returns>
         public override string ToString()
         {
-            if (Datum is LatLng)
+            if (_datum is LatLng)
             {
-                LatLng datum = Datum as LatLng;
-                return Math.Round(datum.Latitude, 6).ToString(CultureInfo.InvariantCulture) + "," +
-                    Math.Round(datum.Longitude, 6).ToString(CultureInfo.InvariantCulture);
+                LatLng latlng = _datum as LatLng;
+                return Math.Round(latlng.Latitude, Precision).ToString(CultureInfo.InvariantCulture) + "," +
+                    Math.Round(latlng.Longitude, Precision).ToString(CultureInfo.InvariantCulture);
+            }
+            if (_datum is string)
+            {
+                return _datum as string;
             }
             return null;
         }
@@ -89,40 +103,8 @@ namespace Terratype.Models
             {
                 return false;
             }
-            Datum = new LatLng
-            {
-                Latitude = lat,
-                Longitude = lng
-            };
-            return true;
-        }
-
-        /// <summary>
-        /// Parses human readable position if possible
-        /// </summary>
-        public virtual bool TryParse(JObject datum)
-        {
-            if (datum == null)
-            {
-                return false;
-            }
-
-            var latitude = datum.GetValue(nameof(Models.LatLng.Latitude), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            var longitude = datum.GetValue(nameof(Models.LatLng.Longitude), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-
-            double lat = 0.0, lng = 0.0;
-            if (String.IsNullOrWhiteSpace(latitude) ||
-                String.IsNullOrWhiteSpace(longitude) ||
-                !double.TryParse(latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out lat) ||
-                !double.TryParse(longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out lng))
-            {
-                return false;
-            }
-            Datum = new LatLng
-            {
-                Latitude = lat,
-                Longitude = lng
-            };
+            _datum = Math.Round(lat, Precision).ToString(CultureInfo.InvariantCulture) + "," +
+                    Math.Round(lng, Precision).ToString(CultureInfo.InvariantCulture);
             return true;
         }
 
@@ -189,41 +171,4 @@ namespace Terratype.Models
         }
 
     }
-
-    public class PositionConvertor : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(Position).IsAssignableFrom(objectType);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            JObject item = JObject.Load(reader);
-            var id = item.GetValue(nameof(Position.Id), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            if (String.IsNullOrWhiteSpace(id))
-            {
-                return null;
-            }
-            var position = Position.Create(id);
-            position.TryParse(item.GetValue(nameof(Position.datum), StringComparison.InvariantCultureIgnoreCase)?.Value<string>());
-            return position;
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var position = value as Position;
-
-            writer.WriteStartObject();
-
-            writer.WritePropertyName(nameof(Position.Id));
-            writer.WriteValue(position.Id);
-
-            writer.WritePropertyName(nameof(Position.datum));
-            writer.WriteValue(position.datum.ToString());
-
-            throw new NotImplementedException();
-        }
-    }
-
 }

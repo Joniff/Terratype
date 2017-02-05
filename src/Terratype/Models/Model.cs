@@ -2,37 +2,40 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 
 namespace Terratype.Models
 {
     [DebuggerDisplay("{Position},{Zoom}")]
     [JsonObject(MemberSerialization.OptIn)]
+    [JsonConverter(typeof(ModelConvertor))]
     public class Model
     {
         /// <summary>
         /// Which provider is this map using to render
         /// </summary>
-        [JsonProperty]
-        public Provider Provider { get; set; }
+        [JsonProperty(PropertyName = "provider")]
+        public Provider Provider { get; internal set; }
 
         /// <summary>
         /// Where is this map point to
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "position")]
         public Position Position { get; set; }
 
         /// <summary>
         /// Which provider is this map using to render
         /// </summary>
-        [JsonProperty]
-        public Icon Icon { get; set; }
+        [JsonProperty(PropertyName = "icon")]
+        public Icon Icon { get; internal set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "zoom")]
         public int Zoom { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "lookup")]
         public string Lookup { get; set; }
 
         public Model()
@@ -46,55 +49,46 @@ namespace Terratype.Models
             Position = other.Position;
             Zoom = other.Zoom;
             Lookup = other.Lookup;
+            Icon = other.Icon;
         }
 
-        public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json, new ModelConvertor()))
+        public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json))
         {
         }
 
-        public Model(JObject data) : this(data.ToObject<Model>(new JsonSerializer() { Converters = { new ModelConvertor() } }))
-        {        
-        }
-
-        public IHtmlString GetHtml(int height = 400, string language = null)
+        public Model(JObject data) : this(data.ToObject<Model>())
         {
-            if (Provider == null)
-            {
-                throw new ArgumentNullException(nameof(Provider));
-            }
-
-            return Provider.GetHtml(this, height, language);
         }
     }
 
     [DebuggerDisplay("{Position},{Zoom}")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Model<TProvider, TPosition> 
-        where TProvider : Models.Provider 
+    public class Model<TProvider, TPosition>
+        where TProvider : Models.Provider
         where TPosition : Models.Position
     {
         /// <summary>
         /// Which provider is this map using to render
         /// </summary>
-        [JsonProperty]
-        public TProvider Provider { get; set; }
+        [JsonProperty(PropertyName = "provider")]
+        public TProvider Provider { get; internal set; }
 
         /// <summary>
         /// Where is this map point to
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "position")]
         public TPosition Position { get; set; }
 
         /// <summary>
         /// Which provider is this map using to render
         /// </summary>
-        [JsonProperty]
-        public Icon Icon { get; set; }
+        [JsonProperty(PropertyName = "icon")]
+        public Icon Icon { get; internal set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "zoom")]
         public int Zoom { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "lookup")]
         public string Lookup { get; set; }
 
         public Model()
@@ -106,26 +100,28 @@ namespace Terratype.Models
         {
             Provider = other.Provider as TProvider;
             Position = other.Position as TPosition;
+            Icon = other.Icon;
             Zoom = other.Zoom;
             Lookup = other.Lookup;
         }
-
-        public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json, new ModelConvertor()))
-        {
+        public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json))
+        { 
         }
 
-        public Model(JObject data) : this(data.ToObject<Model>(new JsonSerializer() { Converters = { new ModelConvertor() } }))
+        public Model(JObject data) : this(data.ToObject<Model>())
         {
         }
-
     }
-
-
-
 
     public class ModelConvertor : JsonConverter
     {
-        public override bool CanWrite { get { return false; } }
+        public override bool CanWrite
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public override bool CanConvert(Type objectType)
         {
@@ -137,11 +133,11 @@ namespace Terratype.Models
             var model = new Model();
 
             JObject item = JObject.Load(reader);
-            model.Lookup = item.GetValue(nameof(Model.Lookup), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            model.Zoom = item.GetValue(nameof(Model.Zoom), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
-            model.Icon = new Models.Icon(item.GetValue(nameof(Model.Icon), StringComparison.InvariantCultureIgnoreCase) as JObject);
+            model.Lookup = item.GetValue(Json.PropertyName<Model>(nameof(Model.Lookup)), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
+            model.Zoom = item.GetValue(Json.PropertyName<Model>(nameof(Model.Zoom)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
+            model.Icon = new Models.Icon(item.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
 
-            var provider = item.GetValue(nameof(Provider), StringComparison.InvariantCultureIgnoreCase);
+            var provider = item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
             if (provider != null)
             {
                 var field = provider.First as JProperty;
@@ -150,20 +146,20 @@ namespace Terratype.Models
                     if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
                         System.Type providerType = Provider.Providers[field.Value.ToObject<string>()];
-                        model.Provider = (Provider)item.GetValue(nameof(Provider), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
+                        model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
                         break;
                     }
                     field = field.Next as JProperty;
                 }
             }
 
-            var position = item.GetValue(nameof(Position), StringComparison.InvariantCultureIgnoreCase);
+            var position = item.GetValue(Json.PropertyName<Model>(nameof(Model.Position)), StringComparison.InvariantCultureIgnoreCase);
             if (position != null)
             {
                 var field = position.First as JProperty;
                 while (field != null)
                 {
-                    if (String.Equals(field.Name, nameof(Position.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position.Id)), StringComparison.InvariantCultureIgnoreCase))
                     {
                         System.Type positionType = Position.Register[field.Value.ToObject<string>()];
                         model.Position = Models.Position.Create(field.Value.ToObject<string>());
@@ -174,9 +170,9 @@ namespace Terratype.Models
                 field = position.First as JProperty;
                 while (field != null)
                 {
-                    if (String.Equals(field.Name, nameof(Position.datum), StringComparison.InvariantCultureIgnoreCase))
+                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position._datum)), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        model.Position.TryParse(field.Value as JObject);
+                        model.Position.TryParse(field.Value.ToObject<string>());
                         break;
                     }
                     field = field.Next as JProperty;
@@ -187,8 +183,25 @@ namespace Terratype.Models
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var model = value as Model;
+            writer.WriteStartObject();
+
+            writer.WritePropertyName(Json.PropertyName<Model>(nameof(Model.Zoom)));
+            writer.WriteValue(model.Zoom);
+
+            writer.WritePropertyName(Json.PropertyName<Model>(nameof(Model.Lookup)));
+            writer.WriteValue(model.Lookup);
+
+            writer.WritePropertyName(Json.PropertyName<Model>(nameof(Model.Position)));
+            writer.WriteStartObject();
+            writer.WritePropertyName(Json.PropertyName<Position>(nameof(Position.Id)));
+            writer.WriteValue(model.Position.Id);
+            writer.WritePropertyName(Json.PropertyName<Position>(nameof(Position._datum)));
+            writer.WriteValue(model.Position.ToString());
+            writer.WriteEndObject();
+
+            writer.WriteEndObject();
         }
     }
-
 }
+    

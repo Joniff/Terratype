@@ -13,7 +13,9 @@ namespace Terratype.Providers
     [JsonObject(MemberSerialization.OptIn)]
     public class GoogleMapsV3 : Models.Provider
     {
-        [JsonProperty]
+        private const string UrlPath = "/App_Plugins/Terratype.GoogleMapsV3/1.0.0/";
+
+        [JsonProperty(PropertyName = "id")]
         public override string Id
         {
             get
@@ -69,35 +71,35 @@ namespace Terratype.Providers
             }
         }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "version")]
         public string Version { get; set; }
 
         /// <summary>
         /// API Key from https://console.developers.google.com/apis/credentials
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "apiKey")]
         public string ApiKey { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "forceHttps")]
         public bool ForceHttps { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "language")]
         public string Language { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "predefineStyling")]
         public string PredefineStyling { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "showRoads")]
         public bool ShowRoads { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "showLandmarks")]
         public bool ShowLandmarks { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "showLabels")]
         public bool ShowLabels { get; set; }
 
-        [JsonProperty]
-        public dynamic Styling { get; set; }
+        [JsonProperty(PropertyName = "styles")]
+        public dynamic Styles { get; set; }
 
         /// <summary>
         /// Where are the controls situation
@@ -137,63 +139,71 @@ namespace Terratype.Providers
 
             public class SelectorDefinition
             {
-                [JsonProperty]
+                [JsonProperty(PropertyName = "type")]
+
                 public SelectorType Type { get; set; }
 
-                [JsonProperty]
+                [JsonProperty(PropertyName = "position")]
                 public ControlPositions Position { get; set; }
             }
 
-            [JsonProperty]
+            [JsonProperty(PropertyName = "basic")]
             public bool Basic { get; set; }
-            [JsonProperty]
+
+            [JsonProperty(PropertyName = "satellite")]
             public bool Satellite { get; set; }
-            [JsonProperty]
+
+            [JsonProperty(PropertyName = "terrain")]
             public bool Terrain { get; set; }
 
-            [JsonProperty]
+            [JsonProperty(PropertyName = "selector")]
             public SelectorDefinition Selector { get; set; }
         }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "variety")]
         public VarietyDefinition Variety { get; set; }
 
         [JsonObject(MemberSerialization.OptIn)]
         public class Control
         {
-            [JsonProperty]
+            [JsonProperty(PropertyName = "enable")]
             public bool Enable { get; set; }
-            [JsonProperty]
+
+            [JsonProperty(PropertyName = "position")]
             public ControlPositions Position { get; set; }
         }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "streetView")]
         public Control StreetView { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "fullscreen")]
         public Control Fullscreen { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "scale")]
         public Control Scale { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "zoomControl")]
         public Control ZoomControl { get; set; }
 
 
+        [JsonObject(MemberSerialization.OptIn)]
         public class SearchDefinition
         {
             public enum SearchStatus { Disable = 0, Enable, Autocomplete };
 
+            [JsonProperty(PropertyName = "enable")]
             public SearchStatus Enable { get; set; }
 
+            [JsonObject(MemberSerialization.OptIn)]
             public class LimitDefinition
             {
+                [JsonProperty(PropertyName = "countries")]
                 public IEnumerable<string> Countries { get; set; }
             }
             public LimitDefinition Limit { get; set; }
         }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "search")]
         public SearchDefinition Search { get; set; }
 
         private string GoogleScript(Models.Model model)
@@ -237,51 +247,53 @@ namespace Terratype.Providers
             }
         }
 
-        public override IHtmlString GetHtml(Models.Model model, int height = 400, string language = null)
+        /// <summary>
+        /// Returns the Html that renders this map
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="height"></param>
+        /// <param name="language"></param>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, int height, string language, string labelId)
         {
-            var guid = new Guid("b72310d2-7041-4234-a6c5-6c5c2fdd708e");
+            const string guid = "b72310d2-7041-4234-a6c5-6c5c2fdd708e";
             var id = "gmapv3_" + DateTime.Now.Ticks.ToString();
 
-            var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-            using (var writer = new HtmlTextWriter(builder))
+            writer.AddAttribute("data-markerclusterer-url", UrlPath + "images/m");
+            writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
+            writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-label-id", labelId);
+            writer.AddAttribute("data-id", id);
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
+            writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(GoogleMapsV3));
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+
+            if (!HttpContext.Current.Items.Contains(guid))
             {
-                writer.RenderBeginTag(HtmlTextWriterTag.Div);
-                if (!HttpContext.Current.Items.Contains(guid))
-                {
-                    HttpContext.Current.Items.Add(guid, true);
-                    writer.RenderBeginTag(HtmlTextWriterTag.Script);
-                    Resource("Terratype.GoogleMapsV3.Scripts.Render.js", writer);
-                    writer.RenderEndTag();
-
-                    writer.AddAttribute(HtmlTextWriterAttribute.Src, GoogleScript(model));
-                    writer.AddAttribute("defer", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Script);
-                    writer.RenderEndTag();
-                }
-
+                HttpContext.Current.Items.Add(guid, true);
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath + "scripts/Terratype.Renderer.js");
+                writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
-                writer.Write("var ");
-                writer.Write(id);
-                writer.Write("=");
-                writer.WriteLine(JsonConvert.SerializeObject(model));
-                writer.Write(";");
-                writer.Write(id);
-                writer.Write(".id='");
-                writer.Write(id);
-                writer.Write("';window.terratype_gmapsv3.maps.push(");
-                writer.Write(id);
-                writer.WriteLine(");");
                 writer.RenderEndTag();
 
-                writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
-                writer.AddStyleAttribute(HtmlTextWriterStyle.Height, height.ToString() + "px");
-                writer.RenderBeginTag(HtmlTextWriterTag.Div);
+
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath + "scripts/markerclusterer.min.js");
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, GoogleScript(model));
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
             }
 
-            return new HtmlString(builder.ToString());
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Height, height.ToString() + "px");
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.RenderEndTag();
+            writer.RenderEndTag();
         }
 
     }

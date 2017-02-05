@@ -69,7 +69,7 @@ namespace Terratype.Controllers
             {
                 return null;
             }
-            return position.datum.ToString();
+            return position._datum.ToString();
         }
 
         public class ImageInfo
@@ -262,7 +262,7 @@ namespace Terratype.Controllers
             var wgs84 = source.ToWgs84();
             var destination = Models.Position.Create(destinationId);
             destination.FromWgs84(wgs84);
-            return destination.datum.ToString();
+            return destination._datum.ToString();
         }
     }
 }

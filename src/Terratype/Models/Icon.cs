@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Diagnostics;
+using Terratype;
 
 namespace Terratype.Models
 {
@@ -12,28 +14,36 @@ namespace Terratype.Models
         /// <summary>
         /// Predefined identifier for this icon, or null for custom icon
         /// </summary>
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "url")]
         public Uri Url { get; set; }
 
+        [JsonObject(MemberSerialization.OptIn)]
         [DebuggerDisplay("{Width}W x {Height}H")]
+        //[JsonConverter(typeof(SizeConverter))]
         public class SizeDefinition
         {
+            [JsonProperty(PropertyName = "width")]
             public int Width { get; set; }
+
+            [JsonProperty(PropertyName = "height")]
             public int Height { get; set; }
         }
 
-        [JsonProperty]
-
+        [JsonProperty(PropertyName = "size")]
         public SizeDefinition Size { get; set; }
 
         [DebuggerDisplay("{Horizontal} {Vertical}")]
+        [JsonObject(MemberSerialization.OptIn)]
+        [JsonConverter(typeof(AnchorDefinitionConverter))]
         public class AnchorDefinition
         {
+            [JsonProperty(PropertyName = "horizontal")]
             public AnchorHorizontal Horizontal { get; set; }
 
+            [JsonProperty(PropertyName = "vertical")]
             public AnchorVertical Vertical { get; set; }
 
             public AnchorDefinition()
@@ -43,6 +53,7 @@ namespace Terratype.Models
             }
         }
 
+        [JsonProperty(PropertyName = "anchor")]
         public AnchorDefinition Anchor { get; set; }
 
         public Icon()
@@ -56,63 +67,67 @@ namespace Terratype.Models
             Size = other.Size;
             Anchor = other.Anchor;
         }
-
-        public Icon(string json) : this(JsonConvert.DeserializeObject<Icon>(json, new IconConvertor()))
-        {
-        }
-
-        public Icon(JObject data) : this(data.ToObject<Icon>(new JsonSerializer() { Converters = { new IconConvertor() } }))
-        {
-        }
     }
 
-    public class IconConvertor : JsonConverter
+    public class AnchorDefinitionConverter : JsonConverter
     {
-        public override bool CanWrite { get { return false; } }
-
         public override bool CanConvert(Type objectType)
         {
-            return typeof(Icon).IsAssignableFrom(objectType);
+            return typeof(Icon.AnchorDefinition).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var icon = new Icon();
-
+            var anchor = new Icon.AnchorDefinition();
             JObject item = JObject.Load(reader);
-            icon.Id = item.GetValue(nameof(Icon.Id), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
-            icon.Url = new Uri(item.GetValue(nameof(Icon.Url), StringComparison.InvariantCultureIgnoreCase)?.Value<string>());
-            icon.Size = item.GetValue(nameof(Icon.Size), StringComparison.InvariantCultureIgnoreCase)?.ToObject<Icon.SizeDefinition>();
-            var anchor = item.GetValue(nameof(Icon.Anchor), StringComparison.InvariantCultureIgnoreCase);
-            if (anchor != null)
-            {
-                icon.Anchor = new Icon.AnchorDefinition();
-                var field = anchor.First as JProperty;
-                int counter = 0;
-                while (field != null && counter != 2)
-                {
-                    if (String.Equals(field.Name, nameof(Icon.AnchorDefinition.Horizontal), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        icon.Anchor.Horizontal = new AnchorHorizontal(field.Value.ToObject<string>());
-                        counter++;
-                    }
-                    else if (String.Equals(field.Name, nameof(Icon.AnchorDefinition.Vertical), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        icon.Anchor.Vertical = new AnchorVertical(field.Value.ToObject<string>());
-                        counter++;
-                    }
-                    field = field.Next as JProperty;
-                }
-            }
-            return icon;
+            anchor.Horizontal = new AnchorHorizontal(item.GetValue(Json.PropertyName<Models.Icon.AnchorDefinition>(nameof(Models.Icon.AnchorDefinition.Horizontal)))?.Value<string>());
+            anchor.Vertical = new AnchorVertical(item.GetValue(Json.PropertyName<Models.Icon.AnchorDefinition>(nameof(Models.Icon.AnchorDefinition.Vertical)))?.Value<string>());
+            return anchor;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var anchor = value as Icon.AnchorDefinition;
+            writer.WriteStartObject();
+
+            writer.WritePropertyName(Json.PropertyName<Models.Icon.AnchorDefinition>(nameof(Models.Icon.AnchorDefinition.Horizontal)));
+            writer.WriteValue(anchor.Horizontal.IsManual() ? anchor.Horizontal.Manual.ToString() : anchor.Horizontal.Automatic.ToString().ToLowerInvariant());
+
+            writer.WritePropertyName(Json.PropertyName<Models.Icon.AnchorDefinition>(nameof(Models.Icon.AnchorDefinition.Vertical)));
+            writer.WriteValue(anchor.Vertical.IsManual() ? anchor.Vertical.Manual.ToString() : anchor.Vertical.Automatic.ToString().ToLowerInvariant());
+
+            writer.WriteEndObject();
         }
     }
 
+    //public class SizeConverter : JsonConverter
+    //{
+    //    public override bool CanConvert(Type objectType)
+    //    {
+    //        return typeof(Icon.SizeDefinition).IsAssignableFrom(objectType);
+    //    }
 
+    //    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    //    {
+    //        var size = new Icon.SizeDefinition();
+    //        JObject item = JObject.Load(reader);
+    //        size.Height = new AnchorHorizontal(item.GetValue(Json.PropertyName<Models.Icon.SizeDefinition>(nameof(Models.Icon.SizeDefinition.Height)))?.Value<string>());
+    //        size.Width = new AnchorVertical(item.GetValue(Json.PropertyName<Models.Icon.SizeDefinition>(nameof(Models.Icon.SizeDefinition.Width)))?.Value<string>());
+    //        return size;
+    //    }
 
+    //    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    //    {
+    //        var size = value as Icon.SizeDefinition;
+    //        writer.WriteStartObject();
+
+    //        writer.WritePropertyName(Json.PropertyName<Models.Icon.SizeDefinition>(nameof(Models.Icon.SizeDefinition.Height)));
+    //        writer.WriteValue(size.Height);
+
+    //        writer.WritePropertyName(Json.PropertyName<Models.Icon.SizeDefinition>(nameof(Models.Icon.SizeDefinition.Width)));
+    //        writer.WriteValue(size.Width);
+
+    //        writer.WriteEndObject();
+    //    }
+    //}
 }

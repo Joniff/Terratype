@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.PropertyEditors;
@@ -37,12 +34,15 @@ namespace Terratype
             else
             {
                 data = new JObject();
-                data.Merge(config.GetValue(nameof(Models.Model.Lookup), StringComparison.InvariantCultureIgnoreCase));
-                data.Merge(config.GetValue(nameof(Models.Model.Zoom), StringComparison.InvariantCultureIgnoreCase));
+                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Lookup)), StringComparison.InvariantCultureIgnoreCase));
+                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Zoom)), StringComparison.InvariantCultureIgnoreCase));
+                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Position)), StringComparison.InvariantCultureIgnoreCase));
             }
             var innerConfig = config.GetValue("config") as JObject;
-            data.Merge(new JObject(new JProperty(nameof(Models.Model.Icon).ToLowerInvariant(), innerConfig.GetValue(nameof(Models.Model.Icon), StringComparison.InvariantCultureIgnoreCase))));
-            data.Merge(new JObject(new JProperty(nameof(Models.Model.Provider).ToLowerInvariant(), innerConfig.GetValue(nameof(Models.Model.Provider), StringComparison.InvariantCultureIgnoreCase))));
+            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(nameof(Models.Model.Icon)), 
+                innerConfig.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Icon)), StringComparison.InvariantCultureIgnoreCase))));
+            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(nameof(Models.Model.Provider)),
+                innerConfig.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Provider)), StringComparison.InvariantCultureIgnoreCase))));
             return new Models.Model(data);
         }
 
