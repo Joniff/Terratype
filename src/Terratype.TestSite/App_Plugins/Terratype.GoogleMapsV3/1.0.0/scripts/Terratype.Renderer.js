@@ -22,6 +22,15 @@
         init: function () {
             q.load();
             var counter = 0;
+
+            if (window.jQuery) {
+                q.updateJquery();   //  Use jquery to monitor changes to the page
+            } else {
+                q.updateJs();       //  Use old fashion js to monitor changes
+            }
+        },
+        updateJs: function () {
+            var counter = 0;
             var mapsRunning = 0;
             var timer = setInterval(function () {
                 if (counter == q.maps.length) {
@@ -40,6 +49,32 @@
                     } else {
                         q.idle(m);
                     }
+                }
+                counter++;
+            }, 250);
+        },
+        updateJquery: function () {
+            var counter = 0;
+            var timer = setInterval(function () {
+                if (counter == q.maps.length) {
+                    clearInterval(timer);
+                    jQuery(window).on('DOMContentLoaded load resize scroll touchend', function () {
+                        counter = 0;
+                        var timer2 = setInterval(function () {
+                            if (counter == q.maps.length) {
+                                clearInterval(timer2);
+                            }
+                            var m = q.maps[counter];
+                            if (m.status > 0) {
+                                q.idle(m);
+                            }
+                            counter++;
+                        }, 50);
+                    });
+                }
+                var m = q.maps[counter];
+                if (m.status == 0) {
+                    q.render(m);
                 }
                 counter++;
             }, 250);
@@ -70,7 +105,8 @@
                         positions: [],
                         center: latlng,
                         divoldsize: 0,
-                        status: 0
+                        status: 0,
+                        visible: false
                     };
                     matches[i].style.display = 'block';
                     q.maps.push(m);
@@ -137,7 +173,7 @@
                         return;
                     }
                     q.refresh(mm);
-                    m.status = 2;
+                    mm.status = 2;
                 });
                 root.google.maps.event.addListener(mm.gmap, 'resize', function () {
                     if (mm.ignoreEvents > 0) {
@@ -205,10 +241,15 @@
             m.gmap.setZoom(m.zoom);
             q.closeInfoWindows(m);
             m.gmap.panTo(m.center);
+            with ({
+                mm: m
+            }) {
+                root.google.maps.event.addListenerOnce(mm.gmap, 'idle', function () {
+                    mm.gmap.panTo(mm.center);
+                    m.ignoreEvents--;
+                });
+            }
             root.google.maps.event.trigger(m.gmap, 'resize');
-            setTimeout(function () {
-                m.ignoreEvents--;
-            }, 1);
         },
         configIconUrl: function (url) {
             if (typeof (url) === 'undefined' || url == null) {
@@ -283,29 +324,50 @@
                 longitude: lng
             };
         },
+        isElementInViewport: function (el) {
+            var rect = el.getBoundingClientRect();
+
+            return (
+                rect.bottom >= 0 &&
+                rect.right >= 0 &&
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        },
         idle: function (m) {
             var element = document.getElementById(m.div);
             var newValue = element.parentElement.offsetTop;
             var newSize = element.clientHeight * element.clientWidth;
             var show = !(element.style.display == 'none');
+            var visible = show && q.isElementInViewport(element);
             if (newValue != 0 && show == false) {
+                //console.log('A ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
                 //  Was hidden, now being shown
                 document.getElementById(m.div).style.display = 'block';
-                setTimeout(function () {
-                    if (document.getElementById(m.div).hasChildNodes() == false) {
-                        //  Ouch, map has been deleted, best off just killing ourselves off
-                        console.log('Terratype Map ' + m.div + ' has been killed due to no map present');
-                        mm.status = -1;
-                    } else {
-                        q.refresh(m);
-                    }
-                }, 1);
             } else if (newValue == 0 && show == true) {
+                //console.log('B ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
                 //  Was shown, now being hidden
                 document.getElementById(m.div).style.display = 'none';
+                m.visible = false;
             }
-            else if (show == true && m.divoldsize != 0 && newSize != 0 && m.divoldsize != newSize) {
-                q.checkResize(m);
+            else if (visible == true && m.divoldsize != 0 && newSize != 0 && m.divoldsize != newSize) {
+                //console.log('C ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
+                //  showing, just been resized and map is visible
+                if (m.visible) {
+                    q.checkResize(m);
+                } else {
+                    q.refresh(m);
+                    m.visible = true;
+                }
+            } else if (visible == true && m.visible == false) {
+                //console.log('D ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
+                //  showing and map just turned visible
+                q.refresh(m);
+                m.visible = true;
+            } else if (visible == false && m.visible == true) {
+                //console.log('E ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
+                //  was visible, but now hiding
+                m.visible = false;
             }
             m.divoldsize = newSize;
         }

@@ -46,7 +46,6 @@
                 var e = event.events[counter++];
                 if (e.name == name) {
                     e.func.call(e.scope, e.object);
-                    gm.originalConsole.log("Broadcast single " + e.name + ":" + e.id);
                     return counter;
                 }
             }
@@ -1056,6 +1055,15 @@
                         longitude: lng
                     };
                 },
+                isElementInViewport: function (el) {
+                    var rect = el.getBoundingClientRect();
+                    return (
+                        rect.bottom >= 0 &&
+                        rect.right >= 0 &&
+                        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+                        rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+                    );
+                },
                 toString: function (datum, precision) {
                     function encodelatlng(latlng) {
                         return Number(latlng).toFixed(precision).replace(/\.?0+$/, '');
@@ -1082,6 +1090,7 @@
                 loadMapWait: null,
                 div: null,
                 divoldsize: 0,
+                visible: false,
                 divwait: 0,
                 superWaiter: null,
                 loadMap: function () {
@@ -1226,8 +1235,9 @@
                                     } else {
                                         var newValue = element.parentElement.offsetTop;
                                         var newSize = element.clientHeight * element.clientWidth;
-                                        if (newValue != 0 && view().showMap == false) {
-                                            //  Was hidden, now being shown
+                                        var show = view().showMap;
+                                        var visible = show && scope.isElementInViewport(element);
+                                        if (newValue != 0 && show == false) {
                                             view().showMap = true;
                                             updateView();
                                             setTimeout(function () {
@@ -1237,13 +1247,22 @@
                                                     scope.eventRefresh.call(scope);
                                                 }
                                             }, 1);
-                                        } else if (newValue == 0 && view().showMap == true) {
-                                            //  Was shown, now being hidden
+                                        } else if (newValue == 0 && show == true) {
                                             view().showMap = false;
-                                            updateView();
+                                            scope.visible = false;
                                         }
-                                        else if (view().showMap == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
-                                            scope.eventCheckRefresh.call(scope);
+                                        else if (visible == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
+                                            if (scope.visible) {
+                                                scope.eventCheckRefresh.call(scope);
+                                            } else {
+                                                scope.eventRefresh.call(scope);
+                                                scope.visible = true;
+                                            }
+                                        } else if (visible == true && scope.visible == false) {
+                                            scope.eventRefresh.call(scope);
+                                            scope.visible = true;
+                                        } else if (visible == false && scope.visible == true) {
+                                            scope.visible = false;
                                         }
                                         scope.divoldsize = newSize;
                                     }

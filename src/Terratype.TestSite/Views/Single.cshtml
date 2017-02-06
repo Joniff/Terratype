@@ -52,6 +52,9 @@
     </dl>
 
     <div id="pretent-accordion" style="display:none;">
+        <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+            This is an empty div
+        </div>
         @Html.Terratype(Model.Content.Map,
             @<text>
                 <div style="background-color:yellow;">
@@ -59,6 +62,9 @@
                 </div>
             </text>
         )
+        <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+            This is an empty div
+        </div>
     </div>
 
     <button onclick="var a = document.getElementById('pretent-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
