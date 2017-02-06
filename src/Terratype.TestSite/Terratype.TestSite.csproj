@@ -429,6 +429,7 @@
     <Content Include="Views\Mappy.cshtml" />
     <Content Include="Views\Single.cshtml" />
     <Content Include="Views\Home.cshtml" />
+    <Content Include="Views\ArchetypeMap.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

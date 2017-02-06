@@ -1,7 +1,7 @@
 ﻿(function (root) {
     var q = {
         markerClustererUrl: document.getElementsByClassName('Terratype.GoogleMapsV3')[0].getAttribute('data-markerclusterer-url'),
-        maps: {},
+        maps: [],
         mapTypeIds: function (basic, satellite, terrain) {
             var mapTypeIds = [];
             if (basic) {
@@ -21,27 +21,36 @@
         },
         init: function () {
             q.load();
-            q.render();
+            var counter = 0;
+            var mapsRunning = 0;
             var timer = setInterval(function () {
-                var mapsRunning = 0;
-                for (var mapId in q.maps) {
-                    if (!q.maps.hasOwnProperty(mapId)) {
-                        continue;
+                if (counter == q.maps.length) {
+                    if (mapsRunning == 0) {
+                        //  There are no maps running
+                        clearInterval(timer);
                     }
-                    var m = q.maps[mapId];
-                    if (m.status != -1) {
-                        mapsRunning++;
-                        if (m.status > 0) {
-                            setTimeout(function () {
-                                q.idle(m);
-                            }, 1);
-                        }
+                    counter = 0;
+                    mapsRunning = 0;
+                }
+                var m = q.maps[counter];
+                if (m.status != -1) {
+                    mapsRunning++;
+                    if (m.status == 0) {
+                        q.render(m);
+                    } else {
+                        q.idle(m);
                     }
                 }
-                if (mapsRunning == 0) {
-                    clearInterval(timer);
+                counter++;
+            }, 250);
+        },
+        getMap: function (mapId) {
+            for (var i = 0; i != q.maps.length; i++) {
+                if (q.maps[i].id == mapId) {
+                    return q.maps[i];
                 }
-            }, 500);
+            }
+            return null;
         },
         load: function () {
             var matches = document.getElementsByClassName('Terratype.GoogleMapsV3');
@@ -51,8 +60,10 @@
                 var model = JSON.parse(unescape(matches[i].getAttribute('data-googlemapsv3')));
                 var datum = q.parse(model.position.datum);
                 var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
-                if (!q.maps[mapId]) {
-                    q.maps[mapId] = {
+                var m = q.getMap(mapId);
+                if (m == null) {
+                    m = {
+                        id: mapId,
                         div: id,
                         zoom: model.zoom,
                         provider: model.provider,
@@ -62,8 +73,9 @@
                         status: 0
                     };
                     matches[i].style.display = 'block';
+                    q.maps.push(m);
                 }
-                q.maps[mapId].positions.push({
+                m.positions.push({
                     id: id,
                     label: matches[i].getAttribute('data-label-id'),
                     latlng: latlng,
@@ -77,116 +89,106 @@
                 });
             }
         },
-        render: function () {
-            for (var mapId in q.maps) {
-                if (!q.maps.hasOwnProperty(mapId)) {
-                    continue;
+        render: function (m) {
+            m.ignoreEvents = 0;
+            var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.terrain);
+            m.gmap = new root.google.maps.Map(document.getElementById(m.div), {
+                disableDefaultUI: false,
+                scrollwheel: false,
+                panControl: false,      //   Has been depricated
+                center: m.center,
+                zoom: m.zoom,
+                draggable: true,
+                fullScreenControl: m.provider.fullscreen.enable,
+                fullscreenControlOptions: m.provider.fullscreen.position,
+                styles: m.provider.styles,
+                mapTypeId: mapTypeIds[0],
+                mapTypeControl: (mapTypeIds.length > 1),
+                mapTypeControlOptions: {
+                    style: m.provider.variety.selector.type,
+                    mapTypeIds: mapTypeIds,
+                    position: m.provider.variety.selector.position
+                },
+                scaleControl: m.provider.scale.enable,
+                scaleControlOptions: {
+                    position: m.provider.scale.position
+                },
+                streetViewControl: m.provider.streetView.enable,
+                streetViewControlOptions: {
+                    position: m.provider.streetView.position
+                },
+                zoomControl: m.provider.zoomControl.enable,
+                zoomControlOptions: {
+                    position: m.provider.zoomControl.position
                 }
-                var m = q.maps[mapId];
-                m.ignoreEvents = 0;
-                var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.terrain);
-                m.gmap = new root.google.maps.Map(document.getElementById(m.div), {
-                    disableDefaultUI: false,
-                    scrollwheel: false,
-                    panControl: false,      //   Has been depricated
-                    center: m.center,
-                    zoom: m.zoom,
-                    draggable: true,
-                    fullScreenControl: m.provider.fullscreen.enable,
-                    fullscreenControlOptions: m.provider.fullscreen.position,
-                    styles: m.provider.styles,
-                    mapTypeId: mapTypeIds[0],
-                    mapTypeControl: (mapTypeIds.length > 1),
-                    mapTypeControlOptions: {
-                        style: m.provider.variety.selector.type,
-                        mapTypeIds: mapTypeIds,
-                        position: m.provider.variety.selector.position
-                    },
-                    scaleControl: m.provider.scale.enable,
-                    scaleControlOptions: {
-                        position: m.provider.scale.position
-                    },
-                    streetViewControl: m.provider.streetView.enable,
-                    streetViewControlOptions: {
-                        position: m.provider.streetView.position
-                    },
-                    zoomControl: m.provider.zoomControl.enable,
-                    zoomControlOptions: {
-                        position: m.provider.zoomControl.position
+            });
+            with ({
+                mm: m
+            }) {
+                root.google.maps.event.addListener(mm.gmap, 'zoom_changed', function () {
+                    if (mm.ignoreEvents > 0) {
+                        return;
                     }
+                    q.closeInfoWindows(mm);
+                    mm.zoom = mm.gmap.getZoom();
                 });
-                with ({
-                    mm: m
-                }) {
-                    root.google.maps.event.addListener(mm.gmap, 'zoom_changed', function () {
-                        if (mm.ignoreEvents > 0) {
-                            return;
-                        }
-                        q.closeInfoWindows(mm);
-                        mm.zoom = mm.gmap.getZoom();
-                    });
-                    root.google.maps.event.addListenerOnce(mm.gmap, 'tilesloaded', function () {
-                        if (mm.ignoreEvents > 0) {
-                            return;
-                        }
-                        q.refresh(mm);
-                        m.status = 2;
-                    });
-                    root.google.maps.event.addListener(mm.gmap, 'resize', function () {
-                        if (mm.ignoreEvents > 0) {
-                            return;
-                        }
-                        q.checkResize(mm);
-                    });
-                    root.google.maps.event.addListener(mm.gmap, 'click', function () {
-                        if (mm.ignoreEvents > 0) {
-                            return;
-                        }
-                        q.closeInfoWindows(mm);
-                    });
-                }
-                m.ginfos = [];
-                m.gmarkers = [];
-
-                for (var p = 0; p != m.positions.length; p++) {
-                    var item = m.positions[p];
-                    m.ginfos[p] = new root.google.maps.InfoWindow({
-                        content: document.getElementById(item.label)
-                    });
-                    m.gmarkers[p] = new root.google.maps.Marker({
-                        map: m.gmap,
-                        position: item.latlng,
-                        id: item.id,
-                        draggable: false,
-                        icon: item.icon
-                    });
-
-                    if (document.getElementById(item.label) != null) {
-                        with ({
-                            mm: m,
-                            pp: p
-                        }) {
-                            mm.gmarkers[p].addListener('click', function () {
-                                if (mm.ignoreEvents > 0) {
-                                    return;
-                                }
-                                q.closeInfoWindows(mm);
-
-                                mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
-                            });
-                        }
+                root.google.maps.event.addListenerOnce(mm.gmap, 'tilesloaded', function () {
+                    if (mm.ignoreEvents > 0) {
+                        return;
                     }
-                }
-
-                if (m.positions.length > 1) {
-                    m.markerclusterer = new MarkerClusterer(m.gmap, m.gmarkers, { imagePath: q.markerClustererUrl });
-                }
-                setTimeout(function () {
-                    if (m.status == 0) {
-                        m.status = 1;
+                    q.refresh(mm);
+                    m.status = 2;
+                });
+                root.google.maps.event.addListener(mm.gmap, 'resize', function () {
+                    if (mm.ignoreEvents > 0) {
+                        return;
                     }
-                }, 100);
+                    q.checkResize(mm);
+                });
+                root.google.maps.event.addListener(mm.gmap, 'click', function () {
+                    if (mm.ignoreEvents > 0) {
+                        return;
+                    }
+                    q.closeInfoWindows(mm);
+                });
             }
+            m.ginfos = [];
+            m.gmarkers = [];
+
+            for (var p = 0; p != m.positions.length; p++) {
+                var item = m.positions[p];
+                m.ginfos[p] = new root.google.maps.InfoWindow({
+                    content: document.getElementById(item.label)
+                });
+                m.gmarkers[p] = new root.google.maps.Marker({
+                    map: m.gmap,
+                    position: item.latlng,
+                    id: item.id,
+                    draggable: false,
+                    icon: item.icon
+                });
+
+                if (document.getElementById(item.label) != null) {
+                    with ({
+                        mm: m,
+                        pp: p
+                    }) {
+                        mm.gmarkers[p].addListener('click', function () {
+                            if (mm.ignoreEvents > 0) {
+                                return;
+                            }
+                            q.closeInfoWindows(mm);
+
+                            mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
+                        });
+                    }
+                }
+            }
+
+            if (m.positions.length > 1) {
+                m.markerclusterer = new MarkerClusterer(m.gmap, m.gmarkers, { imagePath: q.markerClustererUrl });
+            }
+            m.status = 1;
         },
         closeInfoWindows: function (m) {
             for (var p = 0; p != m.positions.length; p++) {

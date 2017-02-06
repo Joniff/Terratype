@@ -258,7 +258,7 @@ namespace Terratype.Providers
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, int height, string language, string labelId)
         {
             const string guid = "b72310d2-7041-4234-a6c5-6c5c2fdd708e";
-            var id = "gmapv3_" + DateTime.Now.Ticks.ToString();
+            var id = nameof(Terratype) + "." + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-markerclusterer-url", UrlPath + "images/m");
             writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
