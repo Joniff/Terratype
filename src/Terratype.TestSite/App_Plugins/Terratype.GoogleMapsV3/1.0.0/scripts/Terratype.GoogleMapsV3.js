@@ -4,7 +4,7 @@
     var event = {
         events: [],
         register: function (id, name, scope, object, func) {
-            gm.originalConsole.log("Register " + name + ":" + id);
+            //gm.originalConsole.log("Register " + name + ":" + id);
 
             event.events.push({
                 id: id,
@@ -20,7 +20,7 @@
                 if (e.id != id) {
                     newEvents.push(e);
                 } else {
-                    gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
+                    //gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
                 }
             });
             event.events = newEvents;
@@ -33,7 +33,7 @@
                     e.func.call(e.scope, e.object);
                 }
             });
-            gm.originalConsole.log(log);
+            //gm.originalConsole.log(log);
         },
         broadcastSingle: function (name, counter) {
             var loop = 0;
@@ -136,7 +136,7 @@
             }
         },
         destroySubsystem: function () {
-            gm.originalConsole.log('Destroying subsystem');
+            //gm.originalConsole.log('Destroying subsystem');
 
             gm.uninstallFakeConsole();
             delete root.google;
@@ -156,7 +156,7 @@
             return (new Date().getTime());
         },
         createSubsystem: function (version, apiKey, forceHttps, coordinateSystem, language) {
-            gm.originalConsole.log('Creating subsystem');
+            //gm.originalConsole.log('Creating subsystem');
             root.TerratypeGoogleMapsV3Callback = function () {
                 gm.status = gm.subsystemCheckGoogleJs;
             }
@@ -785,10 +785,7 @@
                 datumChangeWait: null,
                 defaultConfig: {
                     position: {
-                        datum: {
-                            latitude: 55.4063207,
-                            longitude: 10.3870147
-                        }
+                        datum: "55.4063207,10.3870147"
                     },
                     zoom: 12,
                     provider: {
@@ -1002,9 +999,11 @@
                         clearInterval(scope.superWaiter);
                         scope.superWaiter = null;
                     }
-                    angular.forEach(scope.gevents, function (gevent) {
-                        root.google.maps.event.removeListener(gevent);
-                    });
+                    if (root.google && root.google.maps && root.google.maps.event) {
+                        angular.forEach(scope.gevents, function (gevent) {
+                            root.google.maps.event.removeListener(gevent);
+                        });
+                    }
                     delete scope.gevents;
                     delete scope.gmap;
                     delete scope.gmarker;
@@ -1167,7 +1166,7 @@
                                         if (scope.gmap == null && scope.divwait != 0) {
                                             scope.divwait--;
                                         } else {
-                                            gm.originalConsole.log(id + ' ' + scope.div + ' not present');
+                                            //gm.originalConsole.log(id + ' ' + scope.div + ' not present');
                                             scope.destroy.call(scope);
                                         }
                                     } else if (scope.gmap == null) {

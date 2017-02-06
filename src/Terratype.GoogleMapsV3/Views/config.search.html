@@ -19,7 +19,7 @@
         </div>
     </div>
 </div>
-<div class="umb-el-wrap control-group" ng-show="config().search.enable != 0">
+<div class="umb-el-wrap control-group" ng-show="config().search.enable && config().search.enable != 0">
     <label for="terratype_{{view().identifier}}_googlemapv3_searchcountry" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigSearch_countryLabel">Limit:</localize>
         <small>
