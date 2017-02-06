@@ -3,7 +3,22 @@
 @using Terratype;
 @{
     Layout = null;
+    var jquery = false;
+    if (Request.QueryString["jquery"] != null)
+    {
+        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+                crossorigin="anonymous"></script>
+        jquery = true;
+    }
+
 }
+
+Jquery is @jquery
+
+
+
 
 <fieldset>
     <legend>
@@ -51,7 +66,7 @@
         </dd>
     </dl>
 
-    <div id="pretent-accordion" style="display:none;">
+    <div id="pretent-accordion" style="display:@(Request.QueryString["show"] != null ? "display" : "none");">
         <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
             This is an empty div
         </div>

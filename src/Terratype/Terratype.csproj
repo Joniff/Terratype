@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Json\Json.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Models\LatLng.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="CoordinateSystems\Bd09.cs" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Terratype
 {
     public static class TerratypeHtml
     {
-        private const int defaultHeight = 400;
+        private const int DefaultHeight = 400;
         private const string guid = "c9e9e052-7d33-46d3-a809-8b6e88b63ae3";
 
-        private static int counter
+        private static int Counter
         {
             get
             {
@@ -23,98 +24,96 @@ namespace Terratype
                 if (c == null)
                 {
                     c = 65536;
-                } 
+                }
                 else
                 {
                     c++;
                 }
                 HttpContext.Current.Items[guid] = c;
-                return (int) c;
+                return (int)c;
             }
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options)
+        {
+            return htmlHelper.Terratype(options, null, null);
         }
 
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map)
         {
-            return htmlHelper.Terratype(counter, map, defaultHeight, (string)null);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, int height)
-        {
-            return htmlHelper.Terratype(counter, map, height, (string)null);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, int height, string language)
-        {
-            return htmlHelper.Terratype(counter, map, height, language);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, string language)
-        {
-            return htmlHelper.Terratype(counter, map, defaultHeight, language);
+            return htmlHelper.Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, map, null);
         }
 
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, params Func<object, object>[] label)
         {
-            return htmlHelper.Terratype(counter, map, defaultHeight, (string)null, label);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, int height, params Func<object, object>[] label)
-        {
-            return htmlHelper.Terratype(counter, map, height, (string)null, label);
-        }
-
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, string language, params Func<object, object>[] label)
-        {
-            return htmlHelper.Terratype(counter, map, defaultHeight, language, label);
+            return htmlHelper.Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, map,  label);
         }
 
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map)
+        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map)
         {
-            return htmlHelper.Terratype(id, map, defaultHeight, (string)null);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, int height)
-        {
-            return htmlHelper.Terratype(id, map, height, (string)null);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, int height, string language)
-        {
-            return htmlHelper.Terratype(id, map, height, language);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, string language)
-        {
-            return htmlHelper.Terratype(id, map, defaultHeight, language);
+            return htmlHelper.Terratype(options, map, null);
         }
 
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, params Func<object, object>[] label)
+        public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
         {
-            return htmlHelper.Terratype(id, map, defaultHeight, (string)null, label);
-        }
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, int height, params Func<object, object>[] label)
-        {
-            return htmlHelper.Terratype(id, map, height, (string)null, label);
-        }
+            if (options == null && map == null)
+            {
+                //  Nothing to do, as no map or options are present
+                return new HtmlString("");
+            }
 
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, string language, params Func<object, object>[] label)
-        {
-            return htmlHelper.Terratype(id, map, defaultHeight, language, label);
-        }
+            if (map == null && options.Provider == null)
+            {
+                throw new ArgumentNullException("No map provider declared");
+            }
 
-        public static IHtmlString Terratype(this HtmlHelper htmlHelper, int id, Models.Model map, int height, string language, params Func<object, object>[] label)
-        {
+            if (options == null)
+            {
+                options = new Options()
+                {
+                    MapSetId = Counter,
+                    Height = DefaultHeight
+                };
+            }
+
+            Models.Model merge = null;
+
             if (map == null)
             {
-                throw new ArgumentNullException(nameof(map));
+                merge = new Models.Model()
+                {
+                    Provider = options.Provider,
+                    Position = options.Position
+                };
+                if (options.Zoom != null)
+                {
+                    merge.Zoom = (int)options.Zoom;
+                }
             }
-
-            if (map.Provider == null)
+            else
             {
-                throw new ArgumentNullException(nameof(map.Provider));
-            }
-
-            if (map.Position == null)
-            {
-                throw new ArgumentNullException(nameof(map.Position));
-            }
-
-            if (map.Icon == null)
-            {
-                throw new ArgumentNullException(nameof(map.Icon));
+                merge = new Models.Model()
+                {
+                    Provider = map.Provider,
+                    Position = map.Position,
+                    Zoom = map.Zoom,
+                    Icon = map.Icon
+                };
+                if (options.Provider != null)
+                {
+                    //  Merge providers, with options taking precedents
+                    var mergeJson = JObject.FromObject(merge.Provider);
+                    mergeJson.Merge(JObject.FromObject(options.Provider), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
+                    merge.Provider = mergeJson.ToObject<Models.Provider>();
+                }
             }
 
             var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
@@ -124,7 +123,7 @@ namespace Terratype
                 writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
                 var labelId = nameof(Terratype) + Guid.NewGuid().ToString();
-                map.Provider.GetHtml(writer, id, map, height, language, labelId);
+                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, options.Height ?? DefaultHeight, options.Language, labelId);
                 if (label != null)
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");

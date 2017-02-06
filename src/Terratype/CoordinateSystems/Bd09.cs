@@ -52,5 +52,14 @@ namespace Terratype.CoordinateSystems
         {
             throw new NotImplementedException();
         }
+
+        public Bd09()
+        {
+        }
+
+        public Bd09(string initialPosition)
+        {
+            Parse(initialPosition);
+        }
     }
 }

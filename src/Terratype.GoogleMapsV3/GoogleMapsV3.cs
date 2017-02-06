@@ -269,7 +269,7 @@ namespace Terratype.Providers
             writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(GoogleMapsV3));
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
-            if (!HttpContext.Current.Items.Contains(guid))
+            if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath + "scripts/Terratype.Renderer.js");

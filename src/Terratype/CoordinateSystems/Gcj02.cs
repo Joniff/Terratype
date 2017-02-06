@@ -53,5 +53,14 @@ namespace Terratype.CoordinateSystems
         {
             throw new NotImplementedException();
         }
+
+        public Gcj02()
+        {
+        }
+
+        public Gcj02(string initialPosition)
+        {
+            Parse(initialPosition);
+        }
     }
 }

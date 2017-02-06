@@ -153,12 +153,17 @@ namespace Terratype.Models
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Position Create(string id)
+        public static Position Create(string id, string initialLocation = null)
         {
             Type derivedType = null;
             if (Register.TryGetValue(id, out derivedType))
             {
-                return System.Activator.CreateInstance(derivedType) as Position;
+                var pos = System.Activator.CreateInstance(derivedType) as Position;
+                if (initialLocation != null)
+                {
+                    pos.Parse(initialLocation);
+                }
+                return pos;
             }
             return null;
         }
@@ -169,6 +174,5 @@ namespace Terratype.Models
                 return ToString();
             }
         }
-
     }
 }

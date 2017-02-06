@@ -1,5 +1,6 @@
 ﻿(function (root) {
     var q = {
+        poll: 100,
         markerClustererUrl: document.getElementsByClassName('Terratype.GoogleMapsV3')[0].getAttribute('data-markerclusterer-url'),
         maps: [],
         mapTypeIds: function (basic, satellite, terrain) {
@@ -21,15 +22,10 @@
         },
         init: function () {
             q.load();
-            var counter = 0;
-
-            if (window.jQuery) {
-                q.updateJquery();   //  Use jquery to monitor changes to the page
-            } else {
-                q.updateJs();       //  Use old fashion js to monitor changes
-            }
+            q.updateJs();   //  Can be changed for q.updateJquery(), if *all* DOM updates happen via jQuery (and obviously jQuery is loaded). Have switched off to stop erroneous bug reports
         },
         updateJs: function () {
+            //  Use standard JS to monitor page resizes, dom changes, scrolling
             var counter = 0;
             var mapsRunning = 0;
             var timer = setInterval(function () {
@@ -42,7 +38,7 @@
                     mapsRunning = 0;
                 }
                 var m = q.maps[counter];
-                if (m.status != -1) {
+                if (m.status != -1 && m.positions.length != 0) {
                     mapsRunning++;
                     if (m.status == 0) {
                         q.render(m);
@@ -51,9 +47,10 @@
                     }
                 }
                 counter++;
-            }, 250);
+            }, q.poll);
         },
         updateJquery: function () {
+            //  Can only be used, if all DOM updates happen via jQuery.
             var counter = 0;
             var timer = setInterval(function () {
                 if (counter == q.maps.length) {
@@ -63,21 +60,23 @@
                         var timer2 = setInterval(function () {
                             if (counter == q.maps.length) {
                                 clearInterval(timer2);
+                            } else {
+                                var m = q.maps[counter];
+                                if (m.status > 0 && m.positions.length != 0) {
+                                    q.idle(m);
+                                }
+                                counter++;
                             }
-                            var m = q.maps[counter];
-                            if (m.status > 0) {
-                                q.idle(m);
-                            }
-                            counter++;
-                        }, 50);
+                        }, q.poll);
                     });
+                } else {
+                    var m = q.maps[counter];
+                    if (m.status == 0 && m.positions.length != 0) {
+                        q.render(m);
+                    }
+                    counter++;
                 }
-                var m = q.maps[counter];
-                if (m.status == 0) {
-                    q.render(m);
-                }
-                counter++;
-            }, 250);
+            }, q.poll);
         },
         getMap: function (mapId) {
             for (var i = 0; i != q.maps.length; i++) {
@@ -86,6 +85,65 @@
                 }
             }
             return null;
+        },
+        defaultProvider: {
+            predefineStyling: 'retro',
+            showRoads: true,
+            showLandmarks: true,
+            showLabels: true,
+            variety: {
+                basic: true,
+                satellite: false,
+                terrain: false,
+                selector: {
+                    type: 1,     // Horizontal Bar
+                    position: 0  // Default
+                }
+            },
+            streetView: {
+                enable: false,
+                position: 0
+            },
+            fullscreen: {
+                enable: false,
+                position: 0
+            },
+            scale: {
+                enable: false,
+                position: 0
+            },
+            zoomControl: {
+                enable: true,
+                position: 0,
+            },
+            panControl: {
+                enable: false
+            },
+            draggable: true
+        },
+        mergeJson: function (a, b) {        //  Does not merge arrays
+            var mergy = function (c) {
+                var t = {};
+                for (var k in c) {
+                    if (typeof c[k] === 'object' && c[k].constructor.name !== "Array") {
+                        t[k] = mergy(c[k]);
+                    } else {
+                        t[k] = c[k];
+                    }
+                }
+                return t;
+            }
+            var r = (a) ? mergy(a) : {};
+            if (b) {
+                for (var k in b) {
+                    if (r[k] && typeof r[k] === 'object' && r[k].constructor.name !== "Array") {
+                        r[k] = q.mergeJson(r[k], b[k]);
+                    } else {
+                        r[k] = b[k];
+                    }
+                }
+            }
+            return r;
         },
         load: function () {
             var matches = document.getElementsByClassName('Terratype.GoogleMapsV3');
@@ -101,7 +159,7 @@
                         id: mapId,
                         div: id,
                         zoom: model.zoom,
-                        provider: model.provider,
+                        provider: q.mergeJson(q.defaultProvider, model.provider),
                         positions: [],
                         center: latlng,
                         divoldsize: 0,
@@ -111,18 +169,20 @@
                     matches[i].style.display = 'block';
                     q.maps.push(m);
                 }
-                m.positions.push({
-                    id: id,
-                    label: matches[i].getAttribute('data-label-id'),
-                    latlng: latlng,
-                    icon: {
-                        url: q.configIconUrl(model.icon.url),
-                        scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
-                        anchor: new root.google.maps.Point(
-                            q.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-                            q.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
-                    }
-                });
+                if (model.icon && model.icon.url) {
+                    m.positions.push({
+                        id: id,
+                        label: matches[i].getAttribute('data-label-id'),
+                        latlng: latlng,
+                        icon: {
+                            url: q.configIconUrl(model.icon.url),
+                            scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
+                            anchor: new root.google.maps.Point(
+                                q.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+                                q.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
+                        }
+                    });
+                }
             }
         },
         render: function (m) {

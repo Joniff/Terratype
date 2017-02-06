@@ -56,5 +56,14 @@ namespace Terratype.CoordinateSystems
         {
             Datum = wgs84Position;
         }
+
+        public Wgs84()
+        {
+        }
+
+        public Wgs84(string initialPosition)
+        {
+            Parse(initialPosition);
+        }
     }
 }
