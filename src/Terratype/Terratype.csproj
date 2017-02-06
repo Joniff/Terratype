@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Lang\en-us.xml" />
+    <Content Include="readme.txt" />
+    <Content Include="Terratype.png" />
     <Content Include="Views\grid.html" />
     <Content Include="Views\editor.html" />
     <Content Include="Views\config.html" />
@@ -59,6 +61,7 @@
     <None Include="app.config" />
     <None Include="package.manifest" />
     <None Include="packages.config" />
+    <None Include="Terratype.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">

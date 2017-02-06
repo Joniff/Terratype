@@ -5,23 +5,7 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype", "src\Terratype\Terratype.csproj", "{5034528F-401C-4FD4-8F42-23B378C7140D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{27002E17-BDAD-4E17-93C4-20549B124402}"
-	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		build\Tools\AppVeyorUmbraco\AppVeyorUmbraco.Targets = build\Tools\AppVeyorUmbraco\AppVeyorUmbraco.Targets
-		build-appveyor.cmd = build-appveyor.cmd
-		build.cmd = build.cmd
-		build\package.nuspec = build\package.nuspec
-		build\package.proj = build\package.proj
-		build\package.xml = build\package.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A044B1B9-8024-46CC-9E83-908226E3A742}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.Test", "src\Terratype.Test\Terratype.Test.csproj", "{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5034528F-401C-4FD4-8F42-23B378C7140D} = {5034528F-401C-4FD4-8F42-23B378C7140D}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.TestSite", "src\Terratype.TestSite\Terratype.TestSite.csproj", "{5F1EAA97-8410-4A39-8382-038DE439079E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -48,10 +32,6 @@ Global
 		{5034528F-401C-4FD4-8F42-23B378C7140D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5034528F-401C-4FD4-8F42-23B378C7140D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5034528F-401C-4FD4-8F42-23B378C7140D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F1EAA97-8410-4A39-8382-038DE439079E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,7 +57,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5E38FE9C-F678-467A-905B-7EB6BAEFA32C} = {A044B1B9-8024-46CC-9E83-908226E3A742}
 		{5F1EAA97-8410-4A39-8382-038DE439079E} = {A044B1B9-8024-46CC-9E83-908226E3A742}
 		{5E9BCC16-68C8-4F1D-B203-D54079E0CEC3} = {85D353DE-D775-4584-B473-0C8368BD3472}
 		{9F656D03-2D08-41DD-BEF8-A4C8C02D3368} = {85D353DE-D775-4584-B473-0C8368BD3472}
