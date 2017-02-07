@@ -82,26 +82,33 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Terratype.GoogleMapsV3.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Example.png" />
-    <Content Include="Images\Logo.png" />
-    <Content Include="Images\m1.png" />
-    <Content Include="Images\m2.png" />
-    <Content Include="Images\m3.png" />
-    <Content Include="Images\m4.png" />
-    <Content Include="Images\m5.png" />
-    <Content Include="Lang\en-us.xml" />
-    <Content Include="Scripts\markerclusterer.js" />
-    <Content Include="Scripts\markerclusterer.min.js" />
-    <Content Include="Scripts\Terratype.GoogleMapsV3.js" />
-    <Content Include="Scripts\Terratype.Renderer.js" />
-    <Content Include="Views\config.apperance.html" />
-    <Content Include="Views\config.definition.html" />
-    <Content Include="Views\config.search.html" />
-    <Content Include="Views\editor.apperance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\Example.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\Logo.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\m1.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\m2.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\m3.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\m4.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Images\m5.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Scripts\markerclusterer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Scripts\markerclusterer.min.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Scripts\Terratype.GoogleMapsV3.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Scripts\Terratype.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Views\config.definition.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Views\config.search.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\1.0.0\Views\editor.apperance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
+xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

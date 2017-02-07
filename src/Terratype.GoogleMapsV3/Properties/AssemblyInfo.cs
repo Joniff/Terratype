@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Terratype.GoogleMapsV3")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Google Maps V3 provider for Terratype Umbraco package")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Jonathan Richards")]
 [assembly: AssemblyProduct("Terratype.GoogleMapsV3")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

@@ -60,12 +60,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.OSOpenSpaceV4\Lang\en-us.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\" />
-    <Folder Include="Scripts\" />
-    <Folder Include="Views\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Images\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Scripts\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

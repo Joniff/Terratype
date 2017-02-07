@@ -49,8 +49,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\" />
-    <Folder Include="Views\" />
+    <Folder Include="App_Plugins\Terratype.LeafletV1\1.0.0\Scripts\" />
+    <Folder Include="App_Plugins\Terratype.LeafletV1\1.0.0\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
@@ -63,8 +63,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Logo.png" />
-    <Content Include="Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\1.0.0\Images\Logo.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

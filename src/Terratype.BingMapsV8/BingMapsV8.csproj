@@ -49,12 +49,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\" />
-    <Folder Include="Views\" />
+    <Folder Include="App_Plugins\Terratype.BingMapsV8\1.0.0\Scripts\" />
+    <Folder Include="App_Plugins\Terratype.BingMapsV8\1.0.0\Views\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\Logo.png" />
-    <Content Include="Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\1.0.0\Images\Logo.png" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Lang\en-us.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

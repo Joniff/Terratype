@@ -1,0 +1,88 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Simple>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@using Terratype;
+@{
+    Layout = null;
+    var jquery = false;
+    if (Request.QueryString["jquery"] != null)
+    {
+        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+                crossorigin="anonymous"></script>
+        jquery = true;
+    }
+
+}
+
+Jquery is @jquery
+
+
+
+
+<fieldset>
+    <legend>
+        Map 1
+    </legend>
+    <dl>
+        <dt>
+            Zoom
+        </dt>
+        <dd>
+            @Model.Content.Map.Zoom
+        </dd>
+        <dt>
+            Lookup
+        </dt>
+        <dd>
+            @Model.Content.Map.Lookup
+        </dd>
+
+        <dt>
+            Position
+        </dt>
+        <dd>
+            @Model.Content.Map.Position
+        </dd>
+
+        <dt>
+            Coordinate System
+        </dt>
+        <dd>
+            @Model.Content.Map.Position.Id
+        </dd>
+
+        <dt>
+            Provider
+        </dt>
+        <dd>
+            @Model.Content.Map.Provider.Id
+        </dd>
+        <dt>
+            Icon Url
+        </dt>
+        <dd>
+            @Model.Content.Map.Icon.Url
+        </dd>
+    </dl>
+
+    <div id="pretent-accordion" style="display:@(Request.QueryString["show"] != null ? "display" : "none");">
+        <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+            This is an empty div
+        </div>
+        @Html.Terratype(Model.Content.Map,
+            @<text>
+                <div style="background-color:yellow;">
+                    This icon is at @Model.Content.Map.Position
+                </div>
+            </text>
+        )
+        <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+            This is an empty div
+        </div>
+    </div>
+
+    <button onclick="var a = document.getElementById('pretent-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+</fieldset>

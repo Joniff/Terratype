@@ -108,8 +108,16 @@ namespace Terratype.Models
             return true;
         }
 
+        /// <summary>
+        /// Convert the current position to a Wgs84 location
+        /// </summary>
+        /// <returns>A Wgs84 location</returns>
         public abstract LatLng ToWgs84();
 
+
+        /// <summary>
+        /// Set the position to the Wgs84 location provided
+        /// </summary>
         public abstract void FromWgs84(LatLng wgs84Position);
 
         //  Register all derived classes

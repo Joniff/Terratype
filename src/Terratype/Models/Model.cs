@@ -21,7 +21,7 @@ namespace Terratype.Models
         public Provider Provider { get; internal set; }
 
         /// <summary>
-        /// Where is this map point to
+        /// Where is this map pointing to
         /// </summary>
         [JsonProperty(PropertyName = "position")]
         public Position Position { get; set; }
@@ -32,9 +32,15 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "icon")]
         public Icon Icon { get; internal set; }
 
+        /// <summary>
+        /// Current map zoom
+        /// </summary>
         [JsonProperty(PropertyName = "zoom")]
         public int Zoom { get; set; }
 
+        /// <summary>
+        /// Last search request
+        /// </summary>
         [JsonProperty(PropertyName = "lookup")]
         public string Lookup { get; set; }
 

@@ -51,17 +51,21 @@
     <Compile Include="TerratypeHtml.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Lang\en-us.xml" />
-    <Content Include="readme.txt" />
-    <Content Include="Terratype.png" />
-    <Content Include="Views\grid.html" />
-    <Content Include="Views\editor.html" />
-    <Content Include="Views\config.html" />
-    <Content Include="Scripts\terratype.js" />
+    <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <Content Include="App_Plugins\Terratype\readme.txt" />
+    <Content Include="App_Plugins\Terratype\1.0.0\Images\Terratype.png" />
+    <Content Include="App_Plugins\Terratype\1.0.0\Views\grid.html" />
+    <Content Include="App_Plugins\Terratype\1.0.0\Views\editor.html" />
+    <Content Include="App_Plugins\Terratype\1.0.0\Views\config.html" />
+    <Content Include="App_Plugins\Terratype\1.0.0\Scripts\terratype.js" />
     <None Include="app.config" />
-    <None Include="package.manifest" />
+    <None Include="App_Plugins\Terratype\package.manifest" />
     <None Include="packages.config" />
-    <None Include="Terratype.nuspec" />
+    <None Include="Terratype.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -281,13 +285,11 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>$(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
+xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
