@@ -62,14 +62,14 @@
                 </div>
                 <div>
                     <div ng-show="view().status.loading">
-                        <img src="/umbraco/assets/img/loader.gif" />
+                        <img src="{{view().images.loading}}" />
                     </div>
                     <div ng-show="view().status.failed">
-                        <img src="/umbraco/images/false.png" />
+                        <img src="{{view().images.failed}}" />
                         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyInvalid">Invalid API Key</localize></span>
                     </div>
                     <div ng-show="view().status.success">
-                        <img src="/umbraco/images/true.png" />
+                        <img src="{{view().images.success}}" />
                         <span style="color:green;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyValid">API Key is valid</localize></span>
                     </div>
                     <div ng-show="view().status.reload">

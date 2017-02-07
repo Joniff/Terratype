@@ -19,7 +19,7 @@ Jquery is @jquery
     @Model.Content.Name - Individual maps
 </h1>
 
-<div id="pretent-accordion" style="display:@(Request.QueryString["show1"] != null ? "display" : "none");">
+<div id="pretend-accordion" style="display:@(Request.QueryString["show1"] != null ? "display" : "none");">
 
     @foreach (var record in Model.Content.Archetype)
     {
@@ -37,7 +37,7 @@ Jquery is @jquery
 </div>
 
 
-<button onclick="var a = document.getElementById('pretent-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+<button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 
 
 <h1>
@@ -45,7 +45,7 @@ Jquery is @jquery
 </h1>
 
 
-<div id="pretent-accordion2" style="display:@(Request.QueryString["show2"] != null ? "display" : "none");">
+<div id="pretend-accordion2" style="display:@(Request.QueryString["show2"] != null ? "display" : "none");">
 
     @foreach (var record in Model.Content.Archetype)
     {
@@ -61,14 +61,14 @@ Jquery is @jquery
 </div>
 
 
-<button onclick="var a = document.getElementById('pretent-accordion2');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+<button onclick="var a = document.getElementById('pretend-accordion2');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 
 <h1>
     @Model.Content.Name - Combined maps with options
 </h1>
 
 
-<div id="pretent-accordion3" style="display:@(Request.QueryString["show3"] != null ? "display" : "none");">
+<div id="pretend-accordion3" style="display:@(Request.QueryString["show3"] != null ? "display" : "none");">
 
     @Html.Terratype(new Options { Provider = new Terratype.Providers.GoogleMapsV3()
     {
@@ -92,4 +92,4 @@ Jquery is @jquery
 </div>
 
 
-<button onclick="var a = document.getElementById('pretent-accordion3');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+<button onclick="var a = document.getElementById('pretend-accordion3');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>

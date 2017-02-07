@@ -1,8 +1,7 @@
 ﻿(function (root) {
 
-    var pluginsPath = '/App_Plugins/';
     var providerPath = function (id) {
-        return pluginsPath + id + '/1.0.0/';
+        return Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/1.0.1/';
     }
 
     if (!root.terratype) {

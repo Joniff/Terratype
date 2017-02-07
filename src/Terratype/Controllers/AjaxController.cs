@@ -113,6 +113,119 @@ namespace Terratype.Controllers
             return true;
         }
 
+        private ImageInfo Image(BinaryReader reader)
+        {
+            var decoders = new Dictionary<byte[][], Func<BinaryReader, ImageInfo>>()
+            {
+                //  Bitmap
+                { new byte[][]
+                    {
+                        new byte[]{ 0x42, 0x4D }
+                    }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
+                    {
+                        myreader.ReadBytes(16);
+                        return new ImageInfo()
+                        {
+                            width = myreader.ReadInt32(),
+                            height = myreader.ReadInt32(),
+                            format = "bitmap",
+                            status = HttpStatusCode.OK
+                        };
+                    })
+                },
+
+                //  Gif
+                { new byte[][]
+                    {
+                        new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 },
+                        new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 }
+                    }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
+                    {
+                        return new ImageInfo()
+                        {
+                            width = myreader.ReadInt16(),
+                            height = myreader.ReadInt16(),
+                            format = "gif",
+                            status = HttpStatusCode.OK
+                        };
+                    })
+                },     
+
+                //  Png
+                { new byte[][]
+                    {
+                        new byte[]{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
+                    }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
+                    {
+                        myreader.ReadBytes(8);
+                        return new ImageInfo()
+                        {
+                            width = ReadLittleEndianInt32(myreader),
+                            height = ReadLittleEndianInt32(myreader),
+                            format = "png",
+                            status = HttpStatusCode.OK
+                        };
+                    })
+                },
+
+                //  Jpg
+                { new byte[][]
+                    {
+                        new byte[]{ 0xff, 0xd8 },
+                    }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
+                    {
+                        while (myreader.ReadByte() == 0xff)
+                        {
+                            byte marker = myreader.ReadByte();
+                            short chunkLength = ReadLittleEndianInt16(myreader);
+
+                            if (marker == 0xc0)
+                            {
+                                myreader.ReadByte();
+                                return new ImageInfo()
+                                {
+                                    height = ReadLittleEndianInt16(myreader),
+                                    width = ReadLittleEndianInt16(myreader),
+                                    format = "jpg",
+                                    status = HttpStatusCode.OK
+                                };
+                            }
+
+                            myreader.ReadBytes(chunkLength - 2);
+                        }
+                        return new ImageInfo()
+                        {
+                            format = "jpg",
+                            error = "Invalid jpg",
+                            status = HttpStatusCode.BadRequest
+                        };
+                    })
+                }
+            };
+
+            var magicBytes = new byte[8];
+            for (int i = 0; i != magicBytes.Length; i++)
+            {
+                magicBytes[i] = reader.ReadByte();
+
+                foreach (var decoder in decoders)
+                {
+                    foreach (var magic in decoder.Key)
+                    {
+                        if (i + 1 == magic.Length && Match(magicBytes, magic))
+                        {
+                            return decoder.Value(reader);
+                        }
+                    }
+                }
+            }
+            return new ImageInfo()
+            {
+                error = "Not a supported image type",
+                status = HttpStatusCode.UnsupportedMediaType
+            };
+        }
+
         /// <summary>
         /// Calculates the width & height of an image, tries to read only the few bytes of the image to figure out image size
         /// </summary>
@@ -123,121 +236,20 @@ namespace Terratype.Controllers
         {
             try
             {
+                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                {
+                    //  Is local file, so add our domain stuff and call ourselves. The reason we do this is incase there is a querystring on the end that needs processing. eg imageprocesser
+                    url = new UriBuilder(UmbracoContext.HttpContext.Request.Url.Scheme, UmbracoContext.HttpContext.Request.Url.Host,
+                        UmbracoContext.HttpContext.Request.Url.Port, url).Uri.ToString();
+                }
+                //  Read web file
                 var request = (HttpWebRequest)WebRequest.Create(url);
-                request.UserAgent = @"Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36";
+                request.UserAgent = @"Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36";    //  Sexy fake agent
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     using (BinaryReader reader = new BinaryReader(response.GetResponseStream()))
                     {
-                        var decoders = new Dictionary<byte[][], Func<BinaryReader, ImageInfo>>()
-                        {
-                            //  Bitmap
-                            { new byte[][]
-                                {
-                                    new byte[]{ 0x42, 0x4D }
-                                }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
-                                {
-                                    myreader.ReadBytes(16);
-                                    return new ImageInfo()
-                                    {
-                                        width = myreader.ReadInt32(),
-                                        height = myreader.ReadInt32(),
-                                        format = "bitmap",
-                                        status = HttpStatusCode.OK
-                                    };
-                                })
-                            },
-
-                            //  Gif
-                            { new byte[][]
-                                {
-                                    new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 },
-                                    new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 }
-                                }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
-                                {
-                                    return new ImageInfo()
-                                    {
-                                        width = myreader.ReadInt16(),
-                                        height = myreader.ReadInt16(),
-                                        format = "gif",
-                                        status = HttpStatusCode.OK
-                                    };
-                                })
-                            },     
-
-                            //  Png
-                            { new byte[][]
-                                {
-                                    new byte[]{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
-                                }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
-                                {
-                                    myreader.ReadBytes(8);
-                                    return new ImageInfo()
-                                    {
-                                        width = ReadLittleEndianInt32(myreader),
-                                        height = ReadLittleEndianInt32(myreader),
-                                        format = "png",
-                                        status = HttpStatusCode.OK
-                                    };
-                                })
-                            },
-
-                            //  Jpg
-                            { new byte[][]
-                                {
-                                    new byte[]{ 0xff, 0xd8 },
-                                }, new Func<BinaryReader, ImageInfo>((BinaryReader myreader) =>
-                                {
-                                    while (myreader.ReadByte() == 0xff)
-                                    {
-                                        byte marker = myreader.ReadByte();
-                                        short chunkLength = ReadLittleEndianInt16(myreader);
-
-                                        if (marker == 0xc0)
-                                        {
-                                            myreader.ReadByte();
-                                            return new ImageInfo()
-                                            {
-                                                height = ReadLittleEndianInt16(myreader),
-                                                width = ReadLittleEndianInt16(myreader),
-                                                format = "jpg",
-                                                status = HttpStatusCode.OK
-                                            };
-                                        }
-
-                                        myreader.ReadBytes(chunkLength - 2);
-                                    }
-                                    return new ImageInfo()
-                                    {
-                                        format = "jpg",
-                                        error = "Invalid jpg",
-                                        status = HttpStatusCode.BadRequest
-                                    };
-                                })
-                            }
-                        };
-
-                        var magicBytes = new byte[8];
-                        for (int i = 0; i != magicBytes.Length; i++)
-                        {
-                            magicBytes[i] = reader.ReadByte();
-
-                            foreach (var decoder in decoders)
-                            {
-                                foreach (var magic in decoder.Key)
-                                {
-                                    if (i + 1 == magic.Length && Match(magicBytes, magic))
-                                    {
-                                        return decoder.Value(reader);
-                                    }
-                                }
-                            }
-                        }
-                        return new ImageInfo()
-                        {
-                            error = "Not a supported image type",
-                            status = HttpStatusCode.UnsupportedMediaType
-                        };
+                        return Image(reader);
                     }
                 }
             }

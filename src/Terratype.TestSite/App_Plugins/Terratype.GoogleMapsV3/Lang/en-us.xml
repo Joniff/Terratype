@@ -54,7 +54,6 @@
     <key alias="streetviewLabel">Streetview:</key>
     <key alias="streetviewDescription">Allow user to select streetview mode</key>
     <key alias="streetviewPositionLabel">Streetview Position:</key>
-    <key alias="streetviewPositionDescription">Allow user to select streetview mode</key>
     <key alias="streetviewPositionDescription">Where do you want the streetview 'pegman' to be positioned on the map</key>
 
     <key alias="zoomLabel">Zoom:</key>
@@ -601,7 +600,7 @@
 
     <key alias="countryClearTitle">Clear selected countries</key>
     <key alias="countryClearLabel">Clear</key>
-    <key alias="countryLimit1"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} and a limit of only 1 country that can be selected]]></key>
+    <key alias="countryLimit1"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} has a limit of only 1 country that can be selected]]></key>
     <key alias="countryLimit5"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} has a limit of 5 countries that can be selected]]></key>
   </area>
 

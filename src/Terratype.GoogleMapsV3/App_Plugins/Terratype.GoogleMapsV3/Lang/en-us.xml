@@ -600,7 +600,7 @@
 
     <key alias="countryClearTitle">Clear selected countries</key>
     <key alias="countryClearLabel">Clear</key>
-    <key alias="countryLimit1"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} and a limit of only 1 country that can be selected]]></key>
+    <key alias="countryLimit1"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} has a limit of only 1 country that can be selected]]></key>
     <key alias="countryLimit5"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} has a limit of 5 countries that can be selected]]></key>
   </area>
 

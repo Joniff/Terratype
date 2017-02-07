@@ -2,7 +2,7 @@
 
     var pluginsPath = '/App_Plugins/';
     var providerPath = function (id) {
-        return pluginsPath + id + '/1.0.0/';
+        return pluginsPath + id + '/1.0.1/';
     }
 
     if (!root.terratype) {
@@ -86,11 +86,16 @@
         };
 
         $scope.main = {
+            images: {
+                loading: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/loader.gif',
+                failed: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/false.png',
+                success: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/true.png',
+            },
             loading: true,
             configgering: false,
             urlRoot: providerPath('terratype'),
             controller: function (a) {
-                return '/umbraco/backoffice/terratype/ajax/' + a;
+                return Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/terratype/ajax/' + a;
             },
             poll: 250,
             identifier: $scope.$id + (new Date().getTime()),
@@ -266,7 +271,7 @@
                 return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
             },
             iconCustom: function () {
-                $scope.config().icon.id = $scope.view().predefine[0].id;
+                $scope.config().icon.id = $scope.view().icon.predefine[0].id;
                 if (!$scope.view().icon.anchor.horizontal.isManual) {
                     switch ($scope.view().icon.anchor.horizontal.automatic) {
                         case 'left':
@@ -578,7 +583,7 @@
                 {
                     id: 'orangeumbraco',
                     name: 'Orange Umbraco',
-                    url: '/umbraco/assets/img/application/logo.png',
+                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo.png',
                     shadowUrl: '',
                     size: {
                         width: 32,
@@ -592,7 +597,7 @@
                 {
                     id: 'blackumbraco',
                     name: 'Black Umbraco',
-                    url: '/umbraco/assets/img/application/logo_black.png',
+                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_black.png',
                     shadowUrl: '',
                     size: {
                         width: 32,
@@ -606,7 +611,7 @@
                 {
                     id: 'whiteumbraco',
                     name: 'White Umbraco',
-                    url: '/umbraco/assets/img/application/logo_white.png',
+                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_white.png',
                     shadowUrl: '',
                     size: {
                         width: 32,

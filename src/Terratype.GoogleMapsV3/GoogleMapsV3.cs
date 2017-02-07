@@ -13,7 +13,7 @@ namespace Terratype.Providers
     [JsonObject(MemberSerialization.OptIn)]
     public class GoogleMapsV3 : Models.Provider
     {
-        private const string UrlPath = "/App_Plugins/Terratype.GoogleMapsV3/1.0.0/";
+        private const string UrlPath = "/App_Plugins/Terratype.GoogleMapsV3/1.0.1/";
 
         [JsonProperty(PropertyName = "id")]
         public override string Id

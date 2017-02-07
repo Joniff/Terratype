@@ -3,8 +3,8 @@
   //  {
   //    "name": "Terratype",
   //    "alias": "terratype",
-  //    "view": "/App_Plugins/Terratype/1.0.0/views/grid.html",
-  //    "render": "/App_Plugins/Terratype/1.0.0/views/grid.cshtml",
+  //    "view": "/App_Plugins/Terratype/1.0.1/views/grid.html",
+  //    "render": "/App_Plugins/Terratype/1.0.1/views/grid.cshtml",
   //    "icon": "icon-map-location",
   //    "config": { }
   //  }

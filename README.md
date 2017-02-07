@@ -33,6 +33,11 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.1**
+
+	Removed hardcoded /umbraco/ references
+
+
 **1.0.0**
 
 	Complete rewrite based from AngularGoogleMaps.
