@@ -27,12 +27,14 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 ### Render ###
 
 @using Terratype;
+
 @Html.Terratype(Options, Map, @<text>Label</text>)
 
  
 ### Log ###
 
 **1.0.0**
+
 	Complete rewrite based from AngularGoogleMaps.
 
 ### Source code ###
