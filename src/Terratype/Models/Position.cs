@@ -114,7 +114,6 @@ namespace Terratype.Models
         /// <returns>A Wgs84 location</returns>
         public abstract LatLng ToWgs84();
 
-
         /// <summary>
         /// Set the position to the Wgs84 location provided
         /// </summary>
