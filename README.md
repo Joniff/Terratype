@@ -19,6 +19,15 @@ Wish to give your content editors easy Maps to set real world locations.
 
 5. Create new content based off this document type
 
+### Usage ###
+
+https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
+
+
+### Render ###
+
+@using Terratype;
+@Html.Terratype(Options, Map, @<text>Label</text>)
 
  
 ### Log ###
