@@ -128,7 +128,17 @@ namespace Terratype.Models
                 Type baseType = typeof(Position);
                 foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    foreach (Type type in currAssembly.GetTypes())
+                    Type[] typesInAsm;
+                    try
+                    {
+                        typesInAsm = currAssembly.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException ex)
+                    {
+                        typesInAsm = ex.Types;
+                    }
+
+                    foreach (Type type in typesInAsm)
                     {
                         if (!type.IsClass || type.IsAbstract ||
                             !type.IsSubclassOf(baseType))

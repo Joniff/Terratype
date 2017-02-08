@@ -33,6 +33,17 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+
+**1.0.3**
+
+	Error checking for providers fixed
+
+
+**1.0.2**
+
+	Removed reliance on terratype map provider having to be same version as terratype
+
+	
 **1.0.1**
 
 	Removed hardcoded /umbraco/ references

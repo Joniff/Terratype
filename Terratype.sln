@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeafletV1", "src\Terratype.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OSOpenSpaceV4", "src\Terratype.OSOpenSpaceV4\OSOpenSpaceV4.csproj", "{27FD61EE-3174-4827-8F6D-5FF66F6D1446}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.nuget", "src\Terratype.nuget\Terratype.nuget\Terratype.nuget.csproj", "{2BE16406-DB32-44B6-B52E-AE8083A21924}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terratype.nuget", "src\Terratype.nuget\Terratype.nuget.csproj", "{2BE16406-DB32-44B6-B52E-AE8083A21924}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

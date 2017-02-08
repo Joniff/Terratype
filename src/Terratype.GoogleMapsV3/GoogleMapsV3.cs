@@ -13,7 +13,15 @@ namespace Terratype.Providers
     [JsonObject(MemberSerialization.OptIn)]
     public class GoogleMapsV3 : Models.Provider
     {
-        private const string UrlPath = "/App_Plugins/Terratype.GoogleMapsV3/1.0.1/";
+        private string UrlPath(string file, bool cache = true)
+        {
+            var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
+            if (cache)
+            {
+                result += "?cache=1.0.3";
+            }
+            return result;
+        }
 
         [JsonProperty(PropertyName = "id")]
         public override string Id
@@ -260,7 +268,7 @@ namespace Terratype.Providers
             const string guid = "b72310d2-7041-4234-a6c5-6c5c2fdd708e";
             var id = nameof(Terratype) + "." + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
 
-            writer.AddAttribute("data-markerclusterer-url", UrlPath + "images/m");
+            writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
             writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
             writer.AddAttribute("data-label-id", labelId);
@@ -272,13 +280,13 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath + "scripts/Terratype.Renderer.js");
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.Renderer.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
 
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath + "scripts/markerclusterer.min.js");
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/markerclusterer.min.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();

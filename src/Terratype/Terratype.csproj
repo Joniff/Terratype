@@ -53,11 +53,11 @@
   <ItemGroup>
     <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml" />
     <Content Include="App_Plugins\Terratype\readme.txt" />
-    <Content Include="App_Plugins\Terratype\1.0.1\Images\Terratype.png" />
-    <Content Include="App_Plugins\Terratype\1.0.1\Views\grid.html" />
-    <Content Include="App_Plugins\Terratype\1.0.1\Views\editor.html" />
-    <Content Include="App_Plugins\Terratype\1.0.1\Views\config.html" />
-    <Content Include="App_Plugins\Terratype\1.0.1\Scripts\terratype.js" />
+    <Content Include="App_Plugins\Terratype\Images\Terratype.png" />
+    <Content Include="App_Plugins\Terratype\Views\grid.html" />
+    <Content Include="App_Plugins\Terratype\Views\editor.html" />
+    <Content Include="App_Plugins\Terratype\Views\config.html" />
+    <Content Include="App_Plugins\Terratype\Scripts\terratype.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Terratype\package.manifest" />
     <None Include="packages.config" />

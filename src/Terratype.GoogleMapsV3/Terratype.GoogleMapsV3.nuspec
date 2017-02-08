@@ -16,7 +16,7 @@
     <tags>Umbraco Google Maps Gmaps Open Street View</tags>
     <dependencies>
       <dependency id="UmbracoCms.Core" version="7.0.0" />
-      <dependency id="Terratype" version="1.0.0" />
+      <dependency id="Terratype" version="1.0.3" />
     </dependencies>
   </metadata>
   <files>

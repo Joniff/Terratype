@@ -5,8 +5,8 @@ using Umbraco.Web.PropertyEditors;
 
 namespace Terratype
 {
-    [PropertyEditor("Terratype", "Terratype", "/App_Plugins/Terratype/1.0.1/views/editor.html", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype/1.0.1/scripts/terratype.js")]
+    [PropertyEditor("Terratype", "Terratype", "/App_Plugins/Terratype/views/editor.html?cache=1.0.3", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype/scripts/terratype.js?cache=1.0.2")]
     public class TerratypePropertyEditor : PropertyEditor
 	{
 		protected override PreValueEditor CreatePreValueEditor()
@@ -31,7 +31,7 @@ namespace Terratype
 
 		internal class TerratypePreValueEditor : PreValueEditor
 		{
-			[PreValueField("definition", "Config", "/App_Plugins/Terratype/1.0.1/views/config.html", Description = "", HideLabel = true)]
+			[PreValueField("definition", "Config", "/App_Plugins/Terratype/views/config.html?cache=1.0.3", Description = "", HideLabel = true)]
             public Models.Model Definition { get; set; }
 
         }

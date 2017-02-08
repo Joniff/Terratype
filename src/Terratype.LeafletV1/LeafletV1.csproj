@@ -49,8 +49,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Plugins\Terratype.LeafletV1\1.0.1\Scripts\" />
-    <Folder Include="App_Plugins\Terratype.LeafletV1\1.0.1\Views\" />
+    <Folder Include="App_Plugins\Terratype.LeafletV1\Scripts\" />
+    <Folder Include="App_Plugins\Terratype.LeafletV1\Views\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
@@ -63,7 +63,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Plugins\Terratype.LeafletV1\1.0.1\Images\Logo.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\Logo.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

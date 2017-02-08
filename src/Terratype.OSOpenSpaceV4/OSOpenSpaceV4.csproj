@@ -63,9 +63,9 @@
     <Content Include="App_Plugins\Terratype.OSOpenSpaceV4\Lang\en-us.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Images\" />
-    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Scripts\" />
-    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\1.0.0\Views\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\Images\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\Scripts\" />
+    <Folder Include="App_Plugins\Terratype.OSOpenSpaceV4\Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
