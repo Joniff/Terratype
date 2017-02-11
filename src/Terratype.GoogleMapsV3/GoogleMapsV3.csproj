@@ -102,6 +102,7 @@
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.apperance.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.search.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\grid.apperance.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\editor.apperance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

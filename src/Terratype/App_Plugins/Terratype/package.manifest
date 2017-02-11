@@ -1,12 +1,12 @@
 ﻿{
-  //"gridEditors": [
-  //  {
-  //    "name": "Terratype",
-  //    "alias": "terratype",
-  //    "view": "/App_Plugins/Terratype/views/grid.html",
-  //    "render": "/App_Plugins/Terratype/views/grid.cshtml",
-  //    "icon": "icon-map-location",
-  //    "config": { }
-  //  }
-  //]
+  "gridEditors": [
+    {
+      "name": "Map",
+      "alias": "terratype",
+      "view": "/App_Plugins/Terratype/views/grid.html",
+      "render": "/App_Plugins/Terratype/views/grid.cshtml",
+      "icon": "icon-map-location",
+      "config": { }
+    }
+  ]
 }

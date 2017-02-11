@@ -27,7 +27,7 @@ namespace Terratype.Models
         public Position Position { get; set; }
 
         /// <summary>
-        /// Which provider is this map using to render
+        /// Image marker to display this location on the map
         /// </summary>
         [JsonProperty(PropertyName = "icon")]
         public Icon Icon { get; internal set; }

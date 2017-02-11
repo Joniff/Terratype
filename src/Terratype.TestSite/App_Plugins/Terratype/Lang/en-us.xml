@@ -74,6 +74,13 @@
     <key alias="iconVerticalAnchorBottom">Bottom</key>
     <key alias="iconVerticalAnchorError">Your focal point is now located outside the boundary of the image</key>
 
+    <key alias="gridHeading">Grid</key>
+    <key alias="gridLabel">Enable:</key>      
+    <key alias="gridDescription">Allow this map to be added to a grid</key>
+    <key alias="gridNameLabel">Name:</key>
+    <key alias="gridNameDescription">The name the Grid editor will know this map as</key>
+    <key alias="gridNamePlaceholder">Name...</key>
+    
     <key alias="debugHeading">Debugger</key>
     <key alias="debugJsonLabel">Show Json:</key>
     <key alias="debugJsonDescription">Do you want to show the map or a json editor. This is for developer debugging purposes only and shows the underlying values being stored for this data type. Editing of the values directly influences the control</key>
@@ -84,8 +91,17 @@
   </area>
 
   <area alias="terratypeGrid">
-    <key alias="debugMode">DEBUG MODE</key>
-    <key alias="reviewDate">Review Date</key>
-    <key alias="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</key>
+    <key alias="insert">Click to insert map</key>
   </area>
+
+  <area alias="terratypeGridOverlay">
+    <key alias="title">Map</key>
+    <key alias="subtitle">Embedded interactive map</key>
+    <key alias="dataTypeLabel">Map:</key>
+    <key alias="dataTypeDescription">Select which map you would like to use</key>
+    <key alias="mapDataTypeError">No maps have been created</key>
+    <key alias="locationLabel">Location:</key>
+    <key alias="locationDescription">Where would you like this map to point to</key>  
+  </area>
+
 </language>

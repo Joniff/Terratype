@@ -63,7 +63,7 @@
     });
 
 
-    //  Display language values that contain {{}} variables. The language values need to contain html tags
+    //  Display language values that contain {{}} variables.
     angular.module("umbraco.directives").directive('terratypeTranslate', ['$compile', 'localizationService', function ($compile, localizationService) {
         return function (scope, element, attr) {
             attr.$observe('terratypeTranslate', function (key) {
@@ -79,14 +79,14 @@
         $scope.config = null;
         $scope.store = null;
         $scope.view = function () {
-            return $scope.main;
+            return $scope.terratype;
         };
 
-        $scope.main = {
+        $scope.terratype = {
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.3';
+                    r += '?cache=1.0.4';
                 }
                 return r;
             },
@@ -207,8 +207,8 @@
                     $scope.view().providers[index] = angular.extend($scope.view().providers[index], root.terratype.providers[id]);
                     $scope.view().providers[index].events = $scope.view().providers[index].init($scope.view().identifier, $scope.view().urlProvider,
                         $scope.store, $scope.config, $scope.view, function () {
-                        $scope.$apply();
-                    });
+                            $scope.$apply();
+                        });
                     $scope.view().provider = $scope.view().providers[index];
                     $scope.view().provider.events.setProvider();
                     if ($scope.store().position && $scope.store().position.id != null) {
@@ -697,6 +697,54 @@
                 },
                 ]
             },
+            loadEditor: function (c) {
+                if (!$scope.store().zoom) {
+                    $scope.store().zoom = c.zoom;
+                }
+                if (!$scope.store().position || !$scope.store().position.id || !$scope.store().position.datum) {
+                    $scope.store().position = {
+                        id: c.position.id,
+                        datum: c.position.datum
+                    }
+                    done();
+                } else if ($scope.store().position.id != c.position.id) {
+                    //  Convert coords from old system to new
+                    $http({
+                        url: $scope.view().controller('convertcoordinatesystem'),
+                        method: 'GET',
+                        params: {
+                            sourceId: $scope.store().position.id,
+                            sourceDatum: $scope.store().position.datum,
+                            destinationId: c.position.id
+                        }
+                    }).then(function success(response) {
+                        $scope.store().position.datum = response.data;
+                        $scope.store().position.id = c.position.id;
+                        done();
+                    });
+                } else {
+                    done();
+                }
+                function done() {
+                    $scope.view().loadProvider($scope.config().provider.id, function () {
+                        $scope.view().isPreview = !angular.isUndefined($scope.model.sortOrder);
+                        $scope.view().provider = angular.copy(root.terratype.providers[$scope.config().provider.id]);
+                        var position = angular.copy($scope.store().position);
+                        position.precision = c.position.precision;
+                        $scope.view().provider.coordinateSystems = [];
+                        $scope.view().provider.coordinateSystems.push(position);
+                        $scope.view().position = angular.copy(position);
+                        $scope.view().loading = false;
+                        setTimeout(function () {
+                            //  Simple way to wait for any destroy to have finished
+                            $scope.view().provider.events = $scope.view().provider.init($scope.view().identifier, $scope.view().urlProvider,
+                                $scope.store, $scope.config, $scope.view, function () {
+                                    $scope.$apply();
+                                });
+                        }, 150);
+                    });
+                }
+            },
             initEditor: function () {
                 $scope.view().error = false;
                 try {
@@ -709,6 +757,7 @@
                 }
                 catch (oh) {
                     //  Can't even read our own values
+                    $scope.view().error = true;
                     $scope.model.value = {};
                 }
                 try {
@@ -718,59 +767,144 @@
                     $scope.store = function () {
                         return $scope.model.value;
                     }
-                    if (!$scope.store().zoom) {
-                        $scope.store().zoom = $scope.model.config.definition.zoom;
-                    }
-                    if (!$scope.store().position || !$scope.store().position.id || !$scope.store().position.datum) {
-                        $scope.store().position = {
-                            id: $scope.model.config.definition.position.id,
-                            datum: $scope.model.config.definition.position.datum
-                        }
-                        done();
-                    } else if ($scope.store().position.id != $scope.model.config.definition.position.id) {
-                        //  Convert coords from old system to new
-                        $http({
-                            url: $scope.view().controller('convertcoordinatesystem'),
-                            method: 'GET',
-                            params: {
-                                sourceId: $scope.store().position.id,
-                                sourceDatum: $scope.store().position.datum,
-                                destinationId: $scope.model.config.definition.position.id
-                            }
-                        }).then(function success(response) {
-                            $scope.store().position.datum = response.data;
-                            $scope.store().position.id = $scope.model.config.definition.position.id;
-                            done();
-                        });
-                    } else {
-                        done();
-                    }
-                    function done () {
-                        $scope.view().loadProvider($scope.config().provider.id, function () {
-                            $scope.view().isPreview = !angular.isUndefined($scope.model.sortOrder);
-                            $scope.view().provider = angular.copy(root.terratype.providers[$scope.config().provider.id]);
-                            var position = angular.copy($scope.store().position);
-                            position.precision = $scope.model.config.definition.position.precision;
-                            $scope.view().provider.coordinateSystems = [];
-                            $scope.view().provider.coordinateSystems.push(position);
-                            $scope.view().position = angular.copy(position);
-                            $scope.view().loading = false;
-                            setTimeout(function () {
-                                //  Simple way to wait for any destroy to have finished
-                                $scope.view().provider.events = $scope.view().provider.init($scope.view().identifier, $scope.view().urlProvider,
-                                    $scope.store, $scope.config, $scope.view, function () {
-                                    $scope.$apply();
-                                });
-                            }, 150);
-                        });
-                    }
+                    $scope.view().loadEditor($scope.model.config.definition);
                 }
                 catch (oh) {
                     //  Error so might as well show debug
+                    $scope.view().loading = false;
                     $scope.view().error = true;
                     $scope.config().debug = 1;
                 }
+            },
+            gridOverlay: {
+                title: 'terratypeGridOverlay_title',
+                subtitle: 'terratypeGridOverlay_subtitle',
+                show: false,
+                display: function () {
+                    $http.get($scope.view().controller('datatypes')).then(function success(response) {
+                        $scope.view().gridOverlay.dataTypes = response.data;
+                        $scope.view().gridOverlay.show = true;
+                        if ($scope.view().gridOverlay.store.datatypeId) {
+                            $scope.view().gridOverlay.setDatatype($scope.view().gridOverlay.store.datatypeId);
+                        }
+                    });
+                },
+                submit: function (model) {          //  model = $scope.view().gridOverlay
+                    $scope.control.value = model.store;
+                    model.show = false;
+                    $scope.view().loadGrid();
+                },
+                html: 'uninitalized',
+                dataTypes: [],
+                view: $scope.view,
+                config: {},
+                store: {},
+                setDatatype: function (id) {
+                    $scope.view().showMap = false;
+                    $timeout(function () {
+                        var d = $scope.view().gridOverlay.dataTypes;
+                        for (var i = 0; i != d.length; i++) {
+                            if (d[i].id == id) {
+                                $scope.view().identifier = $scope.$id + id + (new Date().getTime());
+                                $scope.config = function () {
+                                    return $scope.view().gridOverlay.config;
+                                }
+                                $scope.store = function () {
+                                    return $scope.view().gridOverlay.store;
+                                }
+                                var c = angular.copy(d[i].config);
+                                $scope.store().datatypeId = id;
+                                $scope.view().gridOverlay.config = c.config;
+                                $scope.view().loadEditor(c);
+                                break;
+                            }
+                        }
+                    });
+                }
+            },
+            loadGrid: function () {
+                try {
+                    $http.get($scope.view().controller('datatypes?id=' + $scope.control.value.datatypeId)).then(function success(response) {
+                        if (response.data.length == 1) {
+                            $scope.config = function () {
+                                return $scope.view().gridOverlay.config;
+                            }
+                            $scope.store = function () {
+                                return $scope.control.value;
+                            }
+                            var c = angular.copy(response.data[0].config);
+                            $scope.view().gridOverlay.config = c.config;
+                            $scope.view().loadEditor(c);
+                        }
+                    });
+                }
+                catch (oh) {
+                    //  Error so might as well show debug
+                    $scope.view().loading = false;
+                    $scope.view().error = true;
+                    $scope.config().debug = 1;
+                }
+            },
+            initGrid: function () {
+                $scope.view().gridOverlay.html = $scope.view().urlProvider(packageName, 'views/grid.overlay.html', true);
+                localizationService.localize($scope.view().gridOverlay.title).then(function (value) {
+                    $scope.view().gridOverlay.title = value;
+                });
+                localizationService.localize($scope.view().gridOverlay.subtitle).then(function (value) {
+                    $scope.view().gridOverlay.subtitle = value;
+                });
+
+                $timeout(function () {
+                    $scope.view().loading = false;
+                    if ($scope.control.$initializing) {
+                        //  No map has been selected yet
+                    } else if ($scope.control.value) {
+                        //  Map has been previous set
+                        try {
+                            if (typeof ($scope.control.value) === 'string') {
+                                $scope.control.value = ($scope.control.value != '') ? JSON.parse($scope.control.value) : null;
+                            }
+                            if (!$scope.control.value) {
+                                $scope.control.value = {};
+                            }
+                            $scope.view().loadGrid();
+                        }
+                        catch (oh) {
+                            //  Can't even read our own values
+                            $scope.view().error = true;
+                            $scope.control.value = {};
+                        }
+                    }
+                }, 200);
             }
         }
     }]);
+
+    angular.module('umbraco').controller('terratype.grid.overlay', ['$scope', '$timeout', 'localizationService', function ($scope, $timeout, localizationService) {
+        $scope.identifier = $scope.$id + (new Date().getTime());
+        $scope.init = function () {
+            var gridOverlay = $scope.$parent.model;
+            $scope.view = gridOverlay.view;
+            $scope.config = function () {
+                return gridOverlay.config;
+            }
+            $scope.store = function() {
+                return gridOverlay.store;
+            }
+
+            //  Hack. Umbraco have put a keyboard bind for overlays. This interrupts our search feature. We remove the keyboard bind
+            $.each($._data($(document)[0], 'events'), function (i, e) {
+                if (i == 'keydown') {
+                    for (var ee = 0; ee != e.length; ee++) {
+                        if (e[ee].namespace.substring(0, 8) === 'overlay-') {
+                            //console.log(i, JSON.stringify(e));
+                            $(document).unbind('keydown.' + e[ee].namespace);
+                            return;
+                        }
+                    }
+                }
+            });
+        }
+    }]);
+
 }(window));

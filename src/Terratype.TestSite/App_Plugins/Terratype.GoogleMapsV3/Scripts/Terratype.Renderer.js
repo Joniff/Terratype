@@ -398,7 +398,7 @@
             var element = document.getElementById(m.div);
             var newValue = element.parentElement.offsetTop;
             var newSize = element.clientHeight * element.clientWidth;
-            var show = !(element.style.display == 'none');
+            var show = !(element.style.display && typeof element.style.display == 'string' && element.style.display.toLowerCase() == 'none');
             var visible = show && q.isElementInViewport(element);
             if (newValue != 0 && show == false) {
                 //console.log('A ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);

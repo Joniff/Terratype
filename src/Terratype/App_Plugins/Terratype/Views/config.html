@@ -182,18 +182,37 @@
                     </small>
                 </div>
             </div>
+        </section>
 
-            <!--    Disable example map
-            <div class="umb-el-wrap control-group" ng-show="config().icon.url && config().icon.size.width && config().icon.size.height">
-                <div ng-style="{'background-image':'url(' + view().provider.events.files.mapExample + ')', 'padding-top':'10px 0 10px 25px;'}">
-                    <div style="padding:35px;">
-                        <img ng-src="{{view().absoluteUrl(config().icon.url)}}" ng-style="{'width': config().icon.size.width + 'px', 'height': config().icon.size.height + 'px'}" />
-                    </div>
+        <section>
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+                <localize key="terratypeConfig_gridHeading">Grid</localize>
+            </h4>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{view().identifier}}_gridEnable" class="control-label">
+                    <localize key="terratypeConfig_gridLabel">Enable:</localize>
+                    <small>
+                        <localize key="terratypeConfig_gridDescription">Allow this map to be added to a grid</localize>
+                    </small>
+                </label>
+                <div class="controls">
+                    <input id="terratype_{{view().identifier}}_gridEnable" type="checkbox" ng-model="config().grid.enable" />
                 </div>
             </div>
-            -->
+            <div class="umb-el-wrap control-group" ng-show="config().grid.enable == true">
+                <label for="terratype_{{view().identifier}}_gridName" class="control-label">
+                    <localize key="terratypeConfig_gridNameLabel">Name:</localize>
+                    <small>
+                        <localize key="terratypeConfig_gridNameDescription">The name the Grid editor will know this map as</localize>
+                    </small>
+                </label>
+                <div class="controls">
+                    <input type="text" id="terratype_{{view().identifier}}_gridName" ng-model="config().grid.name" class="umb-editor" localize="placeholder" placeholder="@terratypeConfig_gridNamePlaceholder" />
+                </div>
+            </div>
 
         </section>
+
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 <localize key="terratypeConfig_debugHeading">Debugger</localize>
@@ -222,5 +241,5 @@
                 </div>
             </div>
         </section>
-    </fieldset>
+</fieldset>
 </div>

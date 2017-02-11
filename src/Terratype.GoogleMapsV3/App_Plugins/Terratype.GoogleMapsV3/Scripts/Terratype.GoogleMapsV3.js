@@ -137,7 +137,13 @@
         },
         destroySubsystem: function () {
             //gm.originalConsole.log('Destroying subsystem');
-
+            if (gm.searchesTimer != null) {
+                clearInterval(gm.searchesTimer);
+                gm.searchesTimer = null;
+            }
+            gm.deleteSearch();
+            gm.searches = [];
+            gm.checkSearch = 0;
             gm.uninstallFakeConsole();
             delete root.google;
             if (gm.domain) {
@@ -770,18 +776,87 @@
             var sign = num >= 0 ? 1 : -1;
             var pow = Math.pow(10, decimals);
             return parseFloat((Math.round((num * pow) + (sign * 0.001)) / pow).toFixed(decimals));
+        },
+        searches: [],
+        searchesTimer: null,
+        checkSearch: 0,
+        createSearch: function (id, source, destination, options, gmap, done) {
+            gm.searches.push({ status: 0, id: id, source: source, destination: destination, options: options, done: done });
+            if (gm.searchesTimer == null) {
+                gm.searchesTimer = setInterval(function () {
+                    if (gm.checkSearch == 0) {
+                        gm.checkSearch = 1;
+                        if (root.google.maps.places) {
+                            var service = new root.google.maps.places.PlacesService(gmap);
+                            service.textSearch({ query: 'paris, france' }, function (results, status) {
+                                if (root.google) {
+                                    gm.checkSearch = (status == 'OK') ? 2 : -1;
+                                }
+                            });
+                            return;
+                        } else {
+                            gm.checkSearch = -1;
+                        }
+                    } else if (gm.checkSearch == 1) {
+                        return;
+                    }
+
+                    var kill = true;
+                    for (var i = 0; i != gm.searches.length; i++) {
+                        var s = gm.searches[i];
+                        if (s.status == 0) {
+                            if (gm.checkSearch == -1) {
+                                s.status = 3;
+                                s.done(null);
+                                return;
+                            }
+                            s.autocomplete = new root.google.maps.places.Autocomplete(s.source, s.options);
+                            s.status = 1;
+                            return;
+                        }
+                        if (s.status == 1) {
+                            var m = document.body.childNodes;
+                            for (p = 0; p != m.length; p++) {
+                                if (m[p].nodeType == 1 && m[p].className && m[p].className.indexOf('pac-container') != -1 && !m[p].hasAttribute('data-terratype-id')) {
+                                    m[p].className += ' terratype_' + id + '_googlemapv3_lookup_results';
+                                    m[p].setAttribute('data-terratype-id', s.id);
+                                    s.destination.appendChild(m[p]);
+                                    s.status = 2;
+                                    s.done(s.autocomplete);
+                                    return;
+                                }
+                            }
+                            kill = false;
+                        }
+                    }
+                    if (kill) {
+                        clearInterval(gm.searchesTimer);
+                        gm.searchesTimer = null;
+                    }
+                }, gm.poll);
+            }
+        },
+        deleteSearch: function (id) {
+            //for (var i = 0; i != gm.searches.length; i++) {
+            //    var s = gm.searches[i];
+            //    if ((!id || s.id == id) && s.status == 2) {
+            //        var m = document.body.childNodes;
+            //        for (p = m.length - 1; p >= 0; p--) {
+            //            if (m[p].nodeType == 1 && m[p].className && m[p].className.indexOf('pac-container') != -1 && m[p].getAttribute('data-terratype-id') === id) {
+            //                document.removeChild(m[p]);
+            //            }
+            //        }
+            //        s.status = 3;
+            //    }
+            //}
         }
     }
 
-
     var provider = {
         identifier: identifier,
-        timerPoll: 250,
-        timeout: 15000,
         datumWait: 330,
         init: function (id, urlProvider, model, config, view, updateView) {
             var scope = {
-                haveCheckedSearchFunctionalityExists: null,
                 datumChangeWait: null,
                 defaultConfig: {
                     position: {
@@ -878,6 +953,9 @@
                                 },
                                 editor: {
                                     apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
+                                },
+                                grid: {
+                                    apperance: urlProvider(identifier, 'views/grid.apperance.html', true)
                                 }
                             }
                         },
@@ -1012,7 +1090,6 @@
                 reloadMap: function () {
                     scope.destroy();
                     gm.destroySubsystem();
-                    scope.haveCheckedSearchFunctionalityExists = false;
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
                         var counter = 100;      //  Put in place incase of horrible errors
@@ -1325,7 +1402,7 @@
                     scope.ignoreEvents--;
                 },
                 eventCheckRefresh: function () {
-                    if (!scope.gmap.getBounds().contains(scope.gmarker.getPosition())) {
+                    if (scope.gmap.getBounds() && !scope.gmap.getBounds().contains(scope.gmarker.getPosition())) {
                         scope.eventRefresh.call(scope);
                     }
                 },
@@ -1362,38 +1439,28 @@
                 },
                 searchListerners: [],
                 createSearch: function () {
-                    scope.gautocomplete = new root.google.maps.places.Autocomplete(document.getElementById('terratype_' + id + '_googlemapv3_lookup'),
-                    {
+                    gm.createSearch(id, document.getElementById('terratype_' + id + '_googlemapv3_lookup'), document.getElementById('terratype_' + id + '_googlemapv3_lookup_results'), {
                         autocomplete: config().search.enable == 2
-                    });
-                    if (config().search && config().search.limit &&
-                        config().search.limit.countries && config().search.limit.countries.length != 0) {
-                        scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
-                    }
-                    scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
-                        scope.eventLookup.call(scope, scope.gautocomplete.getPlace());
-                    }));
-                    scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'places_changed', function () {
-                        var places = scope.gautocomplete.getPlaces();
-                        if (places && places.length > 0) {
-                            scope.eventLookup.call(scope, places[0]);
-                        }
-                    }));
-
-                    if (!scope.haveCheckedSearchFunctionalityExists) {
-                        //  Check to see if places service is enabled
-                        if (root.google.maps.places) {
-                            var service = new root.google.maps.places.PlacesService(scope.gmap);
-                            service.textSearch({ query: 'paris, france' }, function (results, status) {
-                                if (root.google) {
-                                    view().status.searchFailed = (status != 'OK');
-                                }
-                            });
-                        } else {
+                    }, scope.gmap, function (handler) {
+                        if (handler == null) {
                             view().status.searchFailed = true;
+                        } else {
+                            scope.gautocomplete = handler;
+                            if (config().search && config().search.limit &&
+                                config().search.limit.countries && config().search.limit.countries.length != 0) {
+                                scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
+                            }
+                            scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
+                                scope.eventLookup.call(scope, scope.gautocomplete.getPlace());
+                            }));
+                            scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'places_changed', function () {
+                                var places = scope.gautocomplete.getPlaces();
+                                if (places && places.length > 0) {
+                                    scope.eventLookup.call(scope, places[0]);
+                                }
+                            }));
                         }
-                        scope.haveCheckedSearchFunctionalityExists = true;
-                    }
+                    });
                 },
                 deleteSearch: function () {
                     angular.forEach(scope.searchListerners, function (value, index) {
@@ -1404,6 +1471,7 @@
                         root.google.maps.event.clearInstanceListeners(scope.gautocomplete);
                         scope.gautocomplete = null;
                     }
+                    gm.deleteSearch(id);
                 }
             }
             return scope.init();

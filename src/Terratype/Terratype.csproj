@@ -51,7 +51,10 @@
     <Compile Include="TerratypeHtml.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
+    <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="App_Plugins\Terratype\readme.txt" />
     <Content Include="App_Plugins\Terratype\Images\Terratype.png" />
     <Content Include="App_Plugins\Terratype\Views\grid.html" />

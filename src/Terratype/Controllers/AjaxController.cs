@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -275,6 +276,62 @@ namespace Terratype.Controllers
             var destination = Models.Position.Create(destinationId);
             destination.FromWgs84(wgs84);
             return destination._datum.ToString();
+        }
+
+        public class DataType
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public JObject config { get; set; }
+        }
+
+
+        [System.Web.Http.HttpGet]
+        public IEnumerable<DataType> DataTypes(int? id = null)
+        {
+            var results = new List<DataType>();
+            var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
+
+            foreach (var datatype in datatypes)
+            {
+                var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
+                var config = JObject.Parse(values.First());
+                var grid = config.GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                if (grid == null)
+                {
+                    continue;
+                }
+                grid = grid.GetValue("grid", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                if (grid == null)
+                {
+                    continue;
+                }
+                var enable = false;
+                string name = null;
+                var field = grid.First as JProperty;
+                while (field != null)
+                {
+                    if (String.Equals(field.Name, "enable", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        enable = field.Value.ToObject<bool>();
+                    }
+                    if (String.Equals(field.Name, "name", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        name = field.Value.ToObject<string>();
+                    }
+                    field = field.Next as JProperty;
+                }
+                if (enable && (id == null || id == datatype.Id))
+                {
+                    results.Add(new DataType()
+                    {
+                        id = datatype.Id,
+                        name = String.IsNullOrWhiteSpace(name) ? datatype.Name : name,
+                        config = config
+                    });
+                }
+            }
+            return results;
         }
     }
 }

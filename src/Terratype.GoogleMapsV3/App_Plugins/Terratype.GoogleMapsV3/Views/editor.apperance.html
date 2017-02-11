@@ -22,17 +22,18 @@
     <div ng-show="view().status.success" class="umb-editor">
         <div>
             <div ng-show="store().search.enable != 0 && config().search.enable != 0">
-                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_searchPlaceholder" ng-model="store().lookup" spellcheck=false style="z-index: 10000 !important;">
+                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_searchPlaceholder" ng-model="store().lookup" spellcheck=false style="z-index:9998 !important;">
+                <style ng-bind-html="'.terratype_' + view().identifier + '_googlemapv3_lookup_results {position:static!important;}'">
+                </style>
+                <div id="terratype_{{view().identifier}}_googlemapv3_lookup_results" style="position:absolute;z-index:9999 !important"></div>
             </div>
         </div>
         <div style="height:1px;width:206px;display:inline-block;">
              &nbsp;
         </div>
         <div style="margin-top:-15px;">
-            <div style="overflow:hidden;">
-                <div id="terratype_{{view().identifier}}_googlemapv3_map" style="height:{{config().height}}px" ng-show="view().showMap">
-                </div>
-            </div>
+            <ng-include src="view().provider.events.files.views.grid.apperance">
+            </ng-include>
         </div>
         <div style="height:1px;width:206px;display:inline-block;">
             &nbsp;
