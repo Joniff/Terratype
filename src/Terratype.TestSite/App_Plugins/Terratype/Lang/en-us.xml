@@ -22,6 +22,17 @@
     <key alias="referenceUrl">https://en.wikipedia.org/wiki/World_Geodetic_System#Longitudes_on_WGS_84</key>
   </area>
 
+  <area alias="terratypeLabelStandard">
+    <key alias="name">Standard</key>
+    <key alias="description">Standard plain label</key>
+    <key alias="foregroundLabel">Foreground Color:</key>
+    <key alias="foregroundDescription">Foreground color for the label</key>
+    <key alias="backgroundLabel">Background Color:</key>
+    <key alias="backgroundDescription">Background color for the label</key>
+    <key alias="contentLabel">Content:</key>
+    <key alias="contentDescription">Content of the label, that is displayed when a user clicks the icon on the map</key>
+  </area>
+  
   <area alias="terratypeEditor">
     <key alias="debugMode">DEBUG MODE</key>
     <key alias="reviewDate">Review Date</key>
@@ -74,8 +85,18 @@
     <key alias="iconVerticalAnchorBottom">Bottom</key>
     <key alias="iconVerticalAnchorError">Your focal point is now located outside the boundary of the image</key>
 
+    <key alias="labelHeading">Label</key>
+    <key alias="labelLabel">Enable:</key>
+    <key alias="labelDescription">Allow the editor to add a custom label to the map icon</key>
+    <key alias="labelEditPositionLabel">Edit Position:</key>
+    <key alias="labelEditPositionDescription">Where to position the edit box so that editor can enter there own label</key>
+    <key alias="labelEditPositionBelow">Below the map</key>
+    <key alias="labelEditPositionOverlay">As an overlay when you click icon</key>
+    <key alias="labelLabel">Style:</key>
+    <key alias="labelDescription">Choose a style for your popup label</key>
+    
     <key alias="gridHeading">Grid</key>
-    <key alias="gridLabel">Enable:</key>      
+    <key alias="gridLabel">Enable:</key>
     <key alias="gridDescription">Allow this map to be added to a grid</key>
     <key alias="gridNameLabel">Name:</key>
     <key alias="gridNameDescription">The name the Grid editor will know this map as</key>

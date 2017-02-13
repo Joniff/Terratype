@@ -92,6 +92,16 @@ namespace Terratype.Models
             return null;
         }
 
+        /// <summary>
+        /// Create a derived Label from a particular type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Label Create(Type type)
+        {
+            return System.Activator.CreateInstance(type) as Label;
+        }
+
 
     }
 }

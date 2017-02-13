@@ -32,45 +32,9 @@
         </div>
     </div>
 
-    <div class="umb-el-wrap control-group" ng-show="store().datatypeId">
-        <label for="terratype_{{identifier}}_grid_label" class="control-label">
-            <localize key="terratypeGridOverlay_labelLabel">Label:</localize>
-            <small>
-                <localize key="terratypeGridOverlay_labelDescription">Text to display, in a bubble, when user selects this icon</localize>
-            </small>
-        </label>
-        <div class="controls" style="border:1px solid #ccc;min-height:100px;">
-            <div>
-                <div grid-rte
-                     configuration="view().gridOverlay.rte.config"
-                     value="store().label"
-                     unique-id="$scope.identifier + 'rte'"
-                     on-link-picker-click="openLinkPicker"
-                     on-media-picker-click="openMediaPicker"
-                     on-embed-click="openEmbed"
-                     on-macro-picker-click="openMacroPicker">
-                </div>
-                <umb-overlay ng-if="view().gridOverlay.rte.linkPickerOverlay.show"
-                             model="view().gridOverlay.rte.linkPickerOverlay"
-                             position="right"
-                             view="view().gridOverlay.rte.linkPickerOverlay.view">
-                </umb-overlay>
-                <umb-overlay ng-if="view().gridOverlay.rte.mediaPickerOverlay.show"
-                             model="view().gridOverlay.rte.mediaPickerOverlay"
-                             position="right"
-                             view="view().gridOverlay.rte.mediaPickerOverlay.view">
-                </umb-overlay>
-                <umb-overlay ng-if="view().gridOverlay.rte.embedOverlay.show"
-                             model="view().gridOverlay.rte.embedOverlay"
-                             position="right"
-                             view="view().gridOverlay.rte.embedOverlay.view">
-                </umb-overlay>
-                <umb-overlay ng-if="view().gridOverlay.rte.macroPickerOverlay.show"
-                             model="view().gridOverlay.rte.macroPickerOverlay"
-                             view="view().gridOverlay.rte.macroPickerOverlay.view"
-                             position="right">
-                </umb-overlay>
-            </div>
-        </div>
-    </div>
+    <div ng-if="view().label.enable == true">
+        <ng-include src="view().label.view">
+        </ng-include>
+    </div>    
+
 </div>

@@ -35,8 +35,11 @@ namespace Terratype.Labels
             }
         }
 
-        [JsonProperty(PropertyName = "color")]
-        public int Color { get; set; }
+        [JsonProperty(PropertyName = "foreground")]
+        public int Foreground { get; set; }
+
+        [JsonProperty(PropertyName = "background")]
+        public int Background { get; set; }
 
         [JsonProperty(PropertyName = "content")]
         public IHtmlString Content { get; set; }

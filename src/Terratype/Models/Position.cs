@@ -184,6 +184,16 @@ namespace Terratype.Models
             return null;
         }
 
+        /// <summary>
+        /// Create a derived Position from a particular type
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Position Create(Type type)
+        {
+            return System.Activator.CreateInstance(type) as Position;
+        }
+
         private string DebugValue
         {
             get
