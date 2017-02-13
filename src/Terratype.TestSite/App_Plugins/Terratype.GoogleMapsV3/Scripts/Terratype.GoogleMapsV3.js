@@ -857,6 +857,7 @@
         datumWait: 330,
         init: function (id, urlProvider, model, config, view, updateView) {
             var scope = {
+                events: [],
                 datumChangeWait: null,
                 defaultConfig: {
                     position: {
@@ -1064,6 +1065,9 @@
                         },
                         reload: function () {
                             scope.reloadMap.call(scope);
+                        },
+                        addEvent: function (id, func, s) {
+                            scope.events.push({ id: id, func: func, scope: s});
                         }
                     }
                 },
@@ -1298,6 +1302,32 @@
                                             draggable: true,
                                             icon: gm.icon.call(gm, config().icon)
                                         })
+                                        scope.ginfo = null;
+                                        if (model().label) {
+                                            scope.ginfo = new root.google.maps.InfoWindow({
+                                                content: model().label
+                                            });
+                                            scope.gevents.push(scope.gmarker.addListener('click', function () {
+                                                if (scope.ignoreEvents > 0) {
+                                                    return;
+                                                }
+                                                scope.ginfo.open(scope.gmap, scope.gmarker);
+                                            }));
+                                        }
+                                        root.google.maps.event.addListener(scope.gmap, 'click', function () {
+                                            if (scope.ignoreEvents > 0) {
+                                                return;
+                                            }
+                                            if (scope.ginfo) {
+                                                scope.ginfo.close();
+                                            }
+                                            for (var i = 0; i != scope.events.length; i++) {
+                                                if (scope.events[i].id == 'map-click') {
+                                                    scope.events[i].func.call(scope.events[i].scope);
+                                                }
+                                            }
+                                        });
+
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmarker, 'dragend', function (marker) {
                                             scope.eventDrag.call(scope, marker);
                                         }));

@@ -2,10 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Web;
-using System.Web.Mvc;
-using System.Web.UI;
 
 namespace Terratype.Models
 {
@@ -44,6 +41,12 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "lookup")]
         public string Lookup { get; set; }
 
+        /// <summary>
+        /// Label
+        /// </summary>
+        [JsonProperty(PropertyName = "label")]
+        public Label Label { get; set; }
+
         public Model()
         {
 
@@ -56,6 +59,7 @@ namespace Terratype.Models
             Zoom = other.Zoom;
             Lookup = other.Lookup;
             Icon = other.Icon;
+            Label = other.Label;
         }
 
         public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json))
@@ -69,9 +73,10 @@ namespace Terratype.Models
 
     [DebuggerDisplay("{Position},{Zoom}")]
     [JsonObject(MemberSerialization.OptIn)]
-    public class Model<TProvider, TPosition>
+    public class Model<TProvider, TPosition, TLabel>
         where TProvider : Models.Provider
         where TPosition : Models.Position
+        where TLabel : Models.Label
     {
         /// <summary>
         /// Which provider is this map using to render
@@ -97,6 +102,9 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "lookup")]
         public string Lookup { get; set; }
 
+        [JsonProperty(PropertyName = "label")]
+        public TLabel Label { get; set; }
+
         public Model()
         {
 
@@ -109,6 +117,7 @@ namespace Terratype.Models
             Icon = other.Icon;
             Zoom = other.Zoom;
             Lookup = other.Lookup;
+            Label = other.Label as TLabel;
         }
         public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json))
         { 
@@ -184,6 +193,33 @@ namespace Terratype.Models
                     field = field.Next as JProperty;
                 }
             }
+
+            var label = item.GetValue(Json.PropertyName<Model>(nameof(Model.Label)), StringComparison.InvariantCultureIgnoreCase);
+            if (label != null)
+            {
+                var field = position.First as JProperty;
+                while (field != null)
+                {
+                    if (String.Equals(field.Name, Json.PropertyName<Label>(nameof(Label.Id)), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        System.Type positionType = Position.Register[field.Value.ToObject<string>()];
+                        model.Position = Models.Position.Create(field.Value.ToObject<string>());
+                        break;
+                    }
+                    field = field.Next as JProperty;
+                }
+                field = position.First as JProperty;
+                while (field != null)
+                {
+                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position._datum)), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        model.Position.TryParse(field.Value.ToObject<string>());
+                        break;
+                    }
+                    field = field.Next as JProperty;
+                }
+            }
+
             return model;
         }
 

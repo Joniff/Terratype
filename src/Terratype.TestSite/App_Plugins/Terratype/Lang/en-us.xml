@@ -101,7 +101,9 @@
     <key alias="dataTypeDescription">Select which map you would like to use</key>
     <key alias="mapDataTypeError">No maps have been created</key>
     <key alias="locationLabel">Location:</key>
-    <key alias="locationDescription">Where would you like this map to point to</key>  
+    <key alias="locationDescription">Where would you like this map to point to</key>
+    <key alias="labelLabel">Label:</key>
+    <key alias="labelDescription">Text to display, in a bubble, when user selects this icon</key>
   </area>
 
 </language>

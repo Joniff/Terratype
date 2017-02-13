@@ -31,4 +31,10 @@
             </div>
         </div>
     </div>
+
+    <div ng-if="view().label.enable == true">
+        <ng-include src="view().label.view">
+        </ng-include>
+    </div>    
+
 </div>

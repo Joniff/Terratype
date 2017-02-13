@@ -130,10 +130,17 @@ namespace Terratype
                     writer.RenderBeginTag(HtmlTextWriterTag.Div);
                     writer.AddAttribute(HtmlTextWriterAttribute.Id, labelId);
                     writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                    var hasRazorLabel = false;
                     foreach (var value in label)
                     {
                         writer.Write(value.DynamicInvoke(htmlHelper.ViewContext));
+                        hasRazorLabel = true;
                     }
+                    if (hasRazorLabel == false && map.Label != null)
+                    {
+                        writer.Write(map.Label.ToString());
+                    }
+
                     writer.RenderEndTag();
                     writer.RenderEndTag();
                 }

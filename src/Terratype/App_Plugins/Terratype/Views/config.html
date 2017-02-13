@@ -186,6 +186,50 @@
 
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+                <localize key="terratypeConfig_labelHeading">Label</localize>
+            </h4>
+            <div class="umb-el-wrap control-group">
+                <label for="terratype_{{view().identifier}}_labelEnable" class="control-label">
+                    <localize key="terratypeConfig_labelLabel">Enable:</localize>
+                    <small>
+                        <localize key="terratypeConfig_labelDescription">Allow the editor to add a custom label to the map icon</localize>
+                    </small>
+                </label>
+                <div class="controls">
+                    <input id="terratype_{{view().identifier}}_labelEnable" type="checkbox" ng-model="config().label.enable" />
+                </div>
+            </div>
+            <div class="umb-el-wrap control-group" ng-show="config().label.enable == true">
+                <label for="terratype_{{view().identifier}}_labelEditPosition" class="control-label">
+                    <localize key="terratypeConfig_labelEditPositionLabel">Edit Position:</localize>
+                    <small>
+                        <localize key="terratypeConfig_labelEditPositionDescription">Where to position the edit box so that editor can enter there own label</localize>
+                    </small>
+                </label>
+                <div class="controls">
+                    <select id="terratype_{{view().identifier}}_labelEditPosition" ng-model="config().label.editPosition" class="umb-editor">
+                        <option value="below" localize="label" label="@terratypeConfig_labelEditPositionBelow"></option>
+                        <option value="below" localize="label" label="@terratypeConfig_labelEditPositionOverlay" disabled="disabled"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="umb-el-wrap control-group" ng-show="config().label.enable == true">
+                <label for="terratype_{{view().identifier}}_label" class="control-label">
+                    <localize key="terratypeConfig_labelLabel">Style:</localize>
+                    <small>
+                        <localize key="terratypeConfig_labelDescription">Choose a style for your popup label</localize>
+                    </small>
+                </label>
+                <div class="controls">
+                    <select id="terratype_{{view().identifier}}_label" ng-model="config().label.id" class="umb-editor" ng-change="view().setLabel(config().label.id)" ng-options="p.id as p.name for p in view().labels">
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
                 <localize key="terratypeConfig_gridHeading">Grid</localize>
             </h4>
             <div class="umb-el-wrap control-group">

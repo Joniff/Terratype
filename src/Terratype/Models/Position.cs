@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -122,40 +121,40 @@ namespace Terratype.Models
         //  Register all derived classes
         private static readonly Lazy<Dictionary<string, Type>> register =
             new Lazy<Dictionary<string, Type>>(() =>
+        {
+            Dictionary<string, Type> installed = new Dictionary<string, Type>();
+
+            Type baseType = typeof(Position);
+            foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                Dictionary<string, Type> installed = new Dictionary<string, Type>();
-
-                Type baseType = typeof(Position);
-                foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
+                Type[] typesInAsm;
+                try
                 {
-                    Type[] typesInAsm;
-                    try
-                    {
-                        typesInAsm = currAssembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        typesInAsm = ex.Types;
-                    }
-
-                    foreach (Type type in typesInAsm)
-                    {
-                        if (!type.IsClass || type.IsAbstract ||
-                            !type.IsSubclassOf(baseType))
-                        {
-                            continue;
-                        }
-
-                        var derivedObject = System.Activator.CreateInstance(type) as Position;
-                        if (derivedObject != null)
-                        {
-                            installed.Add(derivedObject.Id, derivedObject.GetType());
-                        }
-                    }
+                    typesInAsm = currAssembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException ex)
+                {
+                    typesInAsm = ex.Types;
                 }
 
-                return installed;
-            });
+                foreach (Type type in typesInAsm)
+                {
+                    if (!type.IsClass || type.IsAbstract ||
+                        !type.IsSubclassOf(baseType))
+                    {
+                        continue;
+                    }
+
+                    var derivedObject = System.Activator.CreateInstance(type) as Position;
+                    if (derivedObject != null)
+                    {
+                        installed.Add(derivedObject.Id, derivedObject.GetType());
+                    }
+                }
+            }
+
+            return installed;
+        });
 
         public static IDictionary<string, Type> Register
         {
@@ -184,6 +183,7 @@ namespace Terratype.Models
             }
             return null;
         }
+
         private string DebugValue
         {
             get

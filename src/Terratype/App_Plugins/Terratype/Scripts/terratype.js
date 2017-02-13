@@ -111,6 +111,8 @@
                 referenceUrl: null,
                 name: null
             },
+            label: {},
+            labels: [],
             mapId: function (array, id) {
                 for (var i = 0; i != array.length; i++) {
                     if (array[i].id == id) {
@@ -126,42 +128,63 @@
                 localizationService.localize(m.description).then(function (value) {
                     m.description = value;
                 });
-                localizationService.localize(m.referenceUrl).then(function (value) {
-                    m.referenceUrl = value;
+                if (m.referenceUrl) {
+                    localizationService.localize(m.referenceUrl).then(function (value) {
+                        m.referenceUrl = value;
+                    });
+                }
+            },
+            initLabels: function (done) {
+                $http.get($scope.view().controller('labels')).then(function success(response) {
+                    angular.forEach(response.data, function (m) {
+                        $scope.view().translate(m);
+                        if (!m.view) {
+                            m.view = $scope.view().urlProvider(packageName, 'views/label' + m.id + '.html', true);
+                        }
+                        if (!m.controller) {
+                            m.controller = 'terratype.label.' + m.id;
+                        }
+                    });
+                    $timeout(function () {
+                        $scope.view().labels = response.data;
+                        done();
+                    });
                 });
             },
             initConfig: function () {
                 $scope.view().configgering = true;
-                if (typeof ($scope.model.value) === 'string') {
-                    $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
-                }
-                $scope.config = function () {
-                    return $scope.model.value.config;
-                }
-                $scope.store = function () {
-                    return $scope.model.value;
-                }
+                $scope.view().initLabels(function () {
+                    if (typeof ($scope.model.value) === 'string') {
+                        $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
+                    }
+                    $scope.config = function () {
+                        return $scope.model.value.config;
+                    }
+                    $scope.store = function () {
+                        return $scope.model.value;
+                    }
 
-                $scope.view().setIcon();
-                $http.get($scope.view().controller('providers')).then(function success(response) {
-                    angular.forEach(response.data, function (p) {
-                        $scope.view().translate(p);
-                        angular.forEach(p.coordinateSystems, function (c) {
-                            $scope.view().translate(c);
+                    $scope.view().setIcon();
+                    $http.get($scope.view().controller('providers')).then(function success(response) {
+                        angular.forEach(response.data, function (p) {
+                            $scope.view().translate(p);
+                            angular.forEach(p.coordinateSystems, function (c) {
+                                $scope.view().translate(c);
+                            });
                         });
-                    });
-                    $timeout(function () {
-                        $scope.view().providers = response.data;
-
-                        if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
-                            $scope.view().setProvider($scope.config().provider.id);
-                        }
                         $timeout(function () {
-                            $scope.view().loading = false;
-                        });
-                    })
-                }, function error(response) {
-                    $scope.view().loading = false;
+                            $scope.view().providers = response.data;
+
+                            if ($scope.config && $scope.config().provider && $scope.config().provider.id != null) {
+                                $scope.view().setProvider($scope.config().provider.id);
+                            }
+                            $timeout(function () {
+                                $scope.view().loading = false;
+                            });
+                        })
+                    }, function error(response) {
+                        $scope.view().loading = false;
+                    });
                 });
             },
             loadProvider: function (id, done) {
@@ -223,6 +246,13 @@
                     $scope.store().position.precision = $scope.view().position.precision;
                 }
                 $scope.view().provider.events.setCoordinateSystem();
+            },
+            setLabel: function (id) {
+                var index = $scope.view().mapId($scope.view().labels, id);
+                if (index == -1) {
+                    index = 0;
+                }
+                $scope.view().label = $scope.view().labels[index];
             },
             iconAnchor: function () {
                 if (isNaN($scope.config().icon.anchor.horizontal)) {
@@ -697,7 +727,7 @@
                 },
                 ]
             },
-            loadEditor: function (c) {
+            loadEditor: function (c, completed) {
                 if (!$scope.store().zoom) {
                     $scope.store().zoom = c.zoom;
                 }
@@ -741,11 +771,14 @@
                                 $scope.store, $scope.config, $scope.view, function () {
                                     $scope.$apply();
                                 });
+                            if (completed) {
+                                completed();
+                            }
                         }, 150);
                     });
                 }
             },
-            initEditor: function () {
+            initEditor: function (completed) {
                 $scope.view().error = false;
                 try {
                     if (typeof ($scope.model.value) === 'string') {
@@ -767,7 +800,7 @@
                     $scope.store = function () {
                         return $scope.model.value;
                     }
-                    $scope.view().loadEditor($scope.model.config.definition);
+                    $scope.view().loadEditor($scope.model.config.definition, completed);
                 }
                 catch (oh) {
                     //  Error so might as well show debug
@@ -781,24 +814,37 @@
                 subtitle: 'terratypeGridOverlay_subtitle',
                 show: false,
                 display: function () {
-                    $http.get($scope.view().controller('datatypes')).then(function success(response) {
-                        $scope.view().gridOverlay.dataTypes = response.data;
+                    if ($scope.view().gridOverlay.show == true) {
+                        return;
+                    }
+                    if ($scope.view().gridOverlay.dataTypes.length == 0) {
+                        $http.get($scope.view().controller('datatypes')).then(function success(response) {
+                            $scope.view().gridOverlay.dataTypes = response.data;
+                            loaded();
+                        });
+                    } else {
+                        loaded();
+                    }
+                    loaded = function () {
                         $scope.view().gridOverlay.show = true;
                         if ($scope.view().gridOverlay.store.datatypeId) {
                             $scope.view().gridOverlay.setDatatype($scope.view().gridOverlay.store.datatypeId);
                         }
-                    });
+                    }
                 },
                 submit: function (model) {          //  model = $scope.view().gridOverlay
                     $scope.control.value = model.store;
                     model.show = false;
-                    $scope.view().loadGrid();
+                    $timeout(function () {
+                        $scope.view().loadGrid();
+                    });
                 },
                 html: 'uninitalized',
                 dataTypes: [],
                 view: $scope.view,
                 config: {},
                 store: {},
+                rte: {},
                 setDatatype: function (id) {
                     $scope.view().showMap = false;
                     $timeout(function () {
@@ -834,7 +880,9 @@
                             }
                             var c = angular.copy(response.data[0].config);
                             $scope.view().gridOverlay.config = c.config;
-                            $scope.view().loadEditor(c);
+                            $scope.view().loadEditor(c, function () {
+                                $scope.view().provider.events.addEvent('map-click', $scope.view().gridOverlay.display, this);
+                            });
                         }
                     });
                 }
@@ -880,7 +928,105 @@
         }
     }]);
 
-    angular.module('umbraco').controller('terratype.grid.overlay', ['$scope', '$timeout', 'localizationService', function ($scope, $timeout, localizationService) {
+    angular.module('umbraco').controller('terratype.label.standard', ['$scope', '$timeout', 'localizationService', '$controller', 'tinyMceService', 'macroService',
+        function ($scope, $timeout, localizationService, $controller, tinyMceService, macroService) {
+
+        $scope.identifier = $scope.$id + (new Date().getTime());
+        $scope.colors = [
+            { id: '#ffffff' },      // White
+            { id: '#faebd7' },      // Antique White
+            { id: '#f5f5dc' },      // Beige
+            { id: '#ffe4c4' },      // Bisque
+            { id: '#c0c0c0' },      // Silver
+            { id: '#808080' },      // Grey
+            { id: '#000000' },      // Black
+            { id: '#ff0000' },      // Red
+            { id: '#800000' },      // Maroon
+            { id: '#ffff00' },      // Yellow
+            { id: '#808000' },      // Olive
+            { id: '#00ff00' },      // Lime
+            { id: '#008000' },      // Green
+            { id: '#00ffff' },      // Aqua
+            { id: '#008080' },      // Teal
+            { id: '#0000ff' },      // Blue
+            { id: '#000080' },      // Navy
+            { id: '#ff00ff' },      // Fuchsia
+            { id: '#800080' }       // Purple
+        ]
+        $scope.init = function () {
+            var model = $scope.$parent.model;
+            $scope.view = model.view;
+            $scope.config = function () {
+                return model.config;
+            }
+            $scope.store = function() {
+                return model.store;
+            }
+        }
+        $scope.rte = {
+            config: {},
+            linkPickerOverlay: {},
+            openLinkPicker: function (editor, currentTarget, anchorElement) {
+                $scope.rte.linkPickerOverlay = {
+                    view: "linkpicker",
+                    currentTarget: currentTarget,
+                    show: true,
+                    submit: function (model) {
+                        tinyMceService.insertLinkInEditor(editor, model.target, anchorElement);
+                        $scope.rte.linkPickerOverlay.show = false;
+                        $scope.rte.linkPickerOverlay = null;
+                    }
+                };
+            },
+            mediaPickerOverlay: {},
+            openMediaPicker: function (editor, currentTarget, userData) {
+                $scope.rte.mediaPickerOverlay = {
+                    currentTarget: currentTarget,
+                    onlyImages: true,
+                    showDetails: true,
+                    startNodeId: userData.startMediaId,
+                    view: "mediapicker",
+                    show: true,
+                    submit: function (model) {
+                        tinyMceService.insertMediaInEditor(editor, model.selectedImages[0]);
+                        $scope.rte.mediaPickerOverlay.show = false;
+                        $scope.rte.mediaPickerOverlay = null;
+                    }
+                };
+            },
+            embedOverlay: {},
+            openEmbed: function (editor) {
+                $scope.rte.embedOverlay = {
+                    view: "embed",
+                    show: true,
+                    submit: function (model) {
+                        tinyMceService.insertEmbeddedMediaInEditor(editor, model.embed.preview);
+                        $scope.rte.embedOverlay.show = false;
+                        $scope.rte.embedOverlay = null;
+                    }
+                };
+            },
+            macroPickerOverlay: {},
+            openMacroPicker: function (editor, dialogData) {
+                $scope.rte.macroPickerOverlay = {
+                    view: "macropicker",
+                    dialogData: dialogData,
+                    show: true,
+                    submit: function (model) {
+                        var macroObject = macroService.collectValueData(model.selectedMacro, model.macroParams, dialogData.renderingEngine);
+                        tinyMceService.insertMacroInEditor(editor, macroObject, $scope);
+                        $scope.rte.macroPickerOverlay.show = false;
+                        $scope.rte.macroPickerOverlay = null;
+                    }
+                };
+            }
+        }
+    }]);
+
+
+
+    angular.module('umbraco').controller('terratype.grid.overlay', ['$scope', '$timeout', 'localizationService', '$controller', 'tinyMceService', 'macroService',
+        function ($scope, $timeout, localizationService, $controller, tinyMceService, macroService) {
         $scope.identifier = $scope.$id + (new Date().getTime());
         $scope.init = function () {
             var gridOverlay = $scope.$parent.model;
@@ -891,20 +1037,8 @@
             $scope.store = function() {
                 return gridOverlay.store;
             }
-
-            //  Hack. Umbraco have put a keyboard bind for overlays. This interrupts our search feature. We remove the keyboard bind
-            $.each($._data($(document)[0], 'events'), function (i, e) {
-                if (i == 'keydown') {
-                    for (var ee = 0; ee != e.length; ee++) {
-                        if (e[ee].namespace.substring(0, 8) === 'overlay-') {
-                            //console.log(i, JSON.stringify(e));
-                            $(document).unbind('keydown.' + e[ee].namespace);
-                            return;
-                        }
-                    }
-                }
-            });
         }
+
     }]);
 
 }(window));

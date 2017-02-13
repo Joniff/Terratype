@@ -62,6 +62,31 @@ namespace Terratype.Controllers
             return providers;
         }
 
+        public class LabelJson
+        {
+            public string id { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+
+            public LabelJson(Models.Label label)
+            {
+                id = label.Id;
+                name = label.Name;
+                description = label.Description;
+            }
+        }
+
+        [System.Web.Http.HttpGet]
+        public IEnumerable<LabelJson> Labels()
+        {
+            var labels = new List<LabelJson>();
+            foreach (var item in Models.Label.Register)
+            {
+                labels.Add(new LabelJson(Models.Label.Create(item.Value)));
+            }
+            return labels;
+        }
+
         [System.Web.Http.HttpGet]
         public string Parse(string id, string datum)
         {

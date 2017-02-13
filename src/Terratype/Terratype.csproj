@@ -33,6 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Json\Json.cs" />
+    <Compile Include="Labels\Standard.cs" />
+    <Compile Include="Models\Label.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Models\LatLng.cs" />
     <Compile Include="Models\Position.cs" />
@@ -52,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
+    <Content Include="App_Plugins\Terratype\Views\label.standard.html" />
     <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -697,7 +697,7 @@
                 },
                 ]
             },
-            loadEditor: function (c) {
+            loadEditor: function (c, completed) {
                 if (!$scope.store().zoom) {
                     $scope.store().zoom = c.zoom;
                 }
@@ -741,11 +741,14 @@
                                 $scope.store, $scope.config, $scope.view, function () {
                                     $scope.$apply();
                                 });
+                            if (completed) {
+                                completed();
+                            }
                         }, 150);
                     });
                 }
             },
-            initEditor: function () {
+            initEditor: function (completed) {
                 $scope.view().error = false;
                 try {
                     if (typeof ($scope.model.value) === 'string') {
@@ -767,7 +770,7 @@
                     $scope.store = function () {
                         return $scope.model.value;
                     }
-                    $scope.view().loadEditor($scope.model.config.definition);
+                    $scope.view().loadEditor($scope.model.config.definition, completed);
                 }
                 catch (oh) {
                     //  Error so might as well show debug
@@ -781,24 +784,37 @@
                 subtitle: 'terratypeGridOverlay_subtitle',
                 show: false,
                 display: function () {
-                    $http.get($scope.view().controller('datatypes')).then(function success(response) {
-                        $scope.view().gridOverlay.dataTypes = response.data;
+                    if ($scope.view().gridOverlay.show == true) {
+                        return;
+                    }
+                    if ($scope.view().gridOverlay.dataTypes.length == 0) {
+                        $http.get($scope.view().controller('datatypes')).then(function success(response) {
+                            $scope.view().gridOverlay.dataTypes = response.data;
+                            loaded();
+                        });
+                    } else {
+                        loaded();
+                    }
+                    loaded = function () {
                         $scope.view().gridOverlay.show = true;
                         if ($scope.view().gridOverlay.store.datatypeId) {
                             $scope.view().gridOverlay.setDatatype($scope.view().gridOverlay.store.datatypeId);
                         }
-                    });
+                    }
                 },
                 submit: function (model) {          //  model = $scope.view().gridOverlay
                     $scope.control.value = model.store;
                     model.show = false;
-                    $scope.view().loadGrid();
+                    $timeout(function () {
+                        $scope.view().loadGrid();
+                    });
                 },
                 html: 'uninitalized',
                 dataTypes: [],
                 view: $scope.view,
                 config: {},
                 store: {},
+                rte: {},
                 setDatatype: function (id) {
                     $scope.view().showMap = false;
                     $timeout(function () {
@@ -834,7 +850,9 @@
                             }
                             var c = angular.copy(response.data[0].config);
                             $scope.view().gridOverlay.config = c.config;
-                            $scope.view().loadEditor(c);
+                            $scope.view().loadEditor(c, function () {
+                                $scope.view().provider.events.addEvent('map-click', $scope.view().gridOverlay.display, this);
+                            });
                         }
                     });
                 }
@@ -880,7 +898,8 @@
         }
     }]);
 
-    angular.module('umbraco').controller('terratype.grid.overlay', ['$scope', '$timeout', 'localizationService', function ($scope, $timeout, localizationService) {
+    angular.module('umbraco').controller('terratype.grid.overlay', ['$scope', '$timeout', 'localizationService', '$controller', 'tinyMceService', 'macroService',
+        function ($scope, $timeout, localizationService, $controller, tinyMceService, macroService) {
         $scope.identifier = $scope.$id + (new Date().getTime());
         $scope.init = function () {
             var gridOverlay = $scope.$parent.model;
@@ -891,19 +910,60 @@
             $scope.store = function() {
                 return gridOverlay.store;
             }
-
-            //  Hack. Umbraco have put a keyboard bind for overlays. This interrupts our search feature. We remove the keyboard bind
-            $.each($._data($(document)[0], 'events'), function (i, e) {
-                if (i == 'keydown') {
-                    for (var ee = 0; ee != e.length; ee++) {
-                        if (e[ee].namespace.substring(0, 8) === 'overlay-') {
-                            //console.log(i, JSON.stringify(e));
-                            $(document).unbind('keydown.' + e[ee].namespace);
-                            return;
-                        }
-                    }
+        }
+        $scope.openLinkPicker = function (editor, currentTarget, anchorElement) {
+            $scope.view().gridOverlay.rte.linkPickerOverlay = {
+                view: "linkpicker",
+                currentTarget: currentTarget,
+                show: true,
+                submit: function (model) {
+                    tinyMceService.insertLinkInEditor(editor, model.target, anchorElement);
+                    $scope.view().gridOverlay.rte.linkPickerOverlay.show = false;
+                    $scope.view().gridOverlay.rte.linkPickerOverlay = null;
                 }
-            });
+            };
+        }
+
+        $scope.openMediaPicker  = function (editor, currentTarget, userData) {
+            $scope.view().gridOverlay.rte.mediaPickerOverlay = {
+                currentTarget: currentTarget,
+                onlyImages: true,
+                showDetails: true,
+                startNodeId: userData.startMediaId,
+                view: "mediapicker",
+                show: true,
+                submit: function (model) {
+                    tinyMceService.insertMediaInEditor(editor, model.selectedImages[0]);
+                    $scope.view().gridOverlay.rte.mediaPickerOverlay.show = false;
+                    $scope.view().gridOverlay.rte.mediaPickerOverlay = null;
+                }
+            };
+        }
+
+        $scope.openEmbed = function (editor) {
+            $scope.view().gridOverlay.rte.embedOverlay = {
+                view: "embed",
+                show: true,
+                submit: function (model) {
+                    tinyMceService.insertEmbeddedMediaInEditor(editor, model.embed.preview);
+                    $scope.view().gridOverlay.rte.embedOverlay.show = false;
+                    $scope.view().gridOverlay.rte.embedOverlay = null;
+                }
+            };
+        }
+
+        $scope.openMacroPicker = function (editor, dialogData) {
+            $scope.view().gridOverlay.rte.macroPickerOverlay = {
+                view: "macropicker",
+                dialogData: dialogData,
+                show: true,
+                submit: function (model) {
+                    var macroObject = macroService.collectValueData(model.selectedMacro, model.macroParams, dialogData.renderingEngine);
+                    tinyMceService.insertMacroInEditor(editor, macroObject, $scope);
+                    $scope.view().gridOverlay.rte.macroPickerOverlay.show = false;
+                    $scope.view().gridOverlay.rte.macroPickerOverlay = null;
+                }
+            };
         }
     }]);
 
