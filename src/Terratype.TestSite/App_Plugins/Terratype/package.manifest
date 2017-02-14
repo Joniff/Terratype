@@ -1,5 +1,4 @@
 ﻿{
-  /*
   "gridEditors": [
     {
       "name": "Map",
@@ -10,5 +9,4 @@
       "config": { }
     }
   ]
-  */
 }

@@ -86,7 +86,7 @@
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.4';
+                    r += '?cache=1.0.5';
                 }
                 return r;
             },

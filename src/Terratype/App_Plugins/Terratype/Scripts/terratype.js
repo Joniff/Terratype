@@ -86,7 +86,7 @@
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.4';
+                    r += '?cache=1.0.5';
                 }
                 return r;
             },
@@ -842,6 +842,15 @@
                     if ($scope.vm().gridOverlay.show == true) {
                         return;
                     }
+                    $scope.config = function () {
+                        return $scope.vm().gridOverlay.config;
+                    }
+                    if ($scope.control.value) {
+                        $scope.vm().gridOverlay.store = $scope.control.value;
+                    }
+                    $scope.store = function () {
+                        return $scope.vm().gridOverlay.store;
+                    }
                     $scope.vm().setLabelView($scope.config().label);
                     if ($scope.vm().gridOverlay.dataTypes.length == 0) {
                         $http.get($scope.vm().controller('datatypes')).then(function success(response) {
@@ -853,13 +862,14 @@
                     }
                     loaded = function () {
                         $scope.vm().gridOverlay.show = true;
-                        if ($scope.vm().gridOverlay.store.datatypeId) {
-                            $scope.vm().gridOverlay.setDatatype($scope.vm().gridOverlay.store.datatypeId);
+                        if ($scope.store().datatypeId) {
+                            $scope.vm().gridOverlay.setDatatype($scope.store().datatypeId);
                         }
                     }
                 },
                 submit: function (model) {          //  model = $scope.vm().gridOverlay
                     model.show = false;
+                    $scope.control.value = $scope.vm().gridOverlay.store;
                     $timeout(function () {
                         $scope.vm().loadGrid();
                     });
@@ -867,12 +877,13 @@
                 view: 'uninitalized',
                 dataTypes: [],
                 vm: $scope.vm,
-                config: function () {
-                    return $scope.vm().gridOverlay.config;
+                config: {
+                    label: {
+                        enablew: false,
+                        editPosition: 0
+                    }
                 },
-                store: function () {
-                    return $scope.control.value;
-                },
+                store: {},
                 rte: {},
                 setDatatype: function (id) {
                     $scope.vm().showMap = false;
@@ -958,10 +969,6 @@
                             if (typeof ($scope.control.value) === 'string') {
                                 $scope.control.value = ($scope.control.value != '') ? JSON.parse($scope.control.value) : null;
                             }
-                            if (!$scope.control.value) {
-                                $scope.control.value = {};
-                            }
-                            $scope.vm().loadGrid();
                         }
                         catch (oh) {
                             //  Can't even read our own values
