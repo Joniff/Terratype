@@ -177,7 +177,7 @@ namespace Terratype.Models
                     if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position.Id)), StringComparison.InvariantCultureIgnoreCase))
                     {
                         System.Type positionType = Position.Register[field.Value.ToObject<string>()];
-                        model.Position = Models.Position.Create(field.Value.ToObject<string>());
+                        model.Position = Models.Position.Create(positionType);
                         break;
                     }
                     field = field.Next as JProperty;
@@ -197,23 +197,13 @@ namespace Terratype.Models
             var label = item.GetValue(Json.PropertyName<Model>(nameof(Model.Label)), StringComparison.InvariantCultureIgnoreCase);
             if (label != null)
             {
-                var field = position.First as JProperty;
+                var field = label.First as JProperty;
                 while (field != null)
                 {
                     if (String.Equals(field.Name, Json.PropertyName<Label>(nameof(Label.Id)), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        System.Type positionType = Position.Register[field.Value.ToObject<string>()];
-                        model.Position = Models.Position.Create(field.Value.ToObject<string>());
-                        break;
-                    }
-                    field = field.Next as JProperty;
-                }
-                field = position.First as JProperty;
-                while (field != null)
-                {
-                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position._datum)), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        model.Position.TryParse(field.Value.ToObject<string>());
+                        System.Type labelType = Label.Register[field.Value.ToObject<string>()];
+                        model.Label = (Label)item.GetValue(Json.PropertyName<Model>(nameof(Model.Label)), StringComparison.InvariantCultureIgnoreCase).ToObject(labelType);
                         break;
                     }
                     field = field.Next as JProperty;

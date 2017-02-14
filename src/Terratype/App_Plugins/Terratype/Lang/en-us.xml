@@ -32,6 +32,11 @@
     <key alias="contentLabel">Content:</key>
     <key alias="contentDescription">Content of the label, that is displayed when a user clicks the icon on the map</key>
   </area>
+
+  <area alias="terratypeLabelOverlay">
+    <key alias="title">Label</key>
+    <key alias="subtitle">Set the popup text that is displayed when the user clicks the map icon</key>
+  </area>
   
   <area alias="terratypeEditor">
     <key alias="debugMode">DEBUG MODE</key>
@@ -86,12 +91,12 @@
     <key alias="iconVerticalAnchorError">Your focal point is now located outside the boundary of the image</key>
 
     <key alias="labelHeading">Label</key>
-    <key alias="labelLabel">Enable:</key>
-    <key alias="labelDescription">Allow the editor to add a custom label to the map icon</key>
+    <key alias="labelEnableLabel">Enable:</key>
+    <key alias="labelEnableDescription">Allow the editor to add a custom label to the map icon</key>
     <key alias="labelEditPositionLabel">Edit Position:</key>
-    <key alias="labelEditPositionDescription">Where to position the edit box so that editor can enter there own label</key>
+    <key alias="labelEditPositionDescription">Where to position the edit box so that editor can enter their own label</key>
     <key alias="labelEditPositionBelow">Below the map</key>
-    <key alias="labelEditPositionOverlay">As an overlay when you click icon</key>
+    <key alias="labelEditPositionOverlay">As an overlay when you click the map icon</key>
     <key alias="labelLabel">Style:</key>
     <key alias="labelDescription">Choose a style for your popup label</key>
     
@@ -123,8 +128,6 @@
     <key alias="mapDataTypeError">No maps have been created</key>
     <key alias="locationLabel">Location:</key>
     <key alias="locationDescription">Where would you like this map to point to</key>
-    <key alias="labelLabel">Label:</key>
-    <key alias="labelDescription">Text to display, in a bubble, when user selects this icon</key>
   </area>
 
 </language>

@@ -1068,6 +1068,14 @@
                         },
                         addEvent: function (id, func, s) {
                             scope.events.push({ id: id, func: func, scope: s});
+                        },
+                        labelChange: function (label) {
+                            if (scope.gmap && scope.ginfo) {
+                                delete scope.ginfo;
+                                scope.ginfo = new root.google.maps.InfoWindow({
+                                    content: label.content
+                                });
+                            }
                         }
                     }
                 },
@@ -1305,15 +1313,17 @@
                                         scope.ginfo = null;
                                         if (model().label) {
                                             scope.ginfo = new root.google.maps.InfoWindow({
-                                                content: model().label
+                                                content: model().label.content
                                             });
-                                            scope.gevents.push(scope.gmarker.addListener('click', function () {
-                                                if (scope.ignoreEvents > 0) {
-                                                    return;
-                                                }
-                                                scope.ginfo.open(scope.gmap, scope.gmarker);
-                                            }));
                                         }
+                                        scope.gevents.push(scope.gmarker.addListener('click', function () {
+                                            if (scope.ignoreEvents > 0) {
+                                                return;
+                                            }
+                                            if (scope.callEvent('icon-click') && scope.ginfo) {
+                                                scope.ginfo.open(scope.gmap, scope.gmarker);
+                                            }
+                                        }));
                                         root.google.maps.event.addListener(scope.gmap, 'click', function () {
                                             if (scope.ignoreEvents > 0) {
                                                 return;
@@ -1321,11 +1331,7 @@
                                             if (scope.ginfo) {
                                                 scope.ginfo.close();
                                             }
-                                            for (var i = 0; i != scope.events.length; i++) {
-                                                if (scope.events[i].id == 'map-click') {
-                                                    scope.events[i].func.call(scope.events[i].scope);
-                                                }
-                                            }
+                                            scope.callEvent('map-click');
                                         });
 
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmarker, 'dragend', function (marker) {
@@ -1502,6 +1508,14 @@
                         scope.gautocomplete = null;
                     }
                     gm.deleteSearch(id);
+                },
+                callEvent: function (id) {
+                    for (var i = 0; i != scope.events.length; i++) {
+                        if (scope.events[i].id == id) {
+                            scope.events[i].func.call(scope.events[i].scope);
+                        }
+                    }
+
                 }
             }
             return scope.init();

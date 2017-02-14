@@ -1,4 +1,4 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Single>
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Single2>
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @using Terratype;
 @{
@@ -79,13 +79,7 @@ Jquery is @jquery
         <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
             This is an empty div
         </div>
-        @Html.Terratype(Model.Content.Map,
-            @<text>
-                <div style="background-color:yellow;">
-                    This icon is at @Model.Content.Map.Position
-                </div>
-            </text>
-        )
+        @Html.Terratype(Model.Content.Map)
         <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
             This is an empty div
         </div>

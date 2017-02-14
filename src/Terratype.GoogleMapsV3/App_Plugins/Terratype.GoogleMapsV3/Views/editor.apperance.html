@@ -1,38 +1,38 @@
-﻿<div id="terratype_{{view().identifier}}_googlemapv3">
-    <div ng-show="view().status.loading">
-        <img src="{{view().images.loading}}" />
+﻿<div id="terratype_{{vm().identifier}}_googlemapv3">
+    <div ng-show="vm().status.loading">
+        <img src="{{vm().images.loading}}" />
     </div>
-    <div ng-show="view().status.failed">
-        <img src="{{view().images.failed}}" />
+    <div ng-show="vm().status.failed">
+        <img src="{{vm().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusInvalid">Invalid Google Map API Key</localize></span>
     </div>
-    <div ng-show="view().status.error">
-        <img src="{{view().images.failed}}" />
+    <div ng-show="vm().status.error">
+        <img src="{{vm().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusError">Failed to load Google Maps V3 multiple times, please manually refresh the page and try again</localize></span>
     </div>
-    <div ng-show="view().status.duplicate">
-        <img src="{{view().images.failed}}" />
+    <div ng-show="vm().status.duplicate">
+        <img src="{{vm().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusDuplicate">Detected multiple GoogleMapsV3 maps with different configuration; All Google Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</localize></span>
     </div>
-    <div ng-show="view().status.searchFailed">
-        <img src="{{view().images.failed}}" />
+    <div ng-show="vm().status.searchFailed">
+        <img src="{{vm().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusSearchFailed">Need to enable Google Places API Web Service</localize></span>
     </div>
 
-    <div ng-show="view().status.success" class="umb-editor">
+    <div ng-show="vm().status.success" class="umb-editor">
         <div>
             <div ng-show="store().search.enable != 0 && config().search.enable != 0">
-                <input id="terratype_{{view().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_searchPlaceholder" ng-model="store().lookup" spellcheck=false style="z-index:9998 !important;">
-                <style ng-bind-html="'.terratype_' + view().identifier + '_googlemapv3_lookup_results {position:static!important;}'">
+                <input id="terratype_{{vm().identifier}}_googlemapv3_lookup" class="umb-editor umb-textstring textstring" type="text" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_searchPlaceholder" ng-model="store().lookup" spellcheck=false style="z-index:9998 !important;">
+                <style ng-bind-html="'.terratype_' + vm().identifier + '_googlemapv3_lookup_results {position:static!important;}'">
                 </style>
-                <div id="terratype_{{view().identifier}}_googlemapv3_lookup_results" style="position:absolute;z-index:9999 !important"></div>
+                <div id="terratype_{{vm().identifier}}_googlemapv3_lookup_results" style="position:absolute;z-index:9999 !important"></div>
             </div>
         </div>
         <div style="height:1px;width:206px;display:inline-block;">
              &nbsp;
         </div>
         <div style="margin-top:-15px;">
-            <ng-include src="view().provider.events.files.views.grid.apperance">
+            <ng-include src="vm().provider.events.files.views.grid.apperance">
             </ng-include>
         </div>
         <div style="height:1px;width:206px;display:inline-block;">
@@ -40,7 +40,7 @@
         </div>
         <div style="margin-top:-15px;">
             <div>
-                <input type="text" id="terratype_{{view().identifier}}_googlemapv3_location" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_locationPlaceholder" ng-model="view().position.datumText" ng-change="view().provider.events.datumChange(view().position.datumText)" ng-style="view().position.datumStyle" />
+                <input type="text" id="terratype_{{vm().identifier}}_googlemapv3_location" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeGoogleMapsV3EditorApperance_locationPlaceholder" ng-model="vm().position.datumText" ng-change="vm().provider.events.datumChange(vm().position.datumText)" ng-style="vm().position.datumStyle" />
             </div>
         </div>
     </div>

@@ -1,18 +1,18 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{view().identifier}}_googlemapv3_search_enable" class="control-label">
+    <label for="terratype_{{vm().identifier}}_googlemapv3_search_enable" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigSearch_typeLabel">Search:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigSearch_typeDescription">Do you want to include a text box, to lookup locations</localize>
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{view().identifier}}_googlemapv3_search_enable" ng-model="config().search.enable" ng-change="view().provider.events.searchChange()" class="umb-editor" convert-to-number>
+        <select id="terratype_{{vm().identifier}}_googlemapv3_search_enable" ng-model="config().search.enable" ng-change="vm().provider.events.searchChange()" class="umb-editor" convert-to-number>
             <option value="0"><localize key="terratypeGoogleMapsV3ConfigSearch_typeDisable">Hide Search</localize></option>
             <option value="1"><localize key="terratypeGoogleMapsV3ConfigSearch_typeEnable">Enable Search</localize></option>
             <option value="2"><localize key="terratypeGoogleMapsV3ConfigSearch_typeAutocomplete">Enable Search with Autocomplete</localize></option>
         </select>
         <div class="comment">
-            <div ng-show="view().status.searchFailed">
+            <div ng-show="vm().status.searchFailed">
                 <img src="/umbraco/images/false.png" />
                 <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3ConfigSearch_typeError">Error</localize></span>
             </div>
@@ -20,17 +20,17 @@
     </div>
 </div>
 <div class="umb-el-wrap control-group" ng-show="config().search.enable && config().search.enable != 0">
-    <label for="terratype_{{view().identifier}}_googlemapv3_searchcountry" class="control-label">
+    <label for="terratype_{{vm().identifier}}_googlemapv3_searchcountry" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigSearch_countryLabel">Limit:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigSearch_countryDescription">Limited all search results to a particular country or countries.</localize>
         </small>
     </label>
     <div class="controls">
-        <div ng-show="view().provider.version && view().provider.versionMajor < 27">
+        <div ng-show="vm().provider.version && vm().provider.versionMajor < 27">
             <small terratype-translate="terratypeGoogleMapsV3ConfigSearch_countryMax"></small>
         </div>
-        <select id="terratype_{{view().identifier}}_googlemapv3_searchcountry" ng-model="config().search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="view().provider.events.searchCountryChange()">
+        <select id="terratype_{{vm().identifier}}_googlemapv3_searchcountry" ng-model="config().search.limit.countries" multiple class="umb-editor" style="height:250px;" ng-change="vm().provider.events.searchCountryChange()">
             <option value="AF"><localize key="terratypeGoogleMapsV3ConfigSearch_countryAF">Afghanistan</localize></option>
             <option value="AX"><localize key="terratypeGoogleMapsV3ConfigSearch_countryAX">Aland Islands</localize></option>
             <option value="AL"><localize key="terratypeGoogleMapsV3ConfigSearch_countryAL">Albania</localize></option>
@@ -282,10 +282,10 @@
         <div style="padding-top:5px;" ng-show="config().search.limit.countries.length != 0">
             <button type="button" ng-click="config().search.limit.countries=[]" localize="title" title="@terratypeGoogleMapsV3ConfigSearch_countryClearTitle"><localize key="terratypeGoogleMapsV3ConfigSearch_countryClearLabel">Clear</localize></button>
         </div>
-        <div ng-show="view().provider.versionMajor < 27 && config().search.limit.countries.length > 1">
+        <div ng-show="vm().provider.versionMajor < 27 && config().search.limit.countries.length > 1">
             <small style="color:red;" terratype-translate="terratypeGoogleMapsV3ConfigSearch_countryLimit1"></small>
         </div>
-        <div ng-show="view().provider.versionMajor >= 27 && config().search.limit.countries.length > 5">
+        <div ng-show="vm().provider.versionMajor >= 27 && config().search.limit.countries.length > 5">
             <small style="color:red;" terratype-translate="terratypeGoogleMapsV3ConfigSearch_countryLimit5"></small>
         </div>
     </div>

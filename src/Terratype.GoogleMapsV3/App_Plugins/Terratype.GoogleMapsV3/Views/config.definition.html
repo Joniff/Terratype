@@ -1,13 +1,13 @@
-﻿<div ng-disabled="view().provider.status.loading">
+﻿<div ng-disabled="vm().provider.status.loading">
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{view().identifier}}_googlemapv3_version" class="control-label">
+        <label for="terratype_{{vm().identifier}}_googlemapv3_version" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigDefinition_versionLabel">Version:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigDefinition_versionDescription">Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)</localize>
             </small>
         </label>
         <div class="controls">
-            <select id="terratype_{{view().identifier}}_googlemapv3_version" ng-model="config().provider.version" class="umb-editor" ng-change="view().provider.events.versionChange()">
+            <select id="terratype_{{vm().identifier}}_googlemapv3_version" ng-model="config().provider.version" class="umb-editor" ng-change="vm().provider.events.versionChange()">
                 <option value="3" localize="label" label="@terratypeGoogleMapsV3ConfigDefinition_version3"></option>
                 <option value="3.exp" localize="label" label="@terratypeGoogleMapsV3ConfigDefinition_version3exp"></option>
                 <option value="3.27" localize="label" label="@terratypeGoogleMapsV3ConfigDefinition_version327"></option>
@@ -39,21 +39,21 @@
                 <option value="3.1" localize="label" label="@terratypeGoogleMapsV3ConfigDefinition_version31"></option>
                 <option value="3.0" localize="label" label="@terratypeGoogleMapsV3ConfigDefinition_version30"></option>
             </select>
-            <div ng-show="view().provider.version">
+            <div ng-show="vm().provider.version">
                 <small terratype-translate="terratypeGoogleMapsV3ConfigDefinition_versionLoaded">
                 </small>
             </div>
         </div>
     </div>
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{view().identifier}}_googlemapv3_apikey" class="control-label">
+        <label for="terratype_{{vm().identifier}}_googlemapv3_apikey" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyLabel">Google API Key:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyDescription">Your Google API Key</localize>
             </small>
         </label>
         <div class="controls">
-            <input id="terratype_{{view().identifier}}_googlemapv3_apikey" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" spellcheck=false ng-change="view().status.reload = true" />
+            <input id="terratype_{{vm().identifier}}_googlemapv3_apikey" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" placeholder="Google API key" spellcheck=false ng-change="vm().status.reload = true" />
             <div>
                 <div>
                     <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key" target="_blank" style="font-size:smaller;">
@@ -61,44 +61,44 @@
                     </a>
                 </div>
                 <div>
-                    <div ng-show="view().status.loading">
-                        <img src="{{view().images.loading}}" />
+                    <div ng-show="vm().status.loading">
+                        <img src="{{vm().images.loading}}" />
                     </div>
-                    <div ng-show="view().status.failed">
-                        <img src="{{view().images.failed}}" />
+                    <div ng-show="vm().status.failed">
+                        <img src="{{vm().images.failed}}" />
                         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyInvalid">Invalid API Key</localize></span>
                     </div>
-                    <div ng-show="view().status.success">
-                        <img src="{{view().images.success}}" />
+                    <div ng-show="vm().status.success">
+                        <img src="{{vm().images.success}}" />
                         <span style="color:green;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyValid">API Key is valid</localize></span>
                     </div>
-                    <div ng-show="view().status.reload">
-                        <button type="button" ng-click="view().provider.events.reload()" localize="title" title="@terratypeGoogleMapsV3ConfigDefinition_apiKeyRetryTitle"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeylabel">Retry</localize></button>
+                    <div ng-show="vm().status.reload">
+                        <button type="button" ng-click="vm().provider.events.reload()" localize="title" title="@terratypeGoogleMapsV3ConfigDefinition_apiKeyRetryTitle"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeylabel">Retry</localize></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{view().identifier}}_googlemapv3_forcehttps" class="control-label">
+        <label for="terratype_{{vm().identifier}}_googlemapv3_forcehttps" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigDefinition_httpsLabel">Force Https:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigDefinition_httpsDescription">Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP</localize>
             </small>
         </label>
         <div class="controls">
-            <input id="terratype_{{view().identifier}}_googlemapv3_forcehttps" type="checkbox" ng-model="config().provider.forceHttps" ng-change="view().provider.events.forceHttpsChange()" />
+            <input id="terratype_{{vm().identifier}}_googlemapv3_forcehttps" type="checkbox" ng-model="config().provider.forceHttps" ng-change="vm().provider.events.forceHttpsChange()" />
         </div>
     </div>
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{view().identifier}}_googlemapv3_language" class="control-label">
+        <label for="terratype_{{vm().identifier}}_googlemapv3_language" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigDefinition_languageLabel">Language:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigDefinition_languageDescription">Primary language used to display places</localize>
             </small>
         </label>
         <div class="controls">
-            <select id="terratype_{{view().identifier}}_googlemapv3_language" ng-model="config().provider.language" class="umb-editor" ng-change="view().provider.events.languageChange()">
+            <select id="terratype_{{vm().identifier}}_googlemapv3_language" ng-model="config().provider.language" class="umb-editor" ng-change="vm().provider.events.languageChange()">
                 <option value=""><localize key="terratypeGoogleMapsV3ConfigDefinition_languageUseDefault">[Use Umbraco]</localize></option>
                 <option value="ab"><localize key="terratypeGoogleMapsV3ConfigDefinition_languageAB">Abkhaz (аҧсуа бызшәа, аҧсшәа)</localize></option>
                 <option value="aa"><localize key="terratypeGoogleMapsV3ConfigDefinition_languageAA">Afar (Afaraf)</localize></option>

@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Web;
+using System.Web.UI;
 
 namespace Terratype.Models
 {
@@ -32,6 +34,14 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "enable")]
         public bool Enable { get; }
 
+        public enum EditPositions { Below = 0, Overlay = 1};
+
+        /// <summary>
+        /// Edit position
+        /// </summary>
+        [JsonProperty(PropertyName = "editPosition")]
+        public EditPositions EditPosition { get; }
+
         private static readonly Lazy<Dictionary<string, Type>> register =
             new Lazy<Dictionary<string, Type>>(() =>
             {
@@ -58,7 +68,7 @@ namespace Terratype.Models
                             continue;
                         }
 
-                        var derivedObject = System.Activator.CreateInstance(type) as Position;
+                        var derivedObject = System.Activator.CreateInstance(type) as Label;
                         if (derivedObject != null)
                         {
                             installed.Add(derivedObject.Id, derivedObject.GetType());
@@ -102,6 +112,7 @@ namespace Terratype.Models
             return System.Activator.CreateInstance(type) as Label;
         }
 
+        public abstract void GetHtml(HtmlTextWriter writer, Models.Model model);
 
     }
 }

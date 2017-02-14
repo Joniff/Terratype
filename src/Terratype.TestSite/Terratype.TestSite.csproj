@@ -427,10 +427,11 @@
     <Content Include="App_Plugins\Grid\Editors\Render\media_wide.cshtml" />
     <Content Include="App_Plugins\Grid\Editors\Render\quote_with_description.cshtml" />
     <Content Include="Views\Mappy.cshtml" />
-    <Content Include="Views\Single.cshtml" />
     <Content Include="Views\Home.cshtml" />
     <Content Include="Views\ArchetypeMap.cshtml" />
     <Content Include="Views\Mappy2.cshtml" />
+    <Content Include="Views\Single1.cshtml" />
+    <Content Include="Views\Single2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

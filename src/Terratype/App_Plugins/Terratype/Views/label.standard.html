@@ -1,78 +1,78 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype.label.standard" ng-init="init()">
 
-    <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_label_standard_foreground" class="control-label">
-            <localize key="terratypeLabelStandard_foregroundLabel">Foreground Color:</localize>
-            <small>
-                <localize key="terratypeLabelStandard_foregroundDescription">Foreground color for the label</localize>
-            </small>
-        </label>
-        <div id="terratype_{{identifier}}_label_standard_foreground_color" class="controls" style="border:1px solid #ccc;padding:2px;">
-            <div ng-repeat="c in colors">
-                <div ng-show="c.id != store().forecolor" style="height:20px;width:20px;padding:3px;" ng-click="setForeground(c.id)" >&nbsp;</div>
-                <div ng-show="c.id == store().forecolor" style="height:20px;width:20px;padding:1px;border:2px solid black">&nbsp;</div>
+    <div id="terratype_{{identifier}}_label_standard_content" class="umb-editor" style="min-height:100px;">
+        <div>
+            <style>
+                .mce-toolbar {
+                    top:auto !important;
+                }
+            </style>
+            <div grid-rte
+                configuration="rte.config"
+                value="store().label.content"
+                unique-id="rte.id"
+                on-link-picker-click="rte.openLinkPicker"
+                on-media-picker-click="rte.openMediaPicker"
+                on-embed-click="rte.openEmbed"
+                on-macro-picker-click="rte.openMacroPicker" 
+                localize="placeholder"
+                placeholder="@terratypeLabelStandard_contentDescription"
+                on-focus="rte.focus()"
+                on-blur="rte.blur()">
             </div>
-        </div>
-    </div>
 
-    <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_label_standard_background" class="control-label">
-            <localize key="terratypeLabelStandard_backgroundLabel">Background Color:</localize>
-            <small>
-                <localize key="terratypeLabelStandard_backgroundDescription">Background color for the label</localize>
-            </small>
-        </label>
-        <div id="terratype_{{identifier}}_label_standard_background_color" class="controls" style="border:1px solid #ccc;padding:2px;">
-            <div ng-repeat="c in colors">
-                <div ng-show="c.id != store().backcolor" style="height:20px;width:20px;padding:3px;" ng-click="setBackground(c.id)">&nbsp;</div>
-                <div ng-show="c.id == store().backcolor" style="height:20px;width:20px;padding:1px;border:2px solid black">&nbsp;</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_label_standard_content" class="control-label">
-            <localize key="terratypeLabelStandard_contentLabel">Content:</localize>
-            <small>
-                <localize key="terratypeLabelStandard_contentDescription">Content of the label, that is displayed when a user clicks the icon on the map</localize>
-            </small>
-        </label>
-        <div id="terratype_{{identifier}}_label_standard_content" class="controls" style="border:1px solid #ccc;min-height:100px;">
-            <div>
-                <div grid-rte
-                    configuration="rte.config"
-                    value="store().content"
-                    unique-id="identifier + 'rte'"
-                    on-link-picker-click="rte.openLinkPicker"
-                    on-media-picker-click="rte.openMediaPicker"
-                    on-embed-click="vrte.openEmbed"
-                    on-macro-picker-click="rte.openMacroPicker">
+            <!--
+            <div id="terratype_{{identifier}}_label_standard_foreground_color" style="margin-top:5px;">
+                <div style="float:left;">
+                    <localize key="terratypeLabelStandard_foregroundLabel">Foreground</localize>&nbsp;
                 </div>
-                <umb-overlay 
-                    ng-if="rte.linkPickerOverlay.show"
-                    model="rte.linkPickerOverlay"
-                    view="rte.view"
-                    position="right">
-                </umb-overlay>
-                <umb-overlay 
-                    ng-if="rte.mediaPickerOverlay.show"
-                    model="rte.mediaPickerOverlay"
-                    view="rte.view"
-                    position="right">
-                </umb-overlay>
-                <umb-overlay 
-                    ng-if="rte.embedOverlay.show"
-                    model="rte.embedOverlay"
-                    view="rte.embedOverlay.view"
-                    position="right">
-                </umb-overlay>
-                <umb-overlay 
-                    ng-if="rte.macroPickerOverlay.show"
-                    model="rte.macroPickerOverlay"
-                    view="rte.macroPickerOverlay.view"
-                    position="right">
-                </umb-overlay>
+                <div style="border:1px solid #ccc;float:left;">
+                    <div ng-repeat="c in colors" style="float:left;">
+                        <div ng-show="c.id != store().label.forecolor" style="min-height:20px;min-width:20px;background-color:{{c.id}};padding:2px;cursor:pointer;" ng-click="setForeground(c.id)">&nbsp;</div>
+                        <div ng-show="c.id == store().label.forecolor" style="min-height:20px;min-width:20px;background-color:{{c.id}};padding:1px;border:1px solid black">&nbsp;</div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
             </div>
+
+            <div id="terratype_{{identifier}}_label_standard_background_color" style="margin-top:5px;">
+                <div style="float:left;">
+                    <localize key="terratypeLabelStandard_backgroundLabel">Background</localize>&nbsp;
+                </div>
+                <div style="border:1px solid #ccc;float:left;">
+                    <div ng-repeat="c in colors" style="float:left;">
+                        <div ng-show="c.id != store().label.backcolor" style="display:inline-block;min-height:20px;min-width:20px;background-color:{{c.id}};padding:2px;cursor:pointer;" ng-click="setBackground(c.id)">&nbsp;</div>
+                        <div ng-show="c.id == store().label.backcolor" style="display:inline-block;min-height:20px;min-width:20px;background-color:{{c.id}};padding:1px;border:1px solid black">&nbsp;</div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            -->
+
+            <umb-overlay 
+                ng-if="rte.linkPickerOverlay.show"
+                model="rte.linkPickerOverlay"
+                view="rte.linkPickerOverlay.view"
+                position="right">
+            </umb-overlay>
+            <umb-overlay 
+                ng-if="rte.mediaPickerOverlay.show"
+                model="rte.mediaPickerOverlay"
+                view="rte.mediaPickerOverlay.view"
+                position="right">
+            </umb-overlay>
+            <umb-overlay 
+                ng-if="rte.embedOverlay.show"
+                model="rte.embedOverlay"
+                view="rte.embedOverlay.view"
+                position="right">
+            </umb-overlay>
+            <umb-overlay 
+                ng-if="rte.macroPickerOverlay.show"
+                model="rte.macroPickerOverlay"
+                view="rte.macroPickerOverlay.view"
+                position="right">
+            </umb-overlay>
         </div>
     </div>
 </div>

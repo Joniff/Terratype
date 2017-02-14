@@ -124,21 +124,22 @@ namespace Terratype
 
                 var labelId = nameof(Terratype) + Guid.NewGuid().ToString();
                 merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, options.Height ?? DefaultHeight, options.Language, labelId);
-                if (label != null)
+                if (label != null || map.Label != null)
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
                     writer.RenderBeginTag(HtmlTextWriterTag.Div);
                     writer.AddAttribute(HtmlTextWriterAttribute.Id, labelId);
                     writer.RenderBeginTag(HtmlTextWriterTag.Div);
-                    var hasRazorLabel = false;
-                    foreach (var value in label)
+                    if (label != null)
                     {
-                        writer.Write(value.DynamicInvoke(htmlHelper.ViewContext));
-                        hasRazorLabel = true;
+                        foreach (var value in label)
+                        {
+                            writer.Write(value.DynamicInvoke(htmlHelper.ViewContext));
+                        }
                     }
-                    if (hasRazorLabel == false && map.Label != null)
+                    else 
                     {
-                        writer.Write(map.Label.ToString());
+                        map.Label.GetHtml(writer, map);
                     }
 
                     writer.RenderEndTag();

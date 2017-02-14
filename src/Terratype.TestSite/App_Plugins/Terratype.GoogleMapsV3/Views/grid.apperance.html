@@ -1,8 +1,8 @@
 ﻿<div style="overflow:hidden;">
 
-    <style ng-bind-html="'.terratype_' + view().identifier + '_googlemapv3_map {height:' + config().height + 'px;}'">
+    <style ng-bind-html="'.terratype_' + vm().identifier + '_googlemapv3_map {height:' + config().height + 'px;}'">
     </style>
 
-    <div class="terratype_{{view().identifier}}_googlemapv3_map" id="terratype_{{view().identifier}}_googlemapv3_map" ng-show="view().showMap">
+    <div class="terratype_{{vm().identifier}}_googlemapv3_map" id="terratype_{{vm().identifier}}_googlemapv3_map" ng-show="vm().showMap">
     </div>
 </div>
