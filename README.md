@@ -33,6 +33,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.4**
+
+	Fixed error with Null types in assemblies
+	Fixed error with map height for IE in Umbraco backend only
+	Added content editable Labels to maps
+
 
 **1.0.3**
 

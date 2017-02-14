@@ -12,7 +12,7 @@ namespace Terratype.Models
 {
     [DebuggerDisplay("{Id}")]
     [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
-    public abstract class Provider
+    public abstract class Provider : Frisk.IFrisk
     {
         /// <summary>
         /// Unique identifier of provider
@@ -51,47 +51,11 @@ namespace Terratype.Models
             }
         }
 
-        //  Register all derived classes
-        private static readonly Lazy<Dictionary<string, Type>> providers =
-            new Lazy<Dictionary<string, Type>>(() =>
-            {
-                Dictionary<string, Type> installed = new Dictionary<string, Type>();
-                Type baseType = typeof(Provider);
-                foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    Type[] typesInAsm;
-                    try
-                    {
-                        typesInAsm = currAssembly.GetTypes();
-                    }
-                    catch (ReflectionTypeLoadException ex)
-                    {
-                        typesInAsm = ex.Types;
-                    }
-
-                    foreach (Type type in typesInAsm)
-                    {
-                        if (!type.IsClass || type.IsAbstract ||
-                            !type.IsSubclassOf(baseType))
-                        {
-                            continue;
-                        }
-
-                        var derivedObject = System.Activator.CreateInstance(type) as Provider;
-                        if (derivedObject != null)
-                        {
-                            installed.Add(derivedObject.Id, derivedObject.GetType());
-                        }
-                    }
-                }
-                return installed;
-            });
-
-        public static Dictionary<string, Type> Providers
+        public static IDictionary<string, Type> Providers
         {
             get
             {
-                return providers.Value;
+                return Frisk.Frisk.Register<Provider>();
             }
         }
 

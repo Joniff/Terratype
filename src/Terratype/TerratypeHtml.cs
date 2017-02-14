@@ -124,7 +124,7 @@ namespace Terratype
 
                 var labelId = nameof(Terratype) + Guid.NewGuid().ToString();
                 merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, options.Height ?? DefaultHeight, options.Language, labelId);
-                if (label != null || map.Label != null)
+                if (map != null && (label != null || map.Label != null))
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
                     writer.RenderBeginTag(HtmlTextWriterTag.Div);

@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Frisk\Frisk.cs" />
     <Compile Include="Json\Json.cs" />
     <Compile Include="Labels\Standard.cs" />
     <Compile Include="Models\Label.cs" />
