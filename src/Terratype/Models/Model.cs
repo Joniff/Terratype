@@ -160,7 +160,7 @@ namespace Terratype.Models
                 {
                     if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        System.Type providerType = Provider.Providers[field.Value.ToObject<string>()];
+                        System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
                         model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
                         break;
                     }
@@ -185,7 +185,7 @@ namespace Terratype.Models
                 field = position.First as JProperty;
                 while (field != null)
                 {
-                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position._datum)), StringComparison.InvariantCultureIgnoreCase))
+                    if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
                     {
                         model.Position.TryParse(field.Value.ToObject<string>());
                         break;
@@ -228,7 +228,7 @@ namespace Terratype.Models
             writer.WriteStartObject();
             writer.WritePropertyName(Json.PropertyName<Position>(nameof(Position.Id)));
             writer.WriteValue(model.Position.Id);
-            writer.WritePropertyName(Json.PropertyName<Position>(nameof(Position._datum)));
+            writer.WritePropertyName(Json.PropertyName<Position>(nameof(Position._internalDatum)));
             writer.WriteValue(model.Position.ToString());
             writer.WriteEndObject();
 

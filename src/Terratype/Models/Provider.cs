@@ -51,7 +51,7 @@ namespace Terratype.Models
             }
         }
 
-        public static IDictionary<string, Type> Providers
+        public static IDictionary<string, Type> Register
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Terratype.Models
         public static Provider Create(string id)
         {
             Type derivedType = null;
-            if (Providers.TryGetValue(id, out derivedType))
+            if (Register.TryGetValue(id, out derivedType))
             {
                 return System.Activator.CreateInstance(derivedType) as Provider;
             }

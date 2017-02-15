@@ -55,7 +55,7 @@ namespace Terratype.Controllers
         public IEnumerable<ProviderJson> Providers()
         {
             var providers = new List<ProviderJson>();
-            foreach (var item in Models.Provider.Providers)
+            foreach (var item in Models.Provider.Register)
             {
                 providers.Add(new ProviderJson(Models.Provider.Create(item.Value)));
             }
@@ -95,7 +95,7 @@ namespace Terratype.Controllers
             {
                 return null;
             }
-            return position._datum.ToString();
+            return position._internalDatum.ToString();
         }
 
         public class ImageInfo
@@ -300,7 +300,7 @@ namespace Terratype.Controllers
             var wgs84 = source.ToWgs84();
             var destination = Models.Position.Create(destinationId);
             destination.FromWgs84(wgs84);
-            return destination._datum.ToString();
+            return destination._internalDatum.ToString();
         }
 
         public class DataType

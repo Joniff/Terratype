@@ -15,6 +15,7 @@ namespace Terratype.Frisk
     }
 
 
+    [JsonObject(MemberSerialization.OptIn)]
     public static class Frisk
     {
 

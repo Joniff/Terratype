@@ -3,6 +3,9 @@ using System.Diagnostics;
 
 namespace Terratype.Models
 {
+    /// <summary>
+    /// This class is used as a base value for all Coordinates System, and to convert from one coordinate system to another. The values stored here are always in WGS 84
+    /// </summary>
     [DebuggerDisplay("{Latitude},{Longitude}")]
     [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
     public class LatLng

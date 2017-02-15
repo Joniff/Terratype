@@ -33,17 +33,17 @@ namespace Terratype.Models
         public abstract string ReferenceUrl { get; }
 
         [JsonProperty(PropertyName = "datum")]
-        internal object _datum { get; set; }
+        internal object _internalDatum { get; set; }
 
-        protected object Datum
+        protected object _inheritedDatum
         {
             get
             {
-                return _datum;
+                return _internalDatum;
             }
             set
             {
-                _datum = value;
+                _internalDatum = value;
             }
         }
 
@@ -61,15 +61,15 @@ namespace Terratype.Models
         /// <returns></returns>
         public override string ToString()
         {
-            if (_datum is LatLng)
+            if (_internalDatum is LatLng)
             {
-                LatLng latlng = _datum as LatLng;
+                LatLng latlng = _internalDatum as LatLng;
                 return Math.Round(latlng.Latitude, Precision).ToString(CultureInfo.InvariantCulture) + "," +
                     Math.Round(latlng.Longitude, Precision).ToString(CultureInfo.InvariantCulture);
             }
-            if (_datum is string)
+            if (_internalDatum is string)
             {
-                return _datum as string;
+                return _internalDatum as string;
             }
             return null;
         }
@@ -102,7 +102,7 @@ namespace Terratype.Models
             {
                 return false;
             }
-            _datum = Math.Round(lat, Precision).ToString(CultureInfo.InvariantCulture) + "," +
+            _internalDatum = Math.Round(lat, Precision).ToString(CultureInfo.InvariantCulture) + "," +
                     Math.Round(lng, Precision).ToString(CultureInfo.InvariantCulture);
             return true;
         }

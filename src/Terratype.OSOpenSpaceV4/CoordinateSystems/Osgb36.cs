@@ -9,7 +9,10 @@ namespace Terratype.CoordinateSystems
     [JsonObject(MemberSerialization.OptIn)]
     public class Osgb36 : Models.Position
     {
-        internal class Grid
+        /// <summary>
+        /// Holds the current values for this class, this for when you want OSGB 36 grid position for use on a map or in further calulations, but not for conversion to other coordinate systems
+        /// </summary>
+        public class DatumType
         {
             public int Easting;
             public int Northing;
@@ -58,7 +61,7 @@ namespace Terratype.CoordinateSystems
 
         public override string ToString()
         {
-            Grid grid = Datum as Grid;
+            var grid = Datum;
 
             double e = grid.Easting;
             double n = grid.Northing;
@@ -100,7 +103,7 @@ namespace Terratype.CoordinateSystems
 
         public override Models.LatLng ToWgs84()
         {
-            Grid grid = Datum as Grid;
+            var grid = Datum;
 
             double E = grid.Easting, N = grid.Northing;
 
@@ -197,11 +200,40 @@ namespace Terratype.CoordinateSystems
             double N = Math.Round(I + II * dLon2 + III * dLon4 + IIIA * dLon6, 0);
             double E = Math.Round(E0 + IV * dLon + V * dLon3 + VI * dLon5, 0);
 
-            Datum = new Grid
+            Datum = new DatumType
             {
                 Northing = (int) N,
                 Easting = (int) E
             };
+        }
+        public DatumType Datum
+        {
+            get
+            {
+                return _inheritedDatum as DatumType;
+            }
+            set
+            {
+                _inheritedDatum = value;
+            }
+        }
+
+        public Osgb36()
+        {
+        }
+        public Osgb36(string initialPosition)
+        {
+            Parse(initialPosition);
+        }
+
+        public Osgb36(Models.LatLng wgs84Position)
+        {
+            FromWgs84(wgs84Position);
+        }
+
+        public Osgb36(DatumType datum)
+        {
+            Datum = datum;
         }
     }
 }
