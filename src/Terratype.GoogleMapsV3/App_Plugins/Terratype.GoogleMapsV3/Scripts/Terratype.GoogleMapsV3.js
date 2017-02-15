@@ -1126,6 +1126,9 @@
                     }
                 },
                 parse: function (text) {
+                    if (typeof text !== 'string') {
+                        return false;
+                    }
                     var args = text.trim().split(',');
                     if (args.length < 2) {
                         return false;
@@ -1475,7 +1478,13 @@
                 },
                 searchListerners: [],
                 createSearch: function () {
-                    gm.createSearch(id, document.getElementById('terratype_' + id + '_googlemapv3_lookup'), document.getElementById('terratype_' + id + '_googlemapv3_lookup_results'), {
+                    var lookup = document.getElementById('terratype_' + id + '_googlemapv3_lookup');
+                    var results = document.getElementById('terratype_' + id + '_googlemapv3_lookup_results');
+                    if (!lookup || !results) {
+                        return;
+                    }
+
+                    gm.createSearch(id, lookup, results, {
                         autocomplete: config().search.enable == 2
                     }, scope.gmap, function (handler) {
                         if (handler == null) {

@@ -1,21 +1,21 @@
 ﻿<div id="terratype_{{view().identifier}}_googlemapv3">
     <div ng-show="view().status.loading">
-        <img src="{{view().images.loading}}" />
+        <img ng-src="{{view().images.loading}}" />
     </div>
     <div ng-show="view().status.failed">
-        <img src="{{view().images.failed}}" />
+        <img ng-src="{{view().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusInvalid">Invalid Google Map API Key</localize></span>
     </div>
     <div ng-show="view().status.error">
-        <img src="{{view().images.failed}}" />
+        <img ng-src="{{view().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusError">Failed to load Google Maps V3 multiple times, please manually refresh the page and try again</localize></span>
     </div>
     <div ng-show="view().status.duplicate">
-        <img src="{{view().images.failed}}" />
+        <img ng-src="{{view().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusDuplicate">Detected multiple GoogleMapsV3 maps with different configuration; All Google Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</localize></span>
     </div>
     <div ng-show="view().status.searchFailed">
-        <img src="{{view().images.failed}}" />
+        <img ng-src="{{view().images.failed}}" />
         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3EditorApperance_statusSearchFailed">Need to enable Google Places API Web Service</localize></span>
     </div>
 

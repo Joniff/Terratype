@@ -1,5 +1,4 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype.grid.overlay" ng-init="init()">
-
     <div class="umb-el-wrap control-group">
         <div ng-show="vm().gridOverlay.dataTypes.length != 0">
             <label for="terratype_{{identifier}}_grid_datatypes" class="control-label">
@@ -18,7 +17,7 @@
     </div>
 
     <div class="umb-el-wrap control-group" ng-show="store().datatypeId">
-        <label for="terratype_{{identifier}}_grid_datatypes" class="control-label">
+        <label class="control-label">
             <localize key="terratypeGridOverlay_locationLabel">Location:</localize>
             <small>
                 <localize key="terratypeGridOverlay_locationDescription">Where would you like this map to point to</localize>

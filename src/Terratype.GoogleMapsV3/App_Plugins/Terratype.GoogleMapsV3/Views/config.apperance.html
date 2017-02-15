@@ -1,60 +1,60 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_variety_basic" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_basic" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_basicMapLabel">Show Standard Map:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_basicMapDescription">Do you want to see the standard map</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_variety_basic" type="checkbox" ng-model="config().provider.variety.basic" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.satellite == false && config().provider.variety.terrain == false" />
+        <input id="terratype_{{identifier}}_googlemapv3_variety_basic" type="checkbox" ng-model="config().provider.variety.basic" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.satellite == false && config().provider.variety.terrain == false" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_variety_terrain" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_terrain" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_terrainMapLabel">Show Terrain Map:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_terrainMapDescription">Do you want to see the standard map with terrain features</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_variety_terrain" type="checkbox" ng-model="config().provider.variety.terrain" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.satellite == false && config().provider.variety.basic == false" />
+        <input id="terratype_{{identifier}}_googlemapv3_variety_terrain" type="checkbox" ng-model="config().provider.variety.terrain" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.satellite == false && config().provider.variety.basic == false" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_variety_basic" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_variety_basic" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_satelliteMapLabel">Show Satellite Map:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_satelliteMapDescription">Do you want to see the satellite map</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_variety_satellite" type="checkbox" ng-model="config().provider.variety.satellite" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.basic == false && config().provider.variety.terrain == false" />
+        <input id="terratype_{{identifier}}_googlemapv3_variety_satellite" type="checkbox" ng-model="config().provider.variety.satellite" ng-change="vm().provider.events.optionChange()" ng-disabled="config().provider.variety.basic == false && config().provider.variety.terrain == false" />
     </div>
 </div>
 <div ng-show="(config().provider.variety.basic + config().provider.variety.satellite + config().provider.variety.terrain) > 1">
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{vm().identifier}}_googlemapv3_variety_satellite" class="control-label">
+        <label for="terratype_{{identifier}}_googlemapv3_variety_satellite" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorLabel">Map Selector Type:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorDescription">How do you want the user to select between viewing a standard, terrain and satellite map</localize>
             </small>
         </label>
         <div class="controls">
-            <select id="terratype_{{vm().identifier}}_googlemapv3_variety_selector_type" ng-model="config().provider.variety.selector.type" class="umb-editor" ng-change="vm().provider.events.optionChange()">
+            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_type" ng-model="config().provider.variety.selector.type" class="umb-editor" ng-change="vm().provider.events.optionChange()">
                 <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_mapSelectorHorizontalBar"></option>
                 <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_mapSelectorDropdownMenu"></option>
             </select>
         </div>
     </div>
     <div class="umb-el-wrap control-group">
-        <label for="terratype_{{vm().identifier}}_googlemapv3_variety_selector_position" class="control-label">
+        <label for="terratype_{{identifier}}_googlemapv3_variety_selector_position" class="control-label">
             <localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorPositionLabel">Map Selector Position:</localize>
             <small>
                 <localize key="terratypeGoogleMapsV3ConfigApperance_mapSelectorPositionDescription">Where do you want the map selector to be positioned on the map</localize>
             </small>
         </label>
         <div class="controls">
-            <select id="terratype_{{vm().identifier}}_googlemapv3_variety_selector_position" ng-model="config().provider.variety.selector.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
+            <select id="terratype_{{identifier}}_googlemapv3_variety_selector_position" ng-model="config().provider.variety.selector.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
                 <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
                 <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
                 <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
@@ -75,25 +75,25 @@
 </div>
 
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_fullscreen_enable" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_fullscreen_enable" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_fullscreenLabel">Fullscreen:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_fullscreenDescription">Allow the map to take up the whole screen. Only available on certain browsers / devices.</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_fullscreen_enable" type="checkbox" ng-model="config().provider.fullscreen.enable" ng-change="vm().provider.events.optionChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_fullscreen_enable" type="checkbox" ng-model="config().provider.fullscreen.enable" ng-change="vm().provider.events.optionChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group" ng-show="config().provider.fullscreen.enable == true">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_fullscreen_position" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_fullscreen_position" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_fullscreenPositionLabel">Fullscreen Button Position:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_fullscreenPositionDescription">Where do you want the fullscreen button to be positioned on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{vm().identifier}}_googlemapv3_fullscreen_position" ng-model="config().provider.fullscreen.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
+        <select id="terratype_{{identifier}}_googlemapv3_fullscreen_position" ng-model="config().provider.fullscreen.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
             <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
             <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
             <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
@@ -113,37 +113,37 @@
 </div>
 
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_scale_enable" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_scale_enable" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_scaleLabel">Scale:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_scaleDescription">Allow the map to show the current scale being used</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_scale_enable" type="checkbox" ng-model="config().provider.scale.enable" ng-change="vm().provider.events.optionChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_scale_enable" type="checkbox" ng-model="config().provider.scale.enable" ng-change="vm().provider.events.optionChange()" />
     </div>
 </div>
 
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_streetview_enable" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_streetview_enable" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_streetviewLabel">Streetview:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_streetviewDescription">Allow user to select streetview mode</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_streetview_enable" type="checkbox" ng-model="config().provider.streetView.enable" ng-change="vm().provider.events.optionChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_streetview_enable" type="checkbox" ng-model="config().provider.streetView.enable" ng-change="vm().provider.events.optionChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group" ng-show="config().provider.streetView.enable == true">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_streetview_position" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_streetview_position" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_streetviewPositionLabel">Streetview Position:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_streetviewPositionDescription">Where do you want the streetview 'pegman' to be positioned on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{vm().identifier}}_googlemapv3_streetview_position" ng-model="config().provider.streetView.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
+        <select id="terratype_{{identifier}}_googlemapv3_streetview_position" ng-model="config().provider.streetView.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
             <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
             <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
             <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
@@ -163,25 +163,25 @@
 </div>
 
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_zoomcontrol_enable" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_zoomcontrol_enable" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_zoomLabel">Zoom:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_zoomDescription">Show zoom control</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_zoomcontrol_enable" type="checkbox" ng-model="config().provider.zoomControl.enable" ng-change="vm().provider.events.optionChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_zoomcontrol_enable" type="checkbox" ng-model="config().provider.zoomControl.enable" ng-change="vm().provider.events.optionChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group" ng-show="config().provider.zoomControl.enable == true">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_zoomcontrol_position" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_zoomPositionLabel">Zoom Position:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_zoomPositionDescription">Where do you want the zoom control buttons to be positioned on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{vm().identifier}}_googlemapv3_zoomcontrol_position" ng-model="config().provider.zoomControl.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
+        <select id="terratype_{{identifier}}_googlemapv3_zoomcontrol_position" ng-model="config().provider.zoomControl.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
             <option value="0" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionDefault"></option>
             <option value="1" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopLeft"></option>
             <option value="2" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_positionTopCenter"></option>
@@ -201,14 +201,14 @@
 </div>
 
 <div class="umb-el-wrap control-group" ng-show="config().provider.variety.basic == true || config().provider.variety.terrain == true">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_style" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_style" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_stylingLabel">Styling:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_stylingDescription">Predefined map styles</localize>
         </small>
     </label>
     <div class="controls">
-        <select id="terratype_{{vm().identifier}}_googlemapv3_style" ng-model="config().provider.predefineStyling" class="umb-editor" ng-change="vm().provider.events.styleChange()">
+        <select id="terratype_{{identifier}}_googlemapv3_style" ng-model="config().provider.predefineStyling" class="umb-editor" ng-change="vm().provider.events.styleChange()">
             <option value="" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingStandard"></option>
             <option value="avocado" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingAvocado"></option>
             <option value="blush" localize="label" label="@terratypeGoogleMapsV3ConfigApperance_stylingBlush"></option>
@@ -237,40 +237,40 @@
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_showroads" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_showroads" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_roadsLabel">Show Roads:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_roadsDescription">Do you want roads to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_showroads" type="checkbox" ng-model="config().provider.showRoads" ng-change="vm().provider.events.styleChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_showroads" type="checkbox" ng-model="config().provider.showRoads" ng-change="vm().provider.events.styleChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_showlandmarks" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_showlandmarks" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_landmarksLabel">Show Landmarks:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_landmarksDescription">Do you want landmarks to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_showlandmarks" type="checkbox" ng-model="config().provider.showLandmarks" ng-change="vm().provider.events.styleChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_showlandmarks" type="checkbox" ng-model="config().provider.showLandmarks" ng-change="vm().provider.events.styleChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_showlabels" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_showlabels" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_labelsLabel">Show Labels:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_labelsDescription">Do you want labels (names of countries, regions, areas, etc) to appear on the map</localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{vm().identifier}}_googlemapv3_showlabels" type="checkbox" ng-model="config().provider.showLabels" ng-change="vm().provider.events.styleChange()" />
+        <input id="terratype_{{identifier}}_googlemapv3_showlabels" type="checkbox" ng-model="config().provider.showLabels" ng-change="vm().provider.events.styleChange()" />
     </div>
 </div>
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{vm().identifier}}_googlemapv3_defaultlocation" class="control-label">
+    <label for="terratype_{{identifier}}_googlemapv3_defaultlocation" class="control-label">
         <localize key="terratypeGoogleMapsV3ConfigApperance_positionLabel">Default location:</localize>
         <small>
             <localize key="terratypeGoogleMapsV3ConfigApperance_positionDescription">Select the default location when displaying this map to a content editor</localize>

@@ -8,11 +8,11 @@
     </div>
 
     <div ng-if="control.value">
-        <div ng-show="config().debug != 1">
+        <div ng-if="config().debug != 1">
             <ng-include src="vm().provider.events.files.views.grid.apperance">
             </ng-include>
         </div>
-        <div ng-show="config().debug != 0">
+        <div ng-if="config().debug != 0">
             <div ng-show="vm().error" style="color:red;">
                 <localize key="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</localize>
             </div>

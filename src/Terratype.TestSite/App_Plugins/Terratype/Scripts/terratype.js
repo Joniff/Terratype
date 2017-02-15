@@ -81,6 +81,7 @@
         $scope.vm = function () {
             return $scope.terratype;
         };
+        $scope.identifier = $scope.$id + (new Date().getTime());
 
         $scope.terratype = {
             urlProvider: function (id, file, cache) {
@@ -101,7 +102,6 @@
                 return Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/' + packageName + '/ajax/' + a;
             },
             poll: 250,
-            identifier: $scope.$id + (new Date().getTime()),
             error: null,
             isPreview: false,
             position: [],
@@ -231,7 +231,7 @@
                 }
                 $scope.vm().loadProvider(id, function () {
                     $scope.vm().providers[index] = angular.extend($scope.vm().providers[index], root.terratype.providers[id]);
-                    $scope.vm().providers[index].events = $scope.vm().providers[index].init($scope.vm().identifier, $scope.vm().urlProvider,
+                    $scope.vm().providers[index].events = $scope.vm().providers[index].init($scope.identifier, $scope.vm().urlProvider,
                         $scope.store, $scope.config, $scope.vm, function () {
                             $scope.$apply();
                         });
@@ -734,14 +734,8 @@
                 },
                 ]
             },
-            loadEditor: function (c, completed) {
+            loadEditor: function (id, c, completed) {
                 $scope.vm().labelOverlay.view = $scope.vm().urlProvider(packageName, 'views/label.' + $scope.config().label.id + '.html', true);
-                localizationService.localize($scope.vm().labelOverlay.title).then(function (value) {
-                    $scope.vm().labelOverlay.title = value;
-                });
-                localizationService.localize($scope.vm().labelOverlay.subtitle).then(function (value) {
-                    $scope.vm().labelOverlay.subtitle = value;
-                });
                 if (!$scope.store().zoom) {
                     $scope.store().zoom = c.zoom;
                 }
@@ -789,7 +783,7 @@
                         $scope.vm().loading = false;
                         setTimeout(function () {
                             //  Simple way to wait for any destroy to have finished
-                            $scope.vm().provider.events = $scope.vm().provider.init($scope.vm().identifier, $scope.vm().urlProvider,
+                            $scope.vm().provider.events = $scope.vm().provider.init(id, $scope.vm().urlProvider,
                                 $scope.store, $scope.config, $scope.vm, function () {
                                     $scope.$apply();
                                 });
@@ -819,13 +813,14 @@
                     $scope.model.value = {};
                 }
                 try {
+                    $scope.vm().labelOverlay.init();
                     $scope.config = function () {
                         return $scope.model.config.definition.config;
                     }
                     $scope.store = function () {
                         return $scope.model.value;
                     }
-                    $scope.vm().loadEditor($scope.model.config.definition, completed);
+                    $scope.vm().loadEditor($scope.identifier, $scope.model.config.definition, completed);
                 }
                 catch (oh) {
                     //  Error so might as well show debug
@@ -835,6 +830,7 @@
                 }
             },
             gridOverlay: {
+                identifier: null,
                 title: 'terratypeGridOverlay_title',
                 subtitle: 'terratypeGridOverlay_subtitle',
                 show: false,
@@ -879,7 +875,7 @@
                 vm: $scope.vm,
                 config: {
                     label: {
-                        enablew: false,
+                        enable: false,
                         editPosition: 0
                     }
                 },
@@ -891,11 +887,11 @@
                         var d = $scope.vm().gridOverlay.dataTypes;
                         for (var i = 0; i != d.length; i++) {
                             if (d[i].id == id) {
-                                $scope.vm().identifier = $scope.$id + id + (new Date().getTime());
+                                //$scope.identifier = $scope.$id + id + (new Date().getTime());
                                 var c = angular.copy(d[i].config);
                                 $scope.store().datatypeId = id;
                                 $scope.vm().gridOverlay.config = c.config;
-                                $scope.vm().loadEditor(c);
+                                $scope.vm().loadEditor($scope.vm().gridOverlay.identifier, c);
                                 break;
                             }
                         }
@@ -903,6 +899,14 @@
                 }
             },
             labelOverlay: {
+                init: function () {
+                    localizationService.localize($scope.vm().labelOverlay.title).then(function (value) {
+                        $scope.vm().labelOverlay.title = value;
+                    });
+                    localizationService.localize($scope.vm().labelOverlay.subtitle).then(function (value) {
+                        $scope.vm().labelOverlay.subtitle = value;
+                    });
+                },
                 title: 'terratypeLabelOverlay_title',
                 subtitle: 'terratypeLabelOverlay_subtitle',
                 show: false,
@@ -938,8 +942,9 @@
                             }
                             var c = angular.copy(response.data[0].config);
                             $scope.vm().gridOverlay.config = c.config;
-                            $scope.vm().loadEditor(c, function () {
+                            $scope.vm().loadEditor($scope.identifier, c, function () {
                                 $scope.vm().provider.events.addEvent('map-click', $scope.vm().gridOverlay.display, this);
+                                $scope.vm().provider.events.addEvent('icon-click', $scope.vm().gridOverlay.display, this);
                             });
                         }
                     });
@@ -959,6 +964,7 @@
                 localizationService.localize($scope.vm().gridOverlay.subtitle).then(function (value) {
                     $scope.vm().gridOverlay.subtitle = value;
                 });
+                $scope.vm().labelOverlay.init();
                 $timeout(function () {
                     $scope.vm().loading = false;
                     if ($scope.control.$initializing) {
@@ -975,6 +981,7 @@
                             $scope.vm().error = true;
                             $scope.control.value = {};
                         }
+                        $scope.vm().loadGrid();
                     }
                 }, 200);
             }
@@ -1052,14 +1059,23 @@
             },
             createLabel: function (editor) {
                 var text = editor.getElement().getAttribute("placeholder") || editor.settings.placeholder;
-                var attrs = editor.settings.placeholder_attrs || { style: { 'position': 'absolute', 'width': '100%', 'overflow': 'hidden' } };
+                var attrs = editor.settings.placeholder_attrs || { style: { 'position': 'absolute', 'width': '100%', 'overflow': 'hidden', 'display':'none' } };
                 var el = root.tinymce.DOM.create('div', attrs);
+                if (el.addEventListener) {
+                    el.addEventListener('click', $scope.rte.focusEvent, false);
+                } else if (el.attachEvent) {
+                    el.attachEvent('onclick', $scope.rte.focusEvent);
+                }
                 var inner = root.tinymce.DOM.add(el, 'span', { style: { 'padding': '10px', 'color': '#aaaaaa', 'font-size': '17px !important;', 'white-space': 'pre-wrap', 'display':'inline-block' } }, text)
                 var parent = editor.getContentAreaContainer();
                 parent.insertBefore(el, parent.firstChild);
                 return el;
             },
             label: null,
+            focusEvent: function () {
+                $scope.rte.focus();
+                root.tinymce.execCommand('mceFocus', false);
+            },
             focus: function () {
                 var editor = $scope.rte.getEditor();
                 if (!editor.settings.readonly === true) {
@@ -1105,6 +1121,9 @@
                         tinyMceService.insertMediaInEditor(editor, model.selectedImages[0]);
                         $scope.rte.mediaPickerOverlay.show = false;
                         $scope.rte.mediaPickerOverlay = null;
+                    },
+                    onImageLoaded: function () {
+                        // Not sure what we do here
                     }
                 };
             },
@@ -1143,8 +1162,13 @@
         $scope.init = function () {
             var gridOverlay = $scope.$parent.model;
             $scope.vm = gridOverlay.vm;
-            $scope.config = gridOverlay.config;
-            $scope.store = gridOverlay.store;
+            $scope.config = function () {
+                return gridOverlay.config;
+            }
+            $scope.store = function () {
+                return gridOverlay.store;
+            }
+            gridOverlay.identifier = $scope.identifier;
         }
 
     }]);
