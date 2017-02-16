@@ -1,13 +1,13 @@
 ﻿<!-- Terratype -->
 <div class="ng-cloak terratype" ng-controller="terratype" ng-init="terratype.initGrid()" ng-show="!vm().loading">
-    <div class="umb-editor-placeholder" ng-click="terratype.gridOverlay.display()" ng-show="!control.value || active().gridOverlay.show">
+    <div class="umb-editor-placeholder" ng-click="terratype.gridOverlay.display()" ng-show="!control.value || parentScope().terratype.gridOverlay.show">
         <i class="icon icon-map-location"></i>
         <div ng-show="!control.value">
             <localize key="terratypeGrid_insert">Click to insert map</localize>
         </div>
     </div>
 
-    <div ng-if="control.value && !active().gridOverlay.show">
+    <div ng-if="control.value && !parentScope().terratype.gridOverlay.show">
         <div ng-if="config().debug != 1">
             <ng-include src="vm().provider.events.files.views.grid.apperance">
             </ng-include>
@@ -20,8 +20,8 @@
         </div>
     </div>
 
-    <umb-overlay ng-if="active().gridOverlay.show"
-                 model="active().gridOverlay"
+    <umb-overlay ng-if="parentScope().terratype.gridOverlay.show"
+                 model="parentScope().terratype.gridOverlay"
                  view="terratype.gridOverlay.view"
                  position="right">
     </umb-overlay>

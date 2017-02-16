@@ -32,8 +32,8 @@
     </div>
 
     <div ng-if="config().label.enable == true && config().label.editPosition == 0" style="margin-top:5px;">
-        <umb-overlay ng-if="active().labelOverlay.show"
-                     model="active().labelOverlay"
+        <umb-overlay ng-if="parentScope().terratype.labelOverlay.show"
+                     model="parentScope().terratype.labelOverlay"
                      view="vm().label.view"
                      position="right">
         </umb-overlay>
