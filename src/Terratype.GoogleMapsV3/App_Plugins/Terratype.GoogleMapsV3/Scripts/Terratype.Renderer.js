@@ -300,12 +300,12 @@
             m.ignoreEvents++;
             m.gmap.setZoom(m.zoom);
             q.closeInfoWindows(m);
-            m.gmap.panTo(m.center);
+            m.gmap.setCenter(m.center);
             with ({
                 mm: m
             }) {
                 root.google.maps.event.addListenerOnce(mm.gmap, 'idle', function () {
-                    mm.gmap.panTo(mm.center);
+                    mm.gmap.setCenter(mm.center);
                     m.ignoreEvents--;
                 });
             }

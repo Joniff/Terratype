@@ -1172,11 +1172,15 @@
                         view().position.datumStyle = { 'color': 'red' };
                     }
                 },
-                setMarker: function () {
+                setMarker: function (quick) {
                     if (scope.gmap && scope.gmarker) {
                         var latlng = new root.google.maps.LatLng(view().position.datum.latitude, view().position.datum.longitude);
                         scope.gmarker.setPosition(latlng);
-                        scope.gmap.panTo(latlng);
+                        if (quick) {
+                            scope.gmap.setCenter(latlng);
+                        } else {
+                            scope.gmap.panTo(latlng);
+                        }
                     }
                 },
                 loadMapWait: null,
@@ -1437,7 +1441,7 @@
                     //gm.originalConsole.warn(id + ': eventRefresh()');
                     scope.ignoreEvents++;
                     scope.gmap.setZoom(model().zoom);
-                    scope.setMarker.call(scope);
+                    scope.setMarker.call(scope, true);
                     root.google.maps.event.trigger(scope.gmap, 'resize');
                     scope.ignoreEvents--;
                 },

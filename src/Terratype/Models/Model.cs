@@ -2,7 +2,11 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Web;
+using System.Web.UI;
+using Umbraco.Core;
 
 namespace Terratype.Models
 {
@@ -47,6 +51,9 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "label")]
         public Label Label { get; set; }
 
+        [JsonProperty(PropertyName = "height")]
+        public int Height { get; internal set; }
+
         public Model()
         {
 
@@ -60,6 +67,7 @@ namespace Terratype.Models
             Lookup = other.Lookup;
             Icon = other.Icon;
             Label = other.Label;
+            Height = other.Height;
         }
 
         public Model(string json) : this(JsonConvert.DeserializeObject<Model>(json))
@@ -68,6 +76,59 @@ namespace Terratype.Models
 
         public Model(JObject data) : this(data.ToObject<Model>())
         {
+        }
+
+        private const string guid = "c9e9e052-7d33-46d3-a809-8b6e88b63ae4";
+        private static int Counter
+        {
+            get
+            {
+                var c = HttpContext.Current.Items[guid] as int?;
+                if (c == null)
+                {
+                    c = 131072;
+                }
+                else
+                {
+                    c++;
+                }
+                HttpContext.Current.Items[guid] = c;
+                return (int)c;
+            }
+        }
+
+        /// <summary>
+        /// Please use @Html.Terratype() it has vastly more features
+        /// </summary>
+        /// <returns></returns>
+        public IHtmlString GetHtml()
+        {
+            var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+            using (var writer = new HtmlTextWriter(builder))
+            {
+                writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype));
+                writer.RenderBeginTag(HtmlTextWriterTag.Div);
+
+
+                var labelId = Label != null ? nameof(Terratype) + Guid.NewGuid().ToString() : null;
+                Provider.GetHtml(writer, Counter, this, labelId);
+                if (Label != null)
+                {
+                    writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                    writer.AddAttribute(HtmlTextWriterAttribute.Id, labelId);
+                    writer.RenderBeginTag(HtmlTextWriterTag.Div);
+                    Label.GetHtml(writer, this);
+
+                    writer.RenderEndTag();
+                    writer.RenderEndTag();
+                }
+
+                writer.RenderEndTag();
+
+            }
+            return new HtmlString(builder.ToString());
+
         }
     }
 
@@ -104,6 +165,9 @@ namespace Terratype.Models
 
         [JsonProperty(PropertyName = "label")]
         public TLabel Label { get; set; }
+
+        [JsonProperty(PropertyName = "height")]
+        public int Height { get; internal set; }
 
         public Model()
         {
@@ -150,22 +214,55 @@ namespace Terratype.Models
             JObject item = JObject.Load(reader);
             model.Lookup = item.GetValue(Json.PropertyName<Model>(nameof(Model.Lookup)), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
             model.Zoom = item.GetValue(Json.PropertyName<Model>(nameof(Model.Zoom)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
-            model.Icon = new Models.Icon(item.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
 
-            var provider = item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
-            if (provider != null)
+            int? datatypeId = item.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
+            if (datatypeId != null)
             {
-                var field = provider.First as JProperty;
-                while (field != null)
+                var values = ApplicationContext.Current.Services.DataTypeService.GetPreValuesByDataTypeId((int)datatypeId);
+                var json = JObject.Parse(values.First());
+                if (json != null)
                 {
-                    if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
+                    var config = JObject.Parse(values.First()).GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                    if (config != null)
                     {
-                        System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
-                        model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
-                        break;
+                        model.Height = config.GetValue(Json.PropertyName<Model>(nameof(Model.Height)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
+                        model.Icon = new Models.Icon(config.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
+                        var provider = config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
+                        if (provider != null)
+                        {
+                            var field = provider.First as JProperty;
+                            while (field != null)
+                            {
+                                if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
+                                    model.Provider = (Provider)config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
+                                    break;
+                                }
+                                field = field.Next as JProperty;
+                            }
+                        }
                     }
-                    field = field.Next as JProperty;
                 }
+            }
+            else
+            {
+                var provider = item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
+                if (provider != null)
+                {
+                    var field = provider.First as JProperty;
+                    while (field != null)
+                    {
+                        if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
+                            model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
+                            break;
+                        }
+                        field = field.Next as JProperty;
+                    }
+                }
+                model.Icon = new Models.Icon(item.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
             }
 
             var position = item.GetValue(Json.PropertyName<Model>(nameof(Model.Position)), StringComparison.InvariantCultureIgnoreCase);

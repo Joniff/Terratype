@@ -79,8 +79,7 @@ namespace Terratype
             {
                 options = new Options()
                 {
-                    MapSetId = Counter,
-                    Height = DefaultHeight
+                    MapSetId = Counter
                 };
             }
 
@@ -105,7 +104,8 @@ namespace Terratype
                     Provider = map.Provider,
                     Position = map.Position,
                     Zoom = map.Zoom,
-                    Icon = map.Icon
+                    Icon = map.Icon,
+                    Height = map.Height
                 };
                 if (options.Provider != null)
                 {
@@ -123,7 +123,7 @@ namespace Terratype
                 writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
                 var labelId = nameof(Terratype) + Guid.NewGuid().ToString();
-                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, options.Height ?? DefaultHeight, options.Language, labelId);
+                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height != 0 ? merge.Height : DefaultHeight, options.Language);
                 if (map != null && (label != null || map.Label != null))
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");

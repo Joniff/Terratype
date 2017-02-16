@@ -84,6 +84,6 @@ namespace Terratype.Models
             return System.Activator.CreateInstance(type) as Provider;
         }
 
-        public abstract void GetHtml(HtmlTextWriter writer, int id, Models.Model model, int height, string language, string labelId);
+        public abstract void GetHtml(HtmlTextWriter writer, int id, Models.Model model, string labelId = null, int? height = null, string language = null);
     }
 }

@@ -263,9 +263,9 @@ namespace Terratype.Providers
         /// <param name="language"></param>
         /// <param name="label"></param>
         /// <returns></returns>
-        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, int height, string language, string labelId)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {
-            const string guid = "b72310d2-7041-4234-a6c5-6c5c2fdd708e";
+            const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
             var id = nameof(Terratype) + "." + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
@@ -298,7 +298,7 @@ namespace Terratype.Providers
             }
 
             writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
-            writer.AddStyleAttribute(HtmlTextWriterStyle.Height, height.ToString() + "px");
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Height, (height != null ? height : model.Height).ToString() + "px");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
             writer.RenderEndTag();
             writer.RenderEndTag();

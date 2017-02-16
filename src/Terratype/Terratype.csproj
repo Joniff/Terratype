@@ -67,6 +67,7 @@
     <Content Include="App_Plugins\Terratype\Scripts\terratype.js" />
     <None Include="app.config" />
     <None Include="App_Plugins\Terratype\package.manifest" />
+    <None Include="App_Plugins\Terratype\Views\grid.cshtml" />
     <None Include="packages.config" />
     <None Include="Terratype.nuspec">
       <SubType>Designer</SubType>

@@ -54,7 +54,7 @@ namespace Terratype.Providers
             }
         }
 
-        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, int height, string language, string labelId)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {
             throw new NotImplementedException();
         }

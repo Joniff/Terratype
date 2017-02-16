@@ -37,6 +37,7 @@ namespace Terratype
                 data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Lookup)), StringComparison.InvariantCultureIgnoreCase));
                 data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Zoom)), StringComparison.InvariantCultureIgnoreCase));
                 data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Position)), StringComparison.InvariantCultureIgnoreCase));
+                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Height)), StringComparison.InvariantCultureIgnoreCase));
             }
             var innerConfig = config.GetValue("config") as JObject;
             data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(nameof(Models.Model.Icon)), 
