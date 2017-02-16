@@ -1,6 +1,6 @@
 ﻿<div class="ng-cloak terratype" ng-controller="terratype.grid.overlay" ng-init="init()">
     <div class="umb-el-wrap control-group">
-        <div ng-show="vm().gridOverlay.dataTypes.length != 0">
+        <div ng-show="gridOverlay.dataTypes.length != 0">
             <label for="terratype_{{identifier}}_grid_datatypes" class="control-label">
                 <localize key="terratypeGridOverlay_dataTypeLabel">Map:</localize>
                 <small>
@@ -8,10 +8,10 @@
                 </small>
             </label>
             <div class="controls">
-                <select id="terratype_{{identifier}}_grid_datatypes" ng-model="store().datatypeId" class="umb-editor" ng-change="vm().gridOverlay.setDatatype(store().datatypeId)" ng-options="p.id as p.name for p in vm().gridOverlay.dataTypes"></select>
+                <select id="terratype_{{identifier}}_grid_datatypes" ng-model="store().datatypeId" class="umb-editor" ng-change="gridOverlay.setDatatype(store().datatypeId)" ng-options="p.id as p.name for p in gridOverlay.dataTypes"></select>
             </div>
         </div>
-        <div ng-show="vm().gridOverlay.dataTypes.length == 0" style="color:red;">
+        <div ng-show="gridOverlay.dataTypes.length == 0" style="color:red;">
             <localize key="terratypeGridOverlay_mapDataTypeError">No maps have been created</localize>
         </div>
     </div>
@@ -32,9 +32,9 @@
     </div>
 
     <div ng-if="config().label.enable == true && config().label.editPosition == 0" style="margin-top:5px;">
-        <umb-overlay ng-if="vm().labelOverlay.show"
-                     model="vm().labelOverlay"
-                     view="vm().labelOverlay.view"
+        <umb-overlay ng-if="active().labelOverlay.show"
+                     model="active().labelOverlay"
+                     view="vm().label.view"
                      position="right">
         </umb-overlay>
     </div>

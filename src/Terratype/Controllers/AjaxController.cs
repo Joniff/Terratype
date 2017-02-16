@@ -320,13 +320,17 @@ namespace Terratype.Controllers
             foreach (var datatype in datatypes)
             {
                 var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
-                var config = JObject.Parse(values.First());
-                var grid = config.GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
-                if (grid == null)
+                var json = JObject.Parse(values.First());
+                if (json == null)
                 {
                     continue;
                 }
-                grid = grid.GetValue("grid", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                var config = JObject.Parse(values.First()).GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                if (config == null)
+                {
+                    continue;
+                }
+                var grid = config.GetValue("grid", StringComparison.InvariantCultureIgnoreCase) as JObject;
                 if (grid == null)
                 {
                     continue;
@@ -352,7 +356,7 @@ namespace Terratype.Controllers
                     {
                         id = datatype.Id,
                         name = String.IsNullOrWhiteSpace(name) ? datatype.Name : name,
-                        config = config
+                        config = json
                     });
                 }
             }

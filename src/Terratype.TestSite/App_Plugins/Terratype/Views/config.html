@@ -1,4 +1,4 @@
-﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="vm().initConfig()" ng-show="!vm().loading">
+﻿<div class="ng-cloak terratype" ng-controller="terratype" ng-init="terratype.initConfig()" ng-show="!vm().loading">
     <div class="umb-el-wrap control-group">
         <div ng-show="vm().providers.length != 0">
             <label for="terratype_{{identifier}}_provider" class="control-label">
@@ -8,7 +8,7 @@
                 </small>
             </label>
             <div class="controls">
-                <select id="terratype_{{identifier}}_provider" ng-model="config().provider.id" class="umb-editor" ng-change="vm().setProvider(config().provider.id)" ng-options="p.id as p.name for p in vm().providers"></select>
+                <select id="terratype_{{identifier}}_provider" ng-model="config().provider.id" class="umb-editor" ng-change="terratype.setProvider(config().provider.id)" ng-options="p.id as p.name for p in vm().providers"></select>
             </div>
         </div>
         <div ng-show="vm().providers.length == 0" style="color:red;">
@@ -36,7 +36,7 @@
                     </small>
                 </label>
                 <div class="controls" ng-show="config && vm().provider.coordinateSystems && vm().provider.coordinateSystems.length != 0">
-                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="store().position.id" class="umb-editor" ng-change="vm().setCoordinateSystem(store().position.id)" ng-disabled="!config().provider.id" ng-options="c.id as c.name for c in vm().provider.coordinateSystems">
+                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="store().position.id" class="umb-editor" ng-change="terratype.setCoordinateSystem(store().position.id)" ng-disabled="!config().provider.id" ng-options="c.id as c.name for c in vm().provider.coordinateSystems">
                     </select>
                     <div>
                         <small ng-show="store().position.id">
@@ -88,7 +88,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <select id="terratype_{{identifier}}_icon_predefine" ng-model="config().icon.id" class="umb-editor" ng-change="vm().iconPredefineChange(config().icon.id)" ng-options="p.id as p.name for p in vm().icon.predefine">
+                    <select id="terratype_{{identifier}}_icon_predefine" ng-model="config().icon.id" class="umb-editor" ng-change="terratype.iconPredefineChange(config().icon.id)" ng-options="p.id as p.name for p in terratype.icon.predefine">
                     </select>
                 </div>
             </div>
@@ -101,7 +101,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="text" id="terratype_{{identifier}}_icon_url" ng-model="config().icon.url" class="umb-editor umb-textstring textstring" ng-change="vm().iconImageChange(config().icon.url)" localize="placeholder" placeholder="@terratypeConfig_iconUrlPlaceholder" spellcheck=false />
+                    <input type="text" id="terratype_{{identifier}}_icon_url" ng-model="config().icon.url" class="umb-editor umb-textstring textstring" ng-change="terratype.iconImageChange(config().icon.url)" localize="placeholder" placeholder="@terratypeConfig_iconUrlPlaceholder" spellcheck=false />
                     <div ng-show="vm().icon.urlFailed && vm().icon.urlFailed != ''">
                         <small style="color:red;">
                             <localize key="terratypeConfig_iconUrlError">Error:</localize> {{vm().icon.urlFailed}}
@@ -117,7 +117,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_icon_width" ng-model="config().icon.size.width" class="umb-editor" ng-change="vm().iconCustom()" localize="placeholder" placeholder="@terratypeConfig_iconWidthPlaceholder" />
+                    <input type="number" id="terratype_{{identifier}}_icon_width" ng-model="config().icon.size.width" class="umb-editor" ng-change="terratype.iconCustom()" localize="placeholder" placeholder="@terratypeConfig_iconWidthPlaceholder" />
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
@@ -128,7 +128,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_icon_height" ng-model="config().icon.size.height" class="umb-editor" ng-change="vm().iconCustom()" localize="placeholder" placeholder="@terratypeConfig_iconHeightPlaceholder" />
+                    <input type="number" id="terratype_{{identifier}}_icon_height" ng-model="config().icon.size.height" class="umb-editor" ng-change="terratype.iconCustom()" localize="placeholder" placeholder="@terratypeConfig_iconHeightPlaceholder" />
                 </div>
             </div>
             <div class="umb-el-wrap control-group">
@@ -139,12 +139,12 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="vm().icon.anchor.horizontal.isManual" ng-value="true" localize="title" title="@terratypeConfig_iconHorizontalAnchorManualPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.manual; vm().iconCustom()" />
-                    <input type="number" ng-model="vm().icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="vm().icon.anchor.horizontal.isManual == false" localize="placeholder" placeholder="@terratypeConfig_iconHorizontalAnchorManualPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.manual; vm().iconCustom()" />
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="vm().icon.anchor.horizontal.isManual" ng-value="true" localize="title" title="@terratypeConfig_iconHorizontalAnchorManualPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.manual; terratype.iconCustom()" />
+                    <input type="number" ng-model="vm().icon.anchor.horizontal.manual" class="umb-editor" ng-disabled="vm().icon.anchor.horizontal.isManual == false" localize="placeholder" placeholder="@terratypeConfig_iconHorizontalAnchorManualPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.manual; terratype.iconCustom()" />
                 </div>
                 <div class="controls" style="margin-top:3px;">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="vm().icon.anchor.horizontal.isManual" ng-value="false" localize="title" title="@terratypeConfig_iconHorizontalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; vm().iconCustom()" />
-                    <select ng-model="vm().icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.horizontal.isManual == true" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; vm().iconCustom()">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="vm().icon.anchor.horizontal.isManual" ng-value="false" localize="title" title="@terratypeConfig_iconHorizontalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; terratype.iconCustom()" />
+                    <select ng-model="vm().icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.horizontal.isManual == true" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; terratype.iconCustom()">
                         <option value="left" localize="label" label="@terratypeConfig_iconHorizontalAnchorLeft"></option>
                         <option value="center" localize="label" label="@terratypeConfig_iconHorizontalAnchorCenter"></option>
                         <option value="right" localize="label" label="@terratypeConfig_iconHorizontalAnchorRight"></option>
@@ -165,12 +165,12 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="vm().icon.anchor.vertical.isManual" ng-value="true" localize="title" title="@terratypeConfig_iconVerticalAnchorManualPlaceholder" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.manual; vm().iconCustom()" />
-                    <input type="number" ng-model="vm().icon.anchor.vertical.manual" class="umb-editor" ng-disabled="vm().icon.anchor.vertical.isManual == false" localize="placeholder" placeholder="@terratypeConfig_iconVerticalAnchorManualPlaceholder" ng-change="store().icon.anchor.vertical = vm().icon.anchor.vertical.manual; vm().iconCustom()" />
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="vm().icon.anchor.vertical.isManual" ng-value="true" localize="title" title="@terratypeConfig_iconVerticalAnchorManualPlaceholder" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.manual; terratype.iconCustom()" />
+                    <input type="number" ng-model="vm().icon.anchor.vertical.manual" class="umb-editor" ng-disabled="vm().icon.anchor.vertical.isManual == false" localize="placeholder" placeholder="@terratypeConfig_iconVerticalAnchorManualPlaceholder" ng-change="store().icon.anchor.vertical = vm().icon.anchor.vertical.manual; terratype.iconCustom()" />
                 </div>
                 <div class="controls" style="margin-top:3px;">
-                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="vm().icon.anchor.vertical.isManual" ng-value="false" localize="title" title="@iconVerticalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; vm().iconCustom()" />
-                    <select ng-model="vm().icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.vertical.isManual == true" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; vm().iconCustom()">
+                    <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="vm().icon.anchor.vertical.isManual" ng-value="false" localize="title" title="@iconVerticalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; terratype.iconCustom()" />
+                    <select ng-model="vm().icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.vertical.isManual == true" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; terratype.iconCustom()">
                         <option value="top" localize="label" label="@terratypeConfig_iconVerticalAnchorTop"></option>
                         <option value="center" localize="label" label="@terratypeConfig_iconVerticalAnchorCenter"></option>
                         <option value="bottom" localize="label" label="@terratypeConfig_iconVerticalAnchorBottom"></option>
@@ -222,7 +222,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <select id="terratype_{{identifier}}_label" ng-model="config().label.id" class="umb-editor" ng-change="vm().setLabel(config().label.id)" ng-options="p.id as p.name for p in vm().labels">
+                    <select id="terratype_{{identifier}}_label" ng-model="config().label.id" class="umb-editor" ng-change="terratype.setLabel(config().label.id)" ng-options="p.id as p.name for p in vm().labels">
                     </select>
                 </div>
             </div>

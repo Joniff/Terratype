@@ -62,14 +62,14 @@
                 </div>
                 <div>
                     <div ng-show="vm().status.loading">
-                        <img ng-src="{{vm().images.loading}}" />
+                        <img ng-src="{{terratype.images.loading}}" />
                     </div>
                     <div ng-show="vm().status.failed">
-                        <img ng-src="{{vm().images.failed}}" />
+                        <img ng-src="{{terratype.images.failed}}" />
                         <span style="color:red;padding-right:10px;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyInvalid">Invalid API Key</localize></span>
                     </div>
                     <div ng-show="vm().status.success">
-                        <img ng-src="{{vm().images.success}}" />
+                        <img ng-src="{{terratype.images.success}}" />
                         <span style="color:green;"><localize key="terratypeGoogleMapsV3ConfigDefinition_apiKeyValid">API Key is valid</localize></span>
                     </div>
                     <div ng-show="vm().status.reload">

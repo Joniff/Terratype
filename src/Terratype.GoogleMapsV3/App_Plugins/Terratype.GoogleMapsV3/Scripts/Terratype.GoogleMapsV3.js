@@ -855,7 +855,7 @@
     var provider = {
         identifier: identifier,
         datumWait: 330,
-        init: function (id, urlProvider, model, config, view, updateView) {
+        boot: function (id, urlProvider, model, config, view, updateView) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -1076,7 +1076,8 @@
                                     content: label.content
                                 });
                             }
-                        }
+                        },
+                        destroy: scope.destroy
                     }
                 },
                 destroy: function () {
