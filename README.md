@@ -4,7 +4,7 @@
 Map datatype for Umbraco V7 
 
 ### Why? ###
-Wish to give your content editors easy Maps to set real world locations. 
+Wish to give your content editors or grid editors easy Maps to set real world locations. 
  
 ### Usage ###
 1. Install Terratype framework package via Nuget
@@ -33,6 +33,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.5**
+
+	Added native Grid editor to allow terratype maps to be added/edited and rendered inside grids (With no coding required)
+	Added native Datum values to each Coordinate System
+
+	
 **1.0.4**
 
 	Fixed error with Null types in assemblies
