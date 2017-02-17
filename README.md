@@ -33,6 +33,10 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.6**
+
+	Error when creating Google Maps without an API Key present
+
 **1.0.5**
 
 	Added native Grid editor to allow terratype maps to be added/edited and rendered inside grids (With no coding required)

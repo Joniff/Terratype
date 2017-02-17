@@ -48,10 +48,7 @@
     <Compile Include="LeafletV1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Plugins\Terratype.LeafletV1\Scripts\" />
-    <Folder Include="App_Plugins\Terratype.LeafletV1\Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
       <Project>{5034528f-401c-4fd4-8f42-23b378c7140d}</Project>
@@ -63,8 +60,25 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\Terratype.LeafletV1\Css\leaflet.css" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers-2x.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\Logo.png" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\marker-icon-2x.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\marker-icon.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\marker-shadow.png" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-providers.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-src.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV3.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\editor.apperance.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\grid.apperance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

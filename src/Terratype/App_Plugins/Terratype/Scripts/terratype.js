@@ -252,6 +252,10 @@
                     $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
                         $scope.store, $scope.config, $scope.vm, function () {
                             $scope.$apply();
+                        }, function (key, done) {
+                            localizationService.localize(key).then(function (value) {
+                                done(value);
+                            })
                         });
                     $scope.vm().provider = $scope.vm().providers[index];
                     $scope.vm().provider.events.setProvider();
@@ -805,6 +809,10 @@
                             $scope.vm().provider.events = $scope.vm().provider.boot(id, $scope.terratype.urlProvider,
                                 $scope.store, $scope.config, $scope.vm, function () {
                                     $scope.$apply();
+                                }, function (key, done) {
+                                    localizationService.localize(key).then(function (value) {
+                                        done(value);
+                                    })
                                 });
                             if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
                                 with ({

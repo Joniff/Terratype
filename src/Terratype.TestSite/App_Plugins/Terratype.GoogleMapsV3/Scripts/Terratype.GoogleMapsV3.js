@@ -855,7 +855,7 @@
     var provider = {
         identifier: identifier,
         datumWait: 330,
-        boot: function (id, urlProvider, model, config, view, updateView) {
+        boot: function (id, urlProvider, model, config, view, updateView, translate) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -1105,21 +1105,22 @@
                     gm.destroySubsystem();
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        var counter = 100;      //  Put in place incase of horrible errors
+                        var counter = 0;      //  Put in place incase of horrible errors
 
                         var timer = setInterval(function () {
-                            var child = div.firstChild;
-                            if (child && counter != 0) {
-                                counter--;
-                                try {
-                                    div.removeChild(child);
-                                }
-                                catch (oh) {
-                                    //  Swallow errors
-                                }
-                            } else {
+                            if (counter++ > 100 || div.children.length == 0) {
                                 clearInterval(timer);
                                 scope.loadMap.call(scope);
+                            }
+                            try
+                            {
+                                var child = div.firstChild;
+                                if (child) {
+                                    div.removeChild(child);
+                                }
+                            }
+                            catch (oh) {
+                                counter = 100;
                             }
                         }, 1);
                     } else {

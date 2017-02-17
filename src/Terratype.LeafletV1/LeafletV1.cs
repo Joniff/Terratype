@@ -22,7 +22,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "Leaflet V1";
+                return "terratypeLeafletV1_name";                   //  Value in language file
             }
         }
 
@@ -38,7 +38,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "http://leafletjs.com/index.html";
+                return "terratypeLeafletV1_referenceUrl";            //  Value in language file
             }
         }
         public override IDictionary<string, Type> CoordinateSystems
@@ -46,10 +46,12 @@ namespace Terratype.Providers
             get
             {
                 var wgs84 = new CoordinateSystems.Wgs84();
+                var gcj02 = new CoordinateSystems.Gcj02();
 
                 return new Dictionary<string, Type>
                 {
-                    { wgs84.Id, wgs84.GetType() }
+                    { wgs84.Id, wgs84.GetType() },
+                    { gcj02.Id, gcj02.GetType() }
                 };
             }
         }

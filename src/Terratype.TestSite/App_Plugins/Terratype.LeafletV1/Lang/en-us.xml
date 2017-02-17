@@ -4,11 +4,86 @@
     <name>Jonathan Richards</name>
   </creator>
 
-  <area alais="terratypeLeafletV1">
-    <key alias="description">Open source map library that allows various Map providers, including OpenStreetMap, via Leaflet plugins</key>
+  <area alias="terratypeLeafletV1">
+    <key alias="name">OpenStreetMap (Leaflet V1)</key>
+    <key alias="description">Open source map library that allows various Map providers, including OpenStreetMap</key>
+    <key alias="referenceUrl">http://leafletjs.com/index.html</key>
   </area>
-  
+
   <area alias="terratypeLeafletV1ConfigApperance">
+  </area>
+
+  <area alias="terratypeLeafletV1OpenStreetMap">
+    <key alias="name">OpenStreetMap</key>
+    <key alias="description"><![CDATA[As well as being a collaborative project to create a free editable map of the world, where OpenStreetMap is normally accessed via paid for Tile Servers ran by other groups. OpenStreetMap can also be used as a Tile Server, but is <a href="https://operations.osmfoundation.org/policies/tiles/">severely restricted to non-commercial limited fair usage rules</a>]]></key>
+
+    <key alias="mapnikName">Mapnik</key>
+    <key alias="mapnikAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+
+    <key alias="blackwhiteName">Black and White</key>
+    <key alias="blackwhiteAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+
+    <key alias="deName">Germany</key>
+    <key alias="deAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap Deutschland</a>]]></key>
+
+    <key alias="deName">France</key>
+    <key alias="deAttribution"><![CDATA[&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+
+    <key alias="hotName">Humanitarian OpenStreetMap Team</key>
+    <key alias="hotAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>]]></key>
+  </area>
+
+  <area alias="terratypeLeafletV1OpenSeaMap">
+    <key alias="name">OpenSeaMap</key>
+    <key alias="description"><![CDATA[Free <a href="http://wiki.openstreetmap.org/wiki/OpenSeaMap">nautical database</a> adding nautical and tourism information relevant to sailors. Including beacons, bouys, ports, waypoints, repair shops and ship supplies. Based off <a href="http://wiki.openstreetmap.org/wiki/Mapnik">Mapnik</a>.]]></key>
+
+    <key alias="standardName">Standard</key>
+    <key alias="standardAttribution"><![CDATA[Map data: &copy; <a href="http://www.openseamap.org">OpenSeaMap</a> contributors]]></key>
+  </area>
+
+  <area alias="terratypeLeafletV1OpenTopoMap">
+    <key alias="name">OpenTopoMap</key>
+    <key alias="description"><![CDATA[<a href="http://wiki.openstreetmap.org/wiki/OpenTopoMap">Topographic maps</a> focussing on high contrast contour lines and hillshading. Familiar to Germans]]></key>
+
+    <key alias="standardName">Standard</key>
+    <key alias="standardAttribution"><![CDATA[Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)]]></key>
+  </area>
+
+  <area alias="terratypeLeafletV1Thunderforest">
+    <key alias="name">Thunderforest</key>
+    <key alias="description"><![CDATA[The <a href="https://www.thunderforest.com/">Thunderforest</a> Platform is the 4th major revision of the systems that powers OpenCycleMap. With mapnik and postgis at its core, supported with mod_tile, squid, and a host of other components, it provides robust, fast, reliable and wonderful-looking maps. The Thunderforest Platform has enabled me to expand to easily host multiple map styles and serve millions of requests per month to clients all around the globe.]]></key>
+
+    <key alias="openCycleMapName">OpenCycleMap</key>
+    <key alias="openCycleMapAttribution"><![CDATA[&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+
+    <key alias="transportName">Transport</key>
+    <key alias="transportAttribution"><![CDATA[&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+  </area>
+
+  <area alias="terratypeLeafletV1TianDiTu">
+    <key alias="name">Tianditu</key>
+    <key alias="description"><![CDATA[China’s State Bureau of Surveying and Mapping (SBSM) official <a href="https://en.wikipedia.org/wiki/Tianditu">web mapping service</a>]]></key>
+
+    <key alias="basicName">Basic</key>
+    <key alias="basicAttribution"></key>
+
+    <key alias="satelliteName">Satellite</key>
+    <key alias="satelliteAttribution"></key>
+
+    <key alias="terrainName">Terrain</key>
+    <key alias="terrainAttribution"></key>
+  </area>
+
+  <area alias="terratypeLeafletV1GoogleCN">
+    <key alias="name">Google China</key>
+    <key alias="description"><![CDATA[Google's Map offering in China, complying with Chinese state law regarding coordinates systems]]></key>
+
+    <key alias="basicName">Basic</key>
+    <key alias="basicAttribution"><![CDATA[Map data &copy;2017]]></key>
+
+    <key alias="satelliteName">Satellite</key>
+    <key alias="satelliteAttribution"><![CDATA[Map data &copy;2017]]></key>
+
   </area>
 
 </language>
