@@ -1306,9 +1306,9 @@
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'zoom_changed', function () {
                                             scope.eventZoom.call(scope);
                                         }));
-                                        scope.gevents.push(root.google.maps.event.addListenerOnce(scope.gmap, 'tilesloaded', function () {
+                                        root.google.maps.event.addListenerOnce(scope.gmap, 'tilesloaded', function () {
                                             scope.eventRefresh.call(scope);
-                                        }));
+                                        });
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'resize', function () {
                                             scope.eventCheckRefresh.call(scope);
                                         }));
@@ -1333,7 +1333,7 @@
                                                 scope.ginfo.open(scope.gmap, scope.gmarker);
                                             }
                                         }));
-                                        root.google.maps.event.addListener(scope.gmap, 'click', function () {
+                                        scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'click', function () {
                                             if (scope.ignoreEvents > 0) {
                                                 return;
                                             }
@@ -1341,7 +1341,7 @@
                                                 scope.ginfo.close();
                                             }
                                             scope.callEvent('map-click');
-                                        });
+                                        }));
 
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmarker, 'dragend', function (marker) {
                                             scope.eventDrag.call(scope, marker);
