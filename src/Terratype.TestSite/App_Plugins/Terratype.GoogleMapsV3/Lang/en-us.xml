@@ -140,6 +140,7 @@
 
     <key alias="apiKeyLabel">Google API Key:</key>
     <key alias="apiKeyDescription"><![CDATA[Enter your <a href="https://console.developers.google.com/apis/credentials">Google Map API Key</a> which is linked to this domain. Using localhost with a port number also requires a key. Deploying this Umbraco to other domains requires those domains to be linked to this Google Map API key too]]></key>
+    <key alias="apiKeyPlaceholder">Google API Key</key>
     <key alias="apiKeyGet">[Get a key]</key>
     <key alias="apiKeyInvalid">Invalid API Key</key>
     <key alias="apiKeyValid">API Key is valid</key>

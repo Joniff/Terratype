@@ -195,231 +195,6 @@
                 });
             }
         },
-        tileServers: [
-            {
-                id: 'OpenStreetMap',
-                name: 'terratypeLeafletV1OpenStreetMap_name',
-                description: 'terratypeLeafletV1OpenStreetMap_description',
-                key: {
-                    enable: false,
-                },
-                coordinateSystems: ['WGS84'],
-                variants: [
-                    {
-                        url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        id: 'OpenStreetMap.Mapnik',
-                        name: 'terratypeLeafletV1OpenStreetMap_mapnikName',
-                        attribution: 'terratypeLeafletV1OpenStreetMap_mapnikAttribution',
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options:{
-                            subdomains: 'abc'
-                        }
-                    },
-                    {
-                        url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
-                        id: 'OpenStreetMap.blackwhite',
-                        name: 'terratypeLeafletV1OpenStreetMap_blackwhiteName',
-                        attribution: 'terratypeLeafletV1OpenStreetMap_blackwhiteAttribution',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options:{
-                            subdomains: 'abc'
-                        }
-                    },
-                    {
-                        url: 'http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
-                        id: 'OpenStreetMap.de',
-                        name: 'terratypeLeafletV1OpenStreetMap_deName',
-                        attribution: 'terratypeLeafletV1OpenStreetMap_deAttribution',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options:{
-                            subdomains: 'abc'
-                        }
-                    },
-                    {
-                        url: '//{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-                        id: 'OpenStreetMap.fr',
-                        name: 'terratypeLeafletV1OpenStreetMap_frName',
-                        attribution: 'terratypeLeafletV1OpenStreetMap_frAttribution',
-                        minZoom: 0,
-                        maxZoom: 20,
-                        options:{
-                            subdomains: 'abc'
-                        }
-                    },
-                    {
-                        url: '//{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-                        id: 'OpenStreetMap.hot',
-                        name: 'terratypeLeafletV1OpenStreetMap_hotName',
-                        attribution: 'terratypeLeafletV1OpenStreetMap_hotAttribution',
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options:{
-                            subdomains: 'abc'
-                        }
-                    }
-                ]
-            },
-            {
-                id: 'OpenSeaMap',
-                name: 'terratypeLeafletV1OpenSeaMap_name',
-                description: 'terratypeLeafletV1OpenSeaMap_description',
-                key: {
-                    enable: false,
-                },
-                coordinateSystems: ['WGS84'],
-                variants: [
-                    {
-                        url: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
-                        id: 'OpenSeaMap.standard',
-                        name: 'terratypeLeafletV1OpenSeaMap_standardName',
-                        attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: ''
-                        }
-                    }
-                ]
-            },
-            {
-                id: 'OpenTopoMap',
-                name: 'terratypeLeafletV1OpenTopoMap_name',
-                description: 'terratypeLeafletV1OpenTopoMap_description',
-                key: {
-                    enable: false,
-                },
-                coordinateSystems: ['WGS84'],
-                variants: [
-                    {
-                        url: '//{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-                        id: 'OpenTopoMap.standard',
-                        name: 'terratypeLeafletV1OpenSeaMap_standardName',
-                        attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
-                        minZoom: 0,
-                        maxZoom: 17,
-                        options: {
-                            subdomains: 'abc'
-                        }
-                    }
-                ]
-            },
-            {
-                id: 'Thunderforest',
-                name: 'terratypeLeafletV1Thunderforest_name',
-                description: 'terratypeLeafletV1Thunderforest_description',
-                key: {
-                    enable: true,
-                    name: 'terratypeLeafletV1Thunderforest_keyName',
-                    description: 'terratypeLeafletV1Thunderforest_keyDescription',
-                    url: 'terratypeLeafletV1Thunderforest_keyUrl'
-                },
-                coordinateSystems: ['WGS84'],
-                variants: [
-                    {
-                        url: '//{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={key}',
-                        id: 'Thunderforest.OpenCycleMap',
-                        name: 'terratypeLeafletV1Thunderforest_openCycleMapName',
-                        attribution: 'terratypeLeafletV1Thunderforest_openCycleMapAttribution',
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options: {
-                            subdomains: 'abc'
-                        }
-                    },
-                    {
-                        url: '//{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey={key}',
-                        id: 'Thunderforest.Transport',
-                        name: 'terratypeLeafletV1Thunderforest_transportName',
-                        attribution: 'terratypeLeafletV1Thunderforest_transportAttribution',
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options: {
-                            subdomains: 'abc'
-                        }
-                    }
-                ]
-            },
-            {
-                id: 'TianDiTu',
-                name: 'terratypeLeafletV1TianDiTu_name',
-                description: 'terratypeLeafletV1TianDiTu_description',
-                key: {
-                    enable: false,
-                },
-                coordinateSystems: ['GCJ02'],
-                variants: [
-                    {
-                        url: 'http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}',
-                        id: 'TianDiTu.Basic',
-                        name: 'terratypeLeafletV1TianDiTu_basicName',
-                        attribution: 'terratypeLeafletV1TianDiTu_basicName',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: '01234567'
-                        }
-                    },
-                    {
-                        url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
-                        id: 'TianDiTu.Satellite',
-                        name: 'terratypeLeafletV1TianDiTu_satelliteName',
-                        attribution: 'terratypeLeafletV1TianDiTu_satelliteName',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: '01234567'
-                        }
-                    },
-                    {
-                        url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
-                        id: 'TianDiTu.Terrain',
-                        name: 'terratypeLeafletV1TianDiTu_terrainName',
-                        attribution: 'terratypeLeafletV1TianDiTu_terrainName',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: '01234567'
-                        }
-                    }
-                ]
-            },
-            {
-                id: 'GoogleCN',
-                name: 'terratypeLeafletV1GoogleCN_name',
-                description: 'terratypeLeafletV1GoogleCN_description',
-                key: {
-                    enable: false,
-                },
-                coordinateSystems: ['GCJ02'],
-                variants: [
-                    {
-                        url: 'http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}',
-                        id: 'GoogleCN.Basic',
-                        name: 'terratypeLeafletV1GoogleCN_basicName',
-                        attribution: 'terratypeLeafletV1GoogleCN_basicName',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: ''
-                        }
-                    },
-                    {
-                        url: 'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
-                        id: 'GoogleCN.Satellite',
-                        name: 'terratypeLeafletV1GoogleCN_satelliteName',
-                        attribution: 'terratypeLeafletV1GoogleCN_satelliteName',
-                        minZoom: 0,
-                        maxZoom: 18,
-                        options: {
-                            subdomains: ''
-                        }
-                    }
-                ]
-            }
-        ],
         mergeJson: function (a, b) {        //  Does not merge arrays
             var mergy = function (c) {
                 var t = {};
@@ -449,6 +224,240 @@
     var provider = {
         identifier: identifier,
         datumWait: 330,
+        mapSource: [
+            {
+                id: 'OpenStreetMap',
+                name: 'terratypeLeafletV1OpenStreetMap_name',
+                description: 'terratypeLeafletV1OpenStreetMap_description',
+                key: {
+                    enable: false,
+                },
+                tileServers: [
+                    {
+                        url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        id: 'OpenStreetMap.Mapnik',
+                        name: 'terratypeLeafletV1OpenStreetMap_mapnikName',
+                        attribution: 'terratypeLeafletV1OpenStreetMap_mapnikAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options:{
+                            subdomains: 'abc'
+                        }
+                    },
+                    {
+                        url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+                        id: 'OpenStreetMap.blackwhite',
+                        name: 'terratypeLeafletV1OpenStreetMap_blackwhiteName',
+                        attribution: 'terratypeLeafletV1OpenStreetMap_blackwhiteAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options:{
+                            subdomains: 'abc'
+                        }
+                    },
+                    {
+                        url: 'http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
+                        id: 'OpenStreetMap.de',
+                        name: 'terratypeLeafletV1OpenStreetMap_deName',
+                        attribution: 'terratypeLeafletV1OpenStreetMap_deAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options:{
+                            subdomains: 'abc'
+                        }
+                    },
+                    {
+                        url: '//{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+                        id: 'OpenStreetMap.fr',
+                        name: 'terratypeLeafletV1OpenStreetMap_frName',
+                        attribution: 'terratypeLeafletV1OpenStreetMap_frAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 20,
+                        options:{
+                            subdomains: 'abc'
+                        }
+                    },
+                    {
+                        url: '//{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+                        id: 'OpenStreetMap.hot',
+                        name: 'terratypeLeafletV1OpenStreetMap_hotName',
+                        attribution: 'terratypeLeafletV1OpenStreetMap_hotAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options:{
+                            subdomains: 'abc'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'OpenSeaMap',
+                name: 'terratypeLeafletV1OpenSeaMap_name',
+                description: 'terratypeLeafletV1OpenSeaMap_description',
+                key: {
+                    enable: false,
+                },
+                tileServers: [
+                    {
+                        url: 'http://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+                        id: 'OpenSeaMap.standard',
+                        name: 'terratypeLeafletV1OpenSeaMap_standardName',
+                        attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: ''
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'OpenTopoMap',
+                name: 'terratypeLeafletV1OpenTopoMap_name',
+                description: 'terratypeLeafletV1OpenTopoMap_description',
+                key: {
+                    enable: false,
+                },
+                tileServers: [
+                    {
+                        url: '//{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                        id: 'OpenTopoMap.standard',
+                        name: 'terratypeLeafletV1OpenSeaMap_standardName',
+                        attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 17,
+                        options: {
+                            subdomains: 'abc'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'Thunderforest',
+                name: 'terratypeLeafletV1Thunderforest_name',
+                description: 'terratypeLeafletV1Thunderforest_description',
+                key: {
+                    enable: true,
+                    name: 'terratypeLeafletV1Thunderforest_keyName',
+                    description: 'terratypeLeafletV1Thunderforest_keyDescription',
+                    placeholder: 'terratypeLeafletV1Thunderforest_keyPlaceholder',
+                    url: 'terratypeLeafletV1Thunderforest_keyUrl'
+                },
+                tileServers: [
+                    {
+                        url: '//{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey={key}',
+                        id: 'Thunderforest.OpenCycleMap',
+                        name: 'terratypeLeafletV1Thunderforest_openCycleMapName',
+                        attribution: 'terratypeLeafletV1Thunderforest_openCycleMapAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abc'
+                        }
+                    },
+                    {
+                        url: '//{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey={key}',
+                        id: 'Thunderforest.Transport',
+                        name: 'terratypeLeafletV1Thunderforest_transportName',
+                        attribution: 'terratypeLeafletV1Thunderforest_transportAttribution',
+                        coordinateSystems: ['WGS84'],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abc'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'TianDiTu',
+                name: 'terratypeLeafletV1TianDiTu_name',
+                description: 'terratypeLeafletV1TianDiTu_description',
+                key: {
+                    enable: false,
+                },
+                tileServers: [
+                    {
+                        url: 'http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}',
+                        id: 'TianDiTu.Basic',
+                        name: 'terratypeLeafletV1TianDiTu_basicName',
+                        attribution: 'terratypeLeafletV1TianDiTu_basicName',
+                        coordinateSystems: ['GCJ02'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: '01234567'
+                        }
+                    },
+                    {
+                        url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
+                        id: 'TianDiTu.Satellite',
+                        name: 'terratypeLeafletV1TianDiTu_satelliteName',
+                        attribution: 'terratypeLeafletV1TianDiTu_satelliteName',
+                        coordinateSystems: ['GCJ02'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: '01234567'
+                        }
+                    },
+                    {
+                        url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
+                        id: 'TianDiTu.Terrain',
+                        name: 'terratypeLeafletV1TianDiTu_terrainName',
+                        attribution: 'terratypeLeafletV1TianDiTu_terrainName',
+                        coordinateSystems: ['GCJ02'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: '01234567'
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'GoogleCN',
+                name: 'terratypeLeafletV1GoogleCN_name',
+                description: 'terratypeLeafletV1GoogleCN_description',
+                key: {
+                    enable: false,
+                },
+                tileServers: [
+                    {
+                        url: 'http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}',
+                        id: 'GoogleCN.Basic',
+                        name: 'terratypeLeafletV1GoogleCN_basicName',
+                        attribution: 'terratypeLeafletV1GoogleCN_basicName',
+                        coordinateSystems: ['GCJ02'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: ''
+                        }
+                    },
+                    {
+                        url: 'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
+                        id: 'GoogleCN.Satellite',
+                        name: 'terratypeLeafletV1GoogleCN_satelliteName',
+                        attribution: 'terratypeLeafletV1GoogleCN_satelliteName',
+                        coordinateSystems: ['GCJ02'],
+                        minZoom: 0,
+                        maxZoom: 18,
+                        options: {
+                            subdomains: ''
+                        }
+                    }
+                ]
+            }
+        ],
         boot: function (id, urlProvider, model, config, view, updateView, translate) {
             var scope = {
                 events: [],
@@ -669,7 +678,6 @@
                 visible: false,
                 divwait: 0,
                 superWaiter: null,
-                translateCounter: 0,
                 layers: null,
                 minZoom: null,
                 maxZoom: null,
@@ -742,123 +750,115 @@
 
                                         for (var l = 0; l != config().provider.layers.length; l++) {
                                             var layer = config().provider.layers[l];
-                                            for (var t1 = 0; t1 != sub.tileServers; t1++) {
-                                                var ts = sub.tileServers[t1];
-                                                for (var t2 = 0; t2 != ts.variants.length; t2++) {
-                                                    var v = ts.variants[t2];
+                                            for (var t1 = 0; t1 != provider.mapSource; t1++) {
+                                                var ts = provider.mapSource[t1];
+                                                for (var t2 = 0; t2 != ts.tileServers.length; t2++) {
+                                                    var v = ts.tileServers[t2];
                                                     if (v.id == layer.id && layer.minZoom <= v.maxZoom && layer.maxZoom >= v.minZoom) {
                                                         var newZoom = (layer.maxZoom > v.maxZoom) ? v.maxZoom : layer.maxZoom;
-                                                        scope.translateCounter++;
-                                                        (function (layer, v, zoom, maxZoom) {
-                                                            translate(v.attribution, function (value) {
-                                                                scope.translateCounter--;
-                                                                var m = JSON.parse(JSON.stringify(vv.options));
-                                                                m.minZoom = zoom < layer.minZoom ? layer.minZoom : zoom;
-                                                                if (scope.minZoom == null || m.minZoom < scope.minZoom) {
-                                                                    scope.minZoom = m.minZoom;
-                                                                }
-                                                                m.maxZoom = (layer.maxZoom > v.maxZoom) ? v.maxZoom : layer.maxZoom;
-                                                                if (scope.maxZoom == null || m.maxZoom > scope.minZoom) {
-                                                                    scope.maxZoom = m.maxZoom;
-                                                                }
-                                                                m.attribution = value;
-                                                                scope.layers.push(leaflet.tileLayer(v.url, m));
-                                                            });
-                                                        }(layer, v, zoom, maxZoom++));
+                                                        var m = JSON.parse(JSON.stringify(vv.options));
+                                                        m.minZoom = zoom < layer.minZoom ? layer.minZoom : zoom;
+                                                        if (scope.minZoom == null || m.minZoom < scope.minZoom) {
+                                                            scope.minZoom = m.minZoom;
+                                                        }
+                                                        m.maxZoom = (layer.maxZoom > v.maxZoom) ? v.maxZoom : layer.maxZoom;
+                                                        if (scope.maxZoom == null || m.maxZoom > scope.minZoom) {
+                                                            scope.maxZoom = m.maxZoom;
+                                                        }
+                                                        m.attribution = v.attribution;
+                                                        scope.layers.push(leaflet.tileLayer(v.url, m));
                                                     }
                                                 }
                                             }
                                         }
-                                    } else if (scope.translateCounter == 0) {
-                                        if (scope.gmap == null) {
-                                            if (model().zoom < scope.minZoom) {
-                                                model().zoom = scope.minZoom;
-                                            }
-                                            if (model().zoom > scope.maxZoom) {
-                                                model().zoom = scope.maxZoom;
-                                            }
-                                            var latlng = leaflet.latLng(view().position.datum.latitude, view().position.datum.longitude);
-                                            scope.gevents = [];
-                                            scope.gmap = leaflet.map(scope.div, {
-                                                center: latlng,
-                                                zoom: model().zoom,
-                                                minZoom: scope.minZoom,
-                                                maxZoom: scope.maxZoom,
-                                                layers: scope.layers
-                                            });
+                                    } else if (scope.gmap == null) {
+                                        if (model().zoom < scope.minZoom) {
+                                            model().zoom = scope.minZoom;
+                                        }
+                                        if (model().zoom > scope.maxZoom) {
+                                            model().zoom = scope.maxZoom;
+                                        }
+                                        var latlng = leaflet.latLng(view().position.datum.latitude, view().position.datum.longitude);
+                                        scope.gevents = [];
+                                        scope.gmap = leaflet.map(scope.div, {
+                                            center: latlng,
+                                            zoom: model().zoom,
+                                            minZoom: scope.minZoom,
+                                            maxZoom: scope.maxZoom,
+                                            layers: scope.layers
+                                        });
 
-                                            scope.gevents.push(scope.gmap.on('zoomend', function () {
-                                                scope.eventZoom.call(scope);
-                                            }));
-                                            scope.gevents.push(scope.gmap.on('load', function () {
-                                                scope.eventRefresh.call(scope);
-                                            }));
-                                            scope.gevents.push(scope.gmap.on('resize', function () {
-                                                scope.eventCheckRefresh.call(scope);
-                                            }));
-                                            scope.gmarker = leaflet.marker(latlng, {
-                                                draggable: true,
-                                                id: 'terratype_' + id + '_marker',
-                                                icon: sub.icon.call(sub, config().icon)
-                                            });
-                                            scope.ginfo = null;
-                                            if (model().label) {
-                                                scope.ginfo = scope.gmarker.bindPopup(model().label.content);
+                                        scope.gevents.push(scope.gmap.on('zoomend', function () {
+                                            scope.eventZoom.call(scope);
+                                        }));
+                                        scope.gevents.push(scope.gmap.on('load', function () {
+                                            scope.eventRefresh.call(scope);
+                                        }));
+                                        scope.gevents.push(scope.gmap.on('resize', function () {
+                                            scope.eventCheckRefresh.call(scope);
+                                        }));
+                                        scope.gmarker = leaflet.marker(latlng, {
+                                            draggable: true,
+                                            id: 'terratype_' + id + '_marker',
+                                            icon: sub.icon.call(sub, config().icon)
+                                        });
+                                        scope.ginfo = null;
+                                        if (model().label) {
+                                            scope.ginfo = scope.gmarker.bindPopup(model().label.content);
+                                        }
+                                        scope.gevents.push(scope.gmarker.on('click', function () {
+                                            if (scope.ignoreEvents > 0) {
+                                                return;
                                             }
-                                            scope.gevents.push(scope.gmarker.on('click', function () {
-                                                if (scope.ignoreEvents > 0) {
-                                                    return;
-                                                }
-                                                if (scope.callEvent('icon-click') && scope.ginfo) {
-                                                    scope.ginfo.openPopup();
-                                                }
-                                            }));
-                                            scope.gevents.push(scope.gmap.on('click', function () {
-                                                if (scope.ignoreEvents > 0) {
-                                                    return;
-                                                }
-                                                if (scope.ginfo) {
-                                                    scope.ginfo.closePopup();
-                                                }
-                                                scope.callEvent('map-click');
-                                            }));
+                                            if (scope.callEvent('icon-click') && scope.ginfo) {
+                                                scope.ginfo.openPopup();
+                                            }
+                                        }));
+                                        scope.gevents.push(scope.gmap.on('click', function () {
+                                            if (scope.ignoreEvents > 0) {
+                                                return;
+                                            }
+                                            if (scope.ginfo) {
+                                                scope.ginfo.closePopup();
+                                            }
+                                            scope.callEvent('map-click');
+                                        }));
 
-                                            scope.gevents.push(scope.gmarker.on('moveend', function (marker) {
-                                                scope.eventDrag.call(scope, marker);
-                                            }));
-                                            scope.setDatum.call(scope);
+                                        scope.gevents.push(scope.gmarker.on('moveend', function (marker) {
+                                            scope.eventDrag.call(scope, marker);
+                                        }));
+                                        scope.setDatum.call(scope);
 
+                                        updateView();
+                                    } else {
+                                        var newValue = element.parentElement.offsetTop;
+                                        var newSize = element.clientHeight * element.clientWidth;
+                                        var show = view().showMap;
+                                        var visible = show && scope.isElementInViewport(element);
+                                        if (newValue != 0 && show == false) {
+                                            view().showMap = true;
                                             updateView();
-                                        } else {
-                                            var newValue = element.parentElement.offsetTop;
-                                            var newSize = element.clientHeight * element.clientWidth;
-                                            var show = view().showMap;
-                                            var visible = show && scope.isElementInViewport(element);
-                                            if (newValue != 0 && show == false) {
-                                                view().showMap = true;
-                                                updateView();
-                                                setTimeout(function () {
-                                                    if (document.getElementById(scope.div).hasChildNodes() == false) {
-                                                        scope.reloadMap.call(scope);
-                                                    } else {
-                                                        scope.eventRefresh.call(scope);
-                                                    }
-                                                }, 1);
-                                            } else if (newValue == 0 && show == true) {
-                                                view().showMap = false;
-                                                scope.visible = false;
-                                            }
-                                            else if (visible == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
-                                                scope.eventRefresh.call(scope);
-                                                scope.visible = true;
-                                            } else if (visible == true && scope.visible == false) {
-                                                scope.eventRefresh.call(scope);
-                                                scope.visible = true;
-                                            } else if (visible == false && scope.visible == true) {
-                                                scope.visible = false;
-                                            }
-                                            scope.divoldsize = newSize;
+                                            setTimeout(function () {
+                                                if (document.getElementById(scope.div).hasChildNodes() == false) {
+                                                    scope.reloadMap.call(scope);
+                                                } else {
+                                                    scope.eventRefresh.call(scope);
+                                                }
+                                            }, 1);
+                                        } else if (newValue == 0 && show == true) {
+                                            view().showMap = false;
+                                            scope.visible = false;
                                         }
+                                        else if (visible == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
+                                            scope.eventRefresh.call(scope);
+                                            scope.visible = true;
+                                        } else if (visible == true && scope.visible == false) {
+                                            scope.eventRefresh.call(scope);
+                                            scope.visible = true;
+                                        } else if (visible == false && scope.visible == true) {
+                                            scope.visible = false;
+                                        }
+                                        scope.divoldsize = newSize;
                                     }
                                 }
                             });
