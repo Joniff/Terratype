@@ -9,7 +9,7 @@ namespace Terratype.Providers
     [JsonObject(MemberSerialization.OptIn)]
     public class LeafletV1 : Models.Provider
     {
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public override string Id
         {
             get
@@ -55,6 +55,33 @@ namespace Terratype.Providers
                 };
             }
         }
+
+        [JsonObject(MemberSerialization.OptIn)]
+        public class MapSourceDefinition
+        {
+            [JsonProperty(PropertyName = "id")]
+            public string Id { get; set; }
+
+            [JsonObject(MemberSerialization.OptIn)]
+            public class TileServerDefinition
+            {
+                [JsonProperty(PropertyName = "id")]
+                public string Id { get; set; }
+            }
+
+            [JsonProperty(PropertyName = "tileServer")]
+            public TileServerDefinition TileServer { get; set; }
+
+            [JsonProperty(PropertyName = "minZoom")]
+            public int MinZoom { get; set; }
+
+            [JsonProperty(PropertyName = "maxZoom")]
+            public int MaxZoom { get; set; }
+        }
+
+        [JsonProperty(PropertyName = "mapSource")]
+        public IEnumerable<MapSourceDefinition> MapSources { get; set; }
+
 
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {

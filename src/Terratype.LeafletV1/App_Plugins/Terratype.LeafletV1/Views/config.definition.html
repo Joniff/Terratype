@@ -1,50 +1,55 @@
-﻿<div ng-disabled="vm().provider.status.loading">
-    <div class="umb-el-wrap control-group">
-        <label for="terratype_{{identifier}}_leafletv1_mapSource" class="control-label">
-            <localize key="terratypeLeafletV1ConfigDefinition_mapSourceLabel">Map Source:</localize>
-            <small>
-                <localize key="terratypeLeafletV1ConfigDefinition_mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</localize>
-            </small>
-        </label>
-        <div class="controls">
-            <select id="terratype_{{identifier}}_leafletv1_mapSource" ng-model="view().provider.mapSource.id" class="umb-editor" ng-options="p.id as p.name for p in vm().provider.mapSource | orderBy: 'p.name' | filter:mapCoordinateMatch(store().position.id, p.id)" ng-change="setMapSource(view().provider.mapSource.id)">
-            </select>
-            <div ng-show="view().provider.mapSource.id">
+﻿<div ng-disabled="vm().provider.status.loading" ng-show="store().position.id">
+
+    <div ng-repeat="l in vm().provider.mapSources track by $index">
+        <div 
+
+
+
+        <div class="umb-el-wrap control-group">
+            <label for="terratype_{{identifier}}_leafletv1_mapSource_{{l}}" class="control-label">
+                <localize key="terratypeLeafletV1ConfigDefinition_mapSourceLabel">Map Source:</localize>
                 <small>
-                    <localize key="{{view().provider.mapSource.description}}">[Get a key]</localize>
+                    <localize key="terratypeLeafletV1ConfigDefinition_mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</localize>
                 </small>
+            </label>
+            <div class="controls">
+                <select id="terratype_{{identifier}}_leafletv1_mapSource_{{l}}" ng-model="l.id" class="umb-editor" ng-options="p.id as p.name for p in vm().provider.mapSource | orderBy: 'p.name' | filter:vm().provider.events.filter(store().position.id, p.id)" ng-change="vm().provider.events.setMapSource(vm().provider.mapSource.id)">
+                </select>
+                <div ng-show="vm().provider.mapSource.id">
+                    <small>
+                        {{vm().provider.mapSource.description}}
+                    </small>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="umb-el-wrap control-group" ng-show="view().provider.mapSource.id">
-        <label for="terratype_{{identifier}}_leafletv1_tileServer" class="control-label">
-            <localize key="terratypeLeafletV1ConfigDefinition_tileServerLabel">Tile Server:</localize>
-            <small>
-                <localize key="terratypeLeafletV1ConfigDefinition_tileServerDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</localize>
-            </small>
-        </label>
-        <div class="controls">
-            <select id="terratype_{{identifier}}_leafletv1_mapSource" ng-model="view().provider.mapSource.tileServer.id" class="umb-editor" ng-options="p.id as p.name for p in vm().provider.mapSource.tileServers | orderBy: 'p.name' | filter:mapCoordinateMatch(store().position.id, p.id)" ng-change="setTileServer(view().provider.mapSource.tileServer.id)"></select>
-            <div ng-show="view().provider.mapSource.id">
+        <div class="umb-el-wrap control-group" ng-show="vm().provider.mapSource.id">
+            <label for="terratype_{{identifier}}_leafletv1_tileServer" class="control-label">
+                <localize key="terratypeLeafletV1ConfigDefinition_tileServerLabel">Tile Server:</localize>
                 <small>
-                    <localize key="{{view().provider.mapSource.description}}"></localize>
+                    <localize key="terratypeLeafletV1ConfigDefinition_tileServerDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</localize>
                 </small>
+            </label>
+            <div class="controls">
+                <select id="terratype_{{identifier}}_leafletv1_mapSource" ng-model="vm().provider.mapSource.tileServer.id" class="umb-editor" ng-options="p.id as p.name for p in vm().provider.mapSource.tileServers | orderBy: 'p.name' | filter:vm().provider.events.filter(store().position.id, p.id)" ng-change="vm().provider.events.setTileServer(vm().provider.mapSource.tileServer.id)"></select>
             </div>
-        </div>
-     </div>
-    <div class="umb-el-wrap control-group" ng-show="view().provider.mapSource.key.enable == true">
-        <label for="terratype_{{identifier}}_leafletv1_key" class="control-label">
-            <localize key="{{view().provider.mapSource.key.name}}"></localize>
-            <small>
-                <localize key="{{view().provider.mapSource.key.description}}"></localize>
-            </small>
-        </label>
-        <div class="controls">
-            <input id="terratype_{{identifier}}_leafletv1_key" type="text" ng-model="config().provider.key.value" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@{{view().provider.mapSource.key.placeholder}}" spellcheck=false />
-            <div>
-                <div terratype-translate="{{view().provider.mapSource.key.url}}">
+         </div>
+        <div class="umb-el-wrap control-group" ng-show="vm().provider.mapSource.key.enable == true">
+            <label for="terratype_{{identifier}}_leafletv1_key" class="control-label">
+                <localize key="{{vm().provider.mapSource.key.name}}"></localize>
+                <small>
+                    <localize key="{{vm().provider.mapSource.key.description}}"></localize>
+                </small>
+            </label>
+            <div class="controls">
+                <input id="terratype_{{identifier}}_leafletv1_key" type="text" ng-model="config().provider.key.value" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@{{vm().provider.mapSource.key.placeholder}}" spellcheck=false />
+                <div>
+                    <div terratype-translate="{{vm().provider.mapSource.key.url}}">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <small>
+        <localize key="terratypeLeafletV1ConfigDefinition_mapSourceMessage"></localize>
+    </small>
 </div>

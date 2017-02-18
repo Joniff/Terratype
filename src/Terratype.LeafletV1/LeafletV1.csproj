@@ -73,7 +73,7 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-providers.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-src.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.js" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV3.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.apperance.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />

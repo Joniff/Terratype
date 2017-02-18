@@ -64,7 +64,7 @@
 
 
     //  Display language values that contain {{}} variables.
-    angular.module("umbraco.directives").directive('terratypeTranslate', ['$compile', 'localizationService', function ($compile, localizationService) {
+    angular.module('umbraco.directives').directive('terratypeTranslate', ['$compile', 'localizationService', function ($compile, localizationService) {
         return function (scope, element, attr) {
             attr.$observe('terratypeTranslate', function (key) {
                 localizationService.localize(key).then(function (value) {

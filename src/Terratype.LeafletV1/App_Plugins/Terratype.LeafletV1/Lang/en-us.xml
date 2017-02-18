@@ -91,9 +91,11 @@
   </area>
 
   <area alias="terratypeLeafletV1ConfigDefinition">
-    <key alias="terratypeLeafletV1ConfigDefinition_mapSourceLabel">Map Source:</key>
-    <key alias="terratypeLeafletV1ConfigDefinition_mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</key>
-
+    <key alias="mapSourceLabel">Map Source:</key>
+    <key alias="mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</key>
+    <key alias="tileServerLabel">Tile Server:</key>
+    <key alias="tileServerDescription">Server that you will be requesting image tiles from that creates the visual map</key>
+    <key alias="mapSourceMessage">LeafletV1 allows multiple map sources to be used at different map resolutions. So as you zoom in or out, the contents of the map can come from different servers. The reason to do this, is that many of the free servers only allow resolution upto a certain zoom level. Or a map source will only provide maps at specific resolution and expect other sources to be used at other zoom levels</key>
   </area>
   
 </language>

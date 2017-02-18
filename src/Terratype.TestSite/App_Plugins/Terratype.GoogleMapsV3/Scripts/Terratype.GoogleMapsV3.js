@@ -855,7 +855,7 @@
     var provider = {
         identifier: identifier,
         datumWait: 330,
-        boot: function (id, urlProvider, model, config, view, updateView, translate) {
+        boot: function (id, urlProvider, store, config, vm, updateView, translate) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -911,13 +911,13 @@
                     }
                 },
                 initValues: function () {
-                    if (!model().position.datum) {
-                        model().position.datum = scope.defaultConfig.position.datum;
+                    if (!store().position.datum) {
+                        store().position.datum = scope.defaultConfig.position.datum;
                     }
-                    view().position.datum = scope.parse.call(scope, model().position.datum);
+                    vm().position.datum = scope.parse.call(scope, store().position.datum);
 
-                    if (!model().zoom) {
-                        model().zoom = scope.defaultConfig.zoom;
+                    if (!store().zoom) {
+                        store().zoom = scope.defaultConfig.zoom;
                     }
                     if (!config().provider) {
                         config().provider = scope.defaultConfig.provider;
@@ -934,12 +934,12 @@
                 },
                 init: function () {
                     //event.cancel(id);
-                    if (model().position) {
-                        if (typeof model().position.datum === 'string') {
-                            view().position.datum = scope.parse.call(scope, model().position.datum);
+                    if (store().position) {
+                        if (typeof store().position.datum === 'string') {
+                            vm().position.datum = scope.parse.call(scope, store().position.datum);
                         }
                     }
-                    if (view().isPreview == false && config().provider && config().provider.version && model().position && model().position.id) {
+                    if (vm().isPreview == false && config().provider && config().provider.version && store().position && store().position.id) {
                         scope.loadMap.call(scope);
                     }
                     return {
@@ -966,7 +966,7 @@
                             }
                         },
                         setCoordinateSystem: function () {
-                            if (model().position && model().position.id != gm.coordinateSystem) {
+                            if (store().position && store().position.id != gm.coordinateSystem) {
                                 scope.reloadMap.call(scope);
                             }
                         },
@@ -1000,20 +1000,20 @@
                             }
                         },
                         datumChange: function (text) {
-                            view().datumChangeText = text;
+                            vm().datumChangeText = text;
                             if (scope.datumChangeWait) {
                                 clearTimeout(scope.datumChangeWait);
                             }
                             scope.datumChangeWait = setTimeout(function () {
                                 scope.datumChangeWait = null;
-                                var p = scope.parse.call(scope, view().datumChangeText);
+                                var p = scope.parse.call(scope, vm().datumChangeText);
                                 if (typeof p !== 'boolean') {
-                                    model().position.datum = p;
-                                    view().position.datumStyle = {};
+                                    store().position.datum = p;
+                                    vm().position.datumStyle = {};
                                     scope.setMarker.call(scope);
                                     return;
                                 }
-                                view().position.datumStyle = { 'color': 'red' };
+                                vm().position.datumStyle = { 'color': 'red' };
                             }, provider.datumWait);
                         },
                         optionChange: function () {
@@ -1164,18 +1164,18 @@
                     return encodelatlng(datum.latitude) + ',' + encodelatlng(datum.longitude);
                 },
                 setDatum: function () {
-                    var datum = scope.toString.call(scope, view().position.datum, view().position.precision);
+                    var datum = scope.toString.call(scope, vm().position.datum, vm().position.precision);
                     if (typeof datum !== 'boolean') {
-                        model().position.datum = datum;
-                        view().position.datumText = datum;
-                        view().position.datumStyle = {};
+                        store().position.datum = datum;
+                        vm().position.datumText = datum;
+                        vm().position.datumStyle = {};
                     } else {
-                        view().position.datumStyle = { 'color': 'red' };
+                        vm().position.datumStyle = { 'color': 'red' };
                     }
                 },
                 setMarker: function (quick) {
                     if (scope.gmap && scope.gmarker) {
-                        var latlng = new root.google.maps.LatLng(view().position.datum.latitude, view().position.datum.longitude);
+                        var latlng = new root.google.maps.LatLng(vm().position.datum.latitude, vm().position.datum.longitude);
                         scope.gmarker.setPosition(latlng);
                         if (quick) {
                             scope.gmap.setCenter(latlng);
@@ -1196,11 +1196,11 @@
                             //gm.originalConsole.warn(id + ': Loading map');
                             scope.initValues();
                             scope.loadMapWait = null;
-                            view().status = {
+                            vm().status = {
                                 loading: true,
                                 reload: true
                             };
-                            view().showMap = false;
+                            vm().showMap = false;
                             scope.gmap = null;
                             scope.gmarker = null;
                             scope.gautocomplete = null;
@@ -1210,7 +1210,7 @@
                             scope.divwait = gm.timeout / gm.poll;
                             event.register(id, 'gmaperror', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map error');
-                                view().status = {
+                                vm().status = {
                                     failed: true,
                                     reload: true
                                 };
@@ -1221,7 +1221,7 @@
                             });
                             event.register(id, 'gmapkilled', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map killed');
-                                view().status = {
+                                vm().status = {
                                     reload: true
                                 };
                                 event.cancel(id);
@@ -1234,19 +1234,19 @@
                                 if (!root.google) {
                                     scope.reloadMap.call(scope);
                                 } else if (scope.div == null) {
-                                    view().status = {
+                                    vm().status = {
                                         success: true,
                                         reload: true
                                     };
-                                    view().provider.version = String(root.google.maps.version);
-                                    view().provider.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
+                                    vm().provider.version = String(root.google.maps.version);
+                                    vm().provider.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
 
                                     //  Check that we have loaded with the right setting for us
                                     if (gm.apiKey != config().provider.apiKey ||
-                                        gm.coordinateSystem != model().position.id ||
+                                        gm.coordinateSystem != store().position.id ||
                                         gm.forceHttps != config().provider.forceHttps ||
                                         gm.language != config().provider.language) {
-                                        view().status = {
+                                        vm().status = {
                                             duplicate: true,
                                             reload: true
                                         };
@@ -1256,7 +1256,7 @@
                                     }
                                     scope.ignoreEvents = 0;
                                     scope.div = 'terratype_' + id + '_googlemapv3_map';
-                                    view().showMap = true;
+                                    vm().showMap = true;
                                     updateView();
                                 } else {
                                     var element = document.getElementById(scope.div);
@@ -1269,7 +1269,7 @@
                                         }
                                     } else if (scope.gmap == null) {
                                         scope.gevents = [];
-                                        var latlng = new root.google.maps.LatLng(view().position.datum.latitude, view().position.datum.longitude);
+                                        var latlng = new root.google.maps.LatLng(vm().position.datum.latitude, vm().position.datum.longitude);
                                         var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
                                         config().provider.styles = gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
                                                 config().provider.showLandmarks, config().provider.showLabels);
@@ -1278,7 +1278,7 @@
                                             scrollwheel: false,
                                             panControl: false,      //   Has been depricated
                                             center: latlng,
-                                            zoom: model().zoom,
+                                            zoom: store().zoom,
                                             draggable: config().draggable,
                                             fullScreenControl: config().provider.fullscreen.enable,
                                             fullscreenControlOptions: config().provider.fullscreen.position,
@@ -1320,9 +1320,9 @@
                                             icon: gm.icon.call(gm, config().icon)
                                         })
                                         scope.ginfo = null;
-                                        if (model().label) {
+                                        if (store().label) {
                                             scope.ginfo = new root.google.maps.InfoWindow({
-                                                content: model().label.content
+                                                content: store().label.content
                                             });
                                         }
                                         scope.gevents.push(scope.gmarker.addListener('click', function () {
@@ -1356,10 +1356,10 @@
                                     } else {
                                         var newValue = element.parentElement.offsetTop;
                                         var newSize = element.clientHeight * element.clientWidth;
-                                        var show = view().showMap;
+                                        var show = vm().showMap;
                                         var visible = show && scope.isElementInViewport(element);
                                         if (newValue != 0 && show == false) {
-                                            view().showMap = true;
+                                            vm().showMap = true;
                                             updateView();
                                             setTimeout(function () {
                                                 if (document.getElementById(scope.div).hasChildNodes() == false) {
@@ -1369,7 +1369,7 @@
                                                 }
                                             }, 1);
                                         } else if (newValue == 0 && show == true) {
-                                            view().showMap = false;
+                                            vm().showMap = false;
                                             scope.visible = false;
                                         }
                                         else if (visible == true && scope.divoldsize != 0 && newSize != 0 && scope.divoldsize != newSize) {
@@ -1388,7 +1388,7 @@
 
                             if (gm.status == gm.subsystemUninitiated) {
                                 gm.createSubsystem(config().provider.version, config().provider.apiKey, config().provider.forceHttps,
-                                    model().position.id, config().provider.language);
+                                    store().position.id, config().provider.language);
                             }
 
                             //  Check that the subsystem is working
@@ -1397,7 +1397,7 @@
                                 function go() {
                                     //  Error with subsystem, it isn't loading, only thing we can do is try again
                                     if (count > 5) {
-                                        view().status = {
+                                        vm().status = {
                                             error: true,
                                             reload: true
                                         };
@@ -1407,7 +1407,7 @@
                                     }
 
                                     gm.createSubsystem(config().provider.version, config().provider.apiKey, config().provider.forceHttps,
-                                        model().position.id, config().provider.language);
+                                        store().position.id, config().provider.language);
                                     count++;
                                 }
 
@@ -1417,7 +1417,7 @@
                                     gm.destroySubsystem();
                                     setTimeout(go, 1);
                                 } else {
-                                    view().status = {
+                                    vm().status = {
                                         success: true
                                     };
                                     clearInterval(scope.superWaiter);
@@ -1433,7 +1433,7 @@
                         return;
                     }
                     //gm.originalConsole.warn(id + ': eventZoom()');
-                    model().zoom = scope.gmap.getZoom();
+                    store().zoom = scope.gmap.getZoom();
                 },
                 eventRefresh: function () {
                     if (scope.ignoreEvents > 0) {
@@ -1441,7 +1441,7 @@
                     }
                     //gm.originalConsole.warn(id + ': eventRefresh()');
                     scope.ignoreEvents++;
-                    scope.gmap.setZoom(model().zoom);
+                    scope.gmap.setZoom(store().zoom);
                     scope.setMarker.call(scope, true);
                     root.google.maps.event.trigger(scope.gmap, 'resize');
                     scope.ignoreEvents--;
@@ -1457,9 +1457,9 @@
                     }
                     //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
-                    view().position.datum = {
-                        latitude: gm.round(marker.latLng.lat(), view().position.precision),
-                        longitude: gm.round(marker.latLng.lng(), view().position.precision)
+                    vm().position.datum = {
+                        latitude: gm.round(marker.latLng.lat(), vm().position.precision),
+                        longitude: gm.round(marker.latLng.lng(), vm().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);
@@ -1472,10 +1472,10 @@
                     }
                     //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
-                    model().lookup = place.formatted_address;
-                    view().position.datum = {
-                        latitude: gm.round(place.geometry.location.lat(), view().position.precision),
-                        longitude: gm.round(place.geometry.location.lng(), view().position.precision)
+                    store().lookup = place.formatted_address;
+                    vm().position.datum = {
+                        latitude: gm.round(place.geometry.location.lat(), vm().position.precision),
+                        longitude: gm.round(place.geometry.location.lng(), vm().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);
@@ -1494,7 +1494,7 @@
                         autocomplete: config().search.enable == 2
                     }, scope.gmap, function (handler) {
                         if (handler == null) {
-                            view().status.searchFailed = true;
+                            vm().status.searchFailed = true;
                         } else {
                             scope.gautocomplete = handler;
                             if (config().search && config().search.limit &&
