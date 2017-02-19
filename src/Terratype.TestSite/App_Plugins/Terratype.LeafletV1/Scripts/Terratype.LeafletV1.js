@@ -224,6 +224,9 @@
         }
     }
 
+    var Wgs84 = 'WGS84';
+    var Gcj02 = 'GCJ02';
+
     var provider = {
         identifier: identifier,
         datumWait: 330,
@@ -241,7 +244,7 @@
                         id: 'OpenStreetMap.Mapnik',
                         name: 'terratypeLeafletV1OpenStreetMap_mapnikName',
                         attribution: 'terratypeLeafletV1OpenStreetMap_mapnikAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 19,
                         options:{
@@ -253,7 +256,7 @@
                         id: 'OpenStreetMap.blackwhite',
                         name: 'terratypeLeafletV1OpenStreetMap_blackwhiteName',
                         attribution: 'terratypeLeafletV1OpenStreetMap_blackwhiteAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 18,
                         options:{
@@ -265,7 +268,7 @@
                         id: 'OpenStreetMap.de',
                         name: 'terratypeLeafletV1OpenStreetMap_deName',
                         attribution: 'terratypeLeafletV1OpenStreetMap_deAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 18,
                         options:{
@@ -277,7 +280,7 @@
                         id: 'OpenStreetMap.fr',
                         name: 'terratypeLeafletV1OpenStreetMap_frName',
                         attribution: 'terratypeLeafletV1OpenStreetMap_frAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 20,
                         options:{
@@ -289,7 +292,7 @@
                         id: 'OpenStreetMap.hot',
                         name: 'terratypeLeafletV1OpenStreetMap_hotName',
                         attribution: 'terratypeLeafletV1OpenStreetMap_hotAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 19,
                         options:{
@@ -311,7 +314,7 @@
                         id: 'OpenSeaMap.standard',
                         name: 'terratypeLeafletV1OpenSeaMap_standardName',
                         attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -333,7 +336,7 @@
                         id: 'OpenTopoMap.standard',
                         name: 'terratypeLeafletV1OpenSeaMap_standardName',
                         attribution: 'terratypeLeafletV1OpenSeaMap_standardAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 17,
                         options: {
@@ -359,7 +362,7 @@
                         id: 'Thunderforest.OpenCycleMap',
                         name: 'terratypeLeafletV1Thunderforest_openCycleMapName',
                         attribution: 'terratypeLeafletV1Thunderforest_openCycleMapAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 19,
                         options: {
@@ -371,7 +374,7 @@
                         id: 'Thunderforest.Transport',
                         name: 'terratypeLeafletV1Thunderforest_transportName',
                         attribution: 'terratypeLeafletV1Thunderforest_transportAttribution',
-                        coordinateSystems: ['WGS84'],
+                        coordinateSystems: [Wgs84],
                         minZoom: 0,
                         maxZoom: 19,
                         options: {
@@ -393,7 +396,7 @@
                         id: 'TianDiTu.Basic',
                         name: 'terratypeLeafletV1TianDiTu_basicName',
                         attribution: 'terratypeLeafletV1TianDiTu_basicName',
-                        coordinateSystems: ['GCJ02'],
+                        coordinateSystems: [Gcj02],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -405,7 +408,7 @@
                         id: 'TianDiTu.Satellite',
                         name: 'terratypeLeafletV1TianDiTu_satelliteName',
                         attribution: 'terratypeLeafletV1TianDiTu_satelliteName',
-                        coordinateSystems: ['GCJ02'],
+                        coordinateSystems: [Gcj02],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -417,7 +420,7 @@
                         id: 'TianDiTu.Terrain',
                         name: 'terratypeLeafletV1TianDiTu_terrainName',
                         attribution: 'terratypeLeafletV1TianDiTu_terrainName',
-                        coordinateSystems: ['GCJ02'],
+                        coordinateSystems: [Gcj02],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -439,7 +442,7 @@
                         id: 'GoogleCN.Basic',
                         name: 'terratypeLeafletV1GoogleCN_basicName',
                         attribution: 'terratypeLeafletV1GoogleCN_basicName',
-                        coordinateSystems: ['GCJ02'],
+                        coordinateSystems: [Gcj02],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -451,7 +454,7 @@
                         id: 'GoogleCN.Satellite',
                         name: 'terratypeLeafletV1GoogleCN_satelliteName',
                         attribution: 'terratypeLeafletV1GoogleCN_satelliteName',
-                        coordinateSystems: ['GCJ02'],
+                        coordinateSystems: [Gcj02],
                         minZoom: 0,
                         maxZoom: 18,
                         options: {
@@ -462,47 +465,6 @@
             }
         ],
         boot: function (id, urlProvider, store, config, vm, updateView, translate) {
-
-            provider.mapSourceByCoordinateSystem = {};
-            provider.tileServerByCoordinateSystem = {};
-
-            //  Calculate all language values
-            for (var t1 = 0; t1 != provider.mapSource.length; t1++) {
-                var ms = provider.mapSource[t1];
-                (function (ms) {
-                    translate(ms.name, function (value) {
-                        ms.name = value;
-                    });
-                    translate(ms.description, function (value) {
-                        ms.description = value;
-                    });
-                }(ms));
-                var added = {};
-                for (var t2 = 0; t2 != ms.tileServers.length; t2++) {
-                    var v = ms.tileServers[t2];
-                    (function (v) {
-                        translate(v.name, function (value) {
-                            v.name = value;
-                        });
-                        translate(v.attribution, function (value) {
-                            v.attribution = value;
-                        });
-                    }(v));
-                    for (t3 = 0; t3 != v.coordinateSystems.length; t3++) {
-                        var c = v.coordinateSystems[t3];
-                        if (!provider.tileServerByCoordinateSystem[c]) {
-                            provider.tileServerByCoordinateSystem[c] = [];
-                        }
-                        provider.tileServerByCoordinateSystem[c].push(v);
-                        if (!added[c]) {
-                            if (!provider.mapSourceByCoordinateSystem[c]) {
-                                provider.mapSourceByCoordinateSystem[c]
-                            }
-                        }
-                    }
-                }
-            }
-
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -537,9 +499,80 @@
                             }
                         }
                     }
+                    scope.mapSourceOrderRows();
                 },
+                mapSourceByCoordinateSystem: {},
+                mapSourceById: {},
+                tileServerByCoordinateSystemAndMapSource: {},
+                tileServerById: {},
+                tileServerByCoordinateSystemAndId: {},
                 init: function () {
                     //event.cancel(id);
+                    scope.mapSourceByCoordinateSystem = {};
+                    scope.mapSourceById = {};
+                    scope.tileServerByCoordinateSystemAndMapSource = {};
+                    scope.tileServerById = {};
+                    scope.tileServerByCoordinateSystemAndId = {};
+
+                    //  Calculate all language values
+                    for (var t1 = 0; t1 != provider.mapSource.length; t1++) {
+                        var ms = provider.mapSource[t1];
+                        scope.mapSourceById[ms.id] = ms;
+                        (function (ms) {
+                            translate(ms.name, function (value) {
+                                ms.name = value;
+                            });
+                            translate(ms.description, function (value) {
+                                ms.description = value;
+                            });
+                            if (ms.key.enable) {
+                                translate(ms.key.name, function (value) {
+                                    ms.key.name = value;
+                                });
+                                translate(ms.key.description, function (value) {
+                                    ms.key.description = value;
+                                });
+                                translate(ms.key.placeholder, function (value) {
+                                    ms.key.placeholder = value;
+                                });
+                                translate(ms.key.url, function (value) {
+                                    ms.key.url = value;
+                                });
+                            }
+                        }(ms));
+                        var added = {};
+                        for (var t2 = 0; t2 != ms.tileServers.length; t2++) {
+                            var v = ms.tileServers[t2];
+                            scope.tileServerById[v.id] = v;
+                            (function (v) {
+                                translate(v.name, function (value) {
+                                    v.name = value;
+                                });
+                                translate(v.attribution, function (value) {
+                                    v.attribution = value;
+                                });
+                            }(v));
+                            for (t3 = 0; t3 != v.coordinateSystems.length; t3++) {
+                                var c = v.coordinateSystems[t3];
+                                if (!scope.tileServerByCoordinateSystemAndMapSource[c]) {
+                                    scope.tileServerByCoordinateSystemAndMapSource[c] = {};
+                                }
+                                if (!scope.tileServerByCoordinateSystemAndMapSource[c][ms.id]) {
+                                    scope.tileServerByCoordinateSystemAndMapSource[c][ms.id] = [];
+                                }
+                                scope.tileServerByCoordinateSystemAndMapSource[c][ms.id].push(v);
+                                scope.tileServerByCoordinateSystemAndId[c + '.' + v.id] = true;
+                                if (!added[ms.id]) {
+                                    if (!scope.mapSourceByCoordinateSystem[c]) {
+                                        scope.mapSourceByCoordinateSystem[c] = [];
+                                    }
+                                    scope.mapSourceByCoordinateSystem[c].push(ms);
+                                    added[ms.id] = true;
+                                }
+                            }
+                        }
+                    }
+
                     if (store().position) {
                         if (typeof store().position.datum === 'string') {
                             vm().position.datum = scope.parse.call(scope, store().position.datum);
@@ -617,35 +650,81 @@
                             }
                         },
                         destroy: scope.destroy,
-                        filter: function (c, id) {
-                            if (c && id) {
-                                for (var t1 = 0; t1 != provider.mapSource.length; t1++) {
-                                    var ms = provider.mapSource[t1];
-                                    for (var t2 = 0; t2 != ms.tileServers.length; t2++) {
-                                        var v = ms.tileServers[t2];
-                                        if (ms.id == id || v.id == id) {
-                                            for (t3 = 0; t3 != v.coordinateSystems.length; t3++) {
-                                                if (v.coordinateSystems[t3] == c) {
-                                                    return true;
-                                                }
+                        mapSourceAddRow: function () {
+                            if (!store().provider) {
+                                store().provider = {};
+                            }
+                            if (!store().provider.mapSources) {
+                                store().provider.mapSources = [];
+                            }
+                            store().provider.mapSources.push({});
+                        },
+                        mapSourceToggleRow: function (index, show) {
+                            var timer = setInterval(function () {
+                                var el = document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + index);
+                                if (el) {
+                                    if (!show) {
+                                        show = el.style.display == 'none' ? true : false;
+                                    }
+                                    if (show) {
+                                        for (var i = 0; i != store().provider.mapSources.length; i++) {
+                                            if (i != index) {
+                                                document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + i).style.display = 'none';
                                             }
                                         }
                                     }
+                                    el.style.display = show ? 'block' : 'none';
+                                    clearInterval(timer);
                                 }
-                            }
-                            return false;
+                            }, sub.poll);
                         },
-                        setMapSource: function (id) {
-                            for (var t1 = 0; t1 != provider.mapSource.length; t1++) {
-                                var ms = provider.mapSource[t1];
-                                if (ms.id == id) {
-                                    vm().provider.mapSource.description = ms.description;
-                                    vm().provider.mapSource.tileServers = ms.tileServers;
-                                    return;
-                                }
+                        mapSourceDeleteRow: function (index) {
+                            store().provider.mapSources.splice(index, 1);
+                        },
+                        mapSourceOrderRows: function () {
+                            scope.mapSourceOrderRows();
+                        },
+                        mapSourcesTitle: function (l) {
+                            return l.minZoom + '-' + l.maxZoom + ' ' + l.mapSource + '.' + l.tileServer;
+                        },
+                        setMapSource: function (l) {
+
+                        },
+                        setTileServer: function (l) {
+
+                        },
+                        mapSourceByCoordinateSystem: scope.mapSourceByCoordinateSystem,
+                        mapSourceById: scope.mapSourceById,
+                        tileServerByCoordinateSystemAndMapSource: scope.tileServerByCoordinateSystemAndMapSource,
+                        tileServerById: scope.tileServerById,
+                        tileServerByCoordinateSystemAndId: scope.tileServerByCoordinateSystemAndId
+                    }
+                },
+                mapSourceOrderRows: function () {
+                    if (!store.provider || !store.provider.mapSource || store.provider.mapSources.length < 2) {
+                        return;
+                    }
+                    var order = [];
+                    for (var i = 0; i != store.provider.mapSources.length; i++) {
+                        var ii = i;
+                        for (var j = i + 1; j < store.provider.mapSources.length; j++) {
+                            if (store.provider.mapSources[j].minZoom != null && store.provider.mapSources[j].minZoom < store.provider.mapSources[ii].minZoom) {
+                                ii = j;
                             }
                         }
+                        order.push({
+                            mapSource: {
+                                id: store.provider.mapSources[ii].mapSource.id
+                            },
+                            tileServer: {
+                                id: store.provider.mapSources[ii].tileServer.id
+                            },
+                            minZoom: store.provider.mapSources[ii].minZoom,
+                            maxZoom: store.provider.mapSources[ii].maxZoom
+                        });
+                        store.provider.mapSources[ii].minZoom = null;
                     }
+                    store.provider.mapSources = order;
                 },
                 destroy: function () {
                     event.cancel(id);

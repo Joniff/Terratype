@@ -26,8 +26,8 @@
     <key alias="deName">Germany</key>
     <key alias="deAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap Deutschland</a>]]></key>
 
-    <key alias="deName">France</key>
-    <key alias="deAttribution"><![CDATA[&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
+    <key alias="frName">France</key>
+    <key alias="frAttribution"><![CDATA[&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>]]></key>
 
     <key alias="hotName">Humanitarian OpenStreetMap Team</key>
     <key alias="hotAttribution"><![CDATA[&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>]]></key>
@@ -95,7 +95,21 @@
     <key alias="mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</key>
     <key alias="tileServerLabel">Tile Server:</key>
     <key alias="tileServerDescription">Server that you will be requesting image tiles from that creates the visual map</key>
-    <key alias="mapSourceMessage">LeafletV1 allows multiple map sources to be used at different map resolutions. So as you zoom in or out, the contents of the map can come from different servers. The reason to do this, is that many of the free servers only allow resolution upto a certain zoom level. Or a map source will only provide maps at specific resolution and expect other sources to be used at other zoom levels</key>
+    <key alias="tileServerInvalidCoordinateSystem">Error: This tile server Doesn&apos;t support the current coordinate system. Either change your coordinate system or this tile server</key>
+
+    <key alias="mapSourceMessage">LeafletV1 allows multiple map sources to be used at different map resolutions. So as you zoom in or out, the contents of the map can come from different servers. The reason to do this, is that many of the free servers only allow resolution upto a certain zoom level or a map source will only provide maps images at specific resolution and expect other sources to be used at other zoom levels. Feel free to add as many zoom levels as required, as the zoom control will try and only allow maps within the zoom range that is set</key>
+    <key alias="mapSourceAdd">Add a Map Source</key>
+    <key alias="mapSourceAddAnother">Add another Map Source</key>
+    <key alias="mapSourceDeleteTitle">Delete this map source</key>
+    <key alias="minZoomLabel">Min Zoom:</key>
+    <key alias="minZoomDescription">Minimum zoom that you wish this tile server to be used. 0 = shwoing the whole world, 24 = smallest detail. Each tile server has its own range of zooms it can do</key>
+    <key alias="maxZoomLabel">Max Zoom:</key>
+    <key alias="maxZoomDescription">Maximum zoom that you wish this tile server to be used. If you wish for this tile server to serve for only one zoom level then set min and max zoom to the same value</key>
+    <key alias="minZoomError"><![CDATA[Minimum zoom level for this tile server has to be bewteen {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
+    <key alias="maxZoomError"><![CDATA[Maximum zoom level for this tile server has to be bewteen {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
+    <key alias="maxZoomInvalid">The maximum zoom level is lower than the minimum zoom level</key>
+    <key alias="minZoomPlaceholder"><![CDATA[Integer between {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
+    <key alias="maxZoomPlaceholder"><![CDATA[Integer between {{store().provider.mapSources[$index].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
   </area>
   
 </language>
