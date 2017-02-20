@@ -33,6 +33,12 @@
 
     var leaflet = root.L;
 
+    Number.isInteger = Number.isInteger || function (value) {
+        return typeof value === "number" &&
+               isFinite(value) &&
+               Math.floor(value) === value;
+    };
+
     var event = {
         events: [],
         register: function (id, name, scope, object, func) {
@@ -657,41 +663,214 @@
                             if (!store().provider.mapSources) {
                                 store().provider.mapSources = [];
                             }
-                            store().provider.mapSources.push({});
+                            store().provider.mapSources.push({
+                                minZoom: 0,
+                                maxZoom: 24
+                            });
+                            if (!vm().provider.mapSources) {
+                                vm().provider.mapSources = [];
+                            }
+                            vm().provider.mapSources.push({
+                                minZoom: 0,
+                                maxZoom: 24
+                            });
                         },
                         mapSourceToggleRow: function (index, show) {
-                            var timer = setInterval(function () {
-                                var el = document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + index);
-                                if (el) {
-                                    if (!show) {
-                                        show = el.style.display == 'none' ? true : false;
+                            for (var i = 0; i != store().provider.mapSources.length; i++) {
+                                if (i != index) {
+                                    vm().provider.mapSources[i].show = false;
+                                } else {
+                                    if (typeof show === 'undefined') {
+                                        show = !(vm().provider.mapSources[index].show);
                                     }
+                                    vm().provider.mapSources[index].show = show;
+
                                     if (show) {
-                                        for (var i = 0; i != store().provider.mapSources.length; i++) {
-                                            if (i != index) {
-                                                document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + i).style.display = 'none';
+                                        setTimeout(function () {
+                                            var el = document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + index);
+                                            if (!scope.isElementInViewport(el)) {
+                                                el.parentElement.scrollIntoView(true);
                                             }
-                                        }
+                                        });
                                     }
-                                    el.style.display = show ? 'block' : 'none';
-                                    clearInterval(timer);
                                 }
-                            }, sub.poll);
+                            }
                         },
                         mapSourceDeleteRow: function (index) {
                             store().provider.mapSources.splice(index, 1);
+                            vm().provider.mapSources.splice(index, 1);
                         },
                         mapSourceOrderRows: function () {
                             scope.mapSourceOrderRows();
                         },
-                        mapSourcesTitle: function (l) {
+                        mapSourceTitle: function (l) {
                             return l.minZoom + '-' + l.maxZoom + ' ' + l.mapSource + '.' + l.tileServer;
                         },
-                        setMapSource: function (l) {
-
+                        mapSourceValid: function (l) {
+                            if (l) {
+                                return scope.mapSourceValid(l);
+                            }
+                            for (var i = 0; i != store().provider.mapSources.length; i++) {
+                                var r = scope.mapSourceValid(store().provider.mapSources[i]);
+                                if (r == false) {
+                                    return false;
+                                }
+                            }
+                            return true;
                         },
-                        setTileServer: function (l) {
+                        mapSourceMinZoomBindIE: function (div, index) {
+                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                            var el = document.getElementById(div);
+                            if (el != null) {
+                                var n = parseInt(el.value);
+                                if (store().provider.mapSources[index].minZoom != n) {
+                                    store().provider.mapSources[index].minZoom = n;
+                                }
+                            }
+                        },
+                        mapSourceMinZoomBind: function (t, index) {
+                            var n = (t == null) ? store().provider.mapSources[index].minZoom : parseInt(t);
+                            var ts = scope.tileServerById[store().provider.mapSources[index].tileServer.id];
+                            if (n < ts.minZoom) {
+                                n = ts.minZoom;
+                            }
+                            if (n > ts.maxZoom) {
+                                n = ts.maxZoom;
+                            }
+                            vm().provider.mapSources[index].minZoom = store().provider.mapSources[index].minZoom = n;
+                            scope.mapSourceTestImageBind(null, index);
+                        },
+                        mapSourceMaxZoomBindIE: function (div, index) {
+                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                            var el = document.getElementById(div);
+                            if (el != null) {
+                                var n = parseInt(el.value);
+                                if (store().provider.mapSources[index].maxZoom != n) {
+                                    store().provider.mapSources[index].maxZoom = n;
+                                }
+                            }
+                        },
+                        mapSourceMaxZoomBind: function (t, index) {
+                            var n = (t == null) ? store().provider.mapSources[index].maxZoom : parseInt(t);
+                            var ts = scope.tileServerById[store().provider.mapSources[index].tileServer.id];
+                            if (n < ts.minZoom) {
+                                n = ts.minZoom;
+                            }
+                            if (n > ts.maxZoom) {
+                                n = ts.maxZoom;
+                            }
+                            vm().provider.mapSources[index].maxZoom = store().provider.mapSources[index].maxZoom = n;
+                            scope.mapSourceTestImageBind(null, index);
+                        },
+                        mapSourceTestImageBindIE: function (div, index) {
+                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                            var el = document.getElementById(div);
+                            if (el != null) {
+                                var n = parseInt(el.value);
+                                if (vm().provider.mapSources[index].testImage != n) {
+                                    vm().provider.mapSources[index].testImage = n;
+                                }
+                            }
+                        },
+                        mapSourceTestImageBind: function (t, index) {
+                            scope.mapSourceTestImageBind(t, index);
+                        },
+                        mapSourceImageTest: function (index) {
+                            var ts = scope.tileServerById[store().provider.mapSources[index].tileServer.id];
+                            var x, y;
+                            z = vm().provider.mapSources[index].testImage;
+                            if (typeof z === 'undefined' || !Number.isInteger(z)) {
+                                return null;
+                            }
+                            switch (z) {
+                                case 0:
+                                    x = y = 0;
+                                    break;
+                                case 1:
+                                    x = 1, y = 0;
+                                    break;
+                                case 2:
+                                    x = 2, y = 1;
+                                    break;
+                                case 3:
+                                    x = 4, y = 2;
+                                    break;
+                                case 4:
+                                    x = 8, y = 5;
+                                    break;
+                                case 5:
+                                    x = 16, y = 10;
+                                    break;
+                                case 6:
+                                    x = 31, y = 21;
+                                    break;
+                                case 7:
+                                    x = 65, y = 42;
+                                    break;
+                                case 8:
+                                    x = 123, y = 82
+                                    break;
+                                case 9:
+                                    x = 245, y = 165;
+                                    break;
+                                case 10:
+                                    x = 539, y = 320;
+                                    break;
+                                case 11:
+                                    x = 1095, y = 640;
+                                    break;
+                                case 12:
+                                    x = 2000, y = 1280;
+                                    break;
+                                case 13:
+                                    x = 4034, y = 2737;
+                                    break;
+                                case 14:
+                                    x = 8415, y = 5384;
+                                    break;
+                                case 15:
+                                    x = 9643, y = 12320;
+                                    break;
+                                case 16:
+                                    x = 19294, y = 24640;
+                                    break;
+                                case 17:
+                                    x = 120585, y = 78655;
+                                    break;
+                                case 18:
+                                    x = 138634, y = 82398;
+                                    break;
+                                case 19:
+                                    x = 262034, y = 174339;
+                                    break;
+                                case 20:
+                                    x = 261957 * 2, y = 174337 * 2;
+                                    break;
+                                case 21:
+                                    x = 261957 * 4, y = 174337 * 4;
+                                    break;
+                                case 22:
+                                    x = 261957 * 16, y = 174337 * 16;
+                                    break;
+                                case 23:
+                                    x = 261957 * 256, y = 174337 * 256;
+                                    break;
+                                case 24:
+                                    x = 261957 * 65536, y = 174337 * 65536;
+                                    break;
+                            }
+                            var url = ts.url;
 
+                            url = url.replace(new RegExp('\{x\}', 'gi'), x);
+                            url = url.replace(new RegExp('\{y\}', 'gi'), y);
+                            url = url.replace(new RegExp('\{z\}', 'gi'), z);
+                            if (ts.options.subdomains) {
+                                url = url.replace(new RegExp('\{s\}', 'gi'), ts.options.subdomains[0]);
+                            }
+                            if (ts.key && ts.key.enable == true) {
+                                url = url.replace(new RegExp('\{key\}', 'gi'), store().provider.mapSources[index].key.value);
+                            }
+                            return url;
                         },
                         mapSourceByCoordinateSystem: scope.mapSourceByCoordinateSystem,
                         mapSourceById: scope.mapSourceById,
@@ -699,6 +878,12 @@
                         tileServerById: scope.tileServerById,
                         tileServerByCoordinateSystemAndId: scope.tileServerByCoordinateSystemAndId
                     }
+                },
+                mapSourceValid: function (l) {
+                    return typeof l.mapSource !== 'undefined' && typeof l.mapSource.id !== 'undefined' && typeof l.tileServer !== 'undefined' &&
+                        typeof l.tileServer.id !== 'undefined' && Number.isInteger(l.minZoom) && Number.isInteger(l.maxZoom) &&
+                        (scope.tileServerByCoordinateSystemAndId[store().position.id + '.' + l.tileServer.id] == true) &&
+                        (l.minZoom >= scope.tileServerById[l.tileServer.id].minZoom) && (l.minZoom <= l.maxZoom) && (l.maxZoom <= scope.tileServerById[l.tileServer.id].maxZoom);
                 },
                 mapSourceOrderRows: function () {
                     if (!store.provider || !store.provider.mapSource || store.provider.mapSources.length < 2) {
@@ -726,6 +911,18 @@
                     }
                     store.provider.mapSources = order;
                 },
+                mapSourceTestImageBind: function (t, index) {
+                    var ms = store().provider.mapSources[index];
+                    var vs = vm().provider.mapSources[index];
+                    var n = (t == null) ? vs.testImage : parseInt(t);
+                    if (n < ms.minZoom) {
+                        n = ms.minZoom;
+                    }
+                    if (n > ms.maxZoom) {
+                        n = ms.maxZoom;
+                    }
+                    vs.testImageRange = vs.testImageNumber = vs.testImage = n;
+                },
                 destroy: function () {
                     event.cancel(id);
                     angular.forEach(scope.gevents, function (gevent) {
@@ -742,21 +939,21 @@
                     sub.destroySubsystem();
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        var counter = 100;      //  Put in place incase of horrible errors
+                        var counter = 0;      //  Put in place incase of horrible errors
 
                         var timer = setInterval(function () {
-                            var child = div.firstChild;
-                            if (child && counter != 0) {
-                                counter--;
-                                try {
-                                    div.removeChild(child);
-                                }
-                                catch (oh) {
-                                    //  Swallow errors
-                                }
-                            } else {
+                            if (counter++ > 100 || div.children.length == 0) {
                                 clearInterval(timer);
                                 scope.loadMap.call(scope);
+                            }
+                            try {
+                                var child = div.firstChild;
+                                if (child) {
+                                    div.removeChild(child);
+                                }
+                            }
+                            catch (oh) {
+                                counter = 100;
                             }
                         }, 1);
                     } else {

@@ -6,7 +6,7 @@
 
   <area alias="terratypeLeafletV1">
     <key alias="name">Leaflet V1</key>
-    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources includes OpenStreetMap maps</key>
+    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources includes OpenStreetMap</key>
     <key alias="referenceUrl">http://leafletjs.com/index.html</key>
   </area>
 
@@ -102,7 +102,7 @@
     <key alias="mapSourceAddAnother">Add another Map Source</key>
     <key alias="mapSourceDeleteTitle">Delete this map source</key>
     <key alias="minZoomLabel">Min Zoom:</key>
-    <key alias="minZoomDescription">Minimum zoom that you wish this tile server to be used. 0 = shwoing the whole world, 24 = smallest detail. Each tile server has its own range of zooms it can do</key>
+    <key alias="minZoomDescription">Minimum zoom that you wish this tile server to be used. 0 = showing the whole world, 24 = smallest detail. Each tile server has its own range of zooms it can serve</key>
     <key alias="maxZoomLabel">Max Zoom:</key>
     <key alias="maxZoomDescription">Maximum zoom that you wish this tile server to be used. If you wish for this tile server to serve for only one zoom level then set min and max zoom to the same value</key>
     <key alias="minZoomError"><![CDATA[Minimum zoom level for this tile server has to be bewteen {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
@@ -110,6 +110,9 @@
     <key alias="maxZoomInvalid">The maximum zoom level is lower than the minimum zoom level</key>
     <key alias="minZoomPlaceholder"><![CDATA[Integer between {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
     <key alias="maxZoomPlaceholder"><![CDATA[Integer between {{store().provider.mapSources[$index].minZoom}} and {{vm().provider.tileServerById[store().provider.mapSources[$index].tileServer.id].maxZoom}}]]></key>
+
+    <key alias="imagetestLabel">Image Test:</key>
+    <key alias="imageDescription">Tries to directly access a map tile, this isn't always guarenteed to work for all tile servers that require login / access keys. If no image is shown, there is a chance this tile server is down, the Terratype configuration is out-of-date or the zoom level you require is invalid</key>
   </area>
   
 </language>

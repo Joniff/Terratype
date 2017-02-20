@@ -16,7 +16,7 @@
         </div>
     </div>
     <br />
-    <fieldset ng-show="vm().provider.id" style="padding-left:15px;">
+    <fieldset ng-if="vm().provider.id" style="padding-left:15px;">
         <a href="{{vm().provider.referenceUrl}}" target="_blank">
             <legend ng-style="{'padding-left':'36px', 'background-image':'url(' + vm().provider.events.files.logo + ')', 'background-size': 'auto 32px', 'background-repeat': 'no-repeat'}">
                 {{vm().provider.name}}
