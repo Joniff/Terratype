@@ -6,7 +6,7 @@
 
   <area alias="terratypeLeafletV1">
     <key alias="name">Leaflet V1</key>
-    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources includes OpenStreetMap maps</key>
+    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources includes OpenStreetMap</key>
     <key alias="referenceUrl">http://leafletjs.com/index.html</key>
   </area>
 
@@ -114,5 +114,10 @@
     <key alias="imagetestLabel">Image Test:</key>
     <key alias="imageDescription">Tries to directly access a map tile, this isn't always guarenteed to work for all tile servers that require login / access keys. If no image is shown, there is a chance this tile server is down, the Terratype configuration is out-of-date or the zoom level you require is invalid</key>
   </area>
-  
+
+  <area alias="terratypeLeafletV1ConfigApperance">
+    <key alias="positionLabel">Default location:</key>
+    <key alias="positionDescription">Select the default location when displaying this map to a content editor</key>
+  </area>
+
 </language>

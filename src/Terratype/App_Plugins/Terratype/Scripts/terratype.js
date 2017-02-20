@@ -75,8 +75,8 @@
         }
     }]);
 
-    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService',
-        function ($scope, $timeout, $http, localizationService) {
+    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService', 'assetsService',
+        function ($scope, $timeout, $http, localizationService, assetsService) {
         $scope.config = null;
         $scope.store = null;
         $scope.vm = null;
@@ -218,7 +218,7 @@
                         } else {
                             root.terratype.loading = true;
                             var script = $scope.terratype.urlProvider(id, 'scripts/' + id + '.js', true);
-                            LazyLoad.js(script, function () {
+                            assetsService.loadJs(script).then(function () {
                                 $timeout(function () {
                                     if (angular.isUndefined(root.terratype.providers[id])) {
                                         throw script + ' does not define global variable root.terratype.providers[\'' + id + '\']';
@@ -261,6 +261,9 @@
                     $scope.vm().provider.events.setProvider();
                     if ($scope.store().position && $scope.store().position.id != null) {
                         $scope.terratype.setCoordinateSystem($scope.store().position.id);
+                    }
+                    if ($scope.vm().providers[index].events.files.css) {
+                        assetsService.loadCss($scope.vm().providers[index].events.files.css);
                     }
                 });
             },

@@ -1,1 +1,12 @@
-﻿<!-- Apperance -->
+﻿<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_googlemapv3_defaultlocation" class="control-label">
+        <localize key="terratypeLeafletV1ConfigApperance_positionLabel">Default location:</localize>
+        <small>
+            <localize key="terratypeGoogleMapsV3ConfigApperance_positionDescription">Select the default location when displaying this map to a content editor</localize>
+        </small>
+    </label>
+    <div class="controls" style="overflow:hidden;">
+        <ng-include src="vm().provider.events.files.views.editor.apperance">
+        </ng-include>
+    </div>
+</div>
