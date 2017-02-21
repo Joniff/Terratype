@@ -1,8 +1,36 @@
 ﻿<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_googlemapv3_defaultlocation" class="control-label">
+    <label for="terratype_{{identifier}}_leafletv1_zoomcontrol_enable" class="control-label">
+        <localize key="terratypeLeafletV1ConfigApperance_zoomLabel">Zoom:</localize>
+        <small>
+            <localize key="terratypeLeafletV1ConfigApperance_zoomDescription">Show zoom control</localize>
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_leafletv1_zoomcontrol_enable" type="checkbox" ng-model="config().provider.zoomControl.enable" ng-change="vm().provider.events.optionChange()" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group" ng-show="config().provider.zoomControl.enable == true">
+    <label for="terratype_{{identifier}}_leafletv1_zoomcontrol_position" class="control-label">
+        <localize key="terratypeLeafletV1ConfigApperance_zoomPositionLabel">Zoom Position:</localize>
+        <small>
+            <localize key="terratypeLeafletV1ConfigApperance_zoomPositionDescription">Where do you want the zoom control buttons to be positioned on the map</localize>
+        </small>
+    </label>
+    <div class="controls">
+        <select id="terratype_{{identifier}}_leafletv1_zoomcontrol_position" ng-model="config().provider.zoomControl.position" class="umb-editor" ng-change="vm().provider.events.optionChange()" convert-to-number>
+            <option value="1" localize="label" label="@terratypeLeafletV1ConfigApperance_positionTopLeft"></option>
+            <option value="3" localize="label" label="@terratypeLeafletV1ConfigApperance_positionTopRight"></option>
+            <option value="10" localize="label" label="@terratypeLeafletV1ConfigApperance_positionBottomLeft"></option>
+            <option value="12" localize="label" label="@terratypeLeafletV1ConfigApperance_positionBottomRight"></option>
+        </select>
+    </div>
+</div>
+
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_leafletv1_defaultlocation" class="control-label">
         <localize key="terratypeLeafletV1ConfigApperance_positionLabel">Default location:</localize>
         <small>
-            <localize key="terratypeGoogleMapsV3ConfigApperance_positionDescription">Select the default location when displaying this map to a content editor</localize>
+            <localize key="terratypeLeafletV1ConfigApperance_positionDescription">Select the default location when displaying this map to a content editor</localize>
         </small>
     </label>
     <div class="controls" style="overflow:hidden;">

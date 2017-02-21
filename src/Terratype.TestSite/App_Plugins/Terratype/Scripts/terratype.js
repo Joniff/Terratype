@@ -793,7 +793,7 @@
                         id: initial.position.id,
                         datum: initial.position.datum
                     }
-                    done();
+                    $scope.terratype.loadEditor2(id, initial, completed);
                 } else if ($scope.store().position.id != initial.position.id) {
                     //  Convert coords from old system to new
                     $http({
@@ -882,6 +882,7 @@
                 }
                 catch (oh) {
                     //  Error so might as well show debug
+                    console.log(oh);
                     $scope.vm().loading = false;
                     $scope.vm().error = true;
                     $scope.config().debug = 1;
@@ -1061,6 +1062,7 @@
                 }
                 catch (oh) {
                     //  Error so might as well show debug
+                    console.log(oh);
                     $scope.vm().loading = false;
                     $scope.vm().error = true;
                     $scope.config().debug = 1;
@@ -1094,6 +1096,7 @@
                         }
                         catch (oh) {
                             //  Can't even read our own values
+                            console.log(oh);
                             $scope.vm().error = true;
                             $scope.control.value = {};
                         }
@@ -1166,7 +1169,7 @@
         $scope.setBackground = function (id) {
             $scope.store().label.background = id;
         }
-        
+
         $scope.rte = {
             id: $scope.identifier + 'rte',
             getEditor: function () {
@@ -1213,7 +1216,8 @@
             },
             config: {
                 selector: "textarea",
-                toolbar: ['code', 'styleselect', 'bold', 'italic', 'forecolor', 'backcolor','alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'link', 'umbmediapicker', 'umbembeddialog'],
+                toolbar: ['code', 'styleselect', 'bold', 'italic', 'forecolor', 'backcolor', 'alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'link', 'umbmediapicker', 'umbembeddialog'],
+                stylesheets: []
             },
             linkPickerOverlay: {},
             openLinkPicker: function (editor, currentTarget, anchorElement) {

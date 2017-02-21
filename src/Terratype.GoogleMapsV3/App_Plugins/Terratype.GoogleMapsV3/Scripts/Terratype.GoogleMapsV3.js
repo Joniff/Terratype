@@ -1081,11 +1081,16 @@
                             scope.events.push({ id: id, func: func, scope: s});
                         },
                         labelChange: function (label) {
-                            if (scope.gmap && scope.ginfo) {
-                                delete scope.ginfo;
-                                scope.ginfo = new root.google.maps.InfoWindow({
-                                    content: label.content
-                                });
+                            if (scope.gmap) {
+                                if (scope.ginfo) {
+                                    delete scope.ginfo;
+                                    scope.ginfo = null;
+                                }
+                                if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
+                                    scope.ginfo = new root.google.maps.InfoWindow({
+                                        content: label.content
+                                    });
+                                }
                             }
                         },
                         destroy: scope.destroy
@@ -1331,7 +1336,7 @@
                                             icon: gm.icon.call(gm, config().icon)
                                         })
                                         scope.ginfo = null;
-                                        if (store().label) {
+                                        if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
                                             scope.ginfo = new root.google.maps.InfoWindow({
                                                 content: store().label.content
                                             });

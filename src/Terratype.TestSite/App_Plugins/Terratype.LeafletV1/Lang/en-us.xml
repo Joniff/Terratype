@@ -118,6 +118,16 @@
   </area>
 
   <area alias="terratypeLeafletV1ConfigApperance">
+    <key alias="zoomLabel">Zoom:</key>
+    <key alias="zoomDescription">Show zoom control</key>
+    <key alias="zoomPositionLabel">Zoom Position:</key>
+    <key alias="zoomPositionDescription">Where do you want the zoom control buttons to be positioned on the map</key>
+
+    <key alias="positionTopLeft">Top Left</key>
+    <key alias="positionTopRight">Top Right</key>
+    <key alias="positionBottomLeft">Bottom Left</key>
+    <key alias="positionBottomRight">Bottom Right</key>
+
     <key alias="positionLabel">Default location:</key>
     <key alias="positionDescription">Select the default location when displaying this map to a content editor</key>
   </area>

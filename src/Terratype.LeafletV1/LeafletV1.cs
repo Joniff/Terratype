@@ -82,6 +82,27 @@ namespace Terratype.Providers
         [JsonProperty(PropertyName = "mapSource")]
         public IEnumerable<MapSourceDefinition> MapSources { get; set; }
 
+        public enum ControlPositions
+        {
+            TopLeft = 1,
+            TopRight = 3,
+            BottomLeft = 10,
+            BottomRight = 12
+        }
+
+        [JsonObject(MemberSerialization.OptIn)]
+        public class ZoomControlDefinition
+        {
+            [JsonProperty(PropertyName = "enable")]
+            public bool Enable { get; set; }
+
+            [JsonProperty(PropertyName = "position")]
+            public ControlPositions Position { get; set; }
+        }
+
+        [JsonProperty(PropertyName = "zoomControl")]
+        public ZoomControlDefinition ZoomControl { get; set; }
+
 
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {

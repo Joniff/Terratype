@@ -42,6 +42,7 @@
     <key alias="debugMode">DEBUG MODE</key>
     <key alias="reviewDate">Review Date</key>
     <key alias="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</key>
+    <key alias="error">There was an error loading this map</key>
   </area>
 
   <area alias="terratypeConfig">

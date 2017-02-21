@@ -197,6 +197,19 @@
             var sign = num >= 0 ? 1 : -1;
             var pow = Math.pow(10, decimals);
             return parseFloat((Math.round((num * pow) + (sign * 0.001)) / pow).toFixed(decimals));
+        },
+        controlPosition: function (i) {
+            switch (parseInt(i)) {
+                case 1:
+                    return 'topleft';
+                case 3:
+                    return 'topright';
+                case 10:
+                    return 'bottomleft';
+                case 12:
+                    return 'bottomright';
+            }
+            return 'topleft';
         }
     }
 
@@ -455,7 +468,11 @@
                         layers: [{
                             maxZoom: 18,
                             id: 'OpenStreetMap.Mapnik'
-                        }]
+                        }],
+                        zoomControl: {
+                            enable: true,
+                            position: 1
+                        }
                     }
                 },
                 initValues: function () {
@@ -476,7 +493,6 @@
                             }
                         }
                     }
-                    scope.mapSourceOrderRows();
                 },
                 mapSourceByCoordinateSystem: {},
                 mapSourceById: {},
@@ -629,18 +645,32 @@
                         },
                         optionChange: function () {
                             if (scope.gmap) {
-                                scope.reloadMap();
+                                if (scope.zoomControl) {
+                                    scope.gmap.removeControl(scope.zoomControl);
+                                }
+                                if (config().provider.zoomControl.enable) {
+                                    scope.zoomControl = L.control.zoom({
+                                        position: sub.controlPosition(config().provider.zoomControl.position)
+                                    }).addTo(scope.gmap);
+                                }
                             }
                         },
                         reload: function () {
+                            scope.mapSourceOrderRows();
                             scope.reloadMap.call(scope);
                         },
                         addEvent: function (id, func, s) {
                             scope.events.push({ id: id, func: func, scope: s});
                         },
                         labelChange: function (label) {
-                            if (scope.gmap && scope.ginfo) {
-                                scope.ginfo.setContent(label.content);
+                            if (scope.gmap && scope.gmarker) {
+                                if (scope.ginfo) {
+                                    scope.gmap.closePopup();
+                                    scope.gmarker.unbindPopup();
+                                }
+                                if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
+                                    scope.ginfo = scope.gmarker.bindPopup(store().label.content);
+                                }
                             }
                         },
                         destroy: scope.destroy,
@@ -1126,8 +1156,15 @@
                                             maxZoom: scope.maxZoom,
                                             layers: scope.layers,
                                             scrollWheelZoom: false,
-                                            attributionControl: false
+                                            attributionControl: false,
+                                            zoomControl: false
                                         });
+                                        scope.zoomControl = null;
+                                        if (config().provider.zoomControl.enable) {
+                                            scope.zoomControl = L.control.zoom({
+                                                position: sub.controlPosition(config().provider.zoomControl.position)
+                                            }).addTo(scope.gmap);
+                                        }
 
                                         scope.gevents.push(scope.gmap.on('zoomend', function () {
                                             scope.eventZoom.call(scope);
@@ -1144,7 +1181,7 @@
                                             icon: sub.icon.call(sub, config().icon)
                                         }).addTo(scope.gmap);
                                         scope.ginfo = null;
-                                        if (store().label) {
+                                        if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
                                             scope.ginfo = scope.gmarker.bindPopup(store().label.content);
                                         }
                                         scope.gevents.push(scope.gmarker.on('click', function () {
