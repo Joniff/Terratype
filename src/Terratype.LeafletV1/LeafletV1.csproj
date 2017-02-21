@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype.LeafletV1\Css\leaflet.css" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Images\Example.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers-2x.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\Logo.png" />

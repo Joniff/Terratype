@@ -817,6 +817,9 @@
                                         done(value);
                                     })
                                 });
+                            if ($scope.vm().provider.events.files.css) {
+                                assetsService.loadCss($scope.vm().provider.events.files.css);
+                            }
                             if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
                                 with ({
                                     display: $scope.terratype.labelOverlay.display

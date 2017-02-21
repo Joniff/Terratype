@@ -14170,9 +14170,9 @@
                 },
                 destroy: function () {
                     event.cancel(id);
-                    angular.forEach(scope.gevents, function (gevent) {
-                        gevent.removeHooks();
-                    });
+                    //angular.forEach(scope.gevents, function (gevent) {
+                    //    gevent.removeHooks();
+                    //});
                     scope.gevents = [];
                     if (scope.gmap) {
                         scope.gmap.remove();
@@ -14367,7 +14367,8 @@
                                             zoom: store().zoom,
                                             minZoom: scope.minZoom,
                                             maxZoom: scope.maxZoom,
-                                            layers: scope.layers
+                                            layers: scope.layers,
+                                            scrollWheelZoom: false
                                         });
 
                                         scope.gevents.push(scope.gmap.on('zoomend', function () {
