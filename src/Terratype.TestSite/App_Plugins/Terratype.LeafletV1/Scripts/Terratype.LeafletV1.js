@@ -13323,7 +13323,7 @@
         }
     }
 
-    //  Subsystem that loads or destroys Google Map library
+    //  Subsystem that loads or destroys Leaflet maps
     var sub = {
         poll: 250,
         destroySubsystem: function () {
@@ -13810,7 +13810,8 @@
                             vm().position.datum = scope.parse.call(scope, store().position.datum);
                         }
                     }
-                    if (vm().isPreview == false && config().provider && config().provider.layers && store().position && store().position.id) {
+                    if (vm().isPreview == false && config().provider && config().provider.mapSources && config().provider.mapSources.length != 0 &&
+                        scope.mapSourceValid() && store().position && store().position.id) {
                         scope.loadMap.call(scope);
                     }
 
@@ -13945,16 +13946,7 @@
                             return l.minZoom + '-' + l.maxZoom + ' ' + l.mapSource + '.' + l.tileServer;
                         },
                         mapSourceValid: function (l) {
-                            if (l) {
-                                return scope.mapSourceValid(l);
-                            }
-                            for (var i = 0; i != config().provider.mapSources.length; i++) {
-                                var r = scope.mapSourceValid(config().provider.mapSources[i]);
-                                if (r == false) {
-                                    return false;
-                                }
-                            }
-                            return true;
+                            return scope.mapSourceValid(l);
                         },
                         mapSourceMinZoomBindIE: function (div, index) {
                             //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
@@ -14117,7 +14109,7 @@
                         tileServerByCoordinateSystemAndId: scope.tileServerByCoordinateSystemAndId
                     }
                 },
-                mapSourceValid: function (l) {
+                mapSourceValidItem: function (l) {
                     return typeof l.mapSource !== 'undefined' && typeof l.mapSource.id !== 'undefined' && typeof l.tileServer !== 'undefined' &&
                         typeof l.tileServer.id !== 'undefined' && Number.isInteger(l.minZoom) && Number.isInteger(l.maxZoom) &&
                         (scope.tileServerByCoordinateSystemAndId[store().position.id + '.' + l.tileServer.id] == true) &&
@@ -14168,7 +14160,24 @@
                     }
                     vs.testImageRange = vs.testImage = n;
                 },
+                reloadTimer: null,
+                mapSourceValid: function (l) {
+                    if (l) {
+                        return scope.mapSourceValidItem(l);
+                    }
+                    for (var i = 0; i != config().provider.mapSources.length; i++) {
+                        var r = scope.mapSourceValidItem(config().provider.mapSources[i]);
+                        if (r == false) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
                 destroy: function () {
+                    if (scope.reloadTimer != null) {
+                        clearTimeout(scope.reloadTimer);
+                        scope.reloadTimer = null;
+                    }
                     event.cancel(id);
                     //angular.forEach(scope.gevents, function (gevent) {
                     //    gevent.removeHooks();
@@ -14368,7 +14377,8 @@
                                             minZoom: scope.minZoom,
                                             maxZoom: scope.maxZoom,
                                             layers: scope.layers,
-                                            scrollWheelZoom: false
+                                            scrollWheelZoom: false,
+                                            attributionControl: false
                                         });
 
                                         scope.gevents.push(scope.gmap.on('zoomend', function () {
@@ -14384,7 +14394,7 @@
                                             draggable: true,
                                             id: 'terratype_' + id + '_marker',
                                             icon: sub.icon.call(sub, config().icon)
-                                        });
+                                        }).addTo(scope.gmap);
                                         scope.ginfo = null;
                                         if (store().label) {
                                             scope.ginfo = scope.gmarker.bindPopup(store().label.content);
@@ -14471,19 +14481,20 @@
                     scope.ignoreEvents--;
                 },
                 eventCheckRefresh: function () {
-                    if (scope.gmap.getBounds() && !scope.gmap.getBounds().contains(scope.gmarker.getPosition())) {
+                    if (scope.gmap.getBounds() && !scope.gmap.getBounds().contains(scope.gmarker.getLatLng())) {
                         scope.eventRefresh.call(scope);
                     }
                 },
-                eventDrag: function (marker) {
+                eventDrag: function () {
                     if (scope.ignoreEvents > 0) {
                         return;
                     }
                     //sub.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
+                    var latlng = scope.gmarker.getLatLng();
                     vm().position.datum = {
-                        latitude: sub.round(marker.latLng.lat(), vm().position.precision),
-                        longitude: sub.round(marker.latLng.lng(), vm().position.precision)
+                        latitude: sub.round(latlng.lat, vm().position.precision),
+                        longitude: sub.round(latlng.lng, vm().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);

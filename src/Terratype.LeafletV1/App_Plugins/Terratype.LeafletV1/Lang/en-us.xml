@@ -113,6 +113,8 @@
 
     <key alias="imagetestLabel">Image Test:</key>
     <key alias="imageDescription">Tries to directly access a map tile, this isn't always guarenteed to work for all tile servers that require login / access keys. If no image is shown, there is a chance this tile server is down, the Terratype configuration is out-of-date or the zoom level you require is invalid</key>
+    <key alias="retryTitle">Reload this map with current configuration</key>
+    <key alias="retryLabel">Reload</key>
   </area>
 
   <area alias="terratypeLeafletV1ConfigApperance">

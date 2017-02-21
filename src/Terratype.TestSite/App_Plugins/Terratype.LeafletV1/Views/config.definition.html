@@ -147,6 +147,14 @@
             </div>
         </div>
 
+        <div class="umb-el-wrap control-group" ng-show="vm().provider.events.mapSourceValid()" style="margin-top:20px;">
+            <label class="control-label">
+            </label>
+            <div class="controls">
+                <button type="button" ng-click="vm().provider.events.reload()" localize="title" title="@terratypeLeafletV1ConfigDefinition_retryTitle"><localize key="terratypeLeafletV1ConfigDefinition_retryLabel">Retry</localize></button>
+            </div>
+        </div>
+
         <div style="margin-top:10px;padding:10px;background-color:#efefef;border:1px solid #dddddd">
             <small>
                 <localize key="terratypeLeafletV1ConfigDefinition_mapSourceMessage"></localize>
