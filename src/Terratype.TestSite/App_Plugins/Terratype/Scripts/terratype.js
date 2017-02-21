@@ -75,8 +75,8 @@
         }
     }]);
 
-    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService', 'assetsService',
-        function ($scope, $timeout, $http, localizationService, assetsService) {
+    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService',
+        function ($scope, $timeout, $http, localizationService) {
         $scope.config = null;
         $scope.store = null;
         $scope.vm = null;
@@ -90,7 +90,7 @@
                     editPosition: 0
                 }
             },
-            position: [],
+            position: {},
             providers: [],
             provider: {
                 id: null,
@@ -218,7 +218,7 @@
                         } else {
                             root.terratype.loading = true;
                             var script = $scope.terratype.urlProvider(id, 'scripts/' + id + '.js', true);
-                            assetsService.loadJs(script).then(function () {
+                            LazyLoad.js(script, function () {
                                 $timeout(function () {
                                     if (angular.isUndefined(root.terratype.providers[id])) {
                                         throw script + ' does not define global variable root.terratype.providers[\'' + id + '\']';
@@ -241,6 +241,23 @@
                     $scope.terratype.iconCustom();
                 }
             },
+            loadResources: function (id, provider, complete) {
+                if (provider.css && provider.css.length != 0) {
+                    for (var i = 0; i != provider.css.length; i++) {
+                        LazyLoad.css($scope.terratype.urlProvider(id, provider.css[i], true));
+                    }
+                }
+                if (provider.js && provider.js.length != 0) {
+                    var files = [];
+                    for (var i = 0; i != provider.js.length; i++) {
+                        files.push($scope.terratype.urlProvider(id, provider.js[i], true));
+                    }
+                    LazyLoad.js(files, complete);
+                }
+                else {
+                    complete();
+                }
+            },
             setProvider: function (id) {
                 var index = $scope.terratype.mapId($scope.vm().providers, id);
                 if (index == -1) {
@@ -249,22 +266,22 @@
                 }
                 $scope.terratype.loadProvider(id, function () {
                     $scope.vm().providers[index] = angular.extend($scope.vm().providers[index], root.terratype.providers[id]);
-                    $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
-                        $scope.store, $scope.config, $scope.vm, function () {
-                            $scope.$apply();
-                        }, function (key, done) {
-                            localizationService.localize(key).then(function (value) {
-                                done(value);
-                            })
-                        });
-                    $scope.vm().provider = $scope.vm().providers[index];
-                    $scope.vm().provider.events.setProvider();
-                    if ($scope.store().position && $scope.store().position.id != null) {
-                        $scope.terratype.setCoordinateSystem($scope.store().position.id);
-                    }
-                    if ($scope.vm().providers[index].events.files.css) {
-                        assetsService.loadCss($scope.vm().providers[index].events.files.css);
-                    }
+                    $scope.terratype.loadResources(id, $scope.vm().providers[index], function () {
+                        $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
+                            $scope.store, $scope.config, $scope.vm, function () {
+                                $scope.$apply();
+                            }, function (key, done) {
+                                localizationService.localize(key).then(function (value) {
+                                    done(value);
+                                })
+                            });
+                        $scope.vm().provider = $scope.vm().providers[index];
+                        $scope.vm().provider.events.setProvider();
+
+                        if ($scope.store().position && $scope.store().position.id != null) {
+                            $scope.terratype.setCoordinateSystem($scope.store().position.id);
+                        }
+                    });
                 });
             },
             setCoordinateSystem: function (id) {
@@ -790,36 +807,34 @@
                     }).then(function success(response) {
                         $scope.store().position.datum = response.data;
                         $scope.store().position.id = initial.position.id;
-                        done();
+                        $scope.terratype.loadEditor2(id, initial, completed);
                     });
                 } else {
-                    done();
+                    $scope.terratype.loadEditor2(id, initial, completed);
                 }
-                function done() {
-                    $scope.terratype.loadProvider($scope.config().provider.id, function () {
-                        $scope.vm().isPreview = !angular.isUndefined($scope.model.sortOrder);
-                        $scope.vm().provider = angular.copy(root.terratype.providers[$scope.config().provider.id]);
-                        var position = angular.copy($scope.store().position);
-                        position.precision = initial.position.precision;
-                        $scope.vm().provider.coordinateSystems = [];
-                        $scope.vm().provider.coordinateSystems.push(position);
-                        $scope.vm().position = angular.copy(position);
-                        $scope.vm().label = $scope.config().label;
-                        $scope.terratype.setLabelView($scope.vm().label);
-                        $scope.vm().loading = false;
-                        setTimeout(function () {
+            },
+            loadEditor2: function (id, initial, completed) {
+                $scope.terratype.loadProvider($scope.config().provider.id, function () {
+                    $scope.vm().isPreview = !angular.isUndefined($scope.model.sortOrder);
+                    $scope.vm().provider = angular.copy(root.terratype.providers[$scope.config().provider.id]);
+                    var position = angular.copy($scope.store().position);
+                    position.precision = initial.position.precision;
+                    $scope.vm().provider.coordinateSystems = [];
+                    $scope.vm().provider.coordinateSystems.push(position);
+                    $scope.vm().position = angular.copy(position);
+                    $scope.vm().label = $scope.config().label;
+                    $scope.terratype.setLabelView($scope.vm().label);
+                    $scope.vm().loading = false;
+                    setTimeout(function () {
+                        $scope.terratype.loadResources($scope.config().provider.id, $scope.vm().provider, function () {
                             //  Simple way to wait for any destroy to have finished
-                            $scope.vm().provider.events = $scope.vm().provider.boot(id, $scope.terratype.urlProvider,
-                                $scope.store, $scope.config, $scope.vm, function () {
-                                    $scope.$apply();
-                                }, function (key, done) {
-                                    localizationService.localize(key).then(function (value) {
-                                        done(value);
-                                    })
-                                });
-                            if ($scope.vm().provider.events.files.css) {
-                                assetsService.loadCss($scope.vm().provider.events.files.css);
-                            }
+                            $scope.vm().provider.events = $scope.vm().provider.boot(id, $scope.terratype.urlProvider, $scope.store, $scope.config, $scope.vm, function () {
+                                $scope.$apply();
+                            }, function (key, done) {
+                                localizationService.localize(key).then(function (value) {
+                                    done(value);
+                                })
+                            });
                             if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
                                 with ({
                                     display: $scope.terratype.labelOverlay.display
@@ -833,9 +848,9 @@
                             if (completed) {
                                 completed();
                             }
-                        }, 150);
-                    });
-                }
+                        });
+                    }, 150);
+                });
             },
             initEditor: function (completed) {
                 $scope.vm = function () {

@@ -1,5 +1,7 @@
 ﻿(function (root) {
     var identifier = 'Terratype.GoogleMapsV3';
+    var Wgs84 = 'WGS84';
+    var Gcj02 = 'GCJ02';
 
     var event = {
         events: [],
@@ -163,8 +165,10 @@
         },
         createSubsystem: function (version, apiKey, forceHttps, coordinateSystem, language) {
             //gm.originalConsole.log('Creating subsystem');
-            root.TerratypeGoogleMapsV3Callback = function () {
-                gm.status = gm.subsystemCheckGoogleJs;
+            root['terratypeGoogleMapsV3Callback'] = function () {
+                if (gm.status == gm.subsystemInit || gm.status == gm.subsystemReadGoogleJs) {
+                    gm.status = gm.subsystemCheckGoogleJs;
+                };
             }
             var start = gm.ticks() + gm.timeout;
             var single = 0;
@@ -186,13 +190,13 @@
                     if (forceHttps) {
                         https = 'https:';
                     }
-                    if (coordinateSystem == 'GCJ02') {
+                    if (coordinateSystem == Gcj02) {
                         //  maps.google.cn only handles http
                         https = 'http:';
                     }
                     gm.coordinateSystem = coordinateSystem;
 
-                    gm.domain = https + ((coordinateSystem == 'GCJ02') ? '//maps.google.cn/' : '//maps.googleapis.com/');
+                    gm.domain = https + ((coordinateSystem == Gcj02) ? '//maps.google.cn/' : '//maps.googleapis.com/');
                     gm.status = gm.subsystemInit;
                     gm.killswitch = false;
 
@@ -217,7 +221,12 @@
                             switch (gm.status)
                             {
                                 case gm.subsystemInit:
-                                    LazyLoad.js(gm.domain + 'maps/api/js?v=' + version  + '&libraries=places&callback=TerratypeGoogleMapsV3Callback' + key + lan);
+                                    LazyLoad.js(gm.domain + 'maps/api/js?v=' + version + '&libraries=places&callback=terratypeGoogleMapsV3Callback' + key + lan, function () {
+                                        if (gm.status == gm.subsystemInit || gm.status == gm.subsystemReadGoogleJs) {
+                                            gm.status = gm.subsystemCheckGoogleJs;
+                                        };
+                                    });
+                                    start = gm.ticks() + gm.timeout;
                                     gm.status = gm.subsystemReadGoogleJs;
                                     break;
 
@@ -230,14 +239,14 @@
                                     break;
 
                                 case gm.subsystemCheckGoogleJs:
-                                    if (gm.ticks() > start) {
-                                        clearInterval(timer);
-                                        event.broadcast('gmaperror');
-                                        gm.destroySubsystem();
-                                    } else if (gm.isGoogleMapsLoaded()) {
+                                    if (gm.isGoogleMapsLoaded()) {
                                         gm.installFakeConsole();
                                         gm.status = gm.subsystemLoadedGoogleJs;
                                         event.broadcast('gmaprefresh');
+                                    } else if (gm.ticks() > start) {
+                                        clearInterval(timer);
+                                        event.broadcast('gmaperror');
+                                        gm.destroySubsystem();
                                     }
                                     break;
 
@@ -855,6 +864,8 @@
     var provider = {
         identifier: identifier,
         datumWait: 330,
+        css: [],
+        js: [],
         boot: function (id, urlProvider, store, config, vm, updateView, translate) {
             var scope = {
                 events: [],
@@ -939,7 +950,7 @@
                             vm().position.datum = scope.parse.call(scope, store().position.datum);
                         }
                     }
-                    if (vm().isPreview == false && config().provider && config().provider.version && store().position && store().position.id) {
+                    if (vm().isPreview == false && config().provider && config().provider.version && store().position && store().position.id && vm().position.precision) {
                         scope.loadMap.call(scope);
                     }
                     return {
@@ -1008,8 +1019,8 @@
                                 scope.datumChangeWait = null;
                                 var p = scope.parse.call(scope, vm().datumChangeText);
                                 if (typeof p !== 'boolean') {
-                                    store().position.datum = p;
-                                    vm().position.datumStyle = {};
+                                    vm().position.datum = p;
+                                    scope.setDatum.call(scope);
                                     scope.setMarker.call(scope);
                                     return;
                                 }
