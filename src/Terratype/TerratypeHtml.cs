@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
+using Umbraco.Core.Models;
+using Umbraco.Web.Models;
 
 namespace Terratype
 {
@@ -39,6 +41,11 @@ namespace Terratype
             return htmlHelper.Terratype(options, null, null);
         }
 
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(options, null, null);
+        }
+
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map)
         {
             return htmlHelper.Terratype(new Options()
@@ -46,6 +53,53 @@ namespace Terratype
                 MapSetId = Counter,
                 Height = DefaultHeight
             }, map, null);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Models.Model map)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, map, null);
+        }
+
+        private static Models.Model Object2Model(object property)
+        {
+            if (property is IPublishedProperty)
+            {
+                var obj = (property as IPublishedProperty).Value;
+                if (obj is Models.Model || obj.GetType().IsSubclassOf(typeof(Models.Model)))
+                {
+                    return obj as Models.Model;
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+            else if (property is Models.Model || property.GetType().IsSubclassOf(typeof(Models.Model)))
+            {
+                return property as Models.Model;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, object property)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, Object2Model(property), null);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, string propertyAlias)
+        {
+            return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
         }
 
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, params Func<object, object>[] label)
@@ -57,9 +111,62 @@ namespace Terratype
             }, map,  label);
         }
 
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Models.Model map, params Func<object, object>[] label)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, map, label);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, object property, params Func<object, object>[] label)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(new Options()
+            {
+                MapSetId = Counter,
+                Height = DefaultHeight
+            }, Object2Model(property), label);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, string propertyAlias, params Func<object, object>[] label)
+        {
+            return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
+        }
+
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map)
         {
             return htmlHelper.Terratype(options, map, null);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, Models.Model map)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(options, map, null);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, object property)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(options, Object2Model(property), null);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, string propertyAlias)
+        {
+            return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(options, map, label);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, object property, params Func<object, object>[] label)
+        {
+            return (htmlHelper as HtmlHelper).Terratype(options, Object2Model(property), label);
+        }
+
+        public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, string propertyAlias, params Func<object, object>[] label)
+        {
+            return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
         }
 
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
@@ -112,7 +219,8 @@ namespace Terratype
                     //  Merge providers, with options taking precedents
                     var mergeJson = JObject.FromObject(merge.Provider);
                     mergeJson.Merge(JObject.FromObject(options.Provider), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
-                    merge.Provider = mergeJson.ToObject<Models.Provider>();
+                    var providerType = (options.Provider is Models.Provider) ? map.Provider.GetType() : options.Provider.GetType();
+                    merge.Provider = (Models.Provider) mergeJson.ToObject(providerType);
                 }
             }
 

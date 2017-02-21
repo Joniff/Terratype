@@ -1149,6 +1149,126 @@
             $scope.store = parent.store;
             $scope.terratype = parent.terratype;
 
+            $scope.setForeground = function (id) {
+                $scope.store().label.foreground = id;
+            }
+
+            $scope.setBackground = function (id) {
+                $scope.store().label.background = id;
+            }
+
+            var stylesheets = [];
+            stylesheets.push($scope.terratype.urlProvider(packageName, 'css/label.standard.html', true));
+
+            $scope.rte = {
+                id: $scope.identifier + 'rte',
+                getEditor: function () {
+                    for (var i = 0; i != tinymce.editors.length; i++) {
+                        if (tinymce.editors[i].id == $scope.rte.id) {
+                            return tinymce.editors[i];
+                        }
+                    }
+                    return null;
+                },
+                createLabel: function (editor) {
+                    var text = editor.getElement().getAttribute("placeholder") || editor.settings.placeholder;
+                    var attrs = editor.settings.placeholder_attrs || { style: { 'position': 'absolute', 'width': '100%', 'overflow': 'hidden', 'display': 'none' } };
+                    var el = root.tinymce.DOM.create('div', attrs);
+                    if (el.addEventListener) {
+                        el.addEventListener('click', $scope.rte.focusEvent, false);
+                    } else if (el.attachEvent) {
+                        el.attachEvent('onclick', $scope.rte.focusEvent);
+                    }
+                    var inner = root.tinymce.DOM.add(el, 'span', { style: { 'padding': '10px', 'color': '#aaaaaa', 'font-size': '17px !important;', 'white-space': 'pre-wrap', 'display': 'inline-block' } }, text)
+                    var parent = editor.getContentAreaContainer();
+                    parent.insertBefore(el, parent.firstChild);
+                    return el;
+                },
+                label: null,
+                focusEvent: function () {
+                    $scope.rte.focus();
+                    root.tinymce.execCommand('mceFocus', false);
+                },
+                focus: function () {
+                    var editor = $scope.rte.getEditor();
+                    if (!editor.settings.readonly === true) {
+                        $scope.rte.label.style.display = 'none'
+                    }
+                },
+                blur: function () {
+                    var editor = $scope.rte.getEditor();
+                    if (editor.getContent() == '') {
+                        $scope.rte.label.style.display = '';
+                    } else {
+                        $scope.rte.label.style.display = 'none'
+                    }
+                    $scope.terratype.setLabel();
+                },
+                config: {
+                    selector: "textarea",
+                    toolbar: ['code', 'styleselect', 'bold', 'italic', 'forecolor', 'backcolor', 'alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'link', 'umbmediapicker', 'umbembeddialog'],
+                    stylesheets: stylesheets
+                },
+                linkPickerOverlay: {},
+                openLinkPicker: function (editor, currentTarget, anchorElement) {
+                    $scope.rte.linkPickerOverlay = {
+                        view: "linkpicker",
+                        currentTarget: currentTarget,
+                        show: true,
+                        submit: function (model) {
+                            tinyMceService.insertLinkInEditor(editor, model.target, anchorElement);
+                            $scope.rte.linkPickerOverlay.show = false;
+                            $scope.rte.linkPickerOverlay = null;
+                        }
+                    };
+                },
+                mediaPickerOverlay: {},
+                openMediaPicker: function (editor, currentTarget, userData) {
+                    $scope.rte.mediaPickerOverlay = {
+                        currentTarget: currentTarget,
+                        onlyImages: true,
+                        showDetails: true,
+                        startNodeId: userData.startMediaId,
+                        view: "mediapicker",
+                        show: true,
+                        submit: function (model) {
+                            tinyMceService.insertMediaInEditor(editor, model.selectedImages[0]);
+                            $scope.rte.mediaPickerOverlay.show = false;
+                            $scope.rte.mediaPickerOverlay = null;
+                        },
+                        onImageLoaded: function () {
+                            // Not sure what we do here
+                        }
+                    };
+                },
+                embedOverlay: {},
+                openEmbed: function (editor) {
+                    $scope.rte.embedOverlay = {
+                        view: "embed",
+                        show: true,
+                        submit: function (model) {
+                            tinyMceService.insertEmbeddedMediaInEditor(editor, model.embed.preview);
+                            $scope.rte.embedOverlay.show = false;
+                            $scope.rte.embedOverlay = null;
+                        }
+                    };
+                },
+                macroPickerOverlay: {},
+                openMacroPicker: function (editor, dialogData) {
+                    $scope.rte.macroPickerOverlay = {
+                        view: "macropicker",
+                        dialogData: dialogData,
+                        show: true,
+                        submit: function (model) {
+                            var macroObject = macroService.collectValueData(model.selectedMacro, model.macroParams, dialogData.renderingEngine);
+                            tinyMceService.insertMacroInEditor(editor, macroObject, $scope);
+                            $scope.rte.macroPickerOverlay.show = false;
+                            $scope.rte.macroPickerOverlay = null;
+                        }
+                    };
+                }
+            }
+
             var timer = setInterval(function () {
                 if (!root.tinymce) {
                     return;
@@ -1161,122 +1281,6 @@
                 $scope.rte.label = new $scope.rte.createLabel(editor);
                 $scope.rte.blur();
             }, 100);
-        }
-        $scope.setForeground= function (id) {
-            $scope.store().label.foreground = id;
-        }
-
-        $scope.setBackground = function (id) {
-            $scope.store().label.background = id;
-        }
-
-        $scope.rte = {
-            id: $scope.identifier + 'rte',
-            getEditor: function () {
-                for (var i = 0; i != tinymce.editors.length; i++) {
-                    if (tinymce.editors[i].id == $scope.rte.id) {
-                        return tinymce.editors[i]; 
-                    }
-                }
-                return null;
-            },
-            createLabel: function (editor) {
-                var text = editor.getElement().getAttribute("placeholder") || editor.settings.placeholder;
-                var attrs = editor.settings.placeholder_attrs || { style: { 'position': 'absolute', 'width': '100%', 'overflow': 'hidden', 'display':'none' } };
-                var el = root.tinymce.DOM.create('div', attrs);
-                if (el.addEventListener) {
-                    el.addEventListener('click', $scope.rte.focusEvent, false);
-                } else if (el.attachEvent) {
-                    el.attachEvent('onclick', $scope.rte.focusEvent);
-                }
-                var inner = root.tinymce.DOM.add(el, 'span', { style: { 'padding': '10px', 'color': '#aaaaaa', 'font-size': '17px !important;', 'white-space': 'pre-wrap', 'display':'inline-block' } }, text)
-                var parent = editor.getContentAreaContainer();
-                parent.insertBefore(el, parent.firstChild);
-                return el;
-            },
-            label: null,
-            focusEvent: function () {
-                $scope.rte.focus();
-                root.tinymce.execCommand('mceFocus', false);
-            },
-            focus: function () {
-                var editor = $scope.rte.getEditor();
-                if (!editor.settings.readonly === true) {
-                    $scope.rte.label.style.display = 'none'
-                }
-            },
-            blur: function () {
-                var editor = $scope.rte.getEditor();
-                if (editor.getContent() == '') {
-                    $scope.rte.label.style.display = '';
-                } else {
-                    $scope.rte.label.style.display = 'none'
-                }
-                $scope.terratype.setLabel();
-            },
-            config: {
-                selector: "textarea",
-                toolbar: ['code', 'styleselect', 'bold', 'italic', 'forecolor', 'backcolor', 'alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'link', 'umbmediapicker', 'umbembeddialog'],
-                stylesheets: []
-            },
-            linkPickerOverlay: {},
-            openLinkPicker: function (editor, currentTarget, anchorElement) {
-                $scope.rte.linkPickerOverlay = {
-                    view: "linkpicker",
-                    currentTarget: currentTarget,
-                    show: true,
-                    submit: function (model) {
-                        tinyMceService.insertLinkInEditor(editor, model.target, anchorElement);
-                        $scope.rte.linkPickerOverlay.show = false;
-                        $scope.rte.linkPickerOverlay = null;
-                    }
-                };
-            },
-            mediaPickerOverlay: {},
-            openMediaPicker: function (editor, currentTarget, userData) {
-                $scope.rte.mediaPickerOverlay = {
-                    currentTarget: currentTarget,
-                    onlyImages: true,
-                    showDetails: true,
-                    startNodeId: userData.startMediaId,
-                    view: "mediapicker",
-                    show: true,
-                    submit: function (model) {
-                        tinyMceService.insertMediaInEditor(editor, model.selectedImages[0]);
-                        $scope.rte.mediaPickerOverlay.show = false;
-                        $scope.rte.mediaPickerOverlay = null;
-                    },
-                    onImageLoaded: function () {
-                        // Not sure what we do here
-                    }
-                };
-            },
-            embedOverlay: {},
-            openEmbed: function (editor) {
-                $scope.rte.embedOverlay = {
-                    view: "embed",
-                    show: true,
-                    submit: function (model) {
-                        tinyMceService.insertEmbeddedMediaInEditor(editor, model.embed.preview);
-                        $scope.rte.embedOverlay.show = false;
-                        $scope.rte.embedOverlay = null;
-                    }
-                };
-            },
-            macroPickerOverlay: {},
-            openMacroPicker: function (editor, dialogData) {
-                $scope.rte.macroPickerOverlay = {
-                    view: "macropicker",
-                    dialogData: dialogData,
-                    show: true,
-                    submit: function (model) {
-                        var macroObject = macroService.collectValueData(model.selectedMacro, model.macroParams, dialogData.renderingEngine);
-                        tinyMceService.insertMacroInEditor(editor, macroObject, $scope);
-                        $scope.rte.macroPickerOverlay.show = false;
-                        $scope.rte.macroPickerOverlay = null;
-                    }
-                };
-            }
         }
     }]);
 
