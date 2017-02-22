@@ -13,83 +13,184 @@
         jquery = true;
     }
 }
-Jquery is @jquery
+<html>
+<head>
+    <title>Archetype Maps</title>
+</head>
+<body>
+    Jquery is @jquery
 
-<h1>
-    @Model.Content.Name - Individual maps
-</h1>
+    <h1>
+        @Model.Content.Name - Individual GMaps maps
+    </h1>
 
-<div id="pretend-accordion" style="display:@(Request.QueryString["show1"] != null ? "display" : "none");">
+    <div id="pretend-accordion" style="display:@(Request.QueryString["show1"] != null ? "display" : "none");">
 
-    @foreach (var record in Model.Content.Archetype)
-    {
-        var name = record.GetValue<string>("name");
-        var map = record.GetValue<Terratype.Models.Model>("location");
+        @foreach (var record in Model.Content.Archetype)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
 
-        @Html.Terratype(map, 
+            @Html.Terratype(map,
             @<text>
                 @name is at @map.Position
             </text>
         )
 
-        <br />
-    }
-</div>
-
-
-<button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
-
-
-<h1>
-    @Model.Content.Name - Combined maps
-</h1>
-
-
-<div id="pretend-accordion2" style="display:@(Request.QueryString["show2"] != null ? "display" : "none");">
-
-    @foreach (var record in Model.Content.Archetype)
-    {
-        var name = record.GetValue<string>("name");
-        var map = record.GetValue<Terratype.Models.Model>("location");
-
-        @Html.Terratype(new Options { MapSetId = 1 }, map,
-            @<text>
-                @name is at @map.Position
-            </text>
-        )
-    }
-</div>
-
-
-<button onclick="var a = document.getElementById('pretend-accordion2');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
-
-<h1>
-    @Model.Content.Name - Combined maps with options
-</h1>
-
-
-<div id="pretend-accordion3" style="display:@(Request.QueryString["show3"] != null ? "display" : "none");">
-
-    @Html.Terratype(new Options { Provider = new Terratype.Providers.GoogleMapsV3()
-    {
-        Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
-        {
-            Satellite = true
+            <br />
         }
-    }, MapSetId = 2, Zoom = 3, Position = new Terratype.CoordinateSystems.Wgs84("50,0") })
+    </div>
 
-    @foreach (var record in Model.Content.Archetype)
-    {
-        var name = record.GetValue<string>("name");
-        var map = record.GetValue<Terratype.Models.Model>("location");
 
-        @Html.Terratype(new Options { MapSetId = 2 }, map,
+    <button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+    <h1>
+        @Model.Content.Name - Combined Gmaps maps
+    </h1>
+
+
+    <div id="pretend-accordion2" style="display:@(Request.QueryString["show2"] != null ? "display" : "none");">
+
+        @foreach (var record in Model.Content.Archetype)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
+
+            @Html.Terratype(new Options { MapSetId = 1 }, map,
             @<text>
                 @name is at @map.Position
             </text>
         )
-    }
-</div>
+        }
+    </div>
 
 
-<button onclick="var a = document.getElementById('pretend-accordion3');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+    <button onclick="var a = document.getElementById('pretend-accordion2');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+    <h1>
+        @Model.Content.Name - Combined Gmaps maps with options
+    </h1>
+
+
+    <div id="pretend-accordion3" style="display:@(Request.QueryString["show3"] != null ? "display" : "none");">
+
+        @Html.Terratype(new Options
+       {
+           Provider = new Terratype.Providers.GoogleMapsV3()
+           {
+               Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
+               {
+                   Satellite = true
+               }
+           },
+           MapSetId = 2,
+           Zoom = 3,
+           Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+       })
+
+        @foreach (var record in Model.Content.Archetype)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
+
+            @Html.Terratype(new Options { MapSetId = 2 }, map,
+            @<text>
+                @name is at @map.Position
+            </text>
+        )
+        }
+    </div>
+
+
+    <button onclick="var a = document.getElementById('pretend-accordion3');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+    <h1>
+        @Model.Content.Name - Individual Leaflet maps
+    </h1>
+
+    <div id="pretend-accordion4" style="display:@(Request.QueryString["show1"] != null ? "display" : "none");">
+
+        @foreach (var record in Model.Content.Leaflet)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
+
+            @Html.Terratype(map,
+                @<text>
+                    @name is at @map.Position
+                </text>
+        )
+
+            <br />
+        }
+    </div>
+
+
+    <button onclick="var a = document.getElementById('pretend-accordion4');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+    <h1>
+        @Model.Content.Name - Combined Leaflet maps
+    </h1>
+
+
+    <div id="pretend-accordion5" style="display:@(Request.QueryString["show2"] != null ? "display" : "none");">
+
+        @foreach (var record in Model.Content.Leaflet)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
+
+            @Html.Terratype(new Options { MapSetId = 10 }, map,
+        @<text>
+            @name is at @map.Position
+        </text>
+        )
+        }
+    </div>
+
+
+    <button onclick="var a = document.getElementById('pretend-accordion5');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+    <h1>
+        @Model.Content.Name - Combined Leaflet maps with options
+    </h1>
+
+
+    <div id="pretend-accordion6" style="display:@(Request.QueryString["show6"] != null ? "display" : "none");">
+
+        @Html.Terratype(new Options
+   {
+       Provider = new Terratype.Providers.LeafletV1()
+       {
+           ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+           {
+               Enable = true,
+               Position = Terratype.Providers.LeafletV1.ControlPositions.TopLeft
+           }
+       },
+       MapSetId = 11,
+       Zoom = 3,
+       Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+   })
+
+        @foreach (var record in Model.Content.Leaflet)
+            {
+                var name = record.GetValue<string>("name");
+                var map = record.GetValue<Terratype.Models.Model>("location");
+
+            @Html.Terratype(new Options { MapSetId = 11 }, map,
+        @<text>
+            @name is at @map.Position
+        </text>
+        )
+        }
+    </div>
+
+
+    <button onclick="var a = document.getElementById('pretend-accordion6');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+</body>
+</html>

@@ -230,7 +230,7 @@ namespace Terratype
                 writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype));
                 writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
-                var hasLabel = map != null && (label != null || (map.Label != null && map.Label is Labels.Standard && !String.IsNullOrWhiteSpace((map.Label as Labels.Standard).Content.ToString())));
+                var hasLabel = map != null && (label != null || (map.Label != null && map.Label.HasContent));
 
                 var labelId = (hasLabel) ? nameof(Terratype) + Guid.NewGuid().ToString() : null;
                 merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height != 0 ? merge.Height : DefaultHeight, options.Language);

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Web;
 using System.Web.UI;
@@ -45,6 +46,14 @@ namespace Terratype.Labels
         [JsonConverter(typeof(IHtmlStringConverter))]
         [JsonProperty(PropertyName = "content")]
         public IHtmlString Content { get; set; }
+
+        public override bool HasContent
+        {
+            get
+            {
+                return !String.IsNullOrWhiteSpace(Content.ToString());
+            }
+        }
 
         public override void GetHtml(HtmlTextWriter writer, Models.Model model)
         {

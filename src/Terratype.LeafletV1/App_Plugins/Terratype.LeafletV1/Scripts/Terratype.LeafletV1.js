@@ -549,6 +549,7 @@
                             scope.mapSourceTestImageBind(t, index);
                         },
                         mapSourceImageTest: function (index) {
+                            var ms = scope.mapSourceById[config().provider.mapSources[index].mapSource.id];
                             var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
                             var x, y;
                             z = vm().provider.mapSources[index].testImage;
@@ -640,8 +641,8 @@
                             if (ts.options.subdomains) {
                                 url = url.replace(new RegExp('\{s\}', 'gi'), ts.options.subdomains[0]);
                             }
-                            if (ts.key && ts.key.enable == true) {
-                                url = url.replace(new RegExp('\{key\}', 'gi'), config().provider.mapSources[index].key.value);
+                            if (ms.key && ms.key.enable == true) {
+                                url = url.replace(new RegExp('\{key\}', 'gi'), config().provider.mapSources[index].key);
                             }
                             return url;
                         },
@@ -656,6 +657,7 @@
                     return typeof l.mapSource !== 'undefined' && typeof l.mapSource.id !== 'undefined' && typeof l.tileServer !== 'undefined' &&
                         typeof l.tileServer.id !== 'undefined' && Number.isInteger(l.minZoom) && Number.isInteger(l.maxZoom) &&
                         (scope.tileServerByCoordinateSystemAndId[store().position.id + '.' + l.tileServer.id] == true) &&
+                        (scope.mapSourceById[l.mapSource.id].key.enable == false || l.key != '') && 
                         (l.minZoom >= scope.tileServerById[l.tileServer.id].minZoom) && (l.minZoom <= l.maxZoom) && (l.maxZoom <= scope.tileServerById[l.tileServer.id].maxZoom);
                 },
                 mapSourceOrderRows: function () {
@@ -707,6 +709,9 @@
                 mapSourceValid: function (l) {
                     if (l) {
                         return scope.mapSourceValidItem(l);
+                    }
+                    if (!config().provider.mapSources || config().provider.mapSources.length == 0) {
+                        return false;
                     }
                     for (var i = 0; i != config().provider.mapSources.length; i++) {
                         var r = scope.mapSourceValidItem(config().provider.mapSources[i]);
@@ -897,6 +902,7 @@
                                             options.minZoom = ms.minZoom;
                                             options.maxZoom = ms.maxZoom;
                                             options.attribution = ts.attribution,
+                                            options.key = config().provider.mapSources[l].key
                                             scope.layers.push(L.tileLayer(ts.url, options));
                                             if (scope.minZoom == null || ms.minZoom < scope.minZoom) {
                                                 scope.minZoom = ms.minZoom;

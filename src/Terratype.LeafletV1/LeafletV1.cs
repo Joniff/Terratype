@@ -84,6 +84,9 @@ namespace Terratype.Providers
 
             [JsonProperty(PropertyName = "maxZoom")]
             public int MaxZoom { get; set; }
+
+            [JsonProperty(PropertyName = "key")]
+            public string Key { get; set; }
         }
 
         [JsonProperty(PropertyName = "mapSources")]
@@ -119,7 +122,8 @@ namespace Terratype.Providers
             writer.AddAttribute("data-css-files", HttpUtility.UrlEncode(JsonConvert.SerializeObject(new string[] 
             {
                 UrlPath("css/leaflet.css"),
-                UrlPath("css/markercluster.css")
+                UrlPath("css/MarkerCluster.css"),
+                UrlPath("css/MarkerCluster.Default.css")
             }), System.Text.Encoding.Default));
             writer.AddAttribute("data-leafletv1", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
@@ -135,7 +139,7 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.Renderer.js"));
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();

@@ -13,6 +13,17 @@
   <area alias="terratypeLeafletV1ConfigApperance">
   </area>
 
+  <area alias="terratypeLeafletV1Terratype">
+    <key alias="name">Terratype</key>
+    <key alias="description">Terratype tile server. Map the future</key>
+    <key alias="keyName">Access Key</key>
+    <key alias="keyPlaceholder">Access Key</key>
+    <key alias="keyDescription">Access key required to access all services</key>
+    <key alias="keyUrl"><![CDATA[<small>Terratype Access Key can be retrieved from <a href="https://terratype.io">your account</a></small>]]></key>
+    <key alias="standardName">Standard</key>
+    <key alias="standardAttribution">Terratype TileServer</key>
+  </area>
+
   <area alias="terratypeLeafletV1OpenStreetMap">
     <key alias="name">OpenStreetMap</key>
     <key alias="description"><![CDATA[As well as being a collaborative project to create a free editable map of the world, where OpenStreetMap is normally accessed via paid for Tile Servers ran by other groups. OpenStreetMap can also be used as a Tile Server, but is <a href="https://operations.osmfoundation.org/policies/tiles/">severely restricted to non-commercial limited fair usage rules</a>]]></key>
@@ -130,6 +141,10 @@
 
     <key alias="positionLabel">Default location:</key>
     <key alias="positionDescription">Select the default location when displaying this map to a content editor</key>
+  </area>
+
+  <area alias="terratypeLeafletV1EditorApperance">
+    <key alias="locationPlaceholder">latitude (-90.0 to 90.0), longitude (-180.0 to 180.0)</key>
   </area>
 
 </language>

@@ -60,9 +60,9 @@
                         </small>
                     </label>
                     <div class="controls">
-                        <input id="terratype_{{identifier}}_leafletv1_key_{{$index}}" type="text" ng-model="config().provider.mapSources[$index].key.value" class="umb-editor umb-textstring textstring" placeholder="{{vm().provider.events.mapSourceById[l.mapSource.id].key.placeholder}}" spellcheck="false" />
+                        <input id="terratype_{{identifier}}_leafletv1_key_{{$index}}" type="text" ng-model="config().provider.mapSources[$index].key" class="umb-editor umb-textstring textstring" placeholder="{{vm().provider.events.mapSourceById[l.mapSource.id].key.placeholder}}" spellcheck="false" />
                         <div>
-                            <div terratype-translate="{{l.key.url}}">
+                            <div ng-bind-html="vm().provider.events.mapSourceById[l.mapSource.id].key.url">
                             </div>
                         </div>
                     </div>

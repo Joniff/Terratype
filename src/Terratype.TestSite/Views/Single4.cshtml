@@ -75,7 +75,28 @@
                 <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                     This is an empty div
                 </div>
-                @Html.Terratype(Model.Content.Map4)
+
+                @Html.Terratype(new Options
+   {
+       Provider = new Terratype.Providers.LeafletV1()
+       {
+           ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+           {
+               Enable = true,
+               Position = Terratype.Providers.LeafletV1.ControlPositions.BottomRight
+           }
+       },
+       MapSetId = 11,
+       Zoom = 3,
+       Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+   })
+
+
+
+
+
+
+                @Html.Terratype(new Options { MapSetId = 11 }, Model.Content.Map4)
                 <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                     This is an empty div
                 </div>

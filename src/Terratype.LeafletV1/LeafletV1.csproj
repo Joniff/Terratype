@@ -83,7 +83,7 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster-src.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.js" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.apperance.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />

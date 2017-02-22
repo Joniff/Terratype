@@ -264,23 +264,29 @@
                     //  Asked for a provider we don't have
                     return;
                 }
-                $scope.terratype.loadProvider(id, function () {
-                    $scope.vm().providers[index] = angular.extend($scope.vm().providers[index], root.terratype.providers[id]);
-                    $scope.terratype.loadResources(id, $scope.vm().providers[index], function () {
-                        $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
-                            $scope.store, $scope.config, $scope.vm, function () {
-                                $scope.$apply();
-                            }, function (key, done) {
-                                localizationService.localize(key).then(function (value) {
-                                    done(value);
-                                })
-                            });
-                        $scope.vm().provider = $scope.vm().providers[index];
-                        $scope.vm().provider.events.setProvider();
+                $scope.vm().providerLoading = true;
+                $timeout(function () {
+                    $scope.terratype.loadProvider(id, function () {
+                        $scope.vm().providers[index] = angular.extend($scope.vm().providers[index], root.terratype.providers[id]);
+                        $scope.terratype.loadResources(id, $scope.vm().providers[index], function () {
+                            $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
+                                $scope.store, $scope.config, $scope.vm, function () {
+                                    $scope.$apply();
+                                }, function (key, done) {
+                                    localizationService.localize(key).then(function (value) {
+                                        done(value);
+                                    })
+                                });
+                            $scope.vm().provider = $scope.vm().providers[index];
+                            $scope.vm().provider.events.setProvider();
 
-                        if ($scope.store().position && $scope.store().position.id != null) {
-                            $scope.terratype.setCoordinateSystem($scope.store().position.id);
-                        }
+                            if ($scope.store().position && $scope.store().position.id != null) {
+                                $scope.terratype.setCoordinateSystem($scope.store().position.id);
+                            }
+                            $timeout(function () {
+                                $scope.vm().providerLoading = false;
+                            })
+                        });
                     });
                 });
             },

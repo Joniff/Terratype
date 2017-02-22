@@ -42,6 +42,11 @@ namespace Terratype.Models
         [JsonProperty(PropertyName = "editPosition")]
         public EditPositions EditPosition { get; }
 
+        /// <summary>
+        /// Has this lable got some content. False = The content editor has left this label blank
+        /// </summary>
+        public abstract bool HasContent { get; }
+
         public static IDictionary<string, Type> Register
         {
             get

@@ -10,6 +10,32 @@
         translate: false,
         tileServers:
         [
+            /*{
+                id: 'Terratype',
+                name: 'terratypeLeafletV1Terratype_name',
+                description: 'terratypeLeafletV1Terratype_description',
+                key: {
+                    enable: true,
+                    name: 'terratypeLeafletV1Terratype_keyName',
+                    description: 'terratypeLeafletV1Terratype_keyDescription',
+                    placeholder: 'terratypeLeafletV1Terratype_keyPlaceholder',
+                    url: 'terratypeLeafletV1Terratype_keyUrl'
+                },
+                tileServers: [
+                    {
+                        url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key={key}',
+                        id: 'Terratype.Standard',
+                        name: 'terratypeLeafletV1Terratype_standardName',
+                        attribution: 'terratypeLeafletV1Terratype_standardAttribution',
+                        coordinateSystems: [Wgs84],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abc'
+                        }
+                    },
+                ]
+            },*/
             {
                 id: 'OpenStreetMap',
                 name: 'terratypeLeafletV1OpenStreetMap_name',
@@ -124,7 +150,7 @@
                     }
                 ]
             },
-            {
+            /*{
                 id: 'Thunderforest',
                 name: 'terratypeLeafletV1Thunderforest_name',
                 description: 'terratypeLeafletV1Thunderforest_description',
@@ -161,7 +187,7 @@
                         }
                     }
                 ]
-            },
+            },*/
             {
                 id: 'TianDiTu',
                 name: 'terratypeLeafletV1TianDiTu_name',
