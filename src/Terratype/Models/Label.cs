@@ -13,18 +13,18 @@ namespace Terratype.Models
     public abstract class Label : Frisk.IFrisk
     {
         /// <summary>
-        /// Unique identifier of coordinate system
+        /// Unique identifier of label
         /// </summary>
         [JsonProperty(PropertyName = "id")]
         public abstract string Id { get; }
 
         /// <summary>
-        /// Name of coordinate system
+        /// Name of label
         /// </summary>
         public abstract string Name { get; }
 
         /// <summary>
-        /// Description of coordinate system
+        /// Description of label
         /// </summary>
         public abstract string Description { get; }
 

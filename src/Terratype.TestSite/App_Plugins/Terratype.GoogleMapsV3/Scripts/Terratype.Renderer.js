@@ -253,9 +253,12 @@
 
             for (var p = 0; p != m.positions.length; p++) {
                 var item = m.positions[p];
-                m.ginfos[p] = new root.google.maps.InfoWindow({
-                    content: document.getElementById(item.label)
-                });
+                m.ginfos[p] = null;
+                if (item.label) {
+                    m.ginfos[p] = new root.google.maps.InfoWindow({
+                        content: document.getElementById(item.label)
+                    });
+                }
                 m.gmarkers[p] = new root.google.maps.Marker({
                     map: m.gmap,
                     position: item.latlng,
@@ -274,8 +277,9 @@
                                 return;
                             }
                             q.closeInfoWindows(mm);
-
-                            mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
+                            if (mm.ginfos[pp] != null) {
+                                mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
+                            }
                         });
                     }
                 }
@@ -288,7 +292,9 @@
         },
         closeInfoWindows: function (m) {
             for (var p = 0; p != m.positions.length; p++) {
-                m.ginfos[p].close();
+                if (m.ginfos[p] != null) {
+                    m.ginfos[p].close();
+                }
             }
         },
         checkResize: function (m) {

@@ -1157,9 +1157,6 @@
                 $scope.store().label.background = id;
             }
 
-            var stylesheets = [];
-            stylesheets.push($scope.terratype.urlProvider(packageName, 'css/label.standard.html', true));
-
             $scope.rte = {
                 id: $scope.identifier + 'rte',
                 getEditor: function () {
@@ -1207,7 +1204,7 @@
                 config: {
                     selector: "textarea",
                     toolbar: ['code', 'styleselect', 'bold', 'italic', 'forecolor', 'backcolor', 'alignleft', 'aligncenter', 'alignright', 'bullist', 'numlist', 'link', 'umbmediapicker', 'umbembeddialog'],
-                    stylesheets: stylesheets
+                    stylesheets: []
                 },
                 linkPickerOverlay: {},
                 openLinkPicker: function (editor, currentTarget, anchorElement) {

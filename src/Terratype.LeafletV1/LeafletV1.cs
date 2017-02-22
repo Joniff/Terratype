@@ -9,6 +9,16 @@ namespace Terratype.Providers
     [JsonObject(MemberSerialization.OptIn)]
     public class LeafletV1 : Models.Provider
     {
+        private string UrlPath(string file, bool cache = true)
+        {
+            var result = "/App_Plugins/Terratype.LeafletV1/" + file;
+            if (cache)
+            {
+                result += "?cache=1.0.7";
+            }
+            return result;
+        }
+
         [JsonProperty(PropertyName = "id")]
         public override string Id
         {
@@ -59,9 +69,6 @@ namespace Terratype.Providers
         [JsonObject(MemberSerialization.OptIn)]
         public class MapSourceDefinition
         {
-            [JsonProperty(PropertyName = "id")]
-            public string Id { get; set; }
-
             [JsonObject(MemberSerialization.OptIn)]
             public class TileServerDefinition
             {
@@ -79,7 +86,7 @@ namespace Terratype.Providers
             public int MaxZoom { get; set; }
         }
 
-        [JsonProperty(PropertyName = "mapSource")]
+        [JsonProperty(PropertyName = "mapSources")]
         public IEnumerable<MapSourceDefinition> MapSources { get; set; }
 
         public enum ControlPositions
@@ -106,7 +113,54 @@ namespace Terratype.Providers
 
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {
-            throw new NotImplementedException();
+            const string guid = "53031a3b-dc6a-4440-a5e5-5060f691afd6";
+            var id = nameof(Terratype) + "." + nameof(LeafletV1) + Guid.NewGuid().ToString();
+
+            writer.AddAttribute("data-css-files", HttpUtility.UrlEncode(JsonConvert.SerializeObject(new string[] 
+            {
+                UrlPath("css/leaflet.css"),
+                UrlPath("css/markercluster.css")
+            }), System.Text.Encoding.Default));
+            writer.AddAttribute("data-leafletv1", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
+            writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            if (labelId != null)
+            {
+                writer.AddAttribute("data-label-id", labelId);
+            }
+            writer.AddAttribute("data-id", id);
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
+            writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(LeafletV1));
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+
+            if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
+            {
+                HttpContext.Current.Items.Add(guid, true);
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.Renderer.js"));
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                writer.RenderEndTag();
+
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.js"));
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                writer.RenderEndTag();
+
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.markercluster.js"));
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                writer.RenderEndTag();
+
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/tileservers.js"));
+                writer.AddAttribute("defer", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Script);
+                writer.RenderEndTag();
+            }
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
+            writer.AddStyleAttribute(HtmlTextWriterStyle.Height, (height != null ? height : model.Height).ToString() + "px");
+            writer.RenderBeginTag(HtmlTextWriterTag.Div);
+            writer.RenderEndTag();
+            writer.RenderEndTag();
         }
 
     }

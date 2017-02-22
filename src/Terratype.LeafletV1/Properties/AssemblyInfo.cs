@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Terratype.LeafletV1")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Leaflet Provider for Terratype, an Umbraco map datatype")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Jonathan Richards")]
 [assembly: AssemblyProduct("Terratype.LeafletV1")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

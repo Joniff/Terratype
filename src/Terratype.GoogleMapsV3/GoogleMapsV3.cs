@@ -271,7 +271,10 @@ namespace Terratype.Providers
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
             writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
-            writer.AddAttribute("data-label-id", labelId);
+            if (labelId != null)
+            {
+                writer.AddAttribute("data-label-id", labelId);
+            }
             writer.AddAttribute("data-id", id);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
             writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(GoogleMapsV3));

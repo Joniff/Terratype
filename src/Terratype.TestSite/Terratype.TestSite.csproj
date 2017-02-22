@@ -433,6 +433,7 @@
     <Content Include="Views\Single1.cshtml" />
     <Content Include="Views\Single2.cshtml" />
     <Content Include="Views\GridMap.cshtml" />
+    <Content Include="Views\Single4.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

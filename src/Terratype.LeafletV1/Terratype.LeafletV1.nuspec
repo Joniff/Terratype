@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Terratype.LeafletV1</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>Joniff</owners>
+    <licenseUrl>https://github.com/Joniff/Terratype/blob/master/docs/Licence.txt</licenseUrl>
+    <projectUrl>https://github.com/Joniff/Terratype</projectUrl>
+    <iconUrl>https://github.com/Joniff/Terratype/blob/master/src/Terratype/Terratype.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Init</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Umbraco Google Maps Open Street View leaflet</tags>
+    <dependencies>
+      <dependency id="UmbracoCms.Core" version="7.0.0" />
+      <dependency id="Terratype" version="1.0.7" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="App_Plugins\**\*.*" target="content\App_Plugins" />
+  </files>
+</package>

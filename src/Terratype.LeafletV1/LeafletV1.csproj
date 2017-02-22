@@ -58,9 +58,14 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Terratype.LeafletV1.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype.LeafletV1\Css\leaflet.css" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Css\MarkerCluster.css" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Css\MarkerCluster.Default.css" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\Example.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers-2x.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\layers.png" />
@@ -71,10 +76,14 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\tileservers.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-providers.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-src.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster-src.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.Renderer.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.apperance.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />
@@ -82,6 +91,10 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\grid.apperance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
+xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
