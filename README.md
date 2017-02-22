@@ -30,8 +30,17 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 @Html.Terratype(Options, Map, @<text>Label</text>)
 
+
+
+
  
 ### Log ###
+
+**1.0.7**
+	@Html.Terratype() now handles dynamic values
+	Added Leaflet Provider
+	Remove labels from frontend when no label is present
+	Improved provider loading
 
 **1.0.6**
 
