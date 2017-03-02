@@ -5,19 +5,13 @@ ubuntu server 16.10
 INSTALL
 
 
-apt-get install openssh-server
-
+sudo apt-get install openssh-server
 sudo apt-get install libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libpng12-0 libtiff5-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
 sudo apt-get install libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
 sudo apt-get install libpng12-0
 sudo apt-get install libtiff5-dev 
-
 sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
-
-sudo apt-get install make cmake g++ libboost-dev libboost-system-dev \
-  libboost-filesystem-dev libexpat1-dev zlib1g-dev \
-  libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 \
-  liblua5.2-dev
+sudo apt-get install make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
 
 mkdir ~/src
 cd ~/src
@@ -99,6 +93,9 @@ sudo carto project.mml > OSMBright.xml
 cd /usr/local/etc/
 sudo rm renderd.conf
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/renderd.conf
+sudo mkdir /usr/local/share/maps/planet
+cd /usr/local/share/maps/planet 
+sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 
 WEBSERVER
 
@@ -106,57 +103,12 @@ sudo mkdir /var/run/renderd
 sudo mkdir /var/lib/mod_tile
 cd /etc/apache2/conf-available
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/mod_tile.conf
-
-###~~~~ these files modifications need to be added to github and wget .conf file ~~~~####
-sudo nano mod_tile.conf
-
-LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so
-
-#######
-####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
-# Apache’s default website configuration file needs to be modified to include mod_tile settings. Modify the file /etc/apache2/sites-available/000-default.conf to include the following lines immediately after the admin e-mail address line:
-
-LoadTileConfigFile /usr/local/etc/renderd.conf
-ModTileRenderdSocketName /var/run/renderd/renderd.sock
-# Timeout before giving up for a tile to be rendered
-ModTileRequestTimeout 0
-# Timeout before giving up for a tile to be rendered that is otherwise missing
-ModTileMissingRequestTimeout 30
-
-#Tell Apache that you have added the new module, and restart it:
 cd /etc/apache2/sites-available
+sudo rm 000-default.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/000-default.conf
 sudo chown root:root 000-default.conf
-
-
 sudo a2enconf mod_tile
 sudo service apache2 reload
-
-####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
-#Edit the file /etc/postgresql/9.5/main/postgresql.conf and make the following changes
-shared_buffers = 128MB
-checkpoint_segments = 20
-maintenance_work_mem = 256MB
-autovacuum = off
-#
-cd /etc/postgresql/9.5/main
-sudo chown postgres:postgres postgresql.conf
-
-#edit /etc/sysctl.conf and add these lines near the top after the other “kernel” definitions
-# Increase kernel shared memory segments - needed for large databases
-kernel.shmmax=268435456
-
-sudo reboot
-
-sudo sysctl kernel.shmmax
-
-######
-make initial drive over 1TB
-######
-
-sudo mkdir /usr/local/share/maps/planet
-cd /usr/local/share/maps/planet 
-sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
-
 
 DATABASE
 
@@ -193,4 +145,35 @@ This line:
 Should be
 	local   all             postgres                                trust
 
+	
+	
+####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
+#Edit the file /etc/postgresql/9.5/main/postgresql.conf and make the following changes
+shared_buffers = 128MB
+checkpoint_segments = 20
+maintenance_work_mem = 256MB
+autovacuum = off
+#
+cd /etc/postgresql/9.5/main
+sudo chown postgres:postgres postgresql.conf
+
+#edit /etc/sysctl.conf and add these lines near the top after the other “kernel” definitions
+# Increase kernel shared memory segments - needed for large databases
+kernel.shmmax=268435456
+
+sudo reboot
+
+sudo sysctl kernel.shmmax
+
+######
+make initial drive over 1TB
+######
+	
+	
+	
+	
+	
+	
+IMPORT DATA	
+	
 osm2pgsql --slim -U terratype_db -d gis -C 16000 --number-processes 3 /usr/local/share/maps/planet/planet-latest.osm.pbf	
