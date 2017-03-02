@@ -12,13 +12,13 @@
 
   <area alias="terratypeGoogleMapsV3ConfigApperance">
 
-    <key alias="basicMapLabel">Show Basic Map:</key>
+    <key alias="basicMapLabel">Basic Map:</key>
     <key alias="basicMapDescription">Do you want to see the standard map</key>
 
-    <key alias="terrainMapLabel">Show Terrain Map:</key>
+    <key alias="terrainMapLabel">Terrain Map:</key>
     <key alias="terrainMapDescription">Do you want to see the standard map with terrain features</key>
 
-    <key alias="satelliteMapLabel">Show Satellite Map:</key>
+    <key alias="satelliteMapLabel">Satellite Map:</key>
     <key alias="satelliteMapDescription">Do you want to see the satellite map</key>
 
     <key alias="mapSelectorLabel">Map Selector Type:</key>
@@ -88,13 +88,13 @@
     <key alias="stylingSilver">Silver</key>
     <key alias="stylingUnsaturatedBrowns">Unsaturated Browns</key>
 
-    <key alias="roadsLabel">Show Roads:</key>
+    <key alias="roadsLabel">Roads:</key>
     <key alias="roadsDescription">Do you want roads to appear on the map</key>
 
-    <key alias="landmarksLabel">Show Landmarks:</key>
+    <key alias="landmarksLabel">Landmarks:</key>
     <key alias="landmarksDescription">Do you want landmarks to appear on the map</key>
 
-    <key alias="labelsLabel">Show Labels:</key>
+    <key alias="labelsLabel">Labels:</key>
     <key alias="labelsDescription">Do you want labels (names of countries, regions, areas, etc) to appear on the map</key>
 
     <key alias="positionLabel">Default location:</key>

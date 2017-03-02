@@ -126,27 +126,30 @@ sudo chown terratype_db /usr/local/share/maps/planet
 sudo chown terratype_db:root /var/run/renderd
 sudo chown terratype_db:root /var/lib/mod_tile
 
-
-
 sudo -u postgres psql
 \c gis
 CREATE EXTENSION postgis;
-ALTER TABLE geometry_columns OWNER TO terratype_db;cd ..
-
+ALTER TABLE geometry_columns OWNER TO terratype_db;
 ALTER TABLE spatial_ref_sys OWNER TO terratype_db;
 \q
-exit
+
+cd etc/postgresql/9.5/main/
+sudo rm pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/pg_hba.conf
+sudo chown postgres:postgres postgresql.conf
+
+
+IMPORTING MAPS INTO DB
+
+osm2pgsql --slim -U terratype_db -d gis -C 16000 --number-processes 3 /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 
-edit /etc/postgresql/9.3/main/pg_hba.conf
-This line:
-	local   all             postgres                                peer
-Should be
-	local   all             postgres                                trust
 
-	
-	
+Ignoring these changes
+
+
+
 ####~~~~ these files modifications need to be added to github and wget/replace .conf file ~~~~####
 #Edit the file /etc/postgresql/9.5/main/postgresql.conf and make the following changes
 shared_buffers = 128MB
@@ -155,7 +158,6 @@ maintenance_work_mem = 256MB
 autovacuum = off
 #
 cd /etc/postgresql/9.5/main
-sudo chown postgres:postgres postgresql.conf
 
 #edit /etc/sysctl.conf and add these lines near the top after the other “kernel” definitions
 # Increase kernel shared memory segments - needed for large databases
@@ -171,9 +173,3 @@ make initial drive over 1TB
 	
 	
 	
-	
-	
-	
-IMPORT DATA	
-	
-osm2pgsql --slim -U terratype_db -d gis -C 16000 --number-processes 3 /usr/local/share/maps/planet/planet-latest.osm.pbf	
