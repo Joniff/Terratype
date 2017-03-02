@@ -21,7 +21,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "Bing Maps V8";
+                return "terratypeBingMapsV8_name";
             }
         }
 
@@ -37,7 +37,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx";
+                return "terratypeBingMapsV8_description";
             }
         }
 

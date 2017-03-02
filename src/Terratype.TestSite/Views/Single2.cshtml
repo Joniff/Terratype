@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    @Html.Terratype(Model.Content.GetProperty("map"))
+    @Html.Terratype(Model.Content.GetProperty("mapAlias"))
 
     <br />
 
@@ -28,36 +28,56 @@
 
     <br />
 
-    @Html.Terratype(Model.Content.GetProperty("map").Value)
+    @Html.Terratype(Model.Content.GetProperty("mapAlias").Value)
 
     <br />
 
-    @Html.Terratype(Model.Content.GetProperty("map").Value, @<text>This is the label</text>)
+    @Html.Terratype(Model.Content.GetProperty("mapAlias").Value, @<text>This is the label</text>)
 
     <br />
 
+    @Html.Terratype("mapAlias", 
+        @<text>
+            <div>
+                This icon is at 
+                @((Model.Content.GetProperty("mapAlias").Value as Terratype.Models.Model).Position)
+            </div>
+        </text>
+    )
 
-    @Html.Terratype("map")
-
-    <br />
-
-    @Html.Terratype("map", @<text>This is the label</text>)
-
-    <br />
 
 
-    @Html.Terratype(new Options
+    @Html.Terratype("mapAlias",
+        @<text>
+            <div style="background-color:yellow;">
+                This icon is at
+                @((Model.Content.GetProperty("mapAlias").Value as Terratype.Models.Model).Position
+         </div>
+      </text>)
+
+
+
+                @Html.Terratype("map")
+
+                <br />
+
+                @Html.Terratype("map", @<text>This is the label</text>)
+
+                <br />
+
+
+                @Html.Terratype(new Options
+{
+    Provider = new Terratype.Providers.GoogleMapsV3()
     {
-        Provider = new Terratype.Providers.GoogleMapsV3()
+        Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
         {
-            Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
-            {
-                Satellite = true
-            }
-        },
-        Zoom = 3,
-        Position = new Terratype.CoordinateSystems.Wgs84("50,0")
-    }, "map")
+            Satellite = true
+        }
+    },
+    Zoom = 3,
+    Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+}, "map")
 
 
 

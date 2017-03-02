@@ -6,7 +6,7 @@
 
   <area alias="terratypeLeafletV1">
     <key alias="name">Leaflet V1</key>
-    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources includes OpenStreetMap</key>
+    <key alias="description">Popular javascript framework for displaying interactivce maps from various sources including OpenStreetMap</key>
     <key alias="referenceUrl">http://leafletjs.com/index.html</key>
   </area>
 

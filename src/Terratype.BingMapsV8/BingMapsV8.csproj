@@ -48,13 +48,17 @@
     <Compile Include="BingMapsV8.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Plugins\Terratype.BingMapsV8\Scripts\" />
-    <Folder Include="App_Plugins\Terratype.BingMapsV8\Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="App_Plugins\Terratype.BingMapsV8\Images\Logo.png" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.js" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.definition.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.search.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\editor.apperance.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\grid.apperance.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
