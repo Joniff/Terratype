@@ -21,7 +21,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "terratypeBingMapsV8_name";
+                return "terratypeBingMapsV8_name";              //  Value is in language file
             }
         }
 
@@ -37,7 +37,7 @@ namespace Terratype.Providers
         {
             get
             {
-                return "terratypeBingMapsV8_description";
+                return "terratypeBingMapsV8_description";       //  Value is in language file
             }
         }
 

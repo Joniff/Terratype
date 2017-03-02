@@ -1,5 +1,5 @@
 ﻿(function (root) {
-    var identifier = 'Terratype.BingMapV8';
+    var identifier = 'Terratype.BingMapsV8';
     var Wgs84 = 'WGS84';
     var Gcj02 = 'GCJ02';
 

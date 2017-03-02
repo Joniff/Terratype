@@ -4,15 +4,12 @@
     <name>Jonathan Richards</name>
   </creator>
 
-  <area alais="terratypeBingMapsV8">
+  <area alias="terratypeBingMapsV8">
     <key alias="name">Bing Maps V8</key>
     <key alias="description">Bing Maps (previously Live Search Maps, Windows Live Maps, Windows Live Local, and MSN Virtual Earth) is a web mapping service provided as a part of Microsoft's Bing suite of search engines and powered by the Bing Maps for Enterprise framework</key>
     <key alias="referenceUrl">https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx</key>
   </area>
   
-  <area alias="terratypeBingMapsV8ConfigApperance">
-  </area>
-
   <area alias="terratypeBingMapsV8ConfigDefinition">
     <key alias="versionLabel">Version:</key>
     <key alias="versionDescription">Which branch of Bing Maps V8 would you like to use</key>    
@@ -21,8 +18,8 @@
     <key alias="versionFrozen">Frozen (Mission critical release)</key>
 
     <key alias="apiKeyLabel">Bing API Key:</key>
-    <key alias="apiKeyDescription">Your Bing API Key</key>
-    <key alias="apiKeyPlaceholder">Google API Key</key>
+    <key alias="apiKeyDescription">Your Bing API Key. If you leave blank the map will contain a large Microsoft watermark</key>
+    <key alias="apiKeyPlaceholder">Bing API Key</key>
     <key alias="apiKeyGet">[Get a key]</key>
     <key alias="apiKeyInvalid">Invalid API Key</key>
     <key alias="apiKeyValid">API Key is valid</key>
@@ -248,7 +245,7 @@
     <key alias="positionDescription">Select the default location when displaying this map to a content editor</key>
   </area>
 
-  <area alias="terratypeGoogleMapsV3ConfigSearch">
+  <area alias="terratypeBingMapsV8ConfigSearch">
     <key alias="typeLabel">Search:</key>
     <key alias="typeDescription">Do you want to include a text box, to lookup locations</key>
     <key alias="typeDisable">Hide Search</key>
@@ -506,7 +503,7 @@
     <key alias="countryZW">Zimbabwe</key>
   </area>
 
-  <area alias="terratypeGoogleMapsV3EditorApperance">
+  <area alias="terratypeBingMapsV8EditorApperance">
     <key alias="statusInvalid">Invalid Bing Map API Key</key>
     <key alias="statusError">Failed to load Bing Maps V8 multiple times, please manually refresh the page and try again</key>
     <key alias="statusDuplicate">Detected multiple BingMapsV8 maps with different configuration; All Bing Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</key>
