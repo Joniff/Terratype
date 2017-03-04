@@ -36,6 +36,9 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.8**
+	Fixed option error in FireFox
+
 **1.0.7**
 	@Html.Terratype() now handles dynamic values
 	Added Leaflet Provider
