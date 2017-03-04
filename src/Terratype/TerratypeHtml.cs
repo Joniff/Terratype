@@ -66,7 +66,11 @@ namespace Terratype
 
         private static Models.Model Object2Model(object property)
         {
-            if (property is IPublishedProperty)
+            if (property == null)
+            {
+                return null;
+            }
+            else if (property is IPublishedProperty)
             {
                 var obj = (property as IPublishedProperty).Value;
                 if (obj is Models.Model || obj.GetType().IsSubclassOf(typeof(Models.Model)))

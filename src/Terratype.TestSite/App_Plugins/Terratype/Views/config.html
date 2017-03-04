@@ -153,9 +153,9 @@
                 <div class="controls" style="margin-top:3px;">
                     <input type="radio" name="terratype_{{identifier}}_icon_anchor_horizontal" ng-model="vm().icon.anchor.horizontal.isManual" ng-value="false" localize="title" title="@terratypeConfig_iconHorizontalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; terratype.iconCustom()" />
                     <select ng-model="vm().icon.anchor.horizontal.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.horizontal.isManual == true" ng-change="config().icon.anchor.horizontal = vm().icon.anchor.horizontal.automatic; terratype.iconCustom()">
-                        <option value="left" localize="label" label="@terratypeConfig_iconHorizontalAnchorLeft"></option>
-                        <option value="center" localize="label" label="@terratypeConfig_iconHorizontalAnchorCenter"></option>
-                        <option value="right" localize="label" label="@terratypeConfig_iconHorizontalAnchorRight"></option>
+                        <option value="left" terratype-translate="@terratypeConfig_iconHorizontalAnchorLeft"></option>
+                        <option value="center" terratype-translate="@terratypeConfig_iconHorizontalAnchorCenter"></option>
+                        <option value="right" terratype-translate="@terratypeConfig_iconHorizontalAnchorRight"></option>
                     </select>
                 </div>
                 <div ng-show="vm().icon.anchor.horizontal.isManual && vm().icon.anchor.horizontal.manual >= config().icon.size.width">
@@ -179,9 +179,9 @@
                 <div class="controls" style="margin-top:3px;">
                     <input type="radio" name="terratype_{{identifier}}_icon_anchor_vertical" ng-model="vm().icon.anchor.vertical.isManual" ng-value="false" localize="title" title="@iconVerticalAnchorAutomaticPlaceholder" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; terratype.iconCustom()" />
                     <select ng-model="vm().icon.anchor.vertical.automatic" class="umb-editor" ng-disabled="vm().icon.anchor.vertical.isManual == true" ng-change="config().icon.anchor.vertical = vm().icon.anchor.vertical.automatic; terratype.iconCustom()">
-                        <option value="top" localize="label" label="@terratypeConfig_iconVerticalAnchorTop"></option>
-                        <option value="center" localize="label" label="@terratypeConfig_iconVerticalAnchorCenter"></option>
-                        <option value="bottom" localize="label" label="@terratypeConfig_iconVerticalAnchorBottom"></option>
+                        <option value="top" terratype-translate="@terratypeConfig_iconVerticalAnchorTop"></option>
+                        <option value="center" terratype-translate="@terratypeConfig_iconVerticalAnchorCenter"></option>
+                        <option value="bottom" terratype-translate="@terratypeConfig_iconVerticalAnchorBottom"></option>
                     </select>
                 </div>
                 <div ng-show="vm().icon.anchor.vertical.isManual && vm().icon.anchor.vertical.manual >= config().icon.size.height">
@@ -216,8 +216,8 @@
                 </label>
                 <div class="controls">
                     <select id="terratype_{{identifier}}_labelEditPosition" ng-model="config().label.editPosition" class="umb-editor">
-                        <option value="0" localize="label" label="@terratypeConfig_labelEditPositionOverlay"></option>
-                        <option value="1" localize="label" label="@terratypeConfig_labelEditPositionBelow"></option>
+                        <option value="0" terratype-translate="@terratypeConfig_labelEditPositionOverlay"></option>
+                        <option value="1" terratype-translate="@terratypeConfig_labelEditPositionBelow"></option>
                     </select>
                 </div>
             </div>
@@ -278,9 +278,9 @@
                 </label>
                 <div class="controls">
                     <select id="terratype_{{identifier}}_debug" ng-model="config().debug" class="umb-editor">
-                        <option value="0" localize="label" label="@terratypeConfig_debugJsonDisable"></option>
-                        <option value="1" localize="label" label="@terratypeConfig_debugJsonEnable"></option>
-                        <option value="2" localize="label" label="@terratypeConfig_debugJsonBoth"></option>
+                        <option value="0" terratype-translate="@terratypeConfig_debugJsonDisable"></option>
+                        <option value="1" terratype-translate="@terratypeConfig_debugJsonEnable"></option>
+                        <option value="2" terratype-translate="@terratypeConfig_debugJsonBoth"></option>
                     </select>
                 </div>
             </div>

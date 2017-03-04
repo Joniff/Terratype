@@ -8,9 +8,9 @@
         </label>
         <div class="controls">
             <select id="terratype_{{identifier}}_bingmapsv8_version" ng-model="config().provider.version" class="umb-editor" ng-change="vm().provider.events.versionChange()">
-                <option value="experimental" localize="label" label="@terratypeBingMapsV8ConfigDefinition_versionExperimental"></option>
-                <option value="release" localize="label" label="@terratypeBingMapsV8ConfigDefinition_versionRelease"></option>
-                <option value="frozen" localize="label" label="@terratypeBingMapsV8ConfigDefinition_versionFrozen"></option>
+                <option value="experimental" terratype-translate="@terratypeBingMapsV8ConfigDefinition_versionExperimental"></option>
+                <option value="release" terratype-translate="@terratypeBingMapsV8ConfigDefinition_versionRelease"></option>
+                <option value="frozen" terratype-translate="@terratypeBingMapsV8ConfigDefinition_versionFrozen"></option>
             </select>
             <div ng-show="vm().provider.version">
                 <small terratype-translate="terratypeBingMapsV8ConfigDefinition_versionLoaded">

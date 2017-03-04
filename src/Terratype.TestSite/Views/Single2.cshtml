@@ -20,7 +20,7 @@
 </head>
 <body>
 
-    @Html.Terratype(Model.Content.GetProperty("mapAlias"))
+    @Html.Terratype(Model.Content.GetProperty("map"))
 
     <br />
 
@@ -28,30 +28,30 @@
 
     <br />
 
-    @Html.Terratype(Model.Content.GetProperty("mapAlias").Value)
+    @Html.Terratype(Model.Content.GetProperty("map").Value)
 
     <br />
 
-    @Html.Terratype(Model.Content.GetProperty("mapAlias").Value, @<text>This is the label</text>)
+    @Html.Terratype(Model.Content.GetProperty("map").Value, @<text>This is the label</text>)
 
     <br />
 
-    @Html.Terratype("mapAlias", 
+    @Html.Terratype("map", 
         @<text>
             <div>
                 This icon is at 
-                @((Model.Content.GetProperty("mapAlias").Value as Terratype.Models.Model).Position)
+                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
             </div>
         </text>
     )
 
 
 
-    @Html.Terratype("mapAlias",
+    @Html.Terratype("map",
         @<text>
             <div style="background-color:yellow;">
                 This icon is at
-                @((Model.Content.GetProperty("mapAlias").Value as Terratype.Models.Model).Position
+                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
          </div>
       </text>)
 
