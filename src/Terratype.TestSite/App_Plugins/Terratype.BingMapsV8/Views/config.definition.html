@@ -12,10 +12,6 @@
                 <option value="release" terratype-translate="@terratypeBingMapsV8ConfigDefinition_versionRelease"></option>
                 <option value="frozen" terratype-translate="@terratypeBingMapsV8ConfigDefinition_versionFrozen"></option>
             </select>
-            <div ng-show="vm().provider.version">
-                <small terratype-translate="terratypeBingMapsV8ConfigDefinition_versionLoaded">
-                </small>
-            </div>
         </div>
     </div>
     <div class="umb-el-wrap control-group">
@@ -26,7 +22,7 @@
             </small>
         </label>
         <div class="controls">
-            <input id="terratype_{{identifier}}_bingmapsv8_apikey" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeBingMapsV8ConfigDefinition__apiKeyPlaceholder" spellcheck=false ng-change="vm().status.reload = true" />
+            <input id="terratype_{{identifier}}_bingmapsv8_apikey" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeBingMapsV8ConfigDefinition_apiKeyPlaceholder" spellcheck=false ng-change="vm().status.reload = true" />
             <div>
                 <div>
                     <a href="https://msdn.microsoft.com/en-us/library/gg650598.aspx" target="_blank" style="font-size:smaller;">

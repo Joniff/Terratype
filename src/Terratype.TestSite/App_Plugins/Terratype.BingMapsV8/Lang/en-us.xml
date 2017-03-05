@@ -226,8 +226,16 @@
     <key alias="satelliteMapLabel">Satellite Map:</key>
     <key alias="satelliteMapDescription">Do you want to see the satellite map</key>
 
-    <key alias="ordnanceSurveyMapLabel">Ordnance Survey Map:</key>
-    <key alias="ordnanceSurveyMapDescription">Do you want to see the Ordnance Survey map</key>
+    <key alias="streetViewMapLabel">Show Street View:</key>
+    <key alias="streetViewDescription">Do you want to see the Street View mode</key>
+
+    <key alias="stylingLabel">Styling:</key>
+    <key alias="stylingDescription">Predefined map styles</key>
+    <key alias="stylingStandard">Standard</key>
+    <key alias="stylingDark">Dark</key>
+    <key alias="stylingLight">Light</key>
+    <key alias="stylingGrayScale">Gray Scale</key>
+    <key alias="stylingOrdnanceSurvey">Ordnance Survey</key>
 
     <key alias="breadcrumbLabel">Breadcrumb:</key>
     <key alias="breadcrumbDescription">Display the current center location’s geography hierarchy over the top of the map. For example, if the location center is Seattle, the breadcrumb control displays 'World . United States . WA'</key>

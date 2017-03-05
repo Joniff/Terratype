@@ -1,5 +1,5 @@
 ﻿<div style="overflow:hidden;">
-    <style ng-bind-html="'#terratype_' + identifier + '_bingmapsv8_map {height:' + config().height + 'px;}'">
+    <style ng-bind-html="'#terratype_' + identifier + '_bingmapsv8_map {height:' + config().height + 'px;} #terratype_' + identifier + '_bingmapsv8_map .div[style=\'position: absolute; overflow: hidden; width: 100%; top: 50%; text-align: center;\'] {display:none !important;}'">
     </style>
     <div id="terratype_{{identifier}}_bingmapsv8_map" ng-show="vm().showMap">
     </div>
