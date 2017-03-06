@@ -6,12 +6,12 @@ ubuntu server 16.10
 #---INSTALL
 
 
-sudo apt-get install openssh-server
-sudo apt-get install libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
-sudo apt-get install libpng12-0
-sudo apt-get install libtiff5-dev 
-sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
-sudo apt-get install make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
+sudo apt-get install -y openssh-server
+sudo apt-get install -y libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
+sudo apt-get install -y libpng12-0
+sudo apt-get install -y libtiff5-dev 
+sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
+sudo apt-get install -y make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
 
 mkdir ~/src
 cd ~/src
@@ -129,6 +129,7 @@ sudo chown terratype_db /usr/local/share/maps/planet
 sudo chown terratype_db:root /var/run/renderd
 sudo chown terratype_db:root /var/lib/mod_tile
 
+cd /
 sudo -u postgres psql
 \c gis
 CREATE EXTENSION postgis;
@@ -144,9 +145,26 @@ sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/postgre
 sudo chown postgres:postgres postgresql.conf
 sudo service postgresql restart
 
+
+
+
+
+
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
 osm2pgsql --slim --create -C 16000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
-### Need to turn Autovac in postgresql.conf back on afterwards
+
+
+
+#-----------------
+#---REINSTALL DATABASE - Only do this if database goes down
+
+sudo apt-get --purge -y remove postgresql\*
+sudo rm -r /etc/postgresql/
+sudo rm -r /etc/postgresql-common/
+sudo rm -r /var/lib/postgresql/
+sudo userdel -r postgres
+sudo groupdel postgres
+sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
