@@ -139,11 +139,14 @@ ALTER TABLE spatial_ref_sys OWNER TO terratype_db;
 cd /etc/postgresql/9.5/main/
 sudo rm pg_hba.conf
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/pg_hba.conf
+sudo rm postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/postgresql.conf
 sudo chown postgres:postgres postgresql.conf
-
+sudo service postgresql restart
 
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
 osm2pgsql --slim --create -C 16000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
+### Need to turn Autovac in postgresql.conf back on afterwards
