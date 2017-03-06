@@ -136,7 +136,7 @@ ALTER TABLE geometry_columns OWNER TO terratype_db;
 ALTER TABLE spatial_ref_sys OWNER TO terratype_db;
 \q
 
-cd etc/postgresql/9.5/main/
+cd /etc/postgresql/9.5/main/
 sudo rm pg_hba.conf
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/pg_hba.conf
 sudo chown postgres:postgres postgresql.conf
@@ -145,5 +145,5 @@ sudo chown postgres:postgres postgresql.conf
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
-osm2pgsql --slim -U terratype_db -d gis -C 16000 --number-processes 3 /usr/local/share/maps/planet/planet-latest.osm.pbf
+osm2pgsql --slim --create -C 16000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
