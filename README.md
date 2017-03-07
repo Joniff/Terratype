@@ -10,8 +10,11 @@ Wish to give your content editors or grid editors easy Maps to set real world lo
 1. Install Terratype framework package via Nuget
    https://www.nuget.org/packages/Terratype/
 
-2. Install the Map Providers you would like to use
+2. Install the Map Providers you would like to use, you can install and use, simultaneously, multiple providers.
    https://www.nuget.org/packages/Terratype.GoogleMapsV3
+   and/or
+   https://www.nuget.org/packages/Terratype.LeafletV1
+   
    
 3. Create a new data type based off this the newly added Terratype property Editor. You may need to obtain any API Keys that are necessary 
 
