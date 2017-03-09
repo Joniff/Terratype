@@ -143,9 +143,6 @@
                 clearInterval(gm.searchesTimer);
                 gm.searchesTimer = null;
             }
-            gm.deleteSearch();
-            gm.searches = [];
-            gm.checkSearch = 0;
             gm.uninstallFakeConsole();
             delete root.google;
             if (gm.domain) {
@@ -341,92 +338,10 @@
 
             return mapTypeIds;
         },
-        searchCountries: function (countries) {
-            if (!countries || !(countries instanceof Array) || countries.length == 0) {
-                return null;
-            }
-            if (countries.length == 1) {
-                return countries[0];
-            }
-            return countries;
-        },
         round: function (num, decimals) {
             var sign = num >= 0 ? 1 : -1;
             var pow = Math.pow(10, decimals);
             return parseFloat((Math.round((num * pow) + (sign * 0.001)) / pow).toFixed(decimals));
-        },
-        searches: [],
-        searchesTimer: null,
-        checkSearch: 0,
-        createSearch: function (id, source, destination, options, gmap, done) {
-            gm.searches.push({ status: 0, id: id, source: source, destination: destination, options: options, done: done });
-            if (gm.searchesTimer == null) {
-                gm.searchesTimer = setInterval(function () {
-                    if (gm.checkSearch == 0) {
-                        gm.checkSearch = 1;
-                        if (root.google.maps.places) {
-                            var service = new root.google.maps.places.PlacesService(gmap);
-                            service.textSearch({ query: 'paris, france' }, function (results, status) {
-                                if (root.google) {
-                                    gm.checkSearch = (status == 'OK') ? 2 : -1;
-                                }
-                            });
-                            return;
-                        } else {
-                            gm.checkSearch = -1;
-                        }
-                    } else if (gm.checkSearch == 1) {
-                        return;
-                    }
-
-                    var kill = true;
-                    for (var i = 0; i != gm.searches.length; i++) {
-                        var s = gm.searches[i];
-                        if (s.status == 0) {
-                            if (gm.checkSearch == -1) {
-                                s.status = 3;
-                                s.done(null);
-                                return;
-                            }
-                            s.autocomplete = new root.google.maps.places.Autocomplete(s.source, s.options);
-                            s.status = 1;
-                            return;
-                        }
-                        if (s.status == 1) {
-                            var m = document.body.childNodes;
-                            for (p = 0; p != m.length; p++) {
-                                if (m[p].nodeType == 1 && m[p].className && m[p].className.indexOf('pac-container') != -1 && !m[p].hasAttribute('data-terratype-id')) {
-                                    m[p].className += ' terratype_' + id + '_googlemapv3_lookup_results';
-                                    m[p].setAttribute('data-terratype-id', s.id);
-                                    s.destination.appendChild(m[p]);
-                                    s.status = 2;
-                                    s.done(s.autocomplete);
-                                    return;
-                                }
-                            }
-                            kill = false;
-                        }
-                    }
-                    if (kill) {
-                        clearInterval(gm.searchesTimer);
-                        gm.searchesTimer = null;
-                    }
-                }, gm.poll);
-            }
-        },
-        deleteSearch: function (id) {
-            //for (var i = 0; i != gm.searches.length; i++) {
-            //    var s = gm.searches[i];
-            //    if ((!id || s.id == id) && s.status == 2) {
-            //        var m = document.body.childNodes;
-            //        for (p = m.length - 1; p >= 0; p--) {
-            //            if (m[p].nodeType == 1 && m[p].className && m[p].className.indexOf('pac-container') != -1 && m[p].getAttribute('data-terratype-id') === id) {
-            //                document.removeChild(m[p]);
-            //            }
-            //        }
-            //        s.status = 3;
-            //    }
-            //}
         }
     }
 
@@ -454,18 +369,20 @@
                         variety: {
                             basic: true,
                             satellite: false,
-                        },
-                        streetView: {
-                            enable: false
+                            streetView: false
                         },
                         scale: {
-                            enable: false
+                            enable: true
                         },
                         breadcrumb: {
-                            enable: false
+                            enable: true
                         },
                         dashboard: {
-                            enable: false
+                            enable: true
+                        },
+                        traffic: {
+                            enable: false,
+                            legend: false
                         }
                     },
                     search: {
@@ -488,7 +405,7 @@
                         config().provider = scope.defaultConfig.provider;
                     } else {
                         for (var attr in scope.defaultConfig.provider) {
-                            if (!config().provider[attr]) {
+                            if (typeof config().provider[attr] === 'undefined') {
                                 config().provider[attr] = scope.defaultConfig.provider[attr];
                             }
                         }
@@ -527,7 +444,7 @@
                         },
                         setProvider: function () {
                             if (config().provider.id != identifier) {
-                                event.cancel(id);
+                                scope.destroy();
                             }
                         },
                         setCoordinateSystem: function () {
@@ -537,7 +454,12 @@
                         },
                         setIcon: function () {
                             if (scope.gmarker) {
-                                scope.gmarker.setIcon(gm.icon.call(gm, config().icon));
+                                scope.gmarker.setOptions({
+                                    icon: config().icon.url,
+                                    anchor: new root.Microsoft.Maps.Point(
+                                        gm.getAnchorHorizontal(config().icon.anchor.horizontal, config().icon.size.width),
+                                        gm.getAnchorVertical(config().icon.anchor.vertical, config().icon.size.height))
+                                });
                             }
                         },
                         forceHttpsChange: function () {
@@ -558,8 +480,8 @@
                         styleChange: function () {
                             if (scope.gmap) {
                                 var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.streetView, config().provider.predefineStyling);
-                                scope.gmap.newMap.setView({
-                                    mapTypeId: mapTypeIds[0],
+                                scope.gmap.setView({
+                                    mapTypeId: mapTypeIds[0]
                                 });
                             }
                         },
@@ -580,23 +502,28 @@
                                 vm().position.datumStyle = { 'color': 'red' };
                             }, provider.datumWait);
                         },
-                        optionChange: function () {
+                        optionChange: function (reload) {
                             if (scope.gmap) {
-                                var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.streetView, config().provider.predefineStyling);
-                                scope.gmap.setOptions({
-                                    credentials: gm.credentials,
-                                    enableSearchLogo: false,
-                                    showBreadcrumb: config().provider.breadcrumb.enable,
-                                    showCopyright: false,
-                                    showDashboard: config().provider.dashboard.enable,
-                                    showMapTypeSelector: mapTypeIds.length > 1,
-                                    showScalebar: config().provider.scale.enable,
-                                    disableBirdseye: !config().provider.variety.satellite,
-                                    allowHidingLabelsOfRoad: !config().provider.showLabels
-                                });
+                                scope.reloadMap.call(scope);
+
+                                //var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.streetView, config().provider.predefineStyling);
+                                //scope.gmap.setOptions({
+                                //    credentials: gm.credentials,
+                                //    enableSearchLogo: false,
+                                //    showBreadcrumb: config().provider.breadcrumb.enable,
+                                //    showCopyright: false,
+                                //    showDashboard: config().provider.dashboard.enable,
+                                //    showMapTypeSelector: mapTypeIds.length > 1,
+                                //    showScalebar: config().provider.scale.enable,
+                                //    disableBirdseye: !config().provider.variety.satellite,
+                                //    allowHidingLabelsOfRoad: !config().provider.showLabels
+                                //});
                             }
                         },
                         searchChange: function () {
+                            if (typeof config().search.enable == 'string') {
+                                config().search.enable = parseInt(config().search.enable);
+                            }
                             if (config().search.enable != 0) {
                                 if (scope.gautocomplete) {
                                     scope.deleteSearch.call(scope);
@@ -608,11 +535,6 @@
                                 }
                             } else {
                                 scope.deleteSearch.call(scope);
-                            }
-                        },
-                        searchCountryChange: function () {
-                            if (scope.gautocomplete) {
-                                scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
                             }
                         },
                         reload: function () {
@@ -658,6 +580,7 @@
                     delete scope.gevents;
                     delete scope.gmap;
                     delete scope.gmarker;
+                    delete scope.traffic;
                     scope.deleteSearch.call(scope);
                 },
                 reloadMap: function () {
@@ -762,6 +685,7 @@
                             scope.gmap = null;
                             scope.gmarker = null;
                             scope.gautocomplete = null;
+                            scope.traffic = null;
                             scope.gevents = [],
                             scope.div = null;
                             scope.divoldsize = 0;
@@ -798,6 +722,9 @@
                                     };
                                     vm().provider.version = gm.version;
                                     vm().provider.versionMajor = 8;
+                                    if (typeof config().search.enable == 'string') {
+                                        config().search.enable = parseInt(config().search.enable);
+                                    }
 
                                     //  Check that we have loaded with the right setting for us
                                     if (gm.coordinateSystem != store().position.id ||
@@ -838,20 +765,23 @@
                                             showMapTypeSelector: mapTypeIds.length > 1,
                                             showScalebar: config().provider.scale.enable,
                                             disableBirdseye: !config().provider.variety.satellite,
+                                            disableScrollWheelZoom: true,
+                                            labelOverlay: config().provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
                                             allowHidingLabelsOfRoad: !config().provider.showLabels,
-                                            disableScrollWheelZoom: true
+                                            showMapLabels: config().provider.showLabels,
+                                            mapTypeId: mapTypeIds[0],
+                                            fixedMapPosition: true      //  We will monitor map resizes and redraw manually
                                         });
                                         scope.gmap.setView({
                                             center: latlng,
                                             zoom: store().zoom,
                                             mapTypeId: mapTypeIds[0],
+                                            labelOverlay: config().provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
                                         });
 
                                         scope.gevents.push(root.Microsoft.Maps.Events.addHandler(scope.gmap, 'viewchangeend', function () {
                                             if (scope.gmap.getZoom() != store().zoom) {
                                                 scope.eventZoom.call(scope);
-                                            } else {
-                                                scope.eventCheckRefresh.call(scope);
                                             }
                                         }));
                                         scope.gmarker = new root.Microsoft.Maps.Pushpin(latlng, {
@@ -899,6 +829,17 @@
 
                                         if (config().search.enable != 0) {
                                             scope.createSearch.call(scope);
+                                        }
+                                        if (config().provider.traffic.enable == true) {
+                                            root.Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', function () {
+                                                scope.traffic = new root.Microsoft.Maps.Traffic.TrafficManager(scope.gmap);
+                                                scope.traffic.show();
+                                                if (config().provider.traffic.legend) {
+                                                    scope.traffic.showLegend();
+                                                } else {
+                                                    scope.traffic.hideLegend();
+                                                }
+                                            });
                                         }
                                         scope.setDatum.call(scope);
 
@@ -982,20 +923,29 @@
                     if (scope.ignoreEvents > 0) {
                         return;
                     }
-                    //gm.originalConsole.warn(id + ': eventZoom()');
                     store().zoom = scope.gmap.getZoom();
                 },
                 eventRefresh: function () {
                     if (scope.ignoreEvents > 0) {
                         return;
                     }
-                    //gm.originalConsole.warn(id + ': eventRefresh()');
                     scope.ignoreEvents++;
                     scope.gmap.setView({
                         zoom: store().zoom
                     });
                     scope.setMarker.call(scope, true);
                     var mapId = scope.gmap.getMapTypeId();
+                    var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.streetView, config().provider.predefineStyling);
+                    var found = false;
+                    for (var i = 0; i != mapTypeIds.length; i++) {
+                        if (mapTypeIds[i] == mapId) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found == false) {
+                        mapId = mapTypeIds[i];
+                    }
                     scope.gmap.setMapType(Microsoft.Maps.MapTypeId.mercator);
                     setTimeout(function () {
                         scope.gmap.setMapType(mapId);
@@ -1011,7 +961,6 @@
                     if (scope.ignoreEvents > 0) {
                         return;
                     }
-                    //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
                     vm().position.datum = {
                         latitude: gm.round(scope.gmarker.getLocation().latitude, vm().position.precision),
@@ -1022,23 +971,52 @@
                     updateView();
                     scope.ignoreEvents--;
                 },
-                eventLookup: function (place) {
-                    if (scope.ignoreEvents > 0 || !place.geometry) {
+                eventLookup: function (location, name) {
+                    if (scope.ignoreEvents > 0) {
                         return;
                     }
-                    //gm.originalConsole.warn(id + ': eventDrag()');
                     scope.ignoreEvents++;
-                    store().lookup = place.formatted_address;
+                    store().lookup = name;
                     vm().position.datum = {
-                        latitude: gm.round(place.geometry.location.lat(), vm().position.precision),
-                        longitude: gm.round(place.geometry.location.lng(), vm().position.precision)
+                        latitude: gm.round(location.latitude, vm().position.precision),
+                        longitude: gm.round(location.longitude, vm().position.precision)
                     };
                     scope.setMarker.call(scope);
                     scope.setDatum.call(scope);
                     updateView();
                     scope.ignoreEvents--;
                 },
-                searchListerners: [],
+                domEvents: [],
+                addDomEvent: function( obj, type, fn ) {
+                    if ( obj.attachEvent ) {
+                        obj['e'+type+fn] = fn;
+                        obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
+                        obj.attachEvent( 'on'+type, obj[type+fn] );
+                    } else {
+                        obj.addEventListener( type, fn, false );
+                    }
+                    return {
+                        obj: obj,
+                        type: type,
+                        fn: fn
+                    };
+                },
+                removeDomEvent: function (e) {
+                    if ( e.obj.detachEvent ) {
+                        e.obj.detachEvent( 'on'+e.type, obj[e.type+e.fn] );
+                        e.obj[e.type+e.fn] = null;
+                    } else {
+                        e.obj.removeEventListener( e.type, e.fn, false );
+                    }
+                },
+                preventDefault: function () {
+                    if (event.preventDefault) {
+                        event.preventDefault();
+                    } else {
+                        event.returnValue = false;
+                    }
+                    return false;
+                },
                 createSearch: function () {
                     var lookup = document.getElementById('terratype_' + id + '_bingmapsv8_lookup');
                     var results = document.getElementById('terratype_' + id + '_bingmapsv8_lookup_results');
@@ -1046,39 +1024,70 @@
                         return;
                     }
 
-                    gm.createSearch(id, lookup, results, {
-                        autocomplete: config().search.enable == 2
-                    }, scope.gmap, function (handler) {
-                        if (handler == null) {
-                            vm().status.searchFailed = true;
-                        } else {
-                            scope.gautocomplete = handler;
-                            if (config().search && config().search.limit &&
-                                config().search.limit.countries && config().search.limit.countries.length != 0) {
-                                scope.gautocomplete.setComponentRestrictions({ "country": gm.searchCountries(config().search.limit.countries) });
-                            }
-                            scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'place_changed', function () {
-                                scope.eventLookup.call(scope, scope.gautocomplete.getPlace());
-                            }));
-                            scope.searchListerners.push(root.google.maps.event.addListener(scope.gautocomplete, 'places_changed', function () {
-                                var places = scope.gautocomplete.getPlaces();
-                                if (places && places.length > 0) {
-                                    scope.eventLookup.call(scope, places[0]);
+                    switch (config().search.enable) {
+                        case 1:     //  Search
+                            root.Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
+                                callback: function () {
+                                    scope.searchmanager = new root.Microsoft.Maps.Search.SearchManager(scope.gmap);
+                                    scope.domEvents.push(scope.addDomEvent(lookup, 'keydown', function (e) {
+                                        lookup.style.color = '';
+                                        if ((e.key && e.key == 'Enter') || (e.keyIdentifier && e.keyIdentifier == 'Enter') || (e.keyCode && e.keyCode == 13)) {
+                                            if (scope.searchmanager.geocode) {
+                                                scope.searchmanager.geocode({
+                                                    callback: function (result) {
+                                                        if (result && result.results && result.results.length > 0) {
+                                                            scope.eventLookup.call(scope, result.results[0].location, result.results[0].name);
+                                                        } else {
+                                                            lookup.style.color = '#ff0000';
+                                                        }
+                                                        return scope.preventDefault();
+                                                    },
+                                                    count: 1,
+                                                    where: lookup.value,
+                                                    timeout: 5,
+                                                    errorCallback: function () {
+                                                        lookup.style.color = '#ff0000';
+                                                        return scope.preventDefault();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }));
                                 }
-                            }));
-                        }
-                    });
+                            });
+                            break;
+
+                        case 2:     //  Autocomplete
+                            root.Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+                                scope.searchmanager = new root.Microsoft.Maps.AutosuggestManager({
+                                    maxResults: 5,
+                                    map: scope.gmap,
+                                    addressSuggestions: true,
+                                    autoDetectLocation: false,
+                                    placeSuggestions: true,
+                                    useMapView: false,
+                                    userLocation: false
+                                });
+                                scope.searchmanager.attachAutosuggest(lookup, results, function (result) {
+                                    if (result && result.location) {
+                                        scope.eventLookup.call(scope, result.location, result.formattedSuggestion);
+                                    }
+                                });
+                            });
+                    }
                 },
                 deleteSearch: function () {
-                    angular.forEach(scope.searchListerners, function (value, index) {
-                        root.google.maps.event.removeListener(value);
-                    });
-                    scope.searchListerners = [];
-                    if (scope.gautocomplete) {
-                        root.google.maps.event.clearInstanceListeners(scope.gautocomplete);
-                        scope.gautocomplete = null;
+                    if (scope.searchmanager) {
+                        if (scope.searchmanager.detachAutosuggest) {
+                            scope.searchmanager.detachAutosuggest();
+                        }
+                        scope.searchmanager.dispose();
+                        delete scope.searchmanager;
                     }
-                    gm.deleteSearch(id);
+                    for (var i = 0; i != scope.domEvents.length; i++) {
+                        scope.removeDomEvent(scope.domEvents[i]);
+                    }
+                    scope.domEvents = [];
                 },
                 callEvent: function (id) {
                     for (var i = 0; i != scope.events.length; i++) {

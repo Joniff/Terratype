@@ -231,23 +231,31 @@
 
     <key alias="stylingLabel">Styling:</key>
     <key alias="stylingDescription">Predefined map styles</key>
-    <key alias="stylingStandard">Standard</key>
+    <key alias="stylingStandard">Standard with Gray Labels</key>
+    <key alias="stylingRoadVector2">Standard with Black Labels</key>
     <key alias="stylingDark">Dark</key>
     <key alias="stylingLight">Light</key>
     <key alias="stylingGrayScale">Gray Scale</key>
-    <key alias="stylingOrdnanceSurvey">Ordnance Survey</key>
+    <key alias="stylingOrdnanceSurvey">Ordnance Survey (UK Only)</key>
+    <key alias="stylingRoadVector1">Bright</key>
 
-    <key alias="breadcrumbLabel">Breadcrumb:</key>
-    <key alias="breadcrumbDescription">Display the current center location’s geography hierarchy over the top of the map. For example, if the location center is Seattle, the breadcrumb control displays 'World . United States . WA'</key>
+    <key alias="breadcrumbLabel">Location Description:</key>
+    <key alias="breadcrumbDescription">Display a description of what area the map is currently showing. Depending on the resolution, this can be anything from a physical postal address, to just describing the current country</key>
 
-    <key alias="dashboardLabel">Navigation Control:</key>
-    <key alias="dashboardDescription">The current center location’s geography hierarchy. For example, if the location center is Seattle, the breadcrumb control displays “World . United States . WA”</key>
+    <key alias="dashboardLabel">Zoom Control:</key>
+    <key alias="dashboardDescription">Allow the user to zoom in and out of the map</key>
 
     <key alias="scaleLabel">Scale:</key>
-    <key alias="scaleDescription">Allow the map to show the current scale being used</key>
+    <key alias="scaleDescription">Show the current scale being used</key>
 
     <key alias="labelsLabel">Labels:</key>
-    <key alias="labelsDescription">Do you want labels (names of countries, regions, areas, etc) to appear on the map</key>
+    <key alias="labelsDescription">Do you want labels (names of countries, regions, areas, roads etc) to appear on the map</key>
+
+    <key alias="trafficLabel">Traffic:</key>
+    <key alias="trafficDescription">Overlay current traffic situation, showing slow moving traffic as red</key>
+
+    <key alias="trafficLegendLabel">Traffic Legend:</key>
+    <key alias="trafficLegendDescription">Show traffic legend in top left hand corner of map, which signifies which colors signify what speed of traffic</key>
 
     <key alias="positionLabel">Default location:</key>
     <key alias="positionDescription">Select the default location when displaying this map to a content editor</key>

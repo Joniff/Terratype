@@ -41,26 +41,32 @@
     <div class="controls">
         <select id="terratype_{{identifier}}_bingmapsv8_style" ng-model="config().provider.predefineStyling" class="umb-editor" ng-change="vm().provider.events.styleChange()">
             <option value="road" terratype-translate="terratypeBingMapsV8ConfigApperance_stylingStandard"></option>
+            <option value="roadVector2" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingRoadVector2"></option>
             <option value="canvasDark" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingDark"></option>
             <option value="canvasLight" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingLight"></option>
             <option value="grayscale" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingGrayScale"></option>
             <option value="ordnanceSurvey" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingOrdnanceSurvey"></option>
-            <option value="roadVector1">roadVector1</option>
-            <option value="roadVector2">roadVector1</option>
-            <option value="seasonal">seasonal</option>
-            <option value="symbolicNight">symbolicNight</option>
-            <option value="symbolicWinter">symbolicWinter</option>
-            <option value="highContrast">highContrast</option>
-            <option value="NGT">ngt</option>
+            <option value="roadVector1" terratype-translate="@terratypeBingMapsV8ConfigApperance_stylingRoadVector1"></option>
         </select>
     </div>
 </div>
 
 <div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_bingmapsv8_breadcrumb_enable" class="control-label">
-        <localize key="terratypeBingMapsV8ConfigApperance_breadcrumbLabel">Show Breadcrumb:</localize>
+    <label for="terratype_{{identifier}}_bingmapsv8_dashboard_enable" class="control-label">
+        <localize key="terratypeBingMapsV8ConfigApperance_dashboardLabel">Navigation Control:</localize>
         <small>
-            <localize key="terratypeBingMapsV8ConfigApperance_breadcrumbDescription">Display the current center location’s geography hierarchy over the top of the map. For example, if the location center is Seattle, the breadcrumb control displays 'World . United States . WA'</localize>
+            <localize key="terratypeBingMapsV8ConfigApperance_dashboardDescription"></localize>
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_bingmapsv8_dashboard_enable" type="checkbox" ng-model="config().provider.dashboard.enable" ng-change="vm().provider.events.optionChange()" />
+    </div>
+</div>
+<div class="umb-el-wrap control-group" ng-show="config().provider.dashboard.enable == true">
+    <label for="terratype_{{identifier}}_bingmapsv8_breadcrumb_enable" class="control-label">
+        <localize key="terratypeBingMapsV8ConfigApperance_breadcrumbLabel">Breadcrumb:</localize>
+        <small>
+            <localize key="terratypeBingMapsV8ConfigApperance_breadcrumbDescription"></localize>
         </small>
     </label>
     <div class="controls">
@@ -68,23 +74,11 @@
     </div>
 </div>
 
-<div class="umb-el-wrap control-group">
-    <label for="terratype_{{identifier}}_bingmapsv8_dashboard_enable" class="control-label">
-        <localize key="terratypeBingMapsV8ConfigApperance_dashboardLabel">Show Navigation Control:</localize>
-        <small>
-            <localize key="terratypeBingMapsV8ConfigApperance_dashboardDescription">The current center location’s geography hierarchy. For example, if the location center is Seattle, the breadcrumb control displays “World . United States . WA”</localize>
-        </small>
-    </label>
-    <div class="controls">
-        <input id="terratype_{{identifier}}_bingmapsv8_dashboard_enable" type="checkbox" ng-model="config().provider.dashboard.enable" ng-change="vm().provider.events.optionChange()" />
-    </div>
-</div>
-
-<div class="umb-el-wrap control-group">
+<div class="umb-el-wrap control-group" ng-show="config().provider.variety.basic == true || config().provider.variety.satellite == true">
     <label for="terratype_{{identifier}}_bingmapsv8_scale_enable" class="control-label">
         <localize key="terratypeBingMapsV8ConfigApperance_scaleLabel">Scale:</localize>
         <small>
-            <localize key="terratypeBingMapsV8ConfigApperance_scaleDescription">Allow the map to show the current scale being used</localize>
+            <localize key="terratypeBingMapsV8ConfigApperance_scaleDescription"></localize>
         </small>
     </label>
     <div class="controls">
@@ -94,15 +88,40 @@
 
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{identifier}}_bingmapsv8_showlabels" class="control-label">
-        <localize key="terratypeBingMapsV8ConfigApperance_labelsLabel">Show Labels:</localize>
+        <localize key="terratypeBingMapsV8ConfigApperance_labelsLabel">Labels:</localize>
         <small>
-            <localize key="terratypeBingMapsV8ConfigApperance_labelsDescription">Do you want labels (names of countries, regions, areas, etc) to appear on the map</localize>
+            <localize key="terratypeBingMapsV8ConfigApperance_labelsDescription"></localize>
         </small>
     </label>
     <div class="controls">
-        <input id="terratype_{{identifier}}_bingmapsv8_showlabels" type="checkbox" ng-model="config().provider.showLabels" ng-change="vm().provider.events.styleChange()" />
+        <input id="terratype_{{identifier}}_bingmapsv8_showlabels" type="checkbox" ng-model="config().provider.showLabels" ng-change="vm().provider.events.optionChange()" />
     </div>
 </div>
+
+<div class="umb-el-wrap control-group">
+    <label for="terratype_{{identifier}}_bingmapsv8_showtraffic" class="control-label">
+        <localize key="terratypeBingMapsV8ConfigApperance_trafficLabel">Traffic:</localize>
+        <small>
+            <localize key="terratypeBingMapsV8ConfigApperance_trafficDescription"></localize>
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_bingmapsv8_showtraffic" type="checkbox" ng-model="config().provider.traffic.enable" ng-change="vm().provider.events.optionChange()" />
+    </div>
+</div>
+
+<div class="umb-el-wrap control-group" ng-show="config().provider.traffic.enable == true">
+    <label for="terratype_{{identifier}}_bingmapsv8_showlegendtraffic" class="control-label">
+        <localize key="terratypeBingMapsV8ConfigApperance_trafficLegendLabel">Traffic Legend:</localize>
+        <small>
+            <localize key="terratypeBingMapsV8ConfigApperance_trafficLegendDescription"></localize>
+        </small>
+    </label>
+    <div class="controls">
+        <input id="terratype_{{identifier}}_bingmapsv8_showlegendtraffic" type="checkbox" ng-model="config().provider.traffic.legend" ng-change="vm().provider.events.optionChange()" />
+    </div>
+</div>
+
 <div class="umb-el-wrap control-group">
     <label for="terratype_{{identifier}}_bingmapsv8_defaultlocation" class="control-label">
         <localize key="terratypeBingMapsV8ConfigApperance_positionLabel">Default location:</localize>

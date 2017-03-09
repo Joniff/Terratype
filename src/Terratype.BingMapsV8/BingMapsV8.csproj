@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Images\Example.png" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Images\Logo.png" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Lang\en-us.xml" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.js" />

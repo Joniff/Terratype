@@ -934,7 +934,7 @@
                         config().provider = scope.defaultConfig.provider;
                     } else {
                         for (var attr in scope.defaultConfig.provider) {
-                            if (!config().provider[attr]) {
+                            if (typeof config().provider[attr] === 'undefined') {
                                 config().provider[attr] = scope.defaultConfig.provider[attr];
                             }
                         }
@@ -973,7 +973,7 @@
                         },
                         setProvider: function () {
                             if (config().provider.id != identifier) {
-                                event.cancel(id);
+                                scope.destroy();
                             }
                         },
                         setCoordinateSystem: function () {
@@ -1056,6 +1056,9 @@
                             }
                         },
                         searchChange: function () {
+                            if (typeof config().search.enable == 'string') {
+                                config().search.enable = parseInt(config().search.enable);
+                            }
                             if (config().search.enable != 0) {
                                 if (scope.gautocomplete) {
                                     scope.deleteSearch.call(scope);
@@ -1256,6 +1259,9 @@
                                     };
                                     vm().provider.version = String(root.google.maps.version);
                                     vm().provider.versionMajor = parseInt(String(root.google.maps.version).substring(2, 4));
+                                    if (typeof config().search.enable == 'string') {
+                                        config().search.enable = parseInt(config().search.enable);
+                                    }
 
                                     //  Check that we have loaded with the right setting for us
                                     if (gm.apiKey != config().provider.apiKey ||

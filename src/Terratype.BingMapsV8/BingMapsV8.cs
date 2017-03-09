@@ -41,6 +41,14 @@ namespace Terratype.Providers
             }
         }
 
+        public override bool CanSearch
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public override IDictionary<string, Type> CoordinateSystems
         {
             get
