@@ -9,7 +9,7 @@
         };
     }
 
-    angular.module('umbraco').directive('terratypeJson', function () {
+    angular.module('umbraco.directives').directive('terratypeJson', function () {
         return {
             restrict: 'A', // only activate on element attribute
             require: 'ngModel', // get a hold of NgModelController
@@ -73,6 +73,17 @@
                 });
             })
         }
+    }]);
+
+    //  Don't allow Enter Key to bubble up to submit form
+    angular.module('umbraco.directives').directive('terratypeIgnoreEnterKey', ['$rootScope', function ($rootScope) {
+        return function (scope, element, attrs) {
+            element.on("keydown keypress", function (event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                }
+            });
+        };
     }]);
 
     angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService',

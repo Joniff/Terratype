@@ -524,17 +524,11 @@
                             if (typeof config().search.enable == 'string') {
                                 config().search.enable = parseInt(config().search.enable);
                             }
+                            scope.deleteSearch.call(scope);
                             if (config().search.enable != 0) {
-                                if (scope.gautocomplete) {
-                                    scope.deleteSearch.call(scope);
-                                    setTimeout(function () {
-                                        scope.createSearch.call(scope);
-                                    }, 1);
-                                } else {
+                                setTimeout(function () {
                                     scope.createSearch.call(scope);
-                                }
-                            } else {
-                                scope.deleteSearch.call(scope);
+                                }, 1);
                             }
                         },
                         reload: function () {
@@ -576,6 +570,10 @@
                     }
                     if (scope.gmap) {
                         scope.gmap.dispose()
+                    }
+                    if (scope.coordEnter) {
+                        scope.removeDomEvent(scope.coordEnter);
+                        scope.coordEnter = null;
                     }
                     delete scope.gevents;
                     delete scope.gmap;
@@ -671,6 +669,7 @@
                 visible: false,
                 divwait: 0,
                 superWaiter: null,
+                coordEnter: null,
                 loadMap: function () {
                     if (scope.loadMapWait == null) {
                         scope.loadMapWait = setTimeout(function () {
@@ -986,108 +985,102 @@
                     updateView();
                     scope.ignoreEvents--;
                 },
-                domEvents: [],
-                addDomEvent: function( obj, type, fn ) {
-                    if ( obj.attachEvent ) {
-                        obj['e'+type+fn] = fn;
-                        obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
-                        obj.attachEvent( 'on'+type, obj[type+fn] );
-                    } else {
-                        obj.addEventListener( type, fn, false );
-                    }
-                    return {
-                        obj: obj,
-                        type: type,
-                        fn: fn
-                    };
+                searchLookupElement: function (autosuggest) {
+                    return document.getElementById('terratype_' + id + '_bingmapsv8_lookup_' + ((autosuggest  || config().search.enable == 2) ? 'autosuggest' : 'normal'));
                 },
-                removeDomEvent: function (e) {
-                    if ( e.obj.detachEvent ) {
-                        e.obj.detachEvent( 'on'+e.type, obj[e.type+e.fn] );
-                        e.obj[e.type+e.fn] = null;
-                    } else {
-                        e.obj.removeEventListener( e.type, e.fn, false );
-                    }
+                searchResultElement: function () {
+                    return document.getElementById('terratype_' + id + '_bingmapsv8_lookup_results');
                 },
-                preventDefault: function () {
-                    if (event.preventDefault) {
-                        event.preventDefault();
-                    } else {
-                        event.returnValue = false;
-                    }
-                    return false;
-                },
-                createSearch: function () {
-                    var lookup = document.getElementById('terratype_' + id + '_bingmapsv8_lookup');
-                    var results = document.getElementById('terratype_' + id + '_bingmapsv8_lookup_results');
-                    if (!lookup || !results) {
-                        return;
-                    }
-
-                    switch (config().search.enable) {
-                        case 1:     //  Search
-                            root.Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
-                                callback: function () {
-                                    scope.searchmanager = new root.Microsoft.Maps.Search.SearchManager(scope.gmap);
-                                    scope.domEvents.push(scope.addDomEvent(lookup, 'keydown', function (e) {
-                                        lookup.style.color = '';
-                                        if ((e.key && e.key == 'Enter') || (e.keyIdentifier && e.keyIdentifier == 'Enter') || (e.keyCode && e.keyCode == 13)) {
-                                            if (scope.searchmanager.geocode) {
-                                                scope.searchmanager.geocode({
-                                                    callback: function (result) {
-                                                        if (result && result.results && result.results.length > 0) {
-                                                            scope.eventLookup.call(scope, result.results[0].location, result.results[0].name);
-                                                        } else {
-                                                            lookup.style.color = '#ff0000';
-                                                        }
-                                                        return scope.preventDefault();
-                                                    },
-                                                    count: 1,
-                                                    where: lookup.value,
-                                                    timeout: 5,
-                                                    errorCallback: function () {
-                                                        lookup.style.color = '#ff0000';
-                                                        return scope.preventDefault();
-                                                    }
-                                                });
-                                            }
+                lastSearch: null,
+                doSearch: function (e) {
+                    var lookup = scope.searchLookupElement();
+                    if (e.which == 13) {
+                        if (scope.lastSearch != lookup.value) {
+                            scope.lastSearch = lookup.value;
+                            if (scope.searchManager.geocode) {
+                                scope.searchManager.geocode({
+                                    callback: function (result) {
+                                        if (result && result.results && result.results.length > 0) {
+                                            scope.eventLookup.call(scope, result.results[0].location, result.results[0].name);
+                                            $(lookup).css('color', '');
+                                        } else {
+                                            $(lookup).css('color', '#ff0000');
                                         }
-                                    }));
-                                }
-                            });
-                            break;
-
-                        case 2:     //  Autocomplete
-                            root.Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
-                                scope.searchmanager = new root.Microsoft.Maps.AutosuggestManager({
-                                    maxResults: 5,
-                                    map: scope.gmap,
-                                    addressSuggestions: true,
-                                    autoDetectLocation: false,
-                                    placeSuggestions: true,
-                                    useMapView: false,
-                                    userLocation: false
-                                });
-                                scope.searchmanager.attachAutosuggest(lookup, results, function (result) {
-                                    if (result && result.location) {
-                                        scope.eventLookup.call(scope, result.location, result.formattedSuggestion);
+                                        if (config().search.enable == 2) {
+                                            $(scope.searchResultElement()).find('.MicrosoftMap .as_container_search').css('visibility', 'hidden');
+                                        }
+                                    },
+                                    count: 1,
+                                    where: lookup.value,
+                                    timeout: 5,
+                                    errorCallback: function () {
+                                        $(lookup).css('color', '#ff0000');
                                     }
                                 });
+                            }
+                        }
+                        return e.preventDefault();
+                    } else {
+                        $(lookup).css('color', '');
+                    }
+                },
+                searchManager: null,
+                autoSuggestManager: null,
+                createSearch: function (e) {
+                    if (config().search.enable == 0) {
+                        return;
+                    }
+                    function ready1() {
+                        $(scope.searchLookupElement()).on('keypress keydown', scope.doSearch);
+                    }
+                    function ready2() {
+                        scope.autoSuggestManager = new root.Microsoft.Maps.AutosuggestManager({
+                            maxResults: 5,
+                            map: scope.gmap,
+                            addressSuggestions: true,
+                            autoDetectLocation: false,
+                            placeSuggestions: true,
+                            useMapView: false,
+                            userLocation: false
+                        });
+                        scope.autoSuggestManager.attachAutosuggest(scope.searchLookupElement(), scope.searchResultElement(), function (result) {
+                            if (result && result.location) {
+                                scope.eventLookup.call(scope, result.location, result.formattedSuggestion);
+                            }
+                        });
+                    }
+
+                    if (root.Microsoft.Maps.Search) {
+                        ready1();
+                    } else {
+                        root.Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
+                            callback: function () {
+                                scope.searchManager = new root.Microsoft.Maps.Search.SearchManager(scope.gmap);
+                                ready1();
+                            }
+                        });
+                    }
+                    if (config().search.enable == 2) {
+                        if (root.Microsoft.Maps.AutosuggestManager) {
+                            ready2();
+                        } else {
+                            root.Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
+                                ready2();
                             });
+                        }
                     }
                 },
                 deleteSearch: function () {
-                    if (scope.searchmanager) {
-                        if (scope.searchmanager.detachAutosuggest) {
-                            scope.searchmanager.detachAutosuggest();
-                        }
-                        scope.searchmanager.dispose();
-                        delete scope.searchmanager;
+                    if (scope.autoSuggestManager) {
+                        scope.autoSuggestManager.detachAutosuggest();
+                        scope.autoSuggestManager.dispose();
+                        scope.autoSuggestManager = null;
                     }
-                    for (var i = 0; i != scope.domEvents.length; i++) {
-                        scope.removeDomEvent(scope.domEvents[i]);
+                    if (scope.searchManager) {
+                        //  Doesn't seem a way to remove this
                     }
-                    scope.domEvents = [];
+                    $(scope.searchLookupElement(false)).off('keypress keydown');
+                    $(scope.searchLookupElement(true)).off('keypress keydown');
                 },
                 callEvent: function (id) {
                     for (var i = 0; i != scope.events.length; i++) {

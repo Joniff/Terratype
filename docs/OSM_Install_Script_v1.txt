@@ -1,4 +1,6 @@
 https://switch2osm.org/serving-tiles/manually-building-a-tile-server-14-04/
+https://ycnrg.org/osm-tile-server-ubuntu-16-04/
+
 
 ubuntu server 16.10
 
@@ -153,7 +155,7 @@ sudo service postgresql restart
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
-osm2pgsql --slim --create -C 16000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
+osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 

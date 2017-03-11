@@ -1532,6 +1532,21 @@
                                     scope.eventLookup.call(scope, places[0]);
                                 }
                             }));
+
+                            $(lookup).on('keypress keydown', function (e) {
+                                $(lookup).css('color', '');
+                                if (e.which == 13) {
+                                    var service = new root.google.maps.places.PlacesService(scope.gmap);
+                                    service.textSearch({ query: lookup.value }, function (results, status) {
+                                        if (results && status == 'OK' && results.length > 0) {
+                                            scope.eventLookup.call(scope, results[0]);
+                                        } else {
+                                            $(lookup).css('color', '#ff0000');
+                                        }
+                                    });
+                                    return e.preventDefault();
+                                }
+                            });
                         }
                     });
                 },
@@ -1544,6 +1559,7 @@
                         root.google.maps.event.clearInstanceListeners(scope.gautocomplete);
                         scope.gautocomplete = null;
                     }
+                    $('#terratype_' + id + '_googlemapv3_lookup').off('keypress keydown');
                     gm.deleteSearch(id);
                 },
                 callEvent: function (id) {
