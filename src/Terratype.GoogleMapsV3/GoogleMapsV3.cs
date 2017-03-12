@@ -244,17 +244,6 @@ namespace Terratype.Providers
             return url.ToString();
         }
 
-        private void Resource(string resourceName, HtmlTextWriter writer)
-        {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    writer.Write(reader.ReadToEnd());
-                }
-            }
-        }
-
         /// <summary>
         /// Returns the Html that renders this map
         /// </summary>
@@ -266,7 +255,7 @@ namespace Terratype.Providers
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {
             const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
-            var id = nameof(Terratype) + "." + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
+            var id = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
             writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));

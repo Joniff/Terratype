@@ -117,7 +117,7 @@ namespace Terratype.Providers
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
         {
             const string guid = "53031a3b-dc6a-4440-a5e5-5060f691afd6";
-            var id = nameof(Terratype) + "." + nameof(LeafletV1) + Guid.NewGuid().ToString();
+            var id = nameof(Terratype) + nameof(LeafletV1) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-css-files", HttpUtility.UrlEncode(JsonConvert.SerializeObject(new string[] 
             {

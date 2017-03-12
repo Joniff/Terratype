@@ -231,8 +231,8 @@
 
     <key alias="stylingLabel">Styling:</key>
     <key alias="stylingDescription">Predefined map styles</key>
-    <key alias="stylingStandard">Standard with Gray Labels</key>
-    <key alias="stylingRoadVector2">Standard with Black Labels</key>
+    <key alias="stylingStandard">Standard with Standard Labels</key>
+    <key alias="stylingRoadVector2">Standard with Bold Labels</key>
     <key alias="stylingDark">Dark</key>
     <key alias="stylingLight">Light</key>
     <key alias="stylingGrayScale">Gray Scale</key>

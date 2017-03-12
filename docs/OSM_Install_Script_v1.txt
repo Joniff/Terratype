@@ -98,6 +98,7 @@ sudo rm renderd.conf
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/renderd.conf
 sudo mkdir /usr/local/share/maps/planet
 cd /usr/local/share/maps/planet 
+#sudo wget http://download.geofabrik.de/europe/british-isles-latest.osm.pbf
 sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 
 #-----------------
@@ -155,7 +156,8 @@ sudo service postgresql restart
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
-osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
+#sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/british-isles-latest.osm.pbf
+sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 

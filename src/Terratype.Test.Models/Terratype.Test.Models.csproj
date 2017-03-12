@@ -69,9 +69,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Terratype.BingMapsV8\BingMapsV8.csproj">
+      <Project>{9f656d03-2d08-41dd-bef8-a4c8c02d3368}</Project>
+      <Name>BingMapsV8</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Terratype.GoogleMapsV3\GoogleMapsV3.csproj">
       <Project>{5e9bcc16-68c8-4f1d-b203-d54079e0cec3}</Project>
       <Name>GoogleMapsV3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Terratype.LeafletV1\LeafletV1.csproj">
+      <Project>{3146ad87-4cb5-4743-92d0-88558c727e2e}</Project>
+      <Name>LeafletV1</Name>
     </ProjectReference>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
       <Project>{5034528f-401c-4fd4-8f42-23b378c7140d}</Project>

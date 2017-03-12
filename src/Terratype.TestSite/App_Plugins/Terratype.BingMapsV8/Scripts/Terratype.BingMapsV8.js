@@ -387,9 +387,6 @@
                     },
                     search: {
                         enable: 0,
-                        limit: {
-                            countries: []
-                        }
                     }
                 },
                 initValues: function () {
@@ -544,9 +541,13 @@
                                     scope.ginfo = null;
                                 }
                                 if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
-                                    scope.ginfo = new root.google.maps.InfoWindow({
-                                        content: label.content
+                                    scope.ginfo = new root.Microsoft.Maps.Infobox(scope.gmarker.getLocation(), {
+                                        description: ' ',
+                                        visible: false,
+                                        pushpin: scope.gmarker
                                     });
+                                    scope.ginfo._options.description = label.content;
+                                    scope.ginfo.setMap(scope.gmap);
                                 }
                             }
                         },
@@ -795,9 +796,11 @@
                                         scope.ginfo = null;
                                         if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
                                             scope.ginfo = new root.Microsoft.Maps.Infobox(latlng, {
-                                                htmlContent: store().label.content,
-                                                visible: false
+                                                description: ' ',
+                                                visible: false,
+                                                pushpin: scope.gmarker
                                             });
+                                            scope.ginfo._options.description = store().label.content;
                                             scope.ginfo.setMap(scope.gmap);
                                         }
                                         scope.gevents.push(root.Microsoft.Maps.Events.addHandler(scope.gmarker, 'click', function () {
@@ -806,7 +809,7 @@
                                             }
                                             if (scope.callEvent('icon-click') && scope.ginfo) {
                                                 scope.ginfo.setOptions({
-                                                    visible: scope.ginfo.getVisible()
+                                                    visible: !scope.ginfo.getVisible()
                                                 });
                                             }
                                         }));
@@ -986,7 +989,10 @@
                     scope.ignoreEvents--;
                 },
                 searchLookupElement: function (autosuggest) {
-                    return document.getElementById('terratype_' + id + '_bingmapsv8_lookup_' + ((autosuggest  || config().search.enable == 2) ? 'autosuggest' : 'normal'));
+                    if (typeof autosuggest === 'undefined') {
+                        autosuggest = config().search.enable;
+                    }
+                    return document.getElementById('terratype_' + id + '_bingmapsv8_lookup_' + ((autosuggest == 2) ? 'autosuggest' : 'normal'));
                 },
                 searchResultElement: function () {
                     return document.getElementById('terratype_' + id + '_bingmapsv8_lookup_results');
@@ -1031,6 +1037,7 @@
                         return;
                     }
                     function ready1() {
+                        scope.searchManager = new root.Microsoft.Maps.Search.SearchManager(scope.gmap);
                         $(scope.searchLookupElement()).on('keypress keydown', scope.doSearch);
                     }
                     function ready2() {
@@ -1055,7 +1062,6 @@
                     } else {
                         root.Microsoft.Maps.loadModule('Microsoft.Maps.Search', {
                             callback: function () {
-                                scope.searchManager = new root.Microsoft.Maps.Search.SearchManager(scope.gmap);
                                 ready1();
                             }
                         });

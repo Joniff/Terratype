@@ -92,7 +92,7 @@ namespace Models
         }
 
         [TestMethod]
-        public void Model_ConvertToJsonAndBack_ShouldBeEqual()
+        public void GMapsModel_ConvertToJsonAndBack_ShouldBeEqual()
         {
             foreach (var culture in Cultures)
             {
@@ -163,6 +163,169 @@ namespace Models
                             Countries = new string[] { "France", "Germany", "Italy", "United Kingdom" }
                         }
                     }
+                };
+
+                var model = new Terratype.Models.Model()
+                {
+                    Zoom = rnd.Next(19) + 1,
+                    Label = new Terratype.Labels.Standard()
+                    {
+                        Content = new HtmlString("<p>This is some text<p>")
+                    },
+                    Lookup = "Paris, France",
+                    Position = new Terratype.CoordinateSystems.Wgs84(RandomLatLng()),
+                };
+
+                //  Use private set to add properties to class
+                PrivateObject accessor = new PrivateObject(model);
+                accessor.SetProperty(nameof(Terratype.Models.Model.Provider), provider);
+                accessor.SetProperty(nameof(Terratype.Models.Model.Icon), icon);
+
+                var json = JsonConvert.SerializeObject(model);
+
+                var model2 = new Terratype.Models.Model(json);
+
+                model.ShouldBeEquivalentTo<Terratype.Models.Model>(model2);
+
+                var json2 = JsonConvert.SerializeObject(model2);
+
+                Assert.AreEqual(json, json2);
+
+            }
+        }
+
+        [TestMethod]
+        public void LeafletModel_ConvertToJsonAndBack_ShouldBeEqual()
+        {
+            foreach (var culture in Cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+
+                var icon = new Terratype.Models.Icon()
+                {
+                    Id = "test",
+                    Url = new Uri("http://mydomain.com/myfile.jpg"),
+                    Size = new Terratype.Models.Icon.SizeDefinition()
+                    {
+                        Width = 50,
+                        Height = 66
+                    },
+                    Anchor = new Terratype.Models.Icon.AnchorDefinition()
+                    {
+                        Vertical = 25,
+                        Horizontal = 33
+                    }
+                };
+
+                var provider = new Terratype.Providers.LeafletV1()
+                {
+                    MapSources = new Terratype.Providers.LeafletV1.MapSourceDefinition[] {
+                        new Terratype.Providers.LeafletV1.MapSourceDefinition {
+                            TileServer = new Terratype.Providers.LeafletV1.MapSourceDefinition.TileServerDefinition()
+                            {
+                                Id = "TileServerId1"
+                            },
+                            MinZoom = 0,
+                            MaxZoom = 10
+                        },
+                        new Terratype.Providers.LeafletV1.MapSourceDefinition {
+                            TileServer = new Terratype.Providers.LeafletV1.MapSourceDefinition.TileServerDefinition()
+                            {
+                                Id = "TileServerId2"
+                            },
+                            MinZoom = 11,
+                            MaxZoom = 20,
+                            Key = "AAAABBBBCCCCDDDD"
+                        }
+                    },
+                    ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+                    {
+                        Enable = true,
+                        Position = Terratype.Providers.LeafletV1.ControlPositions.BottomLeft
+                    },
+                };
+
+                var model = new Terratype.Models.Model()
+                {
+                    Zoom = rnd.Next(19) + 1,
+                    Label = new Terratype.Labels.Standard()
+                    {
+                        Content = new HtmlString("<p>This is some text<p>")
+                    },
+                    Lookup = "Paris, France",
+                    Position = new Terratype.CoordinateSystems.Wgs84(RandomLatLng()),
+                };
+
+                //  Use private set to add properties to class
+                PrivateObject accessor = new PrivateObject(model);
+                accessor.SetProperty(nameof(Terratype.Models.Model.Provider), provider);
+                accessor.SetProperty(nameof(Terratype.Models.Model.Icon), icon);
+
+                var json = JsonConvert.SerializeObject(model);
+
+                var model2 = new Terratype.Models.Model(json);
+
+                model.ShouldBeEquivalentTo<Terratype.Models.Model>(model2);
+
+                var json2 = JsonConvert.SerializeObject(model2);
+
+                Assert.AreEqual(json, json2);
+
+            }
+        }
+
+        [TestMethod]
+        public void BingModel_ConvertToJsonAndBack_ShouldBeEqual()
+        {
+            foreach (var culture in Cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+
+                var icon = new Terratype.Models.Icon()
+                {
+                    Id = "test",
+                    Url = new Uri("http://mydomain.com/myfile.jpg"),
+                    Size = new Terratype.Models.Icon.SizeDefinition()
+                    {
+                        Width = 50,
+                        Height = 66
+                    },
+                    Anchor = new Terratype.Models.Icon.AnchorDefinition()
+                    {
+                        Vertical = 25,
+                        Horizontal = 33
+                    }
+                };
+
+                var provider = new Terratype.Providers.BingMapsV8()
+                {
+                    Version = "release",
+                    ApiKey = "abcdefghhijklmnopqrstuvwxyz",
+                    Language = "en-gb",
+                    Search = new Terratype.Providers.BingMapsV8.SearchDefinition()
+                    {
+                        Enable = Terratype.Providers.BingMapsV8.SearchDefinition.SearchStatus.Enable
+                    },
+                    Variety = new Terratype.Providers.BingMapsV8.VarietyDefinition()
+                    {
+                        Basic = false,
+                        Satellite = true,
+                        StreetView = true
+                    },
+                    Scale = new Terratype.Providers.BingMapsV8.Control()
+                    {
+                        Enable = false
+                    },
+                    ZoomControl = new Terratype.Providers.BingMapsV8.Control()
+                    {
+                        Enable = true
+                    },
+                    Traffic = new Terratype.Providers.BingMapsV8.TrafficDefinition()
+                    {
+                        Enable = true,
+                        Legend = true
+                    },
+                    ShowLabels = false
                 };
 
                 var model = new Terratype.Models.Model()

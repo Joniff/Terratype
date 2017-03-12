@@ -1,0 +1,86 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Bing>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@using Terratype;
+@{
+    Layout = null;
+    var jquery = false;
+    if (Request.QueryString["jquery"] != null)
+    {
+        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+                crossorigin="anonymous"></script>
+        jquery = true;
+    }
+
+}
+
+<html lang="en-gb">
+<head>
+    <title>Bing Maps V8</title>
+</head>
+<body>
+    Jquery is @jquery
+
+    <fieldset>
+        <legend>
+            Map 1
+        </legend>
+        <dl>
+            <dt>
+                Zoom
+            </dt>
+            <dd>
+                @Model.Content.Map.Zoom
+            </dd>
+            <dt>
+                Lookup
+            </dt>
+            <dd>
+                @Model.Content.Map.Lookup
+            </dd>
+            <dt>
+                Position
+            </dt>
+            <dd>
+                @Model.Content.Map.Position
+            </dd>
+            <dt>
+                Coordinate System
+            </dt>
+            <dd>
+                @Model.Content.Map.Position.Id
+            </dd>
+            <dt>
+                Provider
+            </dt>
+            <dd>
+                @Model.Content.Map.Provider.Id
+            </dd>
+            <dt>
+                Icon Url
+            </dt>
+            <dd>
+                @Model.Content.Map.Icon.Url
+            </dd>
+            <dt>
+                Api Key
+            </dt>
+            <dd>
+                @((Model.Content.Map.Provider as Terratype.Providers.BingMapsV8).ApiKey)
+            </dd>
+
+        </dl>
+        <div id="pretend-accordion" style="display:@(Request.QueryString["show"] != null ? "display" : "none");">
+            <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+                This is an empty div
+            </div>
+            @Html.Terratype(Model.Content.Map)
+            <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+                This is an empty div
+            </div>
+        </div>
+        <button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+    </fieldset>
+</body>
+</html>
