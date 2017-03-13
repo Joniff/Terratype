@@ -16,7 +16,8 @@
         </style>
         <style ng-if="config().provider.breadcrumb.enable == false" ng-bind-html="'#terratype_' + identifier + '_bingmapsv8_map .streetsideText {display:none;}'"></style>
     </div>
-
-    <div id="terratype_{{identifier}}_bingmapsv8_map" ng-show="vm().showMap">
+    <div ng-style="{'height':config().height + 'px'}">
+        <div id="terratype_{{identifier}}_bingmapsv8_map" ng-show="vm().showMap">
+        </div>
     </div>
 </div>

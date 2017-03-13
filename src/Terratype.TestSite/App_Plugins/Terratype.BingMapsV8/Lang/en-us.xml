@@ -18,7 +18,7 @@
     <key alias="versionFrozen">Frozen (Mission critical release)</key>
 
     <key alias="apiKeyLabel">Bing API Key:</key>
-    <key alias="apiKeyDescription">Your Bing API Key. If you leave blank the map will contain a large Microsoft watermark</key>
+    <key alias="apiKeyDescription">Your Bing API Key. If you leave blank the map will contain a large watermark</key>
     <key alias="apiKeyPlaceholder">Bing API Key</key>
     <key alias="apiKeyGet">[Get a key]</key>
     <key alias="apiKeyInvalid">Invalid API Key</key>

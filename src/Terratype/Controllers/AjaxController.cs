@@ -325,7 +325,7 @@ namespace Terratype.Controllers
                 {
                     continue;
                 }
-                var config = JObject.Parse(values.First()).GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                var config = json.GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
                 if (config == null)
                 {
                     continue;
@@ -358,6 +358,59 @@ namespace Terratype.Controllers
                         name = String.IsNullOrWhiteSpace(name) ? datatype.Name : name,
                         config = json
                     });
+                }
+            }
+            return results;
+        }
+
+        private T JsonValue<T>(JObject obj, string notation)
+        {
+            var fields = notation.Split('.');
+            for (var count = 0; count < fields.Length - 1; count++)
+            {
+                obj = obj.GetValue(fields[count], StringComparison.InvariantCultureIgnoreCase) as JObject;
+                if (obj == null)
+                {
+                    return default(T);
+                }
+            }
+            var token = obj.GetValue(fields[fields.Length - 1], StringComparison.InvariantCultureIgnoreCase) as JToken;
+            if (token == null)
+            {
+                return default(T);
+            }
+            return token.Value<T>();
+        }
+
+        [System.Web.Http.HttpGet]
+        public IEnumerable<string> DataTypeFields(string when, string field)
+        {
+            if (string.IsNullOrWhiteSpace(field))
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            var results = new HashSet<string>();
+            var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
+
+            foreach (var datatype in datatypes)
+            {
+                var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
+
+                var json = JObject.Parse(values.First());
+                if (json == null)
+                {
+                    continue;
+                }
+                var equation = when.Split('=');
+                var value = JsonValue<string>(json, equation[0]);
+                if (!String.IsNullOrWhiteSpace(value) && String.Equals(value, equation[1], StringComparison.InvariantCultureIgnoreCase))
+                {
+                    value = JsonValue<string>(json, field);
+                    if (!String.IsNullOrWhiteSpace(value) && !results.Contains(value))
+                    {
+                        results.Add(value);
+                    }
                 }
             }
             return results;

@@ -218,7 +218,7 @@
         mapSources: [],
         css: ['css/leaflet.css'],
         js: ['scripts/leaflet.js', 'scripts/tileservers.js'],
-        boot: function (id, urlProvider, store, config, vm, updateView, translate) {
+        boot: function (id, urlProvider, store, config, vm, updateView, translate, done) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -263,7 +263,7 @@
                 tileServerByCoordinateSystemAndMapSource: {},
                 tileServerById: {},
                 tileServerByCoordinateSystemAndId: {},
-                init: function () {
+                init: function (done) {
                     //event.cancel(id);
                     scope.mapSourceByCoordinateSystem = {};
                     scope.mapSourceById = {};
@@ -272,31 +272,51 @@
                     scope.tileServerByCoordinateSystemAndId = {};
                     var t = root.terratype.leaflet.translate;
                     root.terratype.leaflet.translate = true;
-
+                    var tc = 0;
                     //  Calculate all language values
                     for (var t1 = 0; t1 != root.terratype.leaflet.tileServers.length; t1++) {
                         var ms = root.terratype.leaflet.tileServers[t1];
                         scope.mapSourceById[ms.id] = ms;
                         if (!t) {
                             (function (ms) {
+                                tc += 2;
                                 translate(ms.name, function (value) {
                                     ms.name = value;
+                                    if (--tc == 0) {
+                                        d();
+                                    }
                                 });
                                 translate(ms.description, function (value) {
                                     ms.description = value;
+                                    if (--tc == 0) {
+                                        d();
+                                    }
                                 });
                                 if (ms.key.enable) {
+                                    tc += 4;
                                     translate(ms.key.name, function (value) {
                                         ms.key.name = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                     translate(ms.key.description, function (value) {
                                         ms.key.description = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                     translate(ms.key.placeholder, function (value) {
                                         ms.key.placeholder = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                     translate(ms.key.url, function (value) {
                                         ms.key.url = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                 }
                             }(ms));
@@ -307,11 +327,18 @@
                             scope.tileServerById[v.id] = v;
                             if (!t) {
                                 (function (v) {
+                                    tc += 2;
                                     translate(v.name, function (value) {
                                         v.name = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                     translate(v.attribution, function (value) {
                                         v.attribution = value;
+                                        if (--tc == 0) {
+                                            d();
+                                        }
                                     });
                                 }(v));
                             }
@@ -340,11 +367,6 @@
                             vm().position.datum = scope.parse.call(scope, store().position.datum);
                         }
                     }
-                    if (vm().isPreview == false && config().provider && config().provider.mapSources && config().provider.mapSources.length != 0 &&
-                        scope.mapSourceValid() && store().position && store().position.id && vm().position.precision) {
-                        scope.loadMap.call(scope);
-                    }
-
                     if (config().provider && config().provider.mapSources && config().provider.mapSources.length != 0) {
                         for (var i = 0; i != config().provider.mapSources.length; i++) {
                             provider.mapSources.push({
@@ -356,301 +378,313 @@
                             });
                         }
                     }
-                    return {
-                        files: {
-                            logo: urlProvider(identifier, 'images/Logo.png'),
-                            mapExample: urlProvider(identifier, 'images/Example.png'),
-                            views: {
-                                config: {
-                                    definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                    apperance: urlProvider(identifier, 'views/config.apperance.html', true),
-                                    search: urlProvider(identifier, 'views/config.search.html', true)
-                                },
-                                editor: {
-                                    apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
-                                },
-                                grid: {
-                                    apperance: urlProvider(identifier, 'views/grid.apperance.html', true)
+                    if (tc == 0) {
+                        d();
+                    }
+                    updateView();
+                    function d() {
+                        if (vm().isPreview == false && config().provider && config().provider.mapSources && config().provider.mapSources.length != 0 &&
+                            scope.mapSourceValid() && store().position && store().position.id && vm().position.precision) {
+                            scope.loadMap.call(scope);
+                        }
+                        done({
+                            httpCalls: {
+                            },
+                            files: {
+                                logo: urlProvider(identifier, 'images/Logo.png'),
+                                mapExample: urlProvider(identifier, 'images/Example.png'),
+                                views: {
+                                    config: {
+                                        definition: urlProvider(identifier, 'views/config.definition.html', true),
+                                        apperance: urlProvider(identifier, 'views/config.apperance.html', true),
+                                        search: urlProvider(identifier, 'views/config.search.html', true)
+                                    },
+                                    editor: {
+                                        apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
+                                    },
+                                    grid: {
+                                        apperance: urlProvider(identifier, 'views/grid.apperance.html', true)
+                                    }
                                 }
-                            }
-                        },
-                        setProvider: function () {
-                            if (config().provider.id != identifier) {
-                                event.cancel(id);
-                            }
-                        },
-                        setCoordinateSystem: function () {
-                            if (store().position && scope.mapSourceValid()) {
+                            },
+                            setProvider: function () {
+                                if (vm().provider.id != identifier) {
+                                    event.cancel(id);
+                                }
+                            },
+                            setCoordinateSystem: function () {
+                                if (store().position && scope.mapSourceValid()) {
+                                    scope.reloadMap.call(scope);
+                                }
+                            },
+                            setIcon: function () {
+                                if (scope.gmarker) {
+                                    scope.gmarker.setIcon(sub.icon.call(sub, config().icon));
+                                }
+                            },
+                            styleChange: function () {
+                            },
+                            datumChange: function (text) {
+                                vm().datumChangeText = text;
+                                if (scope.datumChangeWait) {
+                                    clearTimeout(scope.datumChangeWait);
+                                }
+                                scope.datumChangeWait = setTimeout(function () {
+                                    scope.datumChangeWait = null;
+                                    var p = scope.parse.call(scope, vm().datumChangeText);
+                                    if (typeof p !== 'boolean') {
+                                        vm().position.datum = p;
+                                        scope.setDatum.call(scope);
+                                        scope.setMarker.call(scope);
+                                        return;
+                                    }
+                                    vm().position.datumStyle = { 'color': 'red' };
+                                }, provider.datumWait);
+                            },
+                            optionChange: function () {
+                                if (scope.gmap) {
+                                    if (scope.zoomControl) {
+                                        scope.gmap.removeControl(scope.zoomControl);
+                                    }
+                                    if (config().provider.zoomControl.enable) {
+                                        scope.zoomControl = L.control.zoom({
+                                            position: sub.controlPosition(config().provider.zoomControl.position)
+                                        }).addTo(scope.gmap);
+                                    }
+                                }
+                            },
+                            reload: function () {
+                                scope.mapSourceOrderRows();
                                 scope.reloadMap.call(scope);
-                            }
-                        },
-                        setIcon: function () {
-                            if (scope.gmarker) {
-                                scope.gmarker.setIcon(sub.icon.call(sub, config().icon));
-                            }
-                        },
-                        styleChange: function () {
-                        },
-                        datumChange: function (text) {
-                            vm().datumChangeText = text;
-                            if (scope.datumChangeWait) {
-                                clearTimeout(scope.datumChangeWait);
-                            }
-                            scope.datumChangeWait = setTimeout(function () {
-                                scope.datumChangeWait = null;
-                                var p = scope.parse.call(scope, vm().datumChangeText);
-                                if (typeof p !== 'boolean') {
-                                    vm().position.datum = p;
-                                    scope.setDatum.call(scope);
-                                    scope.setMarker.call(scope);
-                                    return;
-                                }
-                                vm().position.datumStyle = { 'color': 'red' };
-                            }, provider.datumWait);
-                        },
-                        optionChange: function () {
-                            if (scope.gmap) {
-                                if (scope.zoomControl) {
-                                    scope.gmap.removeControl(scope.zoomControl);
-                                }
-                                if (config().provider.zoomControl.enable) {
-                                    scope.zoomControl = L.control.zoom({
-                                        position: sub.controlPosition(config().provider.zoomControl.position)
-                                    }).addTo(scope.gmap);
-                                }
-                            }
-                        },
-                        reload: function () {
-                            scope.mapSourceOrderRows();
-                            scope.reloadMap.call(scope);
-                        },
-                        addEvent: function (id, func, s) {
-                            scope.events.push({ id: id, func: func, scope: s});
-                        },
-                        labelChange: function (label) {
-                            if (scope.gmap && scope.gmarker) {
-                                if (scope.ginfo) {
-                                    scope.gmap.closePopup();
-                                    scope.gmarker.unbindPopup();
-                                }
-                                if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
-                                    scope.ginfo = scope.gmarker.bindPopup(store().label.content);
-                                }
-                            }
-                        },
-                        destroy: scope.destroy,
-                        mapSourceAddRow: function () {
-                            if (!config().provider) {
-                                config().provider = {};
-                            }
-                            if (!config().provider.mapSources) {
-                                config().provider.mapSources = [];
-                            }
-                            config().provider.mapSources.push({
-                                minZoom: 0,
-                                maxZoom: 24
-                            });
-                            if (!vm().provider.mapSources) {
-                                vm().provider.mapSources = [];
-                            }
-                            vm().provider.mapSources.push({
-                                show: false
-                            });
-                        },
-                        mapSourceToggleRow: function (index, show) {
-                            for (var i = 0; i != config().provider.mapSources.length; i++) {
-                                if (i != index) {
-                                    vm().provider.mapSources[i].show = false;
-                                } else {
-                                    if (typeof show === 'undefined') {
-                                        show = !(vm().provider.mapSources[index].show);
+                            },
+                            addEvent: function (id, func, s) {
+                                scope.events.push({ id: id, func: func, scope: s });
+                            },
+                            labelChange: function (label) {
+                                if (scope.gmap && scope.gmarker) {
+                                    if (scope.ginfo) {
+                                        scope.gmap.closePopup();
+                                        scope.gmarker.unbindPopup();
                                     }
-                                    vm().provider.mapSources[index].show = show;
-
-                                    if (show) {
-                                        setTimeout(function () {
-                                            var el = document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + index);
-                                            if (!scope.isElementInViewport(el)) {
-                                                el.parentElement.scrollIntoView(true);
-                                            }
-                                        });
+                                    if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
+                                        scope.ginfo = scope.gmarker.bindPopup(store().label.content);
                                     }
                                 }
-                            }
-                        },
-                        mapSourceDeleteRow: function (index) {
-                            config().provider.mapSources.splice(index, 1);
-                            vm().provider.mapSources.splice(index, 1);
-                        },
-                        mapSourceOrderRows: function () {
-                            scope.mapSourceOrderRows();
-                        },
-                        mapSourceTitle: function (l) {
-                            return l.minZoom + '-' + l.maxZoom + ' ' + l.mapSource + '.' + l.tileServer;
-                        },
-                        mapSourceValid: function (l) {
-                            return scope.mapSourceValid(l);
-                        },
-                        mapSourceMinZoomBindIE: function (div, index) {
-                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
-                            var el = document.getElementById(div);
-                            if (el != null) {
-                                var n = parseInt(el.value);
-                                if (config().provider.mapSources[index].minZoom != n) {
-                                    config().provider.mapSources[index].minZoom = n;
+                            },
+                            destroy: scope.destroy,
+                            mapSourceAddRow: function () {
+                                if (!config().provider) {
+                                    config().provider = {};
                                 }
-                            }
-                        },
-                        mapSourceMinZoomBind: function (t, index) {
-                            var n = (t == null) ? config().provider.mapSources[index].minZoom : parseInt(t);
-                            var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
-                            if (n < ts.minZoom) {
-                                n = ts.minZoom;
-                            }
-                            if (n > ts.maxZoom) {
-                                n = ts.maxZoom;
-                            }
-                            vm().provider.mapSources[index].minZoom = config().provider.mapSources[index].minZoom = n;
-                            scope.mapSourceTestImageBind(null, index);
-                        },
-                        mapSourceMaxZoomBindIE: function (div, index) {
-                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
-                            var el = document.getElementById(div);
-                            if (el != null) {
-                                var n = parseInt(el.value);
-                                if (config().provider.mapSources[index].maxZoom != n) {
-                                    config().provider.mapSources[index].maxZoom = n;
+                                if (!config().provider.mapSources) {
+                                    config().provider.mapSources = [];
                                 }
-                            }
-                        },
-                        mapSourceMaxZoomBind: function (t, index) {
-                            var n = (t == null) ? config().provider.mapSources[index].maxZoom : parseInt(t);
-                            var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
-                            if (n < ts.minZoom) {
-                                n = ts.minZoom;
-                            }
-                            if (n > ts.maxZoom) {
-                                n = ts.maxZoom;
-                            }
-                            vm().provider.mapSources[index].maxZoom = config().provider.mapSources[index].maxZoom = n;
-                            scope.mapSourceTestImageBind(null, index);
-                        },
-                        mapSourceTestImageBindIE: function (div, index) {
-                            //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
-                            var el = document.getElementById(div);
-                            if (el != null) {
-                                var n = parseInt(el.value);
-                                if (vm().provider.mapSources[index].testImage != n) {
-                                    vm().provider.mapSources[index].testImage = n;
+                                config().provider.mapSources.push({
+                                    minZoom: 0,
+                                    maxZoom: 24
+                                });
+                                if (!vm().provider.mapSources) {
+                                    vm().provider.mapSources = [];
                                 }
-                            }
-                        },
-                        mapSourceTestImageBind: function (t, index) {
-                            scope.mapSourceTestImageBind(t, index);
-                        },
-                        mapSourceImageTest: function (index) {
-                            var ms = scope.mapSourceById[config().provider.mapSources[index].mapSource.id];
-                            var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
-                            var x, y;
-                            z = vm().provider.mapSources[index].testImage;
-                            if (typeof z === 'undefined' || !Number.isInteger(z)) {
-                                return null;
-                            }
-                            switch (z) {
-                                case 0:
-                                    x = y = 0;
-                                    break;
-                                case 1:
-                                    x = 1, y = 0;
-                                    break;
-                                case 2:
-                                    x = 2, y = 1;
-                                    break;
-                                case 3:
-                                    x = 4, y = 2;
-                                    break;
-                                case 4:
-                                    x = 8, y = 5;
-                                    break;
-                                case 5:
-                                    x = 16, y = 10;
-                                    break;
-                                case 6:
-                                    x = 31, y = 21;
-                                    break;
-                                case 7:
-                                    x = 65, y = 42;
-                                    break;
-                                case 8:
-                                    x = 123, y = 82
-                                    break;
-                                case 9:
-                                    x = 245, y = 165;
-                                    break;
-                                case 10:
-                                    x = 539, y = 320;
-                                    break;
-                                case 11:
-                                    x = 1095, y = 640;
-                                    break;
-                                case 12:
-                                    x = 2000, y = 1280;
-                                    break;
-                                case 13:
-                                    x = 4034, y = 2737;
-                                    break;
-                                case 14:
-                                    x = 8415, y = 5384;
-                                    break;
-                                case 15:
-                                    x = 9643, y = 12320;
-                                    break;
-                                case 16:
-                                    x = 19294, y = 24640;
-                                    break;
-                                case 17:
-                                    x = 120585, y = 78655;
-                                    break;
-                                case 18:
-                                    x = 138634, y = 82398;
-                                    break;
-                                case 19:
-                                    x = 262034, y = 174339;
-                                    break;
-                                case 20:
-                                    x = 261957 * 2, y = 174337 * 2;
-                                    break;
-                                case 21:
-                                    x = 261957 * 4, y = 174337 * 4;
-                                    break;
-                                case 22:
-                                    x = 261957 * 16, y = 174337 * 16;
-                                    break;
-                                case 23:
-                                    x = 261957 * 256, y = 174337 * 256;
-                                    break;
-                                case 24:
-                                    x = 261957 * 65536, y = 174337 * 65536;
-                                    break;
-                            }
-                            var url = ts.url;
+                                vm().provider.mapSources.push({
+                                    show: false
+                                });
+                            },
+                            mapSourceToggleRow: function (index, show) {
+                                for (var i = 0; i != config().provider.mapSources.length; i++) {
+                                    if (i != index) {
+                                        vm().provider.mapSources[i].show = false;
+                                    } else {
+                                        if (typeof show === 'undefined') {
+                                            show = !(vm().provider.mapSources[index].show);
+                                        }
+                                        vm().provider.mapSources[index].show = show;
 
-                            url = url.replace(new RegExp('\{x\}', 'gi'), x);
-                            url = url.replace(new RegExp('\{y\}', 'gi'), y);
-                            url = url.replace(new RegExp('\{z\}', 'gi'), z);
-                            if (ts.options.subdomains) {
-                                url = url.replace(new RegExp('\{s\}', 'gi'), ts.options.subdomains[0]);
-                            }
-                            if (ms.key && ms.key.enable == true) {
-                                url = url.replace(new RegExp('\{key\}', 'gi'), config().provider.mapSources[index].key);
-                            }
-                            return url;
-                        },
-                        mapSourceByCoordinateSystem: scope.mapSourceByCoordinateSystem,
-                        mapSourceById: scope.mapSourceById,
-                        tileServerByCoordinateSystemAndMapSource: scope.tileServerByCoordinateSystemAndMapSource,
-                        tileServerById: scope.tileServerById,
-                        tileServerByCoordinateSystemAndId: scope.tileServerByCoordinateSystemAndId
+                                        if (show) {
+                                            setTimeout(function () {
+                                                var el = document.getElementById('terratype_' + id + '_leafletv1_mapSources_' + index);
+                                                if (!scope.isElementInViewport(el)) {
+                                                    el.parentElement.scrollIntoView(true);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            },
+                            mapSourceDeleteRow: function (index) {
+                                config().provider.mapSources.splice(index, 1);
+                                vm().provider.mapSources.splice(index, 1);
+                            },
+                            mapSourceOrderRows: function () {
+                                scope.mapSourceOrderRows();
+                            },
+                            mapSourceTitle: function (l) {
+                                return l.minZoom + '-' + l.maxZoom + ' ' + l.mapSource + '.' + l.tileServer;
+                            },
+                            mapSourceValid: function (l) {
+                                return scope.mapSourceValid(l);
+                            },
+                            mapSourceMinZoomBindIE: function (div, index) {
+                                //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                                var el = document.getElementById(div);
+                                if (el != null) {
+                                    var n = parseInt(el.value);
+                                    if (config().provider.mapSources[index].minZoom != n) {
+                                        config().provider.mapSources[index].minZoom = n;
+                                    }
+                                }
+                            },
+                            mapSourceMinZoomBind: function (t, index) {
+                                var n = (t == null) ? config().provider.mapSources[index].minZoom : parseInt(t);
+                                var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
+                                if (n < ts.minZoom) {
+                                    n = ts.minZoom;
+                                }
+                                if (n > ts.maxZoom) {
+                                    n = ts.maxZoom;
+                                }
+                                vm().provider.mapSources[index].minZoom = config().provider.mapSources[index].minZoom = n;
+                                scope.mapSourceTestImageBind(null, index);
+                            },
+                            mapSourceMaxZoomBindIE: function (div, index) {
+                                //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                                var el = document.getElementById(div);
+                                if (el != null) {
+                                    var n = parseInt(el.value);
+                                    if (config().provider.mapSources[index].maxZoom != n) {
+                                        config().provider.mapSources[index].maxZoom = n;
+                                    }
+                                }
+                            },
+                            mapSourceMaxZoomBind: function (t, index) {
+                                var n = (t == null) ? config().provider.mapSources[index].maxZoom : parseInt(t);
+                                var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
+                                if (n < ts.minZoom) {
+                                    n = ts.minZoom;
+                                }
+                                if (n > ts.maxZoom) {
+                                    n = ts.maxZoom;
+                                }
+                                vm().provider.mapSources[index].maxZoom = config().provider.mapSources[index].maxZoom = n;
+                                scope.mapSourceTestImageBind(null, index);
+                            },
+                            mapSourceTestImageBindIE: function (div, index) {
+                                //  IE doesn't bind to model correctly, so this is here to do the binding ourselves
+                                var el = document.getElementById(div);
+                                if (el != null) {
+                                    var n = parseInt(el.value);
+                                    if (vm().provider.mapSources[index].testImage != n) {
+                                        vm().provider.mapSources[index].testImage = n;
+                                    }
+                                }
+                            },
+                            mapSourceTestImageBind: function (t, index) {
+                                scope.mapSourceTestImageBind(t, index);
+                            },
+                            mapSourceImageTest: function (index) {
+                                var ms = scope.mapSourceById[config().provider.mapSources[index].mapSource.id];
+                                var ts = scope.tileServerById[config().provider.mapSources[index].tileServer.id];
+                                var x, y;
+                                z = vm().provider.mapSources[index].testImage;
+                                if (typeof z === 'undefined' || !Number.isInteger(z)) {
+                                    return null;
+                                }
+                                switch (z) {
+                                    case 0:
+                                        x = y = 0;
+                                        break;
+                                    case 1:
+                                        x = 1, y = 0;
+                                        break;
+                                    case 2:
+                                        x = 2, y = 1;
+                                        break;
+                                    case 3:
+                                        x = 4, y = 2;
+                                        break;
+                                    case 4:
+                                        x = 8, y = 5;
+                                        break;
+                                    case 5:
+                                        x = 16, y = 10;
+                                        break;
+                                    case 6:
+                                        x = 31, y = 21;
+                                        break;
+                                    case 7:
+                                        x = 65, y = 42;
+                                        break;
+                                    case 8:
+                                        x = 123, y = 82
+                                        break;
+                                    case 9:
+                                        x = 245, y = 165;
+                                        break;
+                                    case 10:
+                                        x = 539, y = 320;
+                                        break;
+                                    case 11:
+                                        x = 1095, y = 640;
+                                        break;
+                                    case 12:
+                                        x = 2000, y = 1280;
+                                        break;
+                                    case 13:
+                                        x = 4034, y = 2737;
+                                        break;
+                                    case 14:
+                                        x = 8415, y = 5384;
+                                        break;
+                                    case 15:
+                                        x = 9643, y = 12320;
+                                        break;
+                                    case 16:
+                                        x = 19294, y = 24640;
+                                        break;
+                                    case 17:
+                                        x = 120585, y = 78655;
+                                        break;
+                                    case 18:
+                                        x = 138634, y = 82398;
+                                        break;
+                                    case 19:
+                                        x = 262034, y = 174339;
+                                        break;
+                                    case 20:
+                                        x = 261957 * 2, y = 174337 * 2;
+                                        break;
+                                    case 21:
+                                        x = 261957 * 4, y = 174337 * 4;
+                                        break;
+                                    case 22:
+                                        x = 261957 * 16, y = 174337 * 16;
+                                        break;
+                                    case 23:
+                                        x = 261957 * 256, y = 174337 * 256;
+                                        break;
+                                    case 24:
+                                        x = 261957 * 65536, y = 174337 * 65536;
+                                        break;
+                                }
+                                var url = ts.url;
+
+                                url = url.replace(new RegExp('\{x\}', 'gi'), x);
+                                url = url.replace(new RegExp('\{y\}', 'gi'), y);
+                                url = url.replace(new RegExp('\{z\}', 'gi'), z);
+                                if (ts.options.subdomains) {
+                                    url = url.replace(new RegExp('\{s\}', 'gi'), ts.options.subdomains[0]);
+                                }
+                                if (ms.key && ms.key.enable == true) {
+                                    url = url.replace(new RegExp('\{key\}', 'gi'), config().provider.mapSources[index].key);
+                                }
+                                return url;
+                            },
+                            mapSourceByCoordinateSystem: scope.mapSourceByCoordinateSystem,
+                            mapSourceById: scope.mapSourceById,
+                            tileServerByCoordinateSystemAndMapSource: scope.tileServerByCoordinateSystemAndMapSource,
+                            tileServerById: scope.tileServerById,
+                            tileServerByCoordinateSystemAndId: scope.tileServerByCoordinateSystemAndId
+                        });
                     }
                 },
                 mapSourceValidItem: function (l) {
@@ -741,10 +775,10 @@
                     sub.destroySubsystem();
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        var counter = 0;      //  Put in place incase of horrible errors
+                        var counter = 100;      //  Put in place incase of horrible errors
 
                         var timer = setInterval(function () {
-                            if (counter++ > 100 || div.children.length == 0) {
+                            if (--counter < 0) {
                                 clearInterval(timer);
                                 scope.loadMap.call(scope);
                             }
@@ -752,10 +786,12 @@
                                 var child = div.firstChild;
                                 if (child) {
                                     div.removeChild(child);
+                                } else {
+                                    counter = 0;
                                 }
                             }
                             catch (oh) {
-                                counter = 100;
+                                counter = 0;
                             }
                         }, 1);
                     } else {
@@ -1033,7 +1069,7 @@
                     scope.ignoreEvents++;
                     scope.gmap.setZoom(store().zoom);
                     scope.setMarker.call(scope, true);
-                    //root.google.maps.event.trigger(scope.gmap, 'resize');
+                    scope.gmap.invalidateSize();
                     scope.ignoreEvents--;
                 },
                 eventCheckRefresh: function () {
@@ -1066,7 +1102,7 @@
 
                 }
             }
-            return scope.init();
+            scope.init(done);
         }
     }
 

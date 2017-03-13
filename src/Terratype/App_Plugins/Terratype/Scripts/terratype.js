@@ -101,6 +101,7 @@
                     editPosition: 0
                 }
             },
+            configs: [],
             position: {},
             providers: [],
             provider: {
@@ -223,7 +224,6 @@
                 var wait = setInterval(function () {
                     if (!root.terratype.loading) {
                         clearInterval(wait);
-
                         if (!angular.isUndefined(root.terratype.providers[id])) {
                             done();
                         } else {
@@ -275,28 +275,60 @@
                     //  Asked for a provider we don't have
                     return;
                 }
+                if ($scope.config().provider) {
+                    if (id != $scope.config().provider.id) {
+                        if ($scope.vm().provider && $scope.vm().provider.events && $scope.vm().provider.events.destroy) {
+                            $scope.vm().provider.events.destroy();
+                        }
+                        $scope.vm().configs[$scope.config().provider.id] = angular.copy($scope.config().provider);
+                        $scope.config().provider = $scope.vm().configs[id] || {};
+                    } else {
+                        $scope.config().provider.id = id;
+                    }
+                } else {
+                    $scope.config().provider = {
+                        id: id,
+                        grid: {
+                            enable: false
+                        }
+                    }
+                }
+
                 $scope.vm().providerLoading = true;
                 $timeout(function () {
                     $scope.terratype.loadProvider(id, function () {
                         $scope.vm().providers[index] = angular.extend($scope.vm().providers[index], root.terratype.providers[id]);
                         $scope.terratype.loadResources(id, $scope.vm().providers[index], function () {
-                            $scope.vm().providers[index].events = $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
+                            $scope.vm().providers[index].boot($scope.identifier, $scope.terratype.urlProvider,
                                 $scope.store, $scope.config, $scope.vm, function () {
                                     $scope.$apply();
                                 }, function (key, done) {
                                     localizationService.localize(key).then(function (value) {
                                         done(value);
                                     })
-                                });
-                            $scope.vm().provider = $scope.vm().providers[index];
-                            $scope.vm().provider.events.setProvider();
-
-                            if ($scope.store().position && $scope.store().position.id != null) {
-                                $scope.terratype.setCoordinateSystem($scope.store().position.id);
-                            }
-                            $timeout(function () {
-                                $scope.vm().providerLoading = false;
-                            })
+                                }, function (e) {
+                                    $scope.vm().providers[index].events = e;
+                                    $scope.vm().provider = angular.copy($scope.vm().providers[index]);
+                                    $scope.vm().provider.events.setProvider();
+                                    if ($scope.store().position && $scope.store().position.id != null) {
+                                        $scope.terratype.setCoordinateSystem($scope.store().position.id);
+                                    }
+                                    $timeout(function () {
+                                        if ($scope.vm().configgering) {
+                                            for (var httpCall in $scope.vm().provider.events.httpCalls) {
+                                                with ({
+                                                    hc: $scope.vm().provider.events.httpCalls[httpCall]
+                                                }) {
+                                                    $http.get($scope.terratype.controller('DataTypeFields?when=' + hc.when + '&field=' + hc.field)).then(function success(response) {
+                                                        hc.values = response.data;
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        $scope.vm().providerLoading = false;
+                                    });
+                                }
+                            );
                         });
                     });
                 });
@@ -845,26 +877,28 @@
                     setTimeout(function () {
                         $scope.terratype.loadResources($scope.config().provider.id, $scope.vm().provider, function () {
                             //  Simple way to wait for any destroy to have finished
-                            $scope.vm().provider.events = $scope.vm().provider.boot(id, $scope.terratype.urlProvider, $scope.store, $scope.config, $scope.vm, function () {
+                            $scope.vm().provider.boot(id, $scope.terratype.urlProvider, $scope.store, $scope.config, $scope.vm, function () {
                                 $scope.$apply();
                             }, function (key, done) {
                                 localizationService.localize(key).then(function (value) {
                                     done(value);
                                 })
-                            });
-                            if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
-                                with ({
-                                    display: $scope.terratype.labelOverlay.display
-                                }) {
-                                    $scope.vm().provider.events.addEvent('icon-click', function () {
-                                        display()
-                                    }, $scope);
+                            }, function (e) {
+                                $scope.vm().provider.events = e;
+                                if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
+                                    with ({
+                                        display: $scope.terratype.labelOverlay.display
+                                    }) {
+                                        $scope.vm().provider.events.addEvent('icon-click', function () {
+                                            display()
+                                        }, $scope);
+                                    }
                                 }
-                            }
-                            $scope.vm().showMap = true;
-                            if (completed) {
-                                completed();
-                            }
+                                $scope.vm().showMap = true;
+                                if (completed) {
+                                    completed();
+                                }
+                            });
                         });
                     }, 150);
                 });

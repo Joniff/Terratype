@@ -95,9 +95,10 @@
                     a.indexOf('InvalidKeyMapError') != -1 || a.indexOf('not authorized') != -1 || a.indexOf('RefererNotAllowedMapError') != -1)) {
                     event.broadcast('gmaperror');
                     gm.destroySubsystem();
+                    return;
                 }
                 try {
-                    gm.originalConsole.error(a);
+                    gm.originalConsole.warn(a);
                 }
                 catch (oh) {
                 }
@@ -147,6 +148,8 @@
             gm.searches = [];
             gm.checkSearch = 0;
             gm.uninstallFakeConsole();
+            root.google.maps.event.clearInstanceListeners(root);
+            root.google.maps.event.clearInstanceListeners(document);
             delete root.google;
             if (gm.domain) {
                 gm.uninstallScript(gm.domain);
@@ -222,9 +225,9 @@
                             {
                                 case gm.subsystemInit:
                                     LazyLoad.js(gm.domain + 'maps/api/js?v=' + version + '&libraries=places&callback=terratypeGoogleMapsV3Callback' + key + lan, function () {
-                                        if (gm.status == gm.subsystemInit || gm.status == gm.subsystemReadGoogleJs) {
-                                            gm.status = gm.subsystemCheckGoogleJs;
-                                        };
+                                        //if (gm.status == gm.subsystemInit || gm.status == gm.subsystemReadGoogleJs) {
+                                        //    gm.status = gm.subsystemCheckGoogleJs;
+                                        //};
                                     });
                                     start = gm.ticks() + gm.timeout;
                                     gm.status = gm.subsystemReadGoogleJs;
@@ -866,7 +869,7 @@
         datumWait: 330,
         css: [],
         js: [],
-        boot: function (id, urlProvider, store, config, vm, updateView, translate) {
+        boot: function (id, urlProvider, store, config, vm, updateView, translate, done) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -943,7 +946,7 @@
                         config().search = scope.defaultConfig.search;
                     }
                 },
-                init: function () {
+                init: function (done) {
                     //event.cancel(id);
                     if (store().position) {
                         if (typeof store().position.datum === 'string') {
@@ -953,7 +956,15 @@
                     if (vm().isPreview == false && config().provider && config().provider.version && store().position && store().position.id && vm().position.precision) {
                         scope.loadMap.call(scope);
                     }
-                    return {
+
+                    done({
+                        httpCalls: {
+                            'apiKey': {
+                                when: 'config.provider.id=' + identifier,
+                                field: 'config.provider.apiKey',
+                                values: []
+                            }
+                        },
                         files: {
                             logo: urlProvider(identifier, 'images/Logo.png'),
                             mapExample: urlProvider(identifier, 'images/Example.png'),
@@ -972,7 +983,7 @@
                             }
                         },
                         setProvider: function () {
-                            if (config().provider.id != identifier) {
+                            if (vm().provider.id != identifier) {
                                 scope.destroy();
                             }
                         },
@@ -1081,7 +1092,7 @@
                             scope.reloadMap.call(scope);
                         },
                         addEvent: function (id, func, s) {
-                            scope.events.push({ id: id, func: func, scope: s});
+                            scope.events.push({ id: id, func: func, scope: s });
                         },
                         labelChange: function (label) {
                             if (scope.gmap) {
@@ -1097,7 +1108,7 @@
                             }
                         },
                         destroy: scope.destroy
-                    }
+                    });
                 },
                 destroy: function () {
                     event.cancel(id);
@@ -1121,13 +1132,12 @@
                 },
                 reloadMap: function () {
                     scope.destroy();
-                    gm.destroySubsystem();
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        var counter = 0;      //  Put in place incase of horrible errors
+                        var counter = 100;      //  Put in place incase of horrible errors
 
                         var timer = setInterval(function () {
-                            if (counter++ > 100 || div.children.length == 0) {
+                            if (--counter < 0) {
                                 clearInterval(timer);
                                 scope.loadMap.call(scope);
                             }
@@ -1136,10 +1146,12 @@
                                 var child = div.firstChild;
                                 if (child) {
                                     div.removeChild(child);
+                                } else {
+                                    counter = 0;
                                 }
                             }
                             catch (oh) {
-                                counter = 100;
+                                counter = 0;
                             }
                         }, 1);
                     } else {
@@ -1194,7 +1206,11 @@
                 },
                 setMarker: function (quick) {
                     if (scope.gmap && scope.gmarker) {
-                        var latlng = new root.google.maps.LatLng(vm().position.datum.latitude, vm().position.datum.longitude);
+                        var latlng = {
+                            lat: vm().position.datum.latitude,
+                            lng: vm().position.datum.longitude
+                        };
+                        //  Gmaps sommetimes complains about perfectly valid coordinates, when this happens we just move on
                         scope.gmarker.setPosition(latlng);
                         if (quick) {
                             scope.gmap.setCenter(latlng);
@@ -1291,7 +1307,10 @@
                                         }
                                     } else if (scope.gmap == null) {
                                         scope.gevents = [];
-                                        var latlng = new root.google.maps.LatLng(vm().position.datum.latitude, vm().position.datum.longitude);
+                                        var latlng = {
+                                            lat: vm().position.datum.latitude,
+                                            lng: vm().position.datum.longitude
+                                        };
                                         var mapTypeIds = gm.mapTypeIds.call(gm, config().provider.variety.basic, config().provider.variety.satellite, config().provider.variety.terrain);
                                         config().provider.styles = gm.style.call(gm, config().provider.predefineStyling, config().provider.showRoads,
                                                 config().provider.showLandmarks, config().provider.showLabels);
@@ -1571,7 +1590,7 @@
 
                 }
             }
-            return scope.init();
+            scope.init(done);
         }
     }
 

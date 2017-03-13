@@ -67,7 +67,7 @@
         }
     }
 
-    //  Subsystem that loads or destroys Google Map library
+    //  Subsystem that loads or destroys Bing Map library
     var gm = {
         originalConsole: root.console,
         domain: null,
@@ -95,9 +95,10 @@
                     a.indexOf('InvalidKeyMapError') != -1 || a.indexOf('not authorized') != -1 || a.indexOf('RefererNotAllowedMapError') != -1)) {
                     event.broadcast('gmaperror');
                     gm.destroySubsystem();
+                    return;
                 }
                 try {
-                    gm.originalConsole.error(a);
+                    gm.originalConsole.warn(a);
                 }
                 catch (oh) {
                 }
@@ -125,7 +126,7 @@
         uninstallFakeConsole: function () {
             root.console = gm.originalConsole;
         },
-        isGoogleMapsLoaded: function () {
+        isBingMapsLoaded: function () {
             return angular.isDefined(root.Microsoft) && angular.isDefined(root.Microsoft.Maps);
         },
         uninstallScript: function (url) {
@@ -144,7 +145,16 @@
                 gm.searchesTimer = null;
             }
             gm.uninstallFakeConsole();
-            delete root.google;
+            delete root.Microsoft.Maps;
+            delete root.$MicrosoftMaps8;
+            root.Microsoft = {
+                Maps: {
+                    NetworkCallbacks: {
+                        normal: function () { return false; }
+                    },
+                    GlobalConfig: {}
+                }
+            };
             if (gm.domain) {
                 gm.uninstallScript(gm.domain);
                 gm.domain = null;
@@ -225,7 +235,7 @@
                                     break;
 
                                 case gm.subsystemCheckBingJs:
-                                    if (gm.isGoogleMapsLoaded()) {
+                                    if (gm.isBingMapsLoaded()) {
                                         gm.installFakeConsole();
                                         gm.status = gm.subsystemLoadedBingJs;
                                         event.broadcast('gmaprefresh');
@@ -350,7 +360,7 @@
         datumWait: 330,
         css: [],
         js: [],
-        boot: function (id, urlProvider, store, config, vm, updateView, translate) {
+        boot: function (id, urlProvider, store, config, vm, updateView, translate, done) {
             var scope = {
                 events: [],
                 datumChangeWait: null,
@@ -421,7 +431,14 @@
                     if (vm().isPreview == false && config().provider && config().provider.version && store().position && store().position.id && vm().position.precision) {
                         scope.loadMap.call(scope);
                     }
-                    return {
+                    done({
+                        httpCalls: {
+                            'apiKey': {
+                                when: 'config.provider.id=' + identifier,
+                                field: 'config.provider.apiKey',
+                                values: []
+                            }
+                        },
                         files: {
                             logo: urlProvider(identifier, 'images/Logo.png'),
                             mapExample: urlProvider(identifier, 'images/Example.png'),
@@ -440,7 +457,7 @@
                             }
                         },
                         setProvider: function () {
-                            if (config().provider.id != identifier) {
+                            if (vm().provider.id != identifier) {
                                 scope.destroy();
                             }
                         },
@@ -552,7 +569,7 @@
                             }
                         },
                         destroy: scope.destroy
-                    }
+                    });
                 },
                 destroy: function () {
                     event.cancel(id);
@@ -584,25 +601,25 @@
                 },
                 reloadMap: function () {
                     scope.destroy();
-                    gm.destroySubsystem();
                     if (scope.div) {
                         var div = document.getElementById(scope.div);
-                        var counter = 0;      //  Put in place incase of horrible errors
+                        var counter = 100;      //  Put in place incase of horrible errors
 
                         var timer = setInterval(function () {
-                            if (counter++ > 100 || div.children.length == 0) {
+                            if (--counter < 0) {
                                 clearInterval(timer);
                                 scope.loadMap.call(scope);
                             }
-                            try
-                            {
+                            try {
                                 var child = div.firstChild;
                                 if (child) {
                                     div.removeChild(child);
+                                } else {
+                                    counter = 0;
                                 }
                             }
                             catch (oh) {
-                                counter = 100;
+                                counter = 0;
                             }
                         }, 1);
                     } else {
@@ -727,8 +744,7 @@
                                     }
 
                                     //  Check that we have loaded with the right setting for us
-                                    if (gm.coordinateSystem != store().position.id ||
-                                        gm.forceHttps != config().provider.forceHttps ||
+                                    if (gm.forceHttps != config().provider.forceHttps ||
                                         gm.language != config().provider.language) {
                                         vm().status = {
                                             duplicate: true,
@@ -1033,7 +1049,7 @@
                 searchManager: null,
                 autoSuggestManager: null,
                 createSearch: function (e) {
-                    if (config().search.enable == 0) {
+                    if (config().search.enable == 0 || scope.searchLookupElement() == null) {
                         return;
                     }
                     function ready1() {
@@ -1097,7 +1113,7 @@
 
                 }
             }
-            return scope.init();
+            return scope.init(done);
         }
     }
 

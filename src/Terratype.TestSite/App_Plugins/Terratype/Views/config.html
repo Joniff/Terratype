@@ -8,7 +8,7 @@
                 </small>
             </label>
             <div class="controls">
-                <select id="terratype_{{identifier}}_provider" ng-model="config().provider.id" class="umb-editor" ng-change="terratype.setProvider(config().provider.id)" ng-options="p.id as p.name for p in vm().providers" style="float:left;"></select>
+                <select id="terratype_{{identifier}}_provider" ng-model="vm().provider.id" class="umb-editor" ng-change="terratype.setProvider(vm().provider.id)" ng-options="p.id as p.name for p in vm().providers" style="float:left;"></select>
                 <div ng-show="vm().providerLoading == true" style="float:left;margin-left:10px;">
                     <img ng-src="{{terratype.images.loading}}" />
                 </div>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <br />
-    <fieldset ng-show="vm().provider.id" style="padding-left:15px;">
+    <fieldset ng-if="vm().provider.id && vm().providerLoading == false" style="padding-left:15px;">
         <legend>
             <a href="{{vm().provider.referenceUrl}}" target="_blank">
                 <span ng-style="{'padding-left':'36px', 'background-image':'url(' + vm().provider.events.files.logo + ')', 'background-size': 'auto 32px', 'background-repeat': 'no-repeat', 'display':'inline-block'}">
@@ -41,8 +41,8 @@
                         <localize key="terratypeConfig_definitionCoordinateSystemDescription">Which Geodetic Coordinate System do you wish to use to present and store locations</localize>
                     </small>
                 </label>
-                <div class="controls" ng-show="config && vm().provider.coordinateSystems && vm().provider.coordinateSystems.length != 0">
-                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="store().position.id" class="umb-editor" ng-change="terratype.setCoordinateSystem(store().position.id)" ng-disabled="!config().provider.id" ng-options="c.id as c.name for c in vm().provider.coordinateSystems">
+                <div class="controls" ng-show="vm().provider.coordinateSystems && vm().provider.coordinateSystems.length != 0">
+                    <select id="terratype_{{identifier}}_coordinatesystem" ng-model="store().position.id" class="umb-editor" ng-change="terratype.setCoordinateSystem(store().position.id)" ng-options="c.id as c.name for c in vm().provider.coordinateSystems">
                     </select>
                     <div>
                         <small ng-show="store().position.id">
@@ -293,5 +293,5 @@
                 </div>
             </div>
         </section>
-</fieldset>
+    </fieldset>
 </div>
