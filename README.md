@@ -39,6 +39,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.9**
+	Added Bing Maps
+	Leaflet not displaying
+	Switching between providers in config now smoother
+
+
 **1.0.8**
 	Fixed option error in FireFox
 

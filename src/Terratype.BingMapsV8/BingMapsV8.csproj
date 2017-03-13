@@ -52,7 +52,9 @@
   <ItemGroup>
     <Content Include="App_Plugins\Terratype.BingMapsV8\Images\Example.png" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Images\Logo.png" />
-    <Content Include="App_Plugins\Terratype.BingMapsV8\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Lang\en-us.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.js" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.Renderer.js" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.apperance.html" />
@@ -63,6 +65,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Terratype.BingMapsV8.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
@@ -71,6 +76,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
+xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
