@@ -16,7 +16,7 @@
     <tags>Umbraco Google Maps Open Street View leaflet</tags>
     <dependencies>
       <dependency id="UmbracoCms.Core" version="7.0.0" />
-      <dependency id="Terratype" version="1.0.9" />
+      <dependency id="Terratype" version="1.0.10" />
     </dependencies>
   </metadata>
   <files>

@@ -201,12 +201,10 @@ namespace Terratype
                 merge = new Models.Model()
                 {
                     Provider = options.Provider,
-                    Position = options.Position
+                    Position = options.Position,
+                    Zoom = (options.Zoom != null) ? (int) options.Zoom : 0,
+                    Height = (options.Height != null) ? (int) options.Height : DefaultHeight,
                 };
-                if (options.Zoom != null)
-                {
-                    merge.Zoom = (int)options.Zoom;
-                }
             }
             else
             {
@@ -226,6 +224,14 @@ namespace Terratype
                     var providerType = (options.Provider is Models.Provider) ? map.Provider.GetType() : options.Provider.GetType();
                     merge.Provider = (Models.Provider) mergeJson.ToObject(providerType);
                 }
+                if (options.Zoom != null)
+                {
+                    merge.Zoom = (int) options.Zoom;
+                }
+                if (options.Height != null)
+                {
+                    merge.Height = (int) options.Height;
+                }
             }
 
             var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
@@ -237,7 +243,7 @@ namespace Terratype
                 var hasLabel = map != null && (label != null || (map.Label != null && map.Label.HasContent));
                 var labelId = (hasLabel) ? nameof(Terratype) + Guid.NewGuid().ToString() : null;
 
-                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height != 0 ? merge.Height : DefaultHeight, options.Language);
+                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language);
                 if (hasLabel)
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");

@@ -172,8 +172,8 @@
            }
        },
        MapSetId = 11,
-       Zoom = 3,
-       Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+       Zoom = 4,
+       Position = new Terratype.CoordinateSystems.Wgs84("20,80")
    })
 
         @foreach (var record in Model.Content.Leaflet)
@@ -205,7 +205,7 @@
                 var name = record.GetValue<string>("name");
                 var map = record.GetValue<Terratype.Models.Model>("location");
 
-            @Html.Terratype(new Options { MapSetId = 11 }, map,
+            @Html.Terratype(new Options { MapSetId = 11, Height = 800, Zoom = 5}, map,
         @<text>
             @name is at @map.Position
         </text>

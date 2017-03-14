@@ -12,8 +12,10 @@ Wish to give your content editors or grid editors easy Maps to set real world lo
 
 2. Install the Map Providers you would like to use, you can install and use, simultaneously, multiple providers.
    https://www.nuget.org/packages/Terratype.GoogleMapsV3
-   and/or
+   
    https://www.nuget.org/packages/Terratype.LeafletV1
+   
+   https://www.nuget.org/packages/Terratype.BingMapsV8
    
    
 3. Create a new data type based off this the newly added Terratype property Editor. You may need to obtain any API Keys that are necessary 
@@ -39,16 +41,24 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.10**
+
+	Render error with map height and zoom in option 
+
+
 **1.0.9**
+
 	Added Bing Maps
 	Leaflet not displaying
 	Switching between providers in config now smoother
 
 
 **1.0.8**
+
 	Fixed option error in FireFox
 
 **1.0.7**
+
 	@Html.Terratype() now handles dynamic values
 	Added Leaflet Provider
 	Remove labels from frontend when no label is present
