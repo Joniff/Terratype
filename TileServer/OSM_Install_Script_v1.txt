@@ -95,9 +95,9 @@ sudo shapeindex simplified_land_polygons.shp
 cd ../..
 cd osm-bright
 sudo rm osm-bright.osm2pgsql.mml
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/osm-bright.osm2pgsql.mml
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/osm-bright.osm2pgsql.mml
 cd ..
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/configure.py
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/configure.py
 sudo ./make.py
 cd ..
 sudo chmod -R 777 .
@@ -105,7 +105,8 @@ cd OSMBright/
 sudo carto project.mml > OSMBright.xml
 cd /usr/local/etc/
 sudo rm renderd.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/renderd.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/renderd.conf
+sudo chmod 777 renderd.conf
 sudo mkdir /usr/local/share/maps/planet
 cd /usr/local/share/maps/planet 
 #sudo wget http://download.geofabrik.de/europe/british-isles-latest.osm.pbf
@@ -117,12 +118,14 @@ sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 sudo mkdir /var/run/renderd
 sudo mkdir /var/lib/mod_tile
 cd /etc/apache2/conf-available
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/mod_tile.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/mod_tile.conf
 cd /etc/apache2/sites-available
 sudo rm 000-default.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/000-default.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/000-default.conf
 sudo chown root:root 000-default.conf
 sudo a2enconf mod_tile
+echo "ServerName localhost" | sudo tee /etc/apache2/conf-available/fqdn.conf
+sudo a2enconf fqdn
 sudo service apache2 reload
 
 #-----------------
@@ -152,9 +155,9 @@ ALTER TABLE spatial_ref_sys OWNER TO terratype_db;
 
 cd /etc/postgresql/9.5/main/
 sudo rm pg_hba.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/pg_hba.conf
 sudo rm postgresql.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/postgresql.conf
 sudo chown postgres:postgres postgresql.conf
 sudo service postgresql restart
 
