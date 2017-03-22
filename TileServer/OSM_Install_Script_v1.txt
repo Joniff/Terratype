@@ -9,6 +9,8 @@ ubuntu server 16.10
 #---INSTALL
 
 sudo sh -c 'echo "\nDefaults timestamp_timeout=-1">>/etc/sudoers'
+sudo chmod 644 /usr/lib/sudo/sudoers.so
+nano 
 sudo apt-get install -y openssh-server
 sudo apt-get install -y libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
 sudo apt-get install -y libpng12-0
@@ -18,36 +20,42 @@ sudo apt-get install -y make cmake g++ libboost-dev libboost-system-dev libboost
 #sudo apt-get install -y ttf-dejavu
 sudo apt-get install init-system-helpers
 
+sudo apt-get install -y libpq-dev libmapnik3.0 libmapnik-dev mapnik-utils mapnik-reference mapnik-doc python-mapnik python3-mapnik node-carto osm2pgsql  
+sudo apt-get install -y libboost-all-dev screen subversion git unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libpng12-dev libtiff5-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg postgresql-9.5 postgresql-9.5-postgis-2.2 postgresql-9.5-postgis-scripts libpq-dev libmapnik3.0 libmapnik-dev mapnik-utils mapnik-reference mapnik-doc python-mapnik python3-mapnik node-carto osm2pgsql 
 
-mkdir ~/src
-cd ~/src
-git clone git://github.com/openstreetmap/osm2pgsql.git
-cd osm2pgsql
-mkdir build && cd build 
-cmake ..
-make
-sudo make install
 
-cd ~/src
-git clone git://github.com/mapnik/mapnik
-cd mapnik
-git branch 2.2 origin/2.2.x
-git checkout 2.2
-python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
-make
-sudo make install
-sudo ldconfig
+sudo cp -a /usr/lib/mapnik/3.0/input/. /usr/lib/mapnik/input/
 
-python
-import mapnik
+
+#mkdir ~/src
+#cd ~/src
+#git clone git://github.com/openstreetmap/osm2pgsql.git
+#cd osm2pgsql
+#mkdir build && cd build 
+#cmake ..
+#make
+#sudo make install
+
+#cd ~/src
+#git clone git://github.com/mapnik/mapnik
+#cd mapnik
+#git branch 2.2 origin/2.2.x
+#git checkout 2.2
+#python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
+#make
+#sudo make install
+#sudo ldconfig
+
+#python
+#import mapnik
 #>>> #if mapnik has compiled then no errors are reported and the second set of chevrons are displayed
-quit ()
+#quit ()
 
 
-NOTE: I tried the above python and it failed, so did this instead
-   sudo add-apt-repository ppa:mapnik/nightly-2.0
-   sudo apt-get update
-   sudo apt-get install libmapnik-dev mapnik-utils python-mapnik
+#NOTE: I tried the above python and it failed, so did this instead
+#   sudo add-apt-repository ppa:mapnik/nightly-2.0
+#   sudo apt-get update
+#   sudo apt-get install libmapnik-dev mapnik-utils python-mapnik
 
 
 
@@ -55,8 +63,8 @@ cd ~/src
 git clone git://github.com/openstreetmap/mod_tile.git
 cd mod_tile
 ./autogen.sh
-./configure
-make
+./configure --prefix=/usr
+make -j`nproc`
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
@@ -79,12 +87,22 @@ cd /usr/local/share/maps/style
 sudo wget https://github.com/mapbox/osm-bright/archive/master.zip
 sudo wget http://data.openstreetmapdata.com/simplified-land-polygons-complete-3857.zip
 sudo wget http://data.openstreetmapdata.com/land-polygons-split-3857.zip
+
+sudo mkdir ne_10m_populated_places
+cd ne_10m_populated_places
+sudo wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places.zip
+sudo unzip ne_10m_populated_places.zip
+sudo rm ne_10m_populated_places.zip
+cd ..
+
+
 sudo mkdir ne_10m_populated_places_simple
 cd ne_10m_populated_places_simple
 sudo wget http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places_simple.zip
 sudo unzip ne_10m_populated_places_simple.zip
 sudo rm ne_10m_populated_places_simple.zip
 cd ..
+
 sudo unzip '*.zip'
 sudo mkdir osm-bright-master/shp
 sudo mv land-polygons-split-3857 osm-bright-master/shp/
@@ -109,6 +127,8 @@ cd /usr/local/etc/
 sudo rm renderd.conf
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/renderd.conf
 sudo chmod 777 renderd.conf
+sudo cp renderd.conf /usr/etc
+sudo chmod 777 /usr/etc/renderd.conf
 sudo mkdir /usr/local/share/maps/planet
 cd /usr/local/share/maps/planet 
 #sudo wget http://download.geofabrik.de/europe/british-isles-latest.osm.pbf
@@ -118,6 +138,7 @@ sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 #---WEBSERVER
 
 sudo mkdir /var/run/renderd
+sudo chown terratype_db /var/run/renderd
 sudo mkdir /var/lib/mod_tile
 cd /etc/apache2/conf-available
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/mod_tile.conf
@@ -171,8 +192,8 @@ sudo service postgresql restart
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
-#sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/british-isles-latest.osm.pbf
-sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U --flat-nodes terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
+#sudo osm2pgsql --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/british-isles-latest.osm.pbf
+sudo osm2pgsql --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 
@@ -192,4 +213,9 @@ sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-pos
 #---------------------------
 #--- RUN RENDERD IN INTERACTIVE MODE
 sudo -u terratype_db renderd -f -c /usr/local/etc/renderd.conf
+
+#---------------------------
+#--- RUN RENDERD IN DEAMON MODE
+
+sudo systemctl enable renderd  
 

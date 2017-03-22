@@ -10,12 +10,12 @@
         translate: false,
         tileServers:
         [
-            /*{
+            {
                 id: 'Terratype',
                 name: 'terratypeLeafletV1Terratype_name',
                 description: 'terratypeLeafletV1Terratype_description',
                 key: {
-                    enable: true,
+                    enable: false,
                     name: 'terratypeLeafletV1Terratype_keyName',
                     description: 'terratypeLeafletV1Terratype_keyDescription',
                     placeholder: 'terratypeLeafletV1Terratype_keyPlaceholder',
@@ -23,7 +23,7 @@
                 },
                 tileServers: [
                     {
-                        url: '//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key={key}',
+                        url: '//terratype.io/osmbright/{z}/{x}/{y}.png',
                         id: 'Terratype.Standard',
                         name: 'terratypeLeafletV1Terratype_standardName',
                         attribution: 'terratypeLeafletV1Terratype_standardAttribution',
@@ -35,7 +35,7 @@
                         }
                     },
                 ]
-            },*/
+            },
             {
                 id: 'OpenStreetMap',
                 name: 'terratypeLeafletV1OpenStreetMap_name',
