@@ -16,6 +16,8 @@ sudo apt-get install -y libtiff5-dev
 sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
 sudo apt-get install -y make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
 #sudo apt-get install -y ttf-dejavu
+sudo apt-get install init-system-helpers
+
 
 mkdir ~/src
 cd ~/src
@@ -185,3 +187,9 @@ sudo rm -r /var/lib/postgresql/
 sudo userdel -r postgres
 sudo groupdel postgres
 sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
+
+
+#---------------------------
+#--- RUN RENDERD IN INTERACTIVE MODE
+sudo -u terratype_db renderd -f -c /usr/local/etc/renderd.conf
+
