@@ -4,10 +4,11 @@ https://ycnrg.org/osm-tile-server-ubuntu-16-04/
 
 ubuntu server 16.10
 
+
 #-----------------
 #---INSTALL
 
-
+sudo sh -c 'echo "\nDefaults timestamp_timeout=-1">>/etc/sudoers'
 sudo apt-get install -y openssh-server
 sudo apt-get install -y libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
 sudo apt-get install -y libpng12-0
@@ -58,6 +59,15 @@ sudo make install
 sudo make install-mod_tile
 sudo ldconfig
 
+#-----------------
+#---PAGEFILE of 50Gb
+
+sudo dd if=/dev/zero of=/media/swapfile.img bs=1024 count=50M
+sudo mkswap /media/swapfile.img
+sudo chmod 777 /etc/fstab
+sudo echo "/media/swapfile.img swap swap sw 0 0" >> /etc/fstab
+sudo chmod 744 /etc/fstab
+sudo swapon /media/swapfile.img
 
 #-----------------
 #---MAPS
@@ -85,9 +95,9 @@ sudo shapeindex simplified_land_polygons.shp
 cd ../..
 cd osm-bright
 sudo rm osm-bright.osm2pgsql.mml
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/osm-bright.osm2pgsql.mml
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/osm-bright.osm2pgsql.mml
 cd ..
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/configure.py
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/configure.py
 sudo ./make.py
 cd ..
 sudo chmod -R 777 .
@@ -95,7 +105,7 @@ cd OSMBright/
 sudo carto project.mml > OSMBright.xml
 cd /usr/local/etc/
 sudo rm renderd.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/renderd.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/renderd.conf
 sudo mkdir /usr/local/share/maps/planet
 cd /usr/local/share/maps/planet 
 #sudo wget http://download.geofabrik.de/europe/british-isles-latest.osm.pbf
@@ -107,10 +117,10 @@ sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 sudo mkdir /var/run/renderd
 sudo mkdir /var/lib/mod_tile
 cd /etc/apache2/conf-available
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/mod_tile.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/mod_tile.conf
 cd /etc/apache2/sites-available
 sudo rm 000-default.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/000-default.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/000-default.conf
 sudo chown root:root 000-default.conf
 sudo a2enconf mod_tile
 sudo service apache2 reload
@@ -142,9 +152,9 @@ ALTER TABLE spatial_ref_sys OWNER TO terratype_db;
 
 cd /etc/postgresql/9.5/main/
 sudo rm pg_hba.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/pg_hba.conf
 sudo rm postgresql.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/docs/postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/config/postgresql.conf
 sudo chown postgres:postgres postgresql.conf
 sudo service postgresql restart
 
@@ -157,7 +167,7 @@ sudo service postgresql restart
 #---IMPORTING MAPS INTO DB
 
 #sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/british-isles-latest.osm.pbf
-sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
+sudo osm2pgsql --slim --create -C 12000 --number-processes 4 -U --flat-nodes terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 
