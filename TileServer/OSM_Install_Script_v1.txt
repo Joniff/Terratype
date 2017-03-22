@@ -15,6 +15,7 @@ sudo apt-get install -y libpng12-0
 sudo apt-get install -y libtiff5-dev 
 sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2
 sudo apt-get install -y make cmake g++ libboost-dev libboost-system-dev libboost-filesystem-dev libexpat1-dev zlib1g-dev libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 liblua5.2-dev
+#sudo apt-get install -y ttf-dejavu
 
 mkdir ~/src
 cd ~/src
@@ -30,7 +31,6 @@ git clone git://github.com/mapnik/mapnik
 cd mapnik
 git branch 2.2 origin/2.2.x
 git checkout 2.2
-
 python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
 make
 sudo make install
