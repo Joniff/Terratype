@@ -1,0 +1,113 @@
+# This file contains common functionality for all postgresql server
+# package init.d scripts. It is usually included by
+# /etc/init.d/postgresql
+
+init_functions=/lib/lsb/init-functions
+#redhat# init_functions=/usr/share/postgresql-common/init-functions-compat
+. $init_functions
+
+PGBINROOT="/usr/lib/postgresql/"
+#redhat# PGBINROOT="/usr/pgsql-"
+
+# do pg_ctlcluster action $1 to all clusters of version $2 with command
+# description $3; output according to Debian Policy for init scripts
+do_ctl_all() {
+    [ "$1" ] || { echo "Error: invalid command '$1'" >&2; exit 1; }
+    [ "$2" ] || { echo "Error: invalid version '$2'" >&2; exit 1; }
+    [ -d "/etc/postgresql/$2" ] || return 0
+    [ "$(ls /etc/postgresql/$2)" ] || return 0
+    [ -x "$PGBINROOT$2/bin/postmaster" ] || return 0
+
+    status=0
+    log_daemon_msg "$3"
+    for c in /etc/postgresql/"$2"/*; do
+	[ -e "$c/postgresql.conf" ] || continue
+	name=$(basename "$c")
+
+	# evaluate start.conf
+	if [ -e "$c/start.conf" ]; then
+	    start=$(sed 's/#.*$//; /^[[:space:]]*$/d; s/^\s*//; s/\s*$//' "$c/start.conf")
+	else
+	    start=auto
+	fi
+	[ "$start" = "auto" ] || continue
+
+        log_progress_msg "$name"
+	set +e
+	if [ "$1" = "stop" ] || [ "$1" = "restart" ]; then
+	    ERRMSG=$(pg_ctlcluster --force "$2" "$name" $1 2>&1)
+	else
+	    ERRMSG=$(pg_ctlcluster "$2" "$name" $1 2>&1)
+	fi
+	res=$?
+	set -e
+	# Do not fail on success or if cluster is already/not running
+	[ $res -eq 0 ] || [ $res -eq 2 ] || status=$(($status || $res))
+    done
+    if [ $status -ne 0 -a -n "$ERRMSG" ]; then
+	log_failure_msg "$ERRMSG"
+    fi
+    log_end_msg $status
+    return $status
+}
+
+# create /var/run/postgresql
+create_socket_directory() {
+    if [ -d /var/run/postgresql ]; then
+	chmod 2775 /var/run/postgresql
+    else
+	install -d -m 2775 -o postgres -g postgres /var/run/postgresql
+	[ -x /sbin/restorecon ] && restorecon -R /var/run/postgresql || true
+    fi
+}
+
+# start all clusters of version $1
+# output according to Debian Policy for init scripts
+start() {
+    do_ctl_all start "$1" "Starting PostgreSQL $1 database server"
+	initctl emit postgresql-started
+}
+
+# stop all clusters of version $1
+# output according to Debian Policy for init scripts
+stop() {
+    do_ctl_all stop "$1" "Stopping PostgreSQL $1 database server"
+}
+
+# restart all clusters of version $1
+# output according to Debian Policy for init scripts
+restart() {
+    do_ctl_all restart "$1" "Restarting PostgreSQL $1 database server"
+}
+
+# reload all clusters of version $1
+# output according to Debian Policy for init scripts
+reload() {
+    do_ctl_all reload "$1" "Reloading PostgreSQL $1 database server"
+}
+
+status() {
+    CLUSTERS=`pg_lsclusters -h | grep "^$1[[:space:]]"`
+    # no clusters -> unknown status
+    [ -n "$CLUSTERS" ] || exit 4
+    echo "$CLUSTERS" | awk 'BEGIN {rc=0; printf("Running clusters: ")} {if (match($4, "online")) printf ("%s/%s ", $1, $2); else rc=3} END { printf("\n"); exit rc }'
+}
+
+# return all installed versions which do not have their own init script
+get_versions() {
+    versions=''
+    local v dir skipinit
+
+    skipinit=continue
+    #redhat# skipinit=true # RedHat systems will have /etc/init.d/postgresql-* provided by the yum.pg.o package
+    dir=$PGBINROOT
+    #redhat# dir="-d /usr/pgsql-*"
+
+    for v in `ls $dir 2>/dev/null`; do
+        #redhat# v=${v#*-}
+        [ -x /etc/init.d/postgresql-$v ] && $skipinit
+        if [ -x $PGBINROOT$v/bin/pg_ctl ]; then
+	    versions="$versions $v"
+	fi
+    done
+}

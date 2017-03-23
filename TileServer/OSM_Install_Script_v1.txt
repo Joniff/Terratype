@@ -26,6 +26,13 @@ sudo apt-get install -y libboost-all-dev screen subversion git unzip wget bzip2 
 
 sudo cp -a /usr/lib/mapnik/3.0/input/. /usr/lib/mapnik/input/
 
+sudo systemctl stop cups
+sudo systemctl stop cups-browsed
+sudo systemctl disable cups
+sudo systemctl disable cups-browsed
+sudo mv /etc/init/cups-browsed.conf /etc/init/cups-browsed.conf-disabled
+sudo mv /etc/init/cups.conf /etc/init/cups.conf-disabled
+
 
 #mkdir ~/src
 #cd ~/src
@@ -139,6 +146,7 @@ sudo wget http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
 
 sudo mkdir /var/run/renderd
 sudo chown terratype_db /var/run/renderd
+
 sudo mkdir /var/lib/mod_tile
 cd /etc/apache2/conf-available
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/mod_tile.conf
@@ -215,7 +223,19 @@ sudo apt-get install -y postgresql postgresql-contrib postgis postgresql-9.5-pos
 sudo -u terratype_db renderd -f -c /usr/local/etc/renderd.conf
 
 #---------------------------
-#--- RUN RENDERD IN DEAMON MODE
+#--- RUN RENDERD ON BOOT UP
 
-sudo systemctl enable renderd  
+cd /usr/share/postgresql-common/
+sudo rm init.d-functions
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/init.d-functions
+sudo chmod 777 init.d-functions
+sudo chown root:root init.d-functions
+cd /etc/init/
+sudo rm renderd-init.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/renderd-init.conf
+sudo chmod 777 renderd-init.conf
+sudo chown root:root renderd-init.conf
+sudo initctl emit postgresql-started
+
+#sudo systemctl enable renderd  
 
