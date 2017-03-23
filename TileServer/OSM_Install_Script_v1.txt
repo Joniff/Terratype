@@ -225,17 +225,10 @@ sudo -u terratype_db renderd -f -c /usr/local/etc/renderd.conf
 #---------------------------
 #--- RUN RENDERD ON BOOT UP
 
-cd /usr/share/postgresql-common/
-sudo rm init.d-functions
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/init.d-functions
-sudo chmod 777 init.d-functions
-sudo chown root:root init.d-functions
-cd /etc/init/
-sudo rm renderd-init.conf
+cd /usr/lib/tmpfiles.d
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/renderd-init.conf
-sudo chmod 777 renderd-init.conf
+sudo chmod 644 renderd-init.conf
 sudo chown root:root renderd-init.conf
-sudo initctl emit postgresql-started
 
 #sudo systemctl enable renderd  
 
