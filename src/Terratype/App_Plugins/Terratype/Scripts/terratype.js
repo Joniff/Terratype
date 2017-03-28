@@ -827,12 +827,14 @@
             },
             loadEditor: function (id, initial, completed) {
                 //console.log('loadEditor(): ' + id)
-                $scope.terratype.labelOverlay.view = $scope.terratype.urlProvider(packageName, 'views/label.' + $scope.config().label.id + '.html', true);
                 if (!$scope.store().zoom) {
                     $scope.store().zoom = initial.zoom;
                 }
-                if (!$scope.store().label) {
+                if ($scope.store().label && $scope.store().label.enable == true) {
+                    $scope.terratype.labelOverlay.view = $scope.terratype.urlProvider(packageName, 'views/label.' + $scope.config().label.id + '.html', true);
+                } else {
                     $scope.store().label = {
+                        enable: false,
                         content: '',
                         id: 'standard'
                     }

@@ -1,4 +1,6 @@
 https://www.linuxbabe.com/linux-server/openstreetmap-tile-server-ubuntu-16-04
+https://switch2osm.org/serving-tiles/manually-building-a-tile-server-14-04/
+https://ycnrg.org/osm-tile-server-ubuntu-16-04/
 
 
 ubuntu server 16.10
@@ -9,8 +11,123 @@ ubuntu server 16.10
 
 sudo sh -c 'echo "\nDefaults timestamp_timeout=-1">>/etc/sudoers'
 sudo chmod 644 /usr/lib/sudo/sudoers.so
-nano 
 sudo apt-get install -y openssh-server
+sudo apt -y update
+sudo apt -y upgrade
+sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get -y update
+sudo apt-get -y install postgresql-9.6
+sudo apt-get -y install postgresql-9.6-postgis-2.3 postgresql-contrib-9.6
+sudo apt-get -y install postgis
+sudo apt-get -y install gnome-system-monitor
+sudo apt-get -y install htop
+sudo apt -y install osm2pgsql
+sudo apt -y install git autoconf libtool libmapnik-dev apache2-dev
+sudo apt -y install apache2
+
+sudo fallocate -l 50G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+
+
+#-----------------
+#---CONFIGURE MOD_TILE
+
+git clone https://github.com/openstreetmap/mod_tile.git
+cd ~/mod_tile/
+./autogen.sh
+./configure
+make
+sudo make install
+sudo make install-mod_tile
+cd ..
+
+sudo apt -y install curl unzip gdal-bin mapnik-utils node-carto
+cd openstreetmap-carto-2.41.0/
+./get-shapefiles.sh
+carto project.mml > style.xml
+
+
+
+
+#-----------------
+#---CONFIGURE RENDERD
+
+cd /usr/local/etc/
+sudo rm renderd.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/renderd.conf
+sudo chmod 777 renderd.conf
+sudo mkdir -p /var/lib/mod_tile
+
+sudo cp ~/mod_tile/debian/renderd.init /etc/init.d/renderd
+sudo chmod a+x /etc/init.d/renderd
+cd /etc/init.d/
+sudo rm renderd
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/renderd
+sudo chmod 777 renderd
+sudo systemctl daemon-reload
+sudo systemctl start renderd
+sudo systemctl enable renderd
+
+
+#-----------------
+#---CONFIGURE APACHE
+
+cd /etc/apache2/mods-available/
+sudo rm mod_tile.load
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/mod_tile.load
+sudo chmod 777 mod_tile.load
+sudo ln -s /etc/apache2/mods-available/mod_tile.load /etc/apache2/mods-enabled/
+cd /etc/apache2/sites-available/
+sudo rm 000-default.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/000-default.conf
+sudo chown root:root 000-default.conf
+sudo chmod 777 000-default.conf
+sudo systemctl restart apache2
+
+#-----------------
+#---CREATE DATABASE
+
+sudo -u postgres -i
+createuser osm
+createdb -E UTF8 -O osm gis
+psql -c "CREATE EXTENSION hstore;" -d gis
+psql -c "CREATE EXTENSION postgis;" -d gis
+psql -c "ALTER TABLE geometry_columns OWNER TO osm;" -d gis
+psql -c "ALTER TABLE spatial_ref_sys OWNER TO osm;" -d gis
+exit
+sudo useradd -m osm
+sudo passwd osm
+
+sudo chown osm:osm ~/openstreetmap-carto-2.41.0/style.xml
+
+#-----------------
+#---CREATE DATABASE
+cd ~
+wget https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz
+tar xvf v2.41.0.tar.gz
+wget -c http://download.geofabrik.de/europe/great-britain-latest.osm.pbf
+osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S openstreetmap-carto-2.41.0/openstreetmap-carto.style great-britain-latest.osm.pbf
+
+
+
+
+
+sudo -u postgres -i
+
+
+
+
+
+
+
+
+
+
+sudo apt -y install postgresql postgresql-contrib postgis postgresql-9.6-postgis-2.3.2
+
+
 sudo apt-get install -y libboost-all-dev subversion git-core tar unzip wget bzip2 build-essential autoconf libtool libxml2-dev libgeos-dev libgeos++-dev libpq-dev libbz2-dev libproj-dev munin-node munin libprotobuf-c0-dev protobuf-c-compiler libfreetype6-dev libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev apache2 apache2-dev libagg-dev liblua5.2-dev ttf-unifont lua5.1 liblua5.1-dev libgeotiff-epsg node-carto
 sudo apt-get install -y libpng12-0
 sudo apt-get install -y libtiff5-dev 

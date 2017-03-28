@@ -16,3 +16,5 @@ App_Data
 *.orig
 *.cache
 .vs/
+TileServer/TerratypeTileServer V1/
+TileServer/TerratypeTileServer V2/

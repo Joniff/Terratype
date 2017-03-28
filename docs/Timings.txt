@@ -1,0 +1,36 @@
+Rendering client
+Starting 1 rendering threads
+Rendering all tiles from zoom 0 to zoom 10
+Rendering all tiles for zoom 0 from (0, 0) to (0, 0)
+Rendering all tiles for zoom 1 from (0, 0) to (1, 1)
+Rendering all tiles for zoom 2 from (0, 0) to (3, 3)
+Rendering all tiles for zoom 3 from (0, 0) to (7, 7)
+Rendering all tiles for zoom 4 from (0, 0) to (15, 15)
+Rendering all tiles for zoom 5 from (0, 0) to (31, 31)
+Rendering all tiles for zoom 6 from (0, 0) to (63, 63)
+Rendering all tiles for zoom 7 from (0, 0) to (127, 127)
+Rendering all tiles for zoom 8 from (0, 0) to (255, 255)
+Rendering all tiles for zoom 9 from (0, 0) to (511, 511)
+Rendering all tiles for zoom 10 from (0, 0) to (1023, 1023)
+Waiting for rendering threads to finish
+
+*****************************************************
+*****************************************************
+Total for all tiles rendered
+Meta tiles rendered: Rendered 21803 tiles in 48776.11 seconds (0.45 tiles/s)
+Total tiles rendered: Rendered 1395392 tiles in 48776.11 seconds (28.61 tiles/s)
+Total tiles handled: Rendered 21848 tiles in 48776.11 seconds (0.45 tiles/s)
+*****************************************************
+Zoom 00: min:  0.9    avg:  0.9     max:  0.9     over a total of      0.9s in 1 requests
+Zoom 01: min:  0.6    avg:  0.6     max:  0.6     over a total of      0.6s in 1 requests
+Zoom 02: min: 210.0    avg: 210.0     max: 210.0     over a total of    210.0s in 1 requests
+Zoom 03: min: 168.3    avg: 168.3     max: 168.3     over a total of    168.3s in 1 requests
+Zoom 04: min: 146.4    avg: 183.0     max: 219.5     over a total of    365.9s in 2 requests
+Zoom 05: min:  0.3    avg: 67.2     max: 408.6     over a total of    806.1s in 12 requests
+Zoom 06: min:  0.2    avg: 13.5     max: 199.6     over a total of    595.5s in 44 requests
+Zoom 07: min:  0.1    avg: 12.0     max: 230.5     over a total of   3010.3s in 251 requests
+Zoom 08: min:  0.1    avg:  6.7     max: 1071.9     over a total of   6827.3s in 1020 requests
+Zoom 09: min:  0.1    avg:  2.3     max: 370.1     over a total of   9247.7s in 4091 requests
+Zoom 10: min:  0.1    avg:  1.7     max: 1028.6     over a total of  27323.7s in 16379 requests
+*****************************************************
+*****************************************************
