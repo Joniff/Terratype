@@ -25,6 +25,7 @@ sudo apt-get -y install htop
 sudo apt -y install osm2pgsql
 sudo apt -y install git autoconf libtool libmapnik-dev apache2-dev
 sudo apt -y install apache2
+sudo apt -y install curl unzip gdal-bin mapnik-utils node-carto
 
 sudo fallocate -l 50G /swapfile
 sudo chmod 600 /swapfile
@@ -33,6 +34,9 @@ sudo mkswap /swapfile
 
 #-----------------
 #---CONFIGURE MOD_TILE
+
+
+
 
 git clone https://github.com/openstreetmap/mod_tile.git
 cd ~/mod_tile/
@@ -43,12 +47,15 @@ sudo make install
 sudo make install-mod_tile
 cd ..
 
-sudo apt -y install curl unzip gdal-bin mapnik-utils node-carto
+sudo mkdir -p /usr/local/share/carto
+cd /usr/local/share/carto
+sudo wget https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz
+sudo tar xvf v2.41.0.tar.gz
+
 cd openstreetmap-carto-2.41.0/
-./get-shapefiles.sh
-carto project.mml > style.xml
-
-
+sudo ./get-shapefiles.sh
+sudo bash -c "carto project.mml > style.xml"
+sudo chmod 777 style.xml
 
 
 #-----------------
@@ -60,12 +67,10 @@ sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/C
 sudo chmod 777 renderd.conf
 sudo mkdir -p /var/lib/mod_tile
 
-sudo cp ~/mod_tile/debian/renderd.init /etc/init.d/renderd
-sudo chmod a+x /etc/init.d/renderd
 cd /etc/init.d/
 sudo rm renderd
 sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/renderd
-sudo chmod 777 renderd
+sudo chmod a+x /etc/init.d/renderd
 sudo systemctl daemon-reload
 sudo systemctl start renderd
 sudo systemctl enable renderd
@@ -101,14 +106,25 @@ sudo useradd -m osm
 sudo passwd osm
 
 sudo chown osm:osm ~/openstreetmap-carto-2.41.0/style.xml
+sudo mkdir -p /var/lib/mod_tile
+sudo chown osm:osm /var/lib/mod_tile
+
+cd /etc/postgresql/9.6/main/
+sudo rm pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/pg_hba.conf
+sudo rm postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/postgresql.conf
+sudo chown postgres:postgres postgresql.conf
+sudo service postgresql restart
+	
+
 
 #-----------------
-#---CREATE DATABASE
-cd ~
-wget https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz
-tar xvf v2.41.0.tar.gz
-wget -c http://download.geofabrik.de/europe/great-britain-latest.osm.pbf
-osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S openstreetmap-carto-2.41.0/openstreetmap-carto.style great-britain-latest.osm.pbf
+#---LOAD DATABASE
+sudo mkdir -p /usr/local/share/maps/europe/
+cd /usr/local/share/maps/europe/
+sudo wget -c http://download.geofabrik.de/europe/great-britain-latest.osm.pbf
+sudo osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/europe/great-britain-latest.osm.pbf
 
 
 
@@ -320,7 +336,7 @@ sudo service postgresql restart
 #---------------------------
 #---IMPORTING MAPS INTO DB
 
-#sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/europe/british-isles-latest.osm.pbf
+#sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/europe//usr/local/share/maps/europe/british-isles-latest.osm.pbf
 sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
