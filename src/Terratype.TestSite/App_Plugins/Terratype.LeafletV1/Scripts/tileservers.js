@@ -23,7 +23,7 @@
                 },
                 tileServers: [
                     {
-                        url: '//192.168.1.124/osmbright/{z}/{x}/{y}.png',
+                        url: '//192.168.1.125/osmbright/{z}/{x}/{y}.png',
                         id: 'Terratype.Standard',
                         name: 'terratypeLeafletV1Terratype_standardName',
                         attribution: 'terratypeLeafletV1Terratype_standardAttribution',

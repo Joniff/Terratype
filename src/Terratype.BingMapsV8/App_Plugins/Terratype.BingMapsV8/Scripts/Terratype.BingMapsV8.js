@@ -650,10 +650,8 @@
                 isElementInViewport: function (el) {
                     var rect = el.getBoundingClientRect();
                     return (
-                        rect.bottom >= 0 &&
-                        rect.right >= 0 &&
-                        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
-                        rect.left <= (window.innerWidth || document.documentElement.clientWidth)
+                        (rect.top <= (window.innerHeight || document.documentElement.clientHeight)) && ((rect.top + rect.height) >= 0) &&
+                        (rect.left <= (window.innerWidth || document.documentElement.clientWidth)) && ((rect.left + rect.width) >= 0)
                     );
                 },
                 toString: function (datum, precision) {

@@ -35,9 +35,6 @@ sudo mkswap /swapfile
 #-----------------
 #---CONFIGURE MOD_TILE
 
-
-
-
 git clone https://github.com/openstreetmap/mod_tile.git
 cd ~/mod_tile/
 ./autogen.sh
@@ -63,17 +60,21 @@ sudo chmod 777 style.xml
 
 cd /usr/local/etc/
 sudo rm renderd.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/renderd.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/renderd.conf
 sudo chmod 777 renderd.conf
+
 sudo mkdir -p /var/lib/mod_tile
 
 cd /etc/init.d/
 sudo rm renderd
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/renderd
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/renderd
 sudo chmod a+x /etc/init.d/renderd
 sudo systemctl daemon-reload
 sudo systemctl start renderd
 sudo systemctl enable renderd
+
+
+sudo -u osm renderd -f -c /usr/local/etc/renderd.conf
 
 
 #-----------------
@@ -81,12 +82,12 @@ sudo systemctl enable renderd
 
 cd /etc/apache2/mods-available/
 sudo rm mod_tile.load
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/mod_tile.load
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/mod_tile.load
 sudo chmod 777 mod_tile.load
 sudo ln -s /etc/apache2/mods-available/mod_tile.load /etc/apache2/mods-enabled/
 cd /etc/apache2/sites-available/
 sudo rm 000-default.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config-v2/000-default.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/000-default.conf
 sudo chown root:root 000-default.conf
 sudo chmod 777 000-default.conf
 sudo systemctl restart apache2
@@ -120,11 +121,25 @@ sudo service postgresql restart
 
 
 #-----------------
-#---LOAD DATABASE
+#---LOAD DATABASE (UK Only)
+
 sudo mkdir -p /usr/local/share/maps/europe/
 cd /usr/local/share/maps/europe/
 sudo wget -c http://download.geofabrik.de/europe/great-britain-latest.osm.pbf
 sudo osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/europe/great-britain-latest.osm.pbf
+
+
+
+#-----------------
+#---LOAD DATABASE (World)
+
+sudo mkdir -p /usr/local/share/maps/planet
+cd /usr/local/share/maps/planet 
+sudo wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
+sudo osm2pgsql --slim -d gis -C 5000 --number-processe 4 -U osm --hstore -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/planet/planet-latest.osm.pbf
+
+
+
 
 
 
