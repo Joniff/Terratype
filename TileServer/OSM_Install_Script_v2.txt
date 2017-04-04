@@ -17,24 +17,25 @@ sudo apt -y upgrade
 sudo add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main"
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 sudo apt-get -y update
-sudo apt-get -y install postgresql-9.6
-sudo apt-get -y install postgresql-9.6-postgis-2.3 postgresql-contrib-9.6
-sudo apt-get -y install postgis
-sudo apt-get -y install gnome-system-monitor
-sudo apt-get -y install htop
-sudo apt -y install osm2pgsql
-sudo apt -y install git autoconf libtool libmapnik-dev apache2-dev
-sudo apt -y install apache2
-sudo apt -y install curl unzip gdal-bin mapnik-utils node-carto
+sudo apt-get -y install postgresql-9.6 postgresql-9.6-postgis-2.3 postgresql-contrib-9.6 postgis gnome-system-monitor htop osm2pgsql git autoconf libtool libmapnik-dev apache2-dev apache2 curl unzip gdal-bin mapnik-utils node-carto
 
-sudo fallocate -l 50G /swapfile
+sudo fallocate -l 20G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
+sudo swapon /swapfile
+
+
+#-----------------
+#---INSTALL ZFS (If you don't run this will need to create a /db folder for database to be stored)
+sudo apt -y install zfs
+sudo zpool create db /dev/sdb1
+
 
 
 #-----------------
 #---CONFIGURE MOD_TILE
 
+cd ~
 git clone https://github.com/openstreetmap/mod_tile.git
 cd ~/mod_tile/
 ./autogen.sh
@@ -74,9 +75,6 @@ sudo systemctl start renderd
 sudo systemctl enable renderd
 
 
-sudo -u osm renderd -f -c /usr/local/etc/renderd.conf
-
-
 #-----------------
 #---CONFIGURE APACHE
 
@@ -95,6 +93,14 @@ sudo systemctl restart apache2
 #-----------------
 #---CREATE DATABASE
 
+cd /etc/postgresql/9.6/main/
+sudo rm pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/pg_hba.conf
+sudo rm postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/postgresql.conf
+sudo chown postgres:postgres postgresql.conf
+sudo service postgresql restart
+
 sudo -u postgres -i
 createuser osm
 createdb -E UTF8 -O osm gis
@@ -109,14 +115,8 @@ sudo passwd osm
 sudo chown osm:osm ~/openstreetmap-carto-2.41.0/style.xml
 sudo mkdir -p /var/lib/mod_tile
 sudo chown osm:osm /var/lib/mod_tile
+sudo -u osm renderd -f -c /usr/local/etc/renderd.conf
 
-cd /etc/postgresql/9.6/main/
-sudo rm pg_hba.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/pg_hba.conf
-sudo rm postgresql.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/postgresql.conf
-sudo chown postgres:postgres postgresql.conf
-sudo service postgresql restart
 	
 
 
@@ -126,7 +126,7 @@ sudo service postgresql restart
 sudo mkdir -p /usr/local/share/maps/europe/
 cd /usr/local/share/maps/europe/
 sudo wget -c http://download.geofabrik.de/europe/great-britain-latest.osm.pbf
-sudo osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/europe/great-britain-latest.osm.pbf
+sudo osm2pgsql --slim -d gis -C 8000 -U osm --hstore --hstore-add-index -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/europe/great-britain-latest.osm.pbf
 
 
 
@@ -136,7 +136,7 @@ sudo osm2pgsql --slim -d gis -C 3600 -U osm --hstore -S /usr/local/share/carto/o
 sudo mkdir -p /usr/local/share/maps/planet
 cd /usr/local/share/maps/planet 
 sudo wget -c http://planet.openstreetmap.org/pbf/planet-latest.osm.pbf
-sudo osm2pgsql --slim -d gis -C 5000 --number-processe 4 -U osm --hstore -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/planet/planet-latest.osm.pbf
+sudo osm2pgsql --slim -d gis -C 8000 --number-processe 4 -U osm --hstore --hstore-add-index -S /usr/local/share/carto/openstreetmap-carto-2.41.0/openstreetmap-carto.style /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 
@@ -352,7 +352,7 @@ sudo service postgresql restart
 #---IMPORTING MAPS INTO DB
 
 #sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/europe//usr/local/share/maps/europe/british-isles-latest.osm.pbf
-sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 12000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
+sudo osm2pgsql --hstore --flat-nodes node.cache --slim --create -C 14000 --number-processes 4 -U terratype_db -d gis /usr/local/share/maps/planet/planet-latest.osm.pbf
 
 
 #---------------------------
