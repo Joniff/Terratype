@@ -352,6 +352,33 @@
             var sign = num >= 0 ? 1 : -1;
             var pow = Math.pow(10, decimals);
             return parseFloat((Math.round((num * pow) + (sign * 0.001)) / pow).toFixed(decimals));
+        },
+        mergeJson: function (aa, bb) {        //  Does not merge arrays
+            var mi = function (c) {
+                var t = {};
+                for (var k in c) {
+                    if (typeof c[k] === 'object' && c[k].constructor.name !== 'Array') {
+                        t[k] = mi(c[k]);
+                    } else {
+                        t[k] = c[k];
+                    }
+                }
+                return t;
+            }
+            var mo = function (a, b) {
+                var r = (a) ? mi(a) : {};
+                if (b) {
+                    for (var k in b) {
+                        if (r[k] && typeof r[k] === 'object' && r[k].constructor.name !== 'Array') {
+                            r[k] = mo(r[k], b[k]);
+                        } else {
+                            r[k] = b[k];
+                        }
+                    }
+                }
+                return r;
+            }
+            return mo(aa, bb);
         }
     }
 
@@ -408,18 +435,8 @@
                     if (!store().zoom) {
                         store().zoom = scope.defaultConfig.zoom;
                     }
-                    if (!config().provider) {
-                        config().provider = scope.defaultConfig.provider;
-                    } else {
-                        for (var attr in scope.defaultConfig.provider) {
-                            if (typeof config().provider[attr] === 'undefined') {
-                                config().provider[attr] = scope.defaultConfig.provider[attr];
-                            }
-                        }
-                    }
-                    if (!config().search) {
-                        config().search = scope.defaultConfig.search;
-                    }
+                    config().provider = gm.mergeJson(scope.defaultConfig.provider, config().provider);
+                    config().search = gm.mergeJson(scope.defaultConfig.search, config().search);
                 },
                 init: function () {
                     //event.cancel(id);
@@ -445,14 +462,14 @@
                             views: {
                                 config: {
                                     definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                    apperance: urlProvider(identifier, 'views/config.apperance.html', true),
+                                    appearance: urlProvider(identifier, 'views/config.appearance.html', true),
                                     search: urlProvider(identifier, 'views/config.search.html', true)
                                 },
                                 editor: {
-                                    apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
+                                    appearance: urlProvider(identifier, 'views/editor.appearance.html', true)
                                 },
                                 grid: {
-                                    apperance: urlProvider(identifier, 'views/grid.apperance.html', true)
+                                    appearance: urlProvider(identifier, 'views/grid.appearance.html', true)
                                 }
                             }
                         },
@@ -551,7 +568,7 @@
                         addEvent: function (id, func, s) {
                             scope.events.push({ id: id, func: func, scope: s});
                         },
-                        labelChange: function (label) {
+                        labelChange: function () {
                             if (scope.gmap) {
                                 if (scope.ginfo) {
                                     delete scope.ginfo;
@@ -563,7 +580,7 @@
                                         visible: false,
                                         pushpin: scope.gmarker
                                     });
-                                    scope.ginfo._options.description = label.content;
+                                    scope.ginfo._options.description = store().label.content;
                                     scope.ginfo.setMap(scope.gmap);
                                 }
                             }

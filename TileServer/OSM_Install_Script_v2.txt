@@ -26,10 +26,13 @@ sudo swapon /swapfile
 
 
 #-----------------
-#---INSTALL ZFS (If you don't run this will need to create a /db folder for database to be stored)
+#---INSTALL ZFS WITH LZ4 COMPRESSION (If you don't run this will need to create a /db folder for database to be stored)
+
 sudo apt -y install zfs
 sudo zpool create db /dev/sdb1
-
+sudo zpool set feature@lz4_compress=enabled db
+sudo zfs set compression=lz4 db
+sudo zfs get all db			# This displays all details of the zfs pool
 
 
 #-----------------
@@ -95,10 +98,19 @@ sudo systemctl restart apache2
 
 cd /etc/postgresql/9.6/main/
 sudo rm pg_hba.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/pg_hba.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/pg_hba.conf
 sudo rm postgresql.conf
-sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config/postgresql.conf
+sudo wget https://raw.githubusercontent.com/Joniff/Terratype/master/TileServer/Config%20V2/postgresql.conf
 sudo chown postgres:postgres postgresql.conf
+sudo chown -R postgres:postgres /var/lib/postgresql/9.6/
+sudo chmod -R u=rwX,go= /var/lib/postgresql/9.6/
+
+sudo service postgresql restart
+
+sudo -u postgres -i
+/usr/lib/postgresql/9.6/bin/initdb -D /db
+exit
+
 sudo service postgresql restart
 
 sudo -u postgres -i
@@ -111,11 +123,12 @@ psql -c "ALTER TABLE spatial_ref_sys OWNER TO osm;" -d gis
 exit
 sudo useradd -m osm
 sudo passwd osm
+# NOTE: Enter password
 
-sudo chown osm:osm ~/openstreetmap-carto-2.41.0/style.xml
+sudo chown osm:osm /usr/local/share/carto/openstreetmap-carto-2.41.0/style.xml
 sudo mkdir -p /var/lib/mod_tile
 sudo chown osm:osm /var/lib/mod_tile
-sudo -u osm renderd -f -c /usr/local/etc/renderd.conf
+##sudo -u osm renderd -f -c /usr/local/etc/renderd.conf
 
 	
 
@@ -140,6 +153,11 @@ sudo osm2pgsql --slim -d gis -C 8000 --number-processe 4 -U osm --hstore --hstor
 
 
 
+#-----------------
+#---PRERENDER TILES
+
+cd /var/lib/mod_tile
+render_list -m osmbright -a -z 0 -Z 10
 
 
 

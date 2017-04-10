@@ -84,11 +84,11 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.js" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Views\editor.apperance.html" />
-    <Content Include="App_Plugins\Terratype.LeafletV1\Views\grid.apperance.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\editor.appearance.html" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Views\grid.appearance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

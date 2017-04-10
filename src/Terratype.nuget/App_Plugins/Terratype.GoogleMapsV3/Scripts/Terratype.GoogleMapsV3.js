@@ -873,11 +873,11 @@
                             views: {
                                 config: {
                                     definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                    apperance: urlProvider(identifier, 'views/config.apperance.html', true),
+                                    appearance: urlProvider(identifier, 'views/config.appearance.html', true),
                                     search: urlProvider(identifier, 'views/config.search.html', true)
                                 },
                                 editor: {
-                                    apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
+                                    appearance: urlProvider(identifier, 'views/editor.appearance.html', true)
                                 }
                             }
                         },

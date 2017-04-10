@@ -218,7 +218,7 @@
     <key alias="languageZU">Zulu (isiZulu)</key>
   </area>
 
-  <area alias="terratypeBingMapsV8ConfigApperance">
+  <area alias="terratypeBingMapsV8ConfigAppearance">
 
     <key alias="basicMapLabel">Basic Map:</key>
     <key alias="basicMapDescription">Do you want to see the standard map</key>
@@ -519,7 +519,7 @@
     <key alias="countryZW">Zimbabwe</key>
   </area>
 
-  <area alias="terratypeBingMapsV8EditorApperance">
+  <area alias="terratypeBingMapsV8EditorAppearance">
     <key alias="statusInvalid">Invalid Bing Map API Key</key>
     <key alias="statusError">Failed to load Bing Maps V8 multiple times, please manually refresh the page and try again</key>
     <key alias="statusDuplicate">Detected multiple BingMapsV8 maps with different configuration; All Bing Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</key>

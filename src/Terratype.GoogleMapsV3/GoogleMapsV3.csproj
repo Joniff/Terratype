@@ -100,11 +100,11 @@
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.min.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.js" />
-    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.search.html" />
-    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\grid.apperance.html" />
-    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\editor.apperance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\grid.appearance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\editor.appearance.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

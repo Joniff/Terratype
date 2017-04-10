@@ -10,6 +10,7 @@
             <select id="terratype_{{identifier}}_googlemapv3_version" ng-model="config().provider.version" class="umb-editor" ng-change="vm().provider.events.versionChange()">
                 <option value="3" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version3"></option>
                 <option value="3.exp" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version3exp"></option>
+                <option value="3.28" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version328"></option>
                 <option value="3.27" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version327"></option>
                 <option value="3.26" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version326"></option>
                 <option value="3.25" terratype-translate="@terratypeGoogleMapsV3ConfigDefinition_version325"></option>
@@ -53,7 +54,7 @@
             </small>
         </label>
         <div class="controls">
-            <input id="terratype_{{identifier}}_googlemapv3_apikey" list="terratype_{{identifier}}_googlemapv3_apikeys" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeGoogleMapsV3ConfigDefinition_apiKeyPlaceholder" spellcheck="false" ng-change="vm().status.reload = true" autocomplete="off" />
+            <input id="terratype_{{identifier}}_googlemapv3_apikey" list="terratype_{{identifier}}_googlemapv3_apikeys" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeGoogleMapsV3ConfigDefinition_apiKeyPlaceholder" spellcheck="false" ng-change="vm().status.reload = true" />
             <datalist id="terratype_{{identifier}}_googlemapv3_apikeys">
                 <option ng-repeat="x in vm().provider.events.httpCalls.apiKey.values" value="{{x}}"></option>
             </datalist>

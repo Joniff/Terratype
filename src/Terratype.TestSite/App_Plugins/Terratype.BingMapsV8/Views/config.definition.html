@@ -22,7 +22,7 @@
             </small>
         </label>
         <div class="controls">
-            <input id="terratype_{{identifier}}_bingmapsv8_apikey" list="terratype_{{identifier}}_bingmapsv8_apikeys" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeBingMapsV8ConfigDefinition_apiKeyPlaceholder" spellcheck="false" ng-change="vm().status.reload = true" autocomplete="off" />
+            <input id="terratype_{{identifier}}_bingmapsv8_apikey" list="terratype_{{identifier}}_bingmapsv8_apikeys" type="text" ng-model="config().provider.apiKey" class="umb-editor umb-textstring textstring" localize="placeholder" placeholder="@terratypeBingMapsV8ConfigDefinition_apiKeyPlaceholder" spellcheck="false" ng-change="vm().status.reload = true" />
             <datalist id="terratype_{{identifier}}_bingmapsv8_apikeys">
                 <option ng-repeat="x in vm().provider.events.httpCalls.apiKey.values" value="{{x}}"></option>
             </datalist>

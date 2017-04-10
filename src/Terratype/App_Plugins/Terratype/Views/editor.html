@@ -17,10 +17,10 @@
         </div>
         <div ng-if="!vm().isPreview">
             <div ng-if="config().debug != 1">
-                <style ng-bind-html="'@media (max-width:767px) { #terratype_' + identifier + '_editor_apperance_start {clear:both;}}'">
+                <style ng-bind-html="'@media (max-width:767px) { #terratype_' + identifier + '_editor_appearance_start {clear:both;}}'">
                 </style>
-                <div id="terratype_{{identifier}}_editor_apperance_start" style="height:1px;">&nbsp;</div>
-                <ng-include src="vm().provider.events.files.views.editor.apperance">
+                <div id="terratype_{{identifier}}_editor_appearance_start" style="height:1px;">&nbsp;</div>
+                <ng-include src="vm().provider.events.files.views.editor.appearance">
                 </ng-include>
             </div>
             <div ng-if="config().label.enable == true && config().label.editPosition == 0" style="margin-top:5px;">

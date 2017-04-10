@@ -68,20 +68,20 @@
 
         <section>
             <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
-                <localize key="terratypeConfig_apperanceHeading">Apperance</localize>
+                <localize key="terratypeConfig_appearanceHeading">Appearance</localize>
             </h4>
             <div class="umb-el-wrap control-group">
                 <label for="terratype_{{identifier}}_height" class="control-label">
-                    <localize key="terratypeConfig_apperanceHeightLabel">Height:</localize>
+                    <localize key="terratypeConfig_appearanceHeightLabel">Height:</localize>
                     <small>
-                        <localize key="terratypeConfig_apperanceHeightDescription">The height of the map as displayed to the content editor in pixels</localize>
+                        <localize key="terratypeConfig_appearanceHeightDescription">The height of the map as displayed to the content editor in pixels</localize>
                     </small>
                 </label>
                 <div class="controls">
-                    <input type="number" id="terratype_{{identifier}}_height" ng-model="config().height" class="umb-editor" localize="placeholder" placeholder="@terratypeConfig_apperanceHeightPlaceholder" />
+                    <input type="number" id="terratype_{{identifier}}_height" ng-model="config().height" class="umb-editor" localize="placeholder" placeholder="@terratypeConfig_appearanceHeightPlaceholder" />
                 </div>
             </div>
-            <ng-include src="vm().provider.events.files.views.config.apperance">
+            <ng-include src="vm().provider.events.files.views.config.appearance">
             </ng-include>
         </section>
         <section>
@@ -215,7 +215,7 @@
                     </small>
                 </label>
                 <div class="controls">
-                    <select id="terratype_{{identifier}}_labelEditPosition" ng-model="config().label.editPosition" class="umb-editor">
+                    <select id="terratype_{{identifier}}_labelEditPosition" ng-model="config().label.editPosition" class="umb-editor" convert-to-number>
                         <option value="0" terratype-translate="@terratypeConfig_labelEditPositionOverlay"></option>
                         <option value="1" terratype-translate="@terratypeConfig_labelEditPositionBelow"></option>
                     </select>

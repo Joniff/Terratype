@@ -57,11 +57,11 @@
     </Content>
     <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.js" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Scripts\Terratype.BingMapsV8.Renderer.js" />
-    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.apperance.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.BingMapsV8\Views\config.search.html" />
-    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\editor.apperance.html" />
-    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\grid.apperance.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\editor.appearance.html" />
+    <Content Include="App_Plugins\Terratype.BingMapsV8\Views\grid.appearance.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

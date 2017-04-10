@@ -349,8 +349,11 @@
                     }
                     $scope.vm().label = $scope.vm().labels[index];
                 }
-                angular.extend($scope.vm().label, $scope.store().label);
-                $scope.vm().provider.events.labelChange($scope.vm().label);
+                //angular.extend($scope.vm().label, $scope.store().label);
+                //$scope.vm().provider.events.labelChange($scope.vm().label);
+
+                angular.extend($scope.store().label, $scope.vm().label);
+                $scope.vm().provider.events.labelChange();
             },
             iconAnchor: function () {
                 if (isNaN($scope.config().icon.anchor.horizontal)) {
@@ -830,15 +833,6 @@
                 if (!$scope.store().zoom) {
                     $scope.store().zoom = initial.zoom;
                 }
-                if ($scope.store().label && $scope.store().label.enable == true) {
-                    $scope.terratype.labelOverlay.view = $scope.terratype.urlProvider(packageName, 'views/label.' + $scope.config().label.id + '.html', true);
-                } else {
-                    $scope.store().label = {
-                        enable: false,
-                        content: '',
-                        id: 'standard'
-                    }
-                }
                 if (!$scope.store().position || !$scope.store().position.id || !$scope.store().position.datum) {
                     $scope.store().position = {
                         id: initial.position.id,
@@ -887,6 +881,7 @@
                                 })
                             }, function (e) {
                                 $scope.vm().provider.events = e;
+                                $scope.terratype.labelOverlay.view = $scope.terratype.urlProvider(packageName, 'views/label.' + $scope.config().label.id + '.html', true);
                                 if ($scope.config().label.enable == true && $scope.config().label.editPosition == 0) {
                                     with ({
                                         display: $scope.terratype.labelOverlay.display

@@ -10,7 +10,7 @@
     <key alias="referenceUrl">https://developers.google.com/maps/documentation/javascript/</key>
   </area>
 
-  <area alias="terratypeGoogleMapsV3ConfigApperance">
+  <area alias="terratypeGoogleMapsV3ConfigAppearance">
 
     <key alias="basicMapLabel">Basic Map:</key>
     <key alias="basicMapDescription">Do you want to see the standard map</key>
@@ -108,6 +108,7 @@
     <key alias="versionDescription">Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)</key>
     <key alias="version3">Stable</key>
     <key alias="version3exp">Experimental</key>
+    <key alias="version328">3.28 (Released 15 February 2017)</key>
     <key alias="version327">3.27 (Released 10 January 2017)</key>
     <key alias="version326">3.26 (Released 18 August 2016)</key>
     <key alias="version325">3.25 (Released 25 May 2016)</key>
@@ -117,15 +118,15 @@
     <key alias="version321">3.21 (Released 5 August 2015)</key>
     <key alias="version320">3.20 (Released 24 April 2015)</key>
     <key alias="version319">3.19 (Released 24 April 2015)</key>
-    <key alias="version318">3.18 (Released 04 December 2014)</key>
+    <key alias="version318">3.18 (Released 4 December 2014)</key>
     <key alias="version317">3.17 (Released 20 August 2014)</key>
     <key alias="version316">3.16 (Released 15 April 2014)</key>
-    <key alias="version315">3.15 (Released 03 March 2014)</key>
+    <key alias="version315">3.15 (Released 3 March 2014)</key>
     <key alias="version314">3.14 (Released 10 September 2013)</key>
     <key alias="version313">3.13 (Released 25 June 2013)</key>
-    <key alias="version312">3.12 (Released 04 June 2013)</key>
+    <key alias="version312">3.12 (Released 4 June 2013)</key>
     <key alias="version311">3.11 (Released 19 February 2013)</key>
-    <key alias="version310">3.10 (Released 04 February 2013)</key>
+    <key alias="version310">3.10 (Released 4 February 2013)</key>
     <key alias="version39">3.9 (Released 10 September 2012)</key>
     <key alias="version38">3.8 (Released 1 May, 2012)</key>
     <key alias="version37">3.7 (Released 7 February 2012)</key>
@@ -605,7 +606,7 @@
     <key alias="countryLimit5"><![CDATA[Google Maps V3.{{view().provider.versionMajor}} has a limit of 5 countries that can be selected]]></key>
   </area>
 
-  <area alias="terratypeGoogleMapsV3EditorApperance">
+  <area alias="terratypeGoogleMapsV3EditorAppearance">
     <key alias="statusInvalid">Invalid Google Map API Key</key>
     <key alias="statusError">Failed to load Google Maps V3 multiple times, please manually refresh the page and try again</key>
     <key alias="statusDuplicate">Detected multiple GoogleMapsV3 maps with different configuration; All Google Maps must share the same Api Key, Coordinate System, ForceHttps switch and Language settings</key>

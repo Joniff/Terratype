@@ -105,29 +105,32 @@
                 position: 1
             }
         },
-        mergeJson: function (a, b) {        //  Does not merge arrays
-            var mergy = function (c) {
+        mergeJson: function (aa, bb) {        //  Does not merge arrays
+            var mi = function (c) {
                 var t = {};
                 for (var k in c) {
-                    if (typeof c[k] === 'object' && c[k].constructor.name !== "Array") {
-                        t[k] = mergy(c[k]);
+                    if (typeof c[k] === 'object' && c[k].constructor.name !== 'Array') {
+                        t[k] = mi(c[k]);
                     } else {
                         t[k] = c[k];
                     }
                 }
                 return t;
             }
-            var r = (a) ? mergy(a) : {};
-            if (b) {
-                for (var k in b) {
-                    if (r[k] && typeof r[k] === 'object' && r[k].constructor.name !== "Array") {
-                        r[k] = q.mergeJson(r[k], b[k]);
-                    } else {
-                        r[k] = b[k];
+            var mo = function (a, b) {
+                var r = (a) ? mi(a) : {};
+                if (b) {
+                    for (var k in b) {
+                        if (r[k] && typeof r[k] === 'object' && r[k].constructor.name !== 'Array') {
+                            r[k] = mo(r[k], b[k]);
+                        } else {
+                            r[k] = b[k];
+                        }
                     }
                 }
+                return r;
             }
-            return r;
+            return mo(aa, bb);
         },
         load: function () {
             var matches = document.getElementsByClassName('Terratype.LeafletV1');
@@ -256,7 +259,7 @@
             for (var p = 0; p != m.positions.length; p++) {
                 var item = m.positions[p];
                 m.gmarkers[p] = L.marker(item.latlng, {
-                    draggable: true,
+                    draggable: false,
                     id: 'terratype_' + id + '_marker',
                     icon: item.icon
                 });

@@ -861,7 +861,34 @@
             //        s.status = 3;
             //    }
             //}
-        }
+        },
+        mergeJson: function (aa, bb) {        //  Does not merge arrays
+            var mi = function (c) {
+                var t = {};
+                for (var k in c) {
+                    if (typeof c[k] === 'object' && c[k].constructor.name !== 'Array') {
+                        t[k] = mi(c[k]);
+                    } else {
+                        t[k] = c[k];
+                    }
+                }
+                return t;
+            }
+            var mo = function (a, b) {
+                var r = (a) ? mi(a) : {};
+                if (b) {
+                    for (var k in b) {
+                        if (r[k] && typeof r[k] === 'object' && r[k].constructor.name !== 'Array') {
+                            r[k] = mo(r[k], b[k]);
+                        } else {
+                            r[k] = b[k];
+                        }
+                    }
+                }
+                return r;
+            }
+            return mo(aa, bb);
+        },
     }
 
     var provider = {
@@ -933,18 +960,8 @@
                     if (!store().zoom) {
                         store().zoom = scope.defaultConfig.zoom;
                     }
-                    if (!config().provider) {
-                        config().provider = scope.defaultConfig.provider;
-                    } else {
-                        for (var attr in scope.defaultConfig.provider) {
-                            if (typeof config().provider[attr] === 'undefined') {
-                                config().provider[attr] = scope.defaultConfig.provider[attr];
-                            }
-                        }
-                    }
-                    if (!config().search) {
-                        config().search = scope.defaultConfig.search;
-                    }
+                    config().provider = gm.mergeJson(scope.defaultConfig.provider, config().provider);
+                    config().search = gm.mergeJson(scope.defaultConfig.search, config().search);
                 },
                 init: function (done) {
                     //event.cancel(id);
@@ -971,14 +988,14 @@
                             views: {
                                 config: {
                                     definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                    apperance: urlProvider(identifier, 'views/config.apperance.html', true),
+                                    appearance: urlProvider(identifier, 'views/config.appearance.html', true),
                                     search: urlProvider(identifier, 'views/config.search.html', true)
                                 },
                                 editor: {
-                                    apperance: urlProvider(identifier, 'views/editor.apperance.html', true)
+                                    appearance: urlProvider(identifier, 'views/editor.appearance.html', true)
                                 },
                                 grid: {
-                                    apperance: urlProvider(identifier, 'views/grid.apperance.html', true)
+                                    appearance: urlProvider(identifier, 'views/grid.appearance.html', true)
                                 }
                             }
                         },
@@ -1094,21 +1111,22 @@
                         addEvent: function (id, func, s) {
                             scope.events.push({ id: id, func: func, scope: s });
                         },
-                        labelChange: function (label) {
-                            if (scope.gmap) {
-                                if (scope.ginfo) {
-                                    delete scope.ginfo;
-                                    scope.ginfo = null;
-                                }
-                                if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
-                                    scope.ginfo = new root.google.maps.InfoWindow({
-                                        content: label.content
-                                    });
-                                }
-                            }
-                        },
+                        labelChange: scope.labelChange,
                         destroy: scope.destroy
                     });
+                },
+                labelChange: function () {
+                    if (scope.gmap) {
+                        if (scope.ginfo) {
+                            delete scope.ginfo;
+                            scope.ginfo = null;
+                        }
+                        if (store().label && typeof store().label.content == 'string' && store().label.content.trim() != '') {
+                            scope.ginfo = new root.google.maps.InfoWindow({
+                                content: store().label.content
+                            });
+                        }
+                    }
                 },
                 destroy: function () {
                     event.cancel(id);
@@ -1368,8 +1386,10 @@
                                             if (scope.ignoreEvents > 0) {
                                                 return;
                                             }
-                                            if (scope.callEvent('icon-click') && scope.ginfo) {
-                                                scope.ginfo.open(scope.gmap, scope.gmarker);
+                                            if (scope.callEvent('icon-click')) {
+                                                if (scope.ginfo) {
+                                                    scope.ginfo.open(scope.gmap, scope.gmarker);
+                                                }
                                             }
                                         }));
                                         scope.gevents.push(root.google.maps.event.addListener(scope.gmap, 'click', function () {

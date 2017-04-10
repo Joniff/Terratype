@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.11**
+
+	Fix for when providers are missing their default values
+	Fixed Minor spelling mistakes
+	Leaflet Map Icon is now static when rendered in razor
+	
 **1.0.10**
 
 	Render error with map height and zoom in option 
@@ -57,6 +63,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 	Fixed option error in FireFox
 
+	
 **1.0.7**
 
 	@Html.Terratype() now handles dynamic values
@@ -64,10 +71,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 	Remove labels from frontend when no label is present
 	Improved provider loading
 
+	
 **1.0.6**
 
 	Error when creating Google Maps without an API Key present
 
+	
 **1.0.5**
 
 	Added native Grid editor to allow terratype maps to be added/edited and rendered inside grids (With no coding required)
@@ -100,6 +109,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 	Complete rewrite based from AngularGoogleMaps.
 
+	
 ### Source code ###
 
 Download the source code, it should work for Visual Studio 2013 & 2015. If you set **Terratype.TestSite** as your **Set as Startup project** this should execute the test Umbraco website, where you can test maps under different scenarios. Once running, surf to http://localhost:60389/umbraco and at the login type **admin** for user and **password** for password.
