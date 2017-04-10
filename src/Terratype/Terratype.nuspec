@@ -11,7 +11,7 @@
     <iconUrl>https://github.com/Joniff/Terratype/blob/master/src/Terratype/Terratype.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Init</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Google Maps Gmaps Open Street View</tags>
     <dependencies>

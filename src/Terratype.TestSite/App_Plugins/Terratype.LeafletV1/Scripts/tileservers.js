@@ -10,7 +10,7 @@
         translate: false,
         tileServers:
         [
-            /*{
+            {
                 id: 'Terratype',
                 name: 'terratypeLeafletV1Terratype_name',
                 description: 'terratypeLeafletV1Terratype_description',
@@ -23,7 +23,7 @@
                 },
                 tileServers: [
                     {
-                        url: '//{s}.XXXXXXXX/osmbright/{z}/{x}/{y}.png',
+                        url: '//{s}.terratype.world/osmbright/{z}/{x}/{y}.png',
                         id: 'Terratype.Standard',
                         name: 'terratypeLeafletV1Terratype_standardName',
                         attribution: 'terratypeLeafletV1Terratype_standardAttribution',
@@ -35,7 +35,7 @@
                         }
                     },
                 ]
-            },*/
+            },
             {
                 id: 'OpenStreetMap',
                 name: 'terratypeLeafletV1OpenStreetMap_name',
