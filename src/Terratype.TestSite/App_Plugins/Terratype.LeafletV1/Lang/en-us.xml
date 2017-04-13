@@ -22,6 +22,10 @@
     <key alias="keyUrl"><![CDATA[<small>Terratype Access Key can be retrieved from <a href="https://terratype.io">your account</a></small>]]></key>
     <key alias="standardName">Standard</key>
     <key alias="standardAttribution">Terratype TileServer</key>
+    <key alias="redAlertName">Red Alert</key>
+    <key alias="redAlertAttribution">Terratype TileServer</key>
+    <key alias="iceName">Ice</key>
+    <key alias="iceAttribution">Terratype TileServer</key>
   </area>
 
   <area alias="terratypeLeafletV1OpenStreetMap">

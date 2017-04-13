@@ -10,7 +10,7 @@
         translate: false,
         tileServers:
         [
-            /*{
+            {
                 id: 'Terratype',
                 name: 'terratypeLeafletV1Terratype_name',
                 description: 'terratypeLeafletV1Terratype_description',
@@ -23,7 +23,7 @@
                 },
                 tileServers: [
                     {
-                        url: '//{s}.XXXXXXXX/osmbright/{z}/{x}/{y}.png',
+                        url: '//{s}.terratype.world/osmbright/{z}/{x}/{y}.png',
                         id: 'Terratype.Standard',
                         name: 'terratypeLeafletV1Terratype_standardName',
                         attribution: 'terratypeLeafletV1Terratype_standardAttribution',
@@ -34,8 +34,32 @@
                             subdomains: 'abcdefgh'
                         }
                     },
+                    {
+                        url: '//{s}.terratype.world/redalert/{z}/{x}/{y}.png',
+                        id: 'Terratype.RedAlert',
+                        name: 'terratypeLeafletV1Terratype_redAlertName',
+                        attribution: 'terratypeLeafletV1Terratype_redAlertAttribution',
+                        coordinateSystems: [Wgs84],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abcdefgh'
+                        }
+                    },
+                    {
+                        url: '//{s}.terratype.world/ice/{z}/{x}/{y}.png',
+                        id: 'Terratype.Ice',
+                        name: 'terratypeLeafletV1Terratype_iceName',
+                        attribution: 'terratypeLeafletV1Terratype_iceAttribution',
+                        coordinateSystems: [Wgs84],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abcdefgh'
+                        }
+                    },
                 ]
-            },*/
+            },
             {
                 id: 'OpenStreetMap',
                 name: 'terratypeLeafletV1OpenStreetMap_name',

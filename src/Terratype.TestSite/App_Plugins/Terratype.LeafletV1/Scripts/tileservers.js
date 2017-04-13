@@ -34,6 +34,30 @@
                             subdomains: 'abcdefgh'
                         }
                     },
+                    {
+                        url: '//{s}.terratype.world/redalert/{z}/{x}/{y}.png',
+                        id: 'Terratype.RedAlert',
+                        name: 'terratypeLeafletV1Terratype_redAlertName',
+                        attribution: 'terratypeLeafletV1Terratype_redAlertAttribution',
+                        coordinateSystems: [Wgs84],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abcdefgh'
+                        }
+                    },
+                    {
+                        url: '//{s}.terratype.world/ice/{z}/{x}/{y}.png',
+                        id: 'Terratype.Ice',
+                        name: 'terratypeLeafletV1Terratype_iceName',
+                        attribution: 'terratypeLeafletV1Terratype_iceAttribution',
+                        coordinateSystems: [Wgs84],
+                        minZoom: 0,
+                        maxZoom: 19,
+                        options: {
+                            subdomains: 'abcdefgh'
+                        }
+                    },
                 ]
             },
             {
