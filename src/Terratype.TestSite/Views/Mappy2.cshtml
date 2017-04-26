@@ -22,7 +22,7 @@
             }
         },
         Height = 1000,
-        MapSetId = 2,
+        MapSetId = 1,
         Zoom = 5,
         Position = new Terratype.CoordinateSystems.Wgs84("-30,130")
     })
@@ -32,7 +32,14 @@
         var name = record.GetPropertyValue<string>("mapName");
         var map = record.GetPropertyValue<Terratype.Models.Model>("map");
 
-        @Html.Terratype(new Options { MapSetId = 2 }, map,
+        @Html.Terratype(new Options {
+       MapSetId = 1,
+       Provider = new Terratype.Providers.GoogleMapsV3()
+       {
+           ic
+       }
+
+   }, map,
             @<text>
                 @name is at @map.Position
             </text>

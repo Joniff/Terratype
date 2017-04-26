@@ -1,16 +1,16 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Umbraco.Web.PublishedContentModels.Single4>
     @using Terratype;
     @{
-    Layout = null;
-    var jquery = false;
-    if (Request.QueryString["jquery"] != null)
-    {
-    //  Add jquery to page, this will be picked up by Terratype and used instead of native js
+        Layout = null;
+        var jquery = false;
+        if (Request.QueryString["jquery"] != null)
+        {
+            //  Add jquery to page, this will be picked up by Terratype and used instead of native js
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous"></script>
-    jquery = true;
-    }
+            jquery = true;
+        }
 
     }
 
@@ -71,26 +71,26 @@
                 </dd>
 
             </dl>
-            <div id="pretend-accordion" style="display:@(Request.QueryString[" show"] !=null ? "display" : "none" );">
+            <div id="pretend-accordion" style="display:@(Request.QueryString[" show"] != null ? "display" : "none" );">
                 <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                     This is an empty div
                 </div>
 
                 @Html.Terratype(new Options
-   {
-       Provider = new Terratype.Providers.LeafletV1()
-       {
-           ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
-           {
-               Enable = true,
-               Position = Terratype.Providers.LeafletV1.ControlPositions.BottomRight
-           }
-       },
-       MapSetId = 11,
-       Zoom = 3,
-       Position = new Terratype.CoordinateSystems.Wgs84("50,0"),
-       Height = 700
-   })
+               {
+                   Provider = new Terratype.Providers.LeafletV1()
+                   {
+                       ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+                       {
+                           Enable = true,
+                           Position = Terratype.Providers.LeafletV1.ControlPositions.BottomRight
+                       }
+                   },
+                   MapSetId = 11,
+                   Zoom = 3,
+                   Position = new Terratype.CoordinateSystems.Wgs84("50,0"),
+                   Height = 700
+               })
 
 
 
@@ -106,3 +106,20 @@
         </fieldset>
     </body>
 </html>
+
+@{
+    var kmlList = new List<string>();
+}
+
+@* 
+    Given that kmlList is a list of kml values - I haven't shown how that list is created 
+    Given that Model.Content.Map is a Terratype map that exists in the model, it's position is irrelevant as it's overwritten by the kml value
+*@
+
+@foreach (var kmlEntry in kmlList)
+{
+    @Html.Terratype(new Options
+    {
+        Position = new Terratype.CoordinateSystems.Wgs84(kmlEntry),
+    }, Model.Content.Map)
+}
