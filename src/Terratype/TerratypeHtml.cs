@@ -204,6 +204,7 @@ namespace Terratype
                     Position = options.Position,
                     Zoom = (options.Zoom != null) ? (int) options.Zoom : 0,
                     Height = (options.Height != null) ? (int) options.Height : DefaultHeight,
+                    Icon = options.Icon
                 };
             }
             else
@@ -231,6 +232,14 @@ namespace Terratype
                 if (options.Height != null)
                 {
                     merge.Height = (int) options.Height;
+                }
+                if (options.Icon != null)
+                {
+                    merge.Icon = options.Icon;
+                }
+                if (options.Position != null)
+                {
+                    merge.Position = options.Position;
                 }
             }
 

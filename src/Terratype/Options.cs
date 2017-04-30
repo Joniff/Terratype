@@ -39,5 +39,10 @@ namespace Terratype
         /// </summary>
         public Models.Provider Provider { get; set; }
 
+        /// <summary>
+        /// Your own custom icon, otherwise will use the icon from the first map of the map set
+        /// </summary>
+        public Models.Icon Icon { get; set; }
+
     }
 }

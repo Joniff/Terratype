@@ -268,8 +268,6 @@
                 var l = (item.label) ? document.getElementById(item.label) : null;
                 if (l) {
 
-                    console.log('LABEL: ' + item.label);
-
                     m.ginfos[p] = new root.google.maps.InfoWindow({
                         content: l
                     });
@@ -278,7 +276,6 @@
                         pp: p
                     }) {
                         mm.gmarkers[p].addListener('click', function () {
-                            console.log('LABEL CLICKED: ' + item.label);
                             if (mm.ignoreEvents > 0) {
                                 return;
                             }
@@ -309,7 +306,6 @@
             }
         },
         refresh: function (m) {
-            console.log('REFRESH START:' + m.id);
             m.ignoreEvents++;
             m.gmap.setZoom(m.zoom);
             q.closeInfoWindows(m);
@@ -318,7 +314,6 @@
                 mm: m
             }) {
                 root.google.maps.event.addListenerOnce(mm.gmap, 'idle', function () {
-                    console.log('REFRESH FINISH:' + mm.id);
                     mm.gmap.setCenter(mm.center);
                     mm.ignoreEvents--;
                 });

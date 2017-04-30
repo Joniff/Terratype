@@ -41,6 +41,13 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.12**
+
+	All providers use .NET Framework 4.5
+	Added Icon to Options, to be able to render custom icons 
+	Fixed label issue for multiple Rendered GMaps 
+
+
 **1.0.11**
 
 	Fix for when providers are missing their default values

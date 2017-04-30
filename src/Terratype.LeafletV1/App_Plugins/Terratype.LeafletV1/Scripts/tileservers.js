@@ -10,56 +10,56 @@
         translate: false,
         tileServers:
         [
-            {
-                id: 'Terratype',
-                name: 'terratypeLeafletV1Terratype_name',
-                description: 'terratypeLeafletV1Terratype_description',
-                key: {
-                    enable: false,
-                    name: 'terratypeLeafletV1Terratype_keyName',
-                    description: 'terratypeLeafletV1Terratype_keyDescription',
-                    placeholder: 'terratypeLeafletV1Terratype_keyPlaceholder',
-                    url: 'terratypeLeafletV1Terratype_keyUrl'
-                },
-                tileServers: [
-                    {
-                        url: '//{s}.terratype.world/osmbright/{z}/{x}/{y}.png',
-                        id: 'Terratype.Standard',
-                        name: 'terratypeLeafletV1Terratype_standardName',
-                        attribution: 'terratypeLeafletV1Terratype_standardAttribution',
-                        coordinateSystems: [Wgs84],
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options: {
-                            subdomains: 'abcdefgh'
-                        }
-                    },
-                    {
-                        url: '//{s}.terratype.world/redalert/{z}/{x}/{y}.png',
-                        id: 'Terratype.RedAlert',
-                        name: 'terratypeLeafletV1Terratype_redAlertName',
-                        attribution: 'terratypeLeafletV1Terratype_redAlertAttribution',
-                        coordinateSystems: [Wgs84],
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options: {
-                            subdomains: 'abcdefgh'
-                        }
-                    },
-                    {
-                        url: '//{s}.terratype.world/ice/{z}/{x}/{y}.png',
-                        id: 'Terratype.Ice',
-                        name: 'terratypeLeafletV1Terratype_iceName',
-                        attribution: 'terratypeLeafletV1Terratype_iceAttribution',
-                        coordinateSystems: [Wgs84],
-                        minZoom: 0,
-                        maxZoom: 19,
-                        options: {
-                            subdomains: 'abcdefgh'
-                        }
-                    },
-                ]
-            },
+            //{
+            //    id: 'Terratype',
+            //    name: 'terratypeLeafletV1Terratype_name',
+            //    description: 'terratypeLeafletV1Terratype_description',
+            //    key: {
+            //        enable: false,
+            //        name: 'terratypeLeafletV1Terratype_keyName',
+            //        description: 'terratypeLeafletV1Terratype_keyDescription',
+            //        placeholder: 'terratypeLeafletV1Terratype_keyPlaceholder',
+            //        url: 'terratypeLeafletV1Terratype_keyUrl'
+            //    },
+            //    tileServers: [
+            //        {
+            //            url: '//{s}.XXX/osmbright/{z}/{x}/{y}.png',
+            //            id: 'Terratype.Standard',
+            //            name: 'terratypeLeafletV1Terratype_standardName',
+            //            attribution: 'terratypeLeafletV1Terratype_standardAttribution',
+            //            coordinateSystems: [Wgs84],
+            //            minZoom: 0,
+            //            maxZoom: 19,
+            //            options: {
+            //                subdomains: 'abcdefgh'
+            //            }
+            //        },
+            //        {
+            //            url: '//{s}.XXX/redalert/{z}/{x}/{y}.png',
+            //            id: 'Terratype.RedAlert',
+            //            name: 'terratypeLeafletV1Terratype_redAlertName',
+            //            attribution: 'terratypeLeafletV1Terratype_redAlertAttribution',
+            //            coordinateSystems: [Wgs84],
+            //            minZoom: 0,
+            //            maxZoom: 19,
+            //            options: {
+            //                subdomains: 'abcdefgh'
+            //            }
+            //        },
+            //        {
+            //            url: '//{s}.XXX/ice/{z}/{x}/{y}.png',
+            //            id: 'Terratype.Ice',
+            //            name: 'terratypeLeafletV1Terratype_iceName',
+            //            attribution: 'terratypeLeafletV1Terratype_iceAttribution',
+            //            coordinateSystems: [Wgs84],
+            //            minZoom: 0,
+            //            maxZoom: 19,
+            //            options: {
+            //                subdomains: 'abcdefgh'
+            //            }
+            //        },
+            //    ]
+            //},
             {
                 id: 'OpenStreetMap',
                 name: 'terratypeLeafletV1OpenStreetMap_name',

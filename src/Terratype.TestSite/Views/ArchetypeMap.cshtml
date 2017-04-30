@@ -155,26 +155,40 @@
     <button onclick="var a = document.getElementById('pretend-accordion5');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 
     <h1>
-        @Model.Content.Name - Combined Leaflet maps with options
+        @Model.Content.Name - Combined Leaflet maps with options and custom icon
     </h1>
 
 
     <div id="pretend-accordion6" style="display:@(Request.QueryString["show6"] != null ? "display" : "none");">
 
         @Html.Terratype(new Options
-   {
-       Provider = new Terratype.Providers.LeafletV1()
        {
-           ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+           Provider = new Terratype.Providers.LeafletV1()
            {
-               Enable = true,
-               Position = Terratype.Providers.LeafletV1.ControlPositions.TopLeft
+               ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+               {
+                   Enable = true,
+                   Position = Terratype.Providers.LeafletV1.ControlPositions.TopLeft
+               }
+           },
+           MapSetId = 11,
+           Zoom = 4,
+           Position = new Terratype.CoordinateSystems.Wgs84("20,80"),
+           Icon = new Terratype.Models.Icon
+           {
+               Url = new Uri("https://d30y9cdsu7xlg0.cloudfront.net/png/4096-200.png"),
+               Size = new Terratype.Models.Icon.SizeDefinition
+               {
+                   Width = 48,
+                   Height = 48
+               },
+               Anchor = new Terratype.Models.Icon.AnchorDefinition
+               {
+                   Horizontal = new Terratype.Models.AnchorHorizontal(Terratype.Models.AnchorHorizontal.Style.Center),
+                   Vertical = new Terratype.Models.AnchorVertical(Terratype.Models.AnchorVertical.Style.Center)
+               }
            }
-       },
-       MapSetId = 11,
-       Zoom = 4,
-       Position = new Terratype.CoordinateSystems.Wgs84("20,80")
-   })
+       })
 
         @foreach (var record in Model.Content.Leaflet)
             {
