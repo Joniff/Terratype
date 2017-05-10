@@ -24,7 +24,7 @@ Wish to give your content editors or grid editors easy Maps to set real world lo
 
 5. Create new content based off this document type
 
-### Usage ###
+### Documentation ###
 
 https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
@@ -116,6 +116,22 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 	Complete rewrite based from AngularGoogleMaps.
 
+	
+	
+### Future development ###
+
+Current Roadmap
+
+	Allow rendered maps to work out their own zoom level depending on icons being displayed
+
+	Include client-side events when map is being rendered, so that your javascript code gets noticified when an icon is clicked (for example)
+
+	Include stylised maps for Leaflet, using own Tile Servers (Likely to be free or paid for service depending on your data usage)
+
+	Adding an ArcGIS and CartoDB providers - likely to charge for these providers, to recupe development and cover maintance costs (My thinking is better to have working providers for money, than broken providers for free)
+
+	
+	
 	
 ### Source code ###
 
