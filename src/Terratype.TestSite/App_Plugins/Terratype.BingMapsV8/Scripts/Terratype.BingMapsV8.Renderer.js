@@ -37,7 +37,25 @@
             if (allowBingToHandleResizes) {
                 q.updateBing();
             } else {
-                q.updateJs();
+                if (q.domDetectionType == 1) {
+                    counter = 0;
+                    var t = setInterval(function () {
+                        //  Is jquery loaded
+                        if (root.jQuery) {
+                            clearInterval(t);
+                            q.updateJquery();
+                        }
+                        if (++counter > q.jqueryLoadWait) {
+                            //  We have waited long enough for jQuery to load, and nothing, so default to javascript
+                            console.warn("Terratype was asked to use jQuery to monitor DOM changes, yet no jQuery library was detected. Terratype has defaulted to using javascript to detect DOM changes instead");
+                            clearInterval(t);
+                            q.domDetectionType = 0;
+                            q.updateJs();
+                        }
+                    }, q.poll);
+                } else {
+                    q.updateJs();
+                }
             }
         },
         updateBing: function () {
@@ -71,7 +89,13 @@
                     if (m.status == 0) {
                         q.render(m);
                     } else {
-                        q.idle(m);
+                        if (m.domDetectionType == 2) {
+                            m.status = -1;
+                        } else if (m.domDetectionType == 1 && root.jQuery) {
+                            q.idleJquery(m);
+                        } else {
+                            q.idleJs(m);
+                        }
                     }
                 }
                 counter++;
@@ -83,20 +107,26 @@
             var timer = setInterval(function () {
                 if (counter == q.maps.length) {
                     clearInterval(timer);
-                    jQuery(window).on('DOMContentLoaded load resize scroll touchend', function () {
-                        counter = 0;
-                        var timer2 = setInterval(function () {
-                            if (counter == q.maps.length) {
-                                clearInterval(timer2);
-                            } else {
-                                var m = q.maps[counter];
-                                if (m.status > 0 && m.positions.length != 0) {
-                                    q.idle(m);
+                    if (q.domDetectionType != 2) {
+                        jQuery(window).on('DOMContentLoaded load resize scroll touchend', function () {
+                            counter = 0;
+                            var timer2 = setInterval(function () {
+                                if (counter == q.maps.length) {
+                                    clearInterval(timer2);
+                                } else {
+                                    var m = q.maps[counter];
+                                    if (m.status > 0 && m.positions.length != 0) {
+                                        if (m.domDetectionType == 1) {
+                                            q.idleJquery(m);
+                                        } else {
+                                            q.idleJs(m);
+                                        }
+                                    }
+                                    counter++;
                                 }
-                                counter++;
-                            }
-                        }, q.poll);
-                    });
+                            }, q.poll);
+                        });
+                    }
                 } else {
                     var m = q.maps[counter];
                     if (m.status == 0 && m.positions.length != 0) {
@@ -175,12 +205,18 @@
             }
             return mo(aa, bb);
         },
+        domDetectionType: 99,
         load: function () {
             var needTraffic = false;
             var matches = document.getElementsByClassName('Terratype.BingMapsV8');
             for (var i = 0; i != matches.length; i++) {
                 mapId = matches[i].getAttribute('data-map-id');
                 id = matches[i].getAttribute('data-id');
+                var domDetectionType = parseInt(matches[i].getAttribute('data-dom-detection-type'));
+                if (q.domDetectionType > domDetectionType) {
+                    q.domDetectionType = domDetectionType;
+                }
+
                 var model = JSON.parse(unescape(matches[i].getAttribute('data-bingmapsv8')));
                 var datum = q.parse(model.position.datum);
                 var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
@@ -196,8 +232,9 @@
                         divoldsize: 0,
                         status: 0,
                         visible: false,
-                        height: model.height
-                    };
+                        height: model.height,
+                        domDetectionType: domDetectionType
+                };
                     matches[i].style.display = 'block';
                     q.maps.push(m);
                 }
@@ -439,9 +476,10 @@
                 (rect.left <= (window.innerWidth || document.documentElement.clientWidth)) && ((rect.left + rect.width) >= 0)
             );
         },
-        idle: function (m) {
+        idleJs: function (m) {
+            //  Monitor dom changes via Javascript
             var element = document.getElementById(m.div);
-            var newValue = element.parentElement.offsetTop;
+            var newValue = element.parentElement.offsetTop + element.parentElement.offsetWidth;
             var newSize = element.clientHeight * element.clientWidth;
             var show = !(element.style.display && typeof element.style.display == 'string' && element.style.display.toLowerCase() == 'none');
             var visible = show && q.isElementInViewport(element);
@@ -471,6 +509,30 @@
                 m.visible = false;
             }
             m.divoldsize = newSize;
+        },
+        idleJquery: function (m) {
+            //  Monitor dom changes via jQuery
+            var element = jQuery(document.getElementById(m.div));
+            var show = !(element.is(':hidden'));
+            var visible = element.is(':visible');
+            if (show == visible) {
+                if (show) {
+                    var newSize = element.height() * element.width();
+                    if (newSize != m.divoldsize) {
+                        q.refresh(m);
+                    }
+                    m.divoldsize = newSize;
+                }
+                return;
+            }
+            if (show) {
+                element.hide();
+                m.divoldsize = 0;
+                return;
+            }
+            element.show();
+            q.refresh(m);
+            m.divoldsize = element.height() * element.width();
         }
     }
 

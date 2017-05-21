@@ -252,7 +252,8 @@ namespace Terratype.Providers
         /// <param name="language"></param>
         /// <param name="label"></param>
         /// <returns></returns>
-        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript)
         {
             const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
             var id = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
@@ -260,6 +261,7 @@ namespace Terratype.Providers
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
             writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
             if (labelId != null)
             {
                 writer.AddAttribute("data-label-id", labelId);

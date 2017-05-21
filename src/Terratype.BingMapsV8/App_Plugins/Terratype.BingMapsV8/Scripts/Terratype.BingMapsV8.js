@@ -878,7 +878,7 @@
 
                                         updateView();
                                     } else {
-                                        var newValue = element.parentElement.offsetTop;
+                                        var newValue = element.parentElement.offsetTop + element.parentElement.offsetWidth;
                                         var newSize = element.clientHeight * element.clientWidth;
                                         var show = vm().showMap;
                                         var visible = show && scope.isElementInViewport(element);
@@ -959,7 +959,7 @@
                     store().zoom = scope.gmap.getZoom();
                 },
                 eventRefresh: function () {
-                    if (scope.ignoreEvents > 0) {
+                    if (scope.gmap == null || scope.ignoreEvents > 0) {
                         return;
                     }
                     scope.ignoreEvents++;

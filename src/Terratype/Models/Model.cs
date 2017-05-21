@@ -214,6 +214,7 @@ namespace Terratype.Models
             JObject item = JObject.Load(reader);
             model.Lookup = item.GetValue(Json.PropertyName<Model>(nameof(Model.Lookup)), StringComparison.InvariantCultureIgnoreCase)?.Value<string>();
             model.Zoom = item.GetValue(Json.PropertyName<Model>(nameof(Model.Zoom)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
+            model.Height = item.GetValue(Json.PropertyName<Model>(nameof(Model.Height)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 400;
 
             int? datatypeId = item.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
             if (datatypeId != null)

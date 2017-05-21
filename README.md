@@ -41,6 +41,14 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.13**
+
+	Terratype model now includes height
+	Extra handling for GMaps when resize doesn't call idle event afterwards
+	Improved code to detect when Rendered map is being shown
+	Now with jQuery monitoring
+
+
 **1.0.12**
 
 	All providers use .NET Framework 4.5

@@ -114,7 +114,8 @@ namespace Terratype.Providers
         public ZoomControlDefinition ZoomControl { get; set; }
 
 
-        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+            string language = null,Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript)
         {
             const string guid = "53031a3b-dc6a-4440-a5e5-5060f691afd6";
             var id = nameof(Terratype) + nameof(LeafletV1) + Guid.NewGuid().ToString();
@@ -127,6 +128,7 @@ namespace Terratype.Providers
             }), System.Text.Encoding.Default));
             writer.AddAttribute("data-leafletv1", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
             if (labelId != null)
             {
                 writer.AddAttribute("data-label-id", labelId);
