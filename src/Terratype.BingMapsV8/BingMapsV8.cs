@@ -188,13 +188,15 @@ namespace Terratype.Providers
         /// <param name="language"></param>
         /// <param name="label"></param>
         /// <returns></returns>
-        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, string language = null)
+        public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript)
         {
             const string guid = "af82089e-e9b9-4b8b-9f2a-bed92279dc6b";
             var id = nameof(Terratype) + nameof(BingMapsV8) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-bingmapsv8", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
             if (labelId != null)
             {
                 writer.AddAttribute("data-label-id", labelId);

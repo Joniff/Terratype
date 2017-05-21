@@ -75,7 +75,7 @@
         }
     }]);
 
-    //  Don't allow Enter Key to bubble up to submit form
+    //  Don't allow Enter Key to bubble up to submit form - INVESTIGATE: Maybe can use 'prevent-default' directive instead
     angular.module('umbraco.directives').directive('terratypeIgnoreEnterKey', ['$rootScope', function ($rootScope) {
         return function (scope, element, attrs) {
             element.on("keydown keypress", function (event) {

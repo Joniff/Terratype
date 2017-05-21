@@ -204,7 +204,7 @@ namespace Terratype
                     Position = options.Position,
                     Zoom = (options.Zoom != null) ? (int) options.Zoom : 0,
                     Height = (options.Height != null) ? (int) options.Height : DefaultHeight,
-                    Icon = options.Icon
+                    Icon = options.Icon,
                 };
             }
             else
@@ -252,7 +252,7 @@ namespace Terratype
                 var hasLabel = map != null && (label != null || (map.Label != null && map.Label.HasContent));
                 var labelId = (hasLabel) ? nameof(Terratype) + Guid.NewGuid().ToString() : null;
 
-                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language);
+                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language, options.DomMonitorType);
                 if (hasLabel)
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
