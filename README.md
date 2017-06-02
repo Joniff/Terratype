@@ -138,6 +138,7 @@ Current Roadmap
 
 	Adding an ArcGIS and CartoDB providers - likely to charge for these providers, to recupe development and cover maintance costs (My thinking is better to have working providers for money, than broken providers for free)
 
+	Allow Null Position maps, so allowing maps that have no current location. This includes allowing null position as the starting location of a map
 	
 	
 	
