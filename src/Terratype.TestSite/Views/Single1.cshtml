@@ -76,7 +76,20 @@
             <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                 This is an empty div
             </div>
-            @Html.Terratype(new Options { DomMonitorType = Options.DomMonitorTypes.JQuery }, Model.Content.Map)
+
+            @Html.Terratype(new Options {
+               DomMonitorType = Options.DomMonitorTypes.JQuery,
+               Provider = new Terratype.Providers.GoogleMapsV3()
+               {
+                   Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
+                   {
+                       Satellite = false
+                   }
+               },
+               Zoom = 12,
+               Position = new Terratype.CoordinateSystems.Wgs84("59.05609,-172.99102")
+            }, Model.Content.Map)
+
             <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                 This is an empty div
             </div>
