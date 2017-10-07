@@ -405,7 +405,7 @@
                 return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
             },
             iconCustom: function () {
-                $scope.config().icon.id = $scope.vm().icon.predefine[0].id;
+                $scope.config().icon.id = $scope.terratype.icon.predefine[0].id;
                 if (!$scope.vm().icon.anchor.horizontal.isManual) {
                     switch ($scope.vm().icon.anchor.horizontal.automatic) {
                         case 'left':
@@ -1319,7 +1319,7 @@
                     return;
                 }
                 var editor = $scope.rte.getEditor();
-                if (editor == null) {
+                if (editor == null || editor.getContentAreaContainer() == null) {
                     return;
                 }
                 clearInterval(timer);

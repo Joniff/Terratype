@@ -1319,7 +1319,7 @@
                     return;
                 }
                 var editor = $scope.rte.getEditor();
-                if (editor == null) {
+                if (editor == null || editor.getContentAreaContainer() == null) {
                     return;
                 }
                 clearInterval(timer);
