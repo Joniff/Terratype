@@ -52,7 +52,7 @@ namespace Terratype.Models
         public Label Label { get; set; }
 
         [JsonProperty(PropertyName = "height")]
-        public int Height { get; internal set; }
+        public int Height { get; set; }
 
         public Model()
         {

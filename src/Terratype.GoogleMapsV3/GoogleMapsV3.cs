@@ -18,7 +18,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
             if (cache)
             {
-                result += "?cache=1.0.13";
+                result += "?cache=1.0.14";
             }
             return result;
         }

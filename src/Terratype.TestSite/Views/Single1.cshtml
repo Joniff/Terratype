@@ -28,6 +28,12 @@
             Map 1
         </legend>
         <dl>
+			<dt>
+				Height
+			</dt>
+			<dd>
+				@(Model.Content.Map.Height)px
+			</dd>
             <dt>
                 Zoom
             </dt>
@@ -86,8 +92,8 @@
                        Satellite = false
                    }
                },
-               Zoom = 12,
-               Position = new Terratype.CoordinateSystems.Wgs84("59.05609,-172.99102")
+               Zoom = 5,
+               Position = new Terratype.CoordinateSystems.Wgs84("59.05609,-102.99102")
             }, Model.Content.Map)
 
             <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">

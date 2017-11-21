@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.14**
+
+	Updated GMaps versions
+	Fixed custom icon error (ronaldbarendse)
+
+
 **1.0.13**
 
 	Terratype model now includes height

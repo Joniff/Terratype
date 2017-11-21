@@ -1,15 +1,16 @@
 <div ng-controller="Umbraco.Overlays.LinkPickerController">
 
-    <umb-control-group label="@content_urls">
+    <umb-control-group label="@defaultdialogs_urlLinkPicker">
         <input type="text"
             localize="placeholder"
             placeholder="@general_url"
             class="umb-editor umb-textstring"
             ng-model="model.target.url"
-            ng-disabled="model.target.id"/>
+            ng-disabled="model.target.id"
+            focus-when="{{true}} "/>
     </umb-control-group>
 
-    <umb-control-group label="@content_nodeName">
+    <umb-control-group label="@defaultdialogs_nodeNameLinkPicker">
         <input type="text"
             localize="placeholder"
             placeholder="@placeholders_entername"

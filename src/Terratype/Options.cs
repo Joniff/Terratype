@@ -68,5 +68,11 @@ namespace Terratype
         /// How do you wish to monitor for changes to the dom, so that the map can be redrawn to reflect changes like browser resizing or layout changes
         /// </summary>
         public DomMonitorTypes DomMonitorType { get; set; }
+
+		/// <summary>
+		/// Should the label be visible straight away
+		/// </summary>
+		//public bool AutoShowLabel { get; set; }
+
     }
 }

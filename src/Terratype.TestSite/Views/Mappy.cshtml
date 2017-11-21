@@ -1,11 +1,7 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Mappy>
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
 	Layout = null;
-    var map = Model.Content.Map1;
-
-    var GMapProvider = (Terratype.Providers.GoogleMapsV3) Model.Content.Map
-
 }
 
 
@@ -19,21 +15,21 @@
             Zoom
         </dt>
         <dd>
-            @Model.Content.Map1.Zoom
+            @Model.Content.Map44.Zoom
         </dd>
 
         <dt>
             Lookup
         </dt>
         <dd>
-            @Model.Content.Map1.Lookup
+            @Model.Content.Map44.Lookup
         </dd>
 
         <dt>
             Position
         </dt>
         <dd>
-            @Model.Content.Map1.Position.ToString()
+            @Model.Content.Map44.Position.ToString()
         </dd>
     </dl>
 

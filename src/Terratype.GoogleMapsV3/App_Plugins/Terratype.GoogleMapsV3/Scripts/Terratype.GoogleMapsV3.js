@@ -28,10 +28,10 @@
             event.events = newEvents;
         },
         broadcast: function (name) {
-            var log = 'Broadcast ' + name + ' ';
+            //var log = 'Broadcast ' + name + ' ';
             angular.forEach(event.events, function (e, i) {
                 if (e.name == name) {
-                    log += e.id + ',';
+                    //log += e.id + ',';
                     e.func.call(e.scope, e.object);
                 }
             });

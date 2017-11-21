@@ -127,7 +127,7 @@
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.13';
+                    r += '?cache=1.0.14';
                 }
                 return r;
             },
@@ -900,14 +900,44 @@
                     }, 150);
                 });
             },
+            isCsv: function (csv) {
+            	var commaCount = 0;
+            	var decimalPointCount = 0;
+            	for (var i = 0, len = csv.length; i != len; i++) {
+            		var c = csv.charAt(i);
+            		if (c == ',') {
+            			commaCount++;
+            		} else if (c == '.') {
+            			decimalPointCount++;
+            		} else if (c < '0' || c > '9') {
+            			return false;
+            		}
+            	}
+            	return commaCount == 2 && decimalPointCount <= 2;
+            },
+            convertCsv: function (csv) {
+            	var args = csv.split(',');
+            	var zoom = parseInt(args[2]);
+            	return {
+            		zoom: zoom,
+            		position: {
+            			id: 'WGS84',
+            			datum: args[0] + ',' + args[1]
+            		}
+            	}
+            },
             initEditor: function (completed) {
                 $scope.vm = function () {
                     return $scope.viewmodel;
                 }
                 $scope.vm().error = false;
                 try {
-                    if (typeof ($scope.model.value) === 'string') {
-                        $scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
+                	if (typeof ($scope.model.value) === 'string') {
+                		if ($scope.terratype.isCsv($scope.model.value)) {
+                			$scope.model.value = convertCsv($scope.model.value);
+                		} else {
+                			$scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : null;
+                		}
                     }
                     if (!$scope.model.value) {
                         $scope.model.value = {};
