@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Bing Maps Microsoft</tags>
     <dependencies>
-      <dependency id="Terratype" version="1.0.14" />
+      <dependency id="Terratype" version="1.0.15" />
     </dependencies>
   </metadata>
   <files>

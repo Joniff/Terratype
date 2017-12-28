@@ -1,5 +1,5 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Terratype.TestSite.Schema.Mappy>
+@using Terratype
 @{
 	Layout = null;
 }
@@ -15,22 +15,26 @@
             Zoom
         </dt>
         <dd>
-            @Model.Content.Map44.Zoom
+            @Model.Content.Bing.Zoom
         </dd>
 
         <dt>
             Lookup
         </dt>
         <dd>
-            @Model.Content.Map44.Lookup
+            @Model.Content.Bing.Lookup
         </dd>
 
         <dt>
             Position
         </dt>
         <dd>
-            @Model.Content.Map44.Position.ToString()
+            @Model.Content.Bing.Position
         </dd>
     </dl>
 
 </fieldset>
+
+<div>
+	@Html.Terratype(Model.Content.Bing)
+</div>

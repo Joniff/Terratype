@@ -21,29 +21,33 @@ namespace Terratype
             return propertyType.PropertyEditorAlias == "Terratype";
         }
 
+		private void MergeJson(JObject data, JObject config, string fieldName)
+		{
+            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(fieldName), 
+                config.GetValue(Json.PropertyName<Models.Model>(fieldName), StringComparison.InvariantCultureIgnoreCase))));
+		}
+
         public object ConvertDataToSource(PublishedPropertyType propertyType, object source, bool preview)
         {
             var values = ApplicationContext.Current.Services.DataTypeService.GetPreValuesByDataTypeId(propertyType.DataTypeId);
             var config = JObject.Parse(values.First());
 
             JObject data = null;
-            if (source != null && source is string)
+            if (source is string && !string.IsNullOrWhiteSpace((string) source))
             {
                 data = JObject.Parse((string)source);
             }
             else
             {
                 data = new JObject();
-                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Lookup)), StringComparison.InvariantCultureIgnoreCase));
-                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Zoom)), StringComparison.InvariantCultureIgnoreCase));
-                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Position)), StringComparison.InvariantCultureIgnoreCase));
-                data.Merge(config.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Height)), StringComparison.InvariantCultureIgnoreCase));
+				//MergeJson(data, config, nameof(Models.Model.Lookup));
+				MergeJson(data, config, nameof(Models.Model.Zoom));
+				MergeJson(data, config, nameof(Models.Model.Position));
             }
             var innerConfig = config.GetValue("config") as JObject;
-            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(nameof(Models.Model.Icon)), 
-                innerConfig.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Icon)), StringComparison.InvariantCultureIgnoreCase))));
-            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(nameof(Models.Model.Provider)),
-                innerConfig.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Provider)), StringComparison.InvariantCultureIgnoreCase))));
+			MergeJson(data, innerConfig, nameof(Models.Model.Icon));
+			MergeJson(data, innerConfig, nameof(Models.Model.Provider));
+			MergeJson(data, innerConfig, nameof(Models.Model.Height));
             return new Models.Model(data);
         }
 
