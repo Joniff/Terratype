@@ -273,7 +273,8 @@ namespace Terratype
 					writer.RenderEndTag();
 				}					
 
-                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language, options.DomMonitorType);
+                merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language, options.DomMonitorType,
+					options.AutoShowLabel, options.AutoRecenterAfterRefresh, options.AutoFit);
                 if (hasLabel)
                 {
                     writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");

@@ -168,7 +168,9 @@
 						minZoom: null,
 						maxZoom: null,
 						layers: null,
-						domDetectionType: domDetectionType
+						domDetectionType: domDetectionType,
+						autoFit: matches[i].getAttribute('data-auto-fit'),
+						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh')
 					};
 					matches[i].style.display = 'block';
 					q.maps.push(m);
@@ -176,9 +178,10 @@
 				if (m.layers == null && model.provider.mapSources && model.provider.mapSources.length != 0) {
 					m.layers = [];
 					for (var g = 0; g != model.provider.mapSources.length; g++) {
-						for (var j = 0; j != root.terratype.providers.leafletv1.tileServers.length; j++) {
-							for (var k = 0; k != root.terratype.providers.leafletv1.tileServers[j].tileServers.length; k++) {
-								var ts = root.terratype.providers.leafletv1.tileServers[j].tileServers[k];
+						var p = root.terratype.providers[q.id];
+						for (var j = 0; j != p.tileServers.length; j++) {
+							for (var k = 0; k != p.tileServers[j].tileServers.length; k++) {
+								var ts = p.tileServers[j].tileServers[k];
 								if (ts.id == model.provider.mapSources[g].tileServer.id) {
 									var options = JSON.parse(JSON.stringify(ts.options));
 									options.minZoom = ts.minZoom;
@@ -281,6 +284,18 @@
 					if (l) {
 						m.ginfos[p] = m.gmarkers[p].bindPopup(l.innerHTML);
 					}
+
+					if (item.autoShowLabel) {
+						with ({
+							mm: m,
+							pp: p
+						}) {
+							root.setTimeout(function () {
+								mm.ginfos[pp].openPopup();
+							}, 100);
+						}
+					}
+
 				}
 				if (m.cluster != null) {
 					m.cluster.addLayer(m.gmarkers[p]);
@@ -304,9 +319,10 @@
 		},
 		refresh: function (m) {
 			m.ignoreEvents++;
-			m.gmap.setZoom(m.zoom);
-			q.closeInfoWindows(m);
-			m.gmap.setView(m.center);
+			if (m.recenterAfterRefresh) {
+				m.gmap.setZoom(m.zoom);
+				m.gmap.setView(m.center);
+			}
 			m.gmap.invalidateSize();
 			setTimeout(function () {
 				if (m.cluster != null) {
@@ -376,7 +392,7 @@
 	};
 
 	var timer = setInterval(function () {
-		if (L && L.MarkerClusterGroup && root.terratype && root.terratype.providers && root.terratype.providers.leafletv1 && root.terratype.providers.leafletv1.tileServers) {
+		if (L && L.MarkerClusterGroup && root.terratype && root.terratype.providers && typeof root.terratype.providers[q.id] !== 'undefined' && typeof root.terratype.providers[q.id].tileServers !== 'undefined') {
 			clearInterval(timer);
 			root.terratype.addProvider(q.id, q);
 			root.setTimeout(q.init, 100);

@@ -79,26 +79,10 @@
 
         </dl>
         <div id="pretend-accordion" style="display:@(Request.QueryString["show"] != null ? "display" : "none");">
-            <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
-                This is an empty div
-            </div>
 
-            @Html.Terratype(new Options {
-               DomMonitorType = Options.DomMonitorTypes.JQuery,
-               Provider = new Terratype.Providers.GoogleMapsV3()
-               {
-                   Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
-                   {
-                       Satellite = false
-                   }
-               },
-               Zoom = 5,
-               Position = new Terratype.CoordinateSystems.Wgs84("59.05609,-102.99102")
-            }, Model.Content.Map)
 
-            <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
-                This is an empty div
-            </div>
+            @Html.Terratype(Model.Content.Map)
+
         </div>
         <button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
     </fieldset>

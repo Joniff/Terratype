@@ -78,5 +78,10 @@ namespace Terratype
 		/// Should the map recenter after a window resize
 		/// </summary>
 		public bool AutoRecenterAfterRefresh { get; set; }
+
+		/// <summary>
+		/// Should the map try and display all markers
+		/// </summary>
+		public bool AutoFit { get; set; }
     }
 }

@@ -6,35 +6,112 @@
 
 
 <fieldset>
-    <legend>
-        Map 1
-    </legend>
+	<legend>
+		Map 1 - Bing
+	</legend>
 
-    <dl>
-        <dt>
-            Zoom
-        </dt>
-        <dd>
-            @Model.Content.Bing.Zoom
-        </dd>
+	<dl>
+		<dt>
+			Zoom
+		</dt>
+		<dd>
+			@Model.Content.Bing.Zoom
+		</dd>
 
-        <dt>
-            Lookup
-        </dt>
-        <dd>
-            @Model.Content.Bing.Lookup
-        </dd>
+		<dt>
+			Lookup
+		</dt>
+		<dd>
+			@Model.Content.Bing.Lookup
+		</dd>
 
-        <dt>
-            Position
-        </dt>
-        <dd>
-            @Model.Content.Bing.Position
-        </dd>
-    </dl>
+		<dt>
+			Position
+		</dt>
+		<dd>
+			@Model.Content.Bing.Position
+		</dd>
+	</dl>
 
+	<div>
+		@Html.Terratype(new Options {
+			AutoShowLabel = true,
+			AutoRecenterAfterRefresh = false
+		}, Model.Content.Bing, @<text> Bing Label </text>)
+	</div>
 </fieldset>
 
-<div>
-	@Html.Terratype(Model.Content.Bing)
-</div>
+<fieldset>
+	<legend>
+		Map 2 - Leaflet
+	</legend>
+
+	<dl>
+		<dt>
+			Zoom
+		</dt>
+		<dd>
+			@Model.Content.L1.Zoom
+		</dd>
+
+		<dt>
+			Lookup
+		</dt>
+		<dd>
+			@Model.Content.L1.Lookup
+		</dd>
+
+		<dt>
+			Position
+		</dt>
+		<dd>
+			@Model.Content.L1.Position
+		</dd>
+	</dl>
+
+	<div>
+		@Html.Terratype(new Options
+		{
+			AutoShowLabel = true,
+				AutoRecenterAfterRefresh = false
+		}, Model.Content.L1, @<text> Leaflet Label </text>)
+	</div>
+</fieldset>
+
+<fieldset>
+	<legend>
+		Map 3 - GMaps
+	</legend>
+
+	<dl>
+		<dt>
+			Zoom
+		</dt>
+		<dd>
+			@Model.Content.Map44.Zoom
+		</dd>
+
+		<dt>
+			Lookup
+		</dt>
+		<dd>
+			@Model.Content.Map44.Lookup
+		</dd>
+
+		<dt>
+			Position
+		</dt>
+		<dd>
+			@Model.Content.Map44.Position
+		</dd>
+	</dl>
+
+	<div>
+		@Html.Terratype(new Options
+		{
+			AutoShowLabel = true,
+				AutoRecenterAfterRefresh = false
+		}, Model.Content.Map44, @<text> GMap Label </text>)
+	</div>
+</fieldset>
+

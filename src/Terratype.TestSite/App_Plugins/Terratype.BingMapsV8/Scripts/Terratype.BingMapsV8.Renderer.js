@@ -190,7 +190,6 @@
 				if (q.domDetectionType > domDetectionType) {
 					q.domDetectionType = domDetectionType;
 				}
-
 				var model = JSON.parse(unescape(matches[i].getAttribute('data-bingmapsv8')));
 				var datum = root.terratype.parseLatLng(model.position.datum);
 				var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
@@ -207,8 +206,10 @@
 						status: 0,
 						visible: false,
 						height: model.height,
-						domDetectionType: domDetectionType
-					};
+						domDetectionType: domDetectionType,
+						autoFit: matches[i].getAttribute('data-auto-fit'),
+						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh')
+				};
 					matches[i].style.display = 'block';
 					q.maps.push(m);
 				}
@@ -320,6 +321,19 @@
 							}
 						});
 					}
+
+					if (item.autoShowLabel) {
+						with ({
+							mm: m,
+							pp: p
+						}) {
+							root.setTimeout(function () {
+								mm.ginfos[pp].setOptions({
+									visible: true
+								});
+							}, 100);
+						}
+					}
 				}
 			}
 
@@ -350,9 +364,13 @@
 				return;
 			}
 			m.ignoreEvents++;
-			m.gmap.setView({
+			var o = {
 				zoom: m.zoom
-			});
+			};
+			if (m.recenterAfterRefresh) {
+				o.center = m.center;
+			}
+			m.gmap.setView(o);
 			var mapId = m.gmap.getMapTypeId();
 			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.streetView, m.provider.predefineStyling);
 			var found = false;

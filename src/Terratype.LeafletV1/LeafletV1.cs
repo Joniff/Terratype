@@ -116,7 +116,7 @@ namespace Terratype.Providers
 
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
             string language = null,Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
-			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false)
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false)
         {
             const string guid = "53031a3b-dc6a-4440-a5e5-5060f691afd6";
             var id = nameof(Terratype) + nameof(LeafletV1) + Guid.NewGuid().ToString();
@@ -137,6 +137,10 @@ namespace Terratype.Providers
 			if (AutoRecenterAfterRefresh)
 			{
 				writer.AddAttribute("data-recenter-after-refresh", true.ToString());
+			}
+			if (AutoFit)
+			{
+				writer.AddAttribute("data-auto-fit", true.ToString());
 			}
 
             if (labelId != null)

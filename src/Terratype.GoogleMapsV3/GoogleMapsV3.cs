@@ -254,7 +254,7 @@ namespace Terratype.Providers
         /// <returns></returns>
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
             string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
-			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false)
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false)
         {
             const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
             var id = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
@@ -271,6 +271,10 @@ namespace Terratype.Providers
 			if (AutoRecenterAfterRefresh)
 			{
 				writer.AddAttribute("data-recenter-after-refresh", true.ToString());
+			}
+			if (AutoFit)
+			{
+				writer.AddAttribute("data-auto-fit", true.ToString());
 			}
             if (labelId != null)
             {

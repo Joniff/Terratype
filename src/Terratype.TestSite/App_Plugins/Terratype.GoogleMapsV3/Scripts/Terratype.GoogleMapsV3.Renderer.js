@@ -168,8 +168,6 @@
 					q.domDetectionType = domDetectionType;
 				}
 				var model = JSON.parse(unescape(matches[i].getAttribute('data-googlemapsv3')));
-				var datum = root.terratype.parseLatLng(model.position.datum);
-				var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
 				var m = q.getMap(mapId);
 				if (m == null) {
 					m = {
@@ -178,16 +176,23 @@
 						zoom: model.zoom,
 						provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
 						positions: [],
-						center: latlng,
+						center: null,
 						divoldsize: 0,
 						status: 0,
 						visible: false,
-						domDetectionType: domDetectionType
+						domDetectionType: domDetectionType,
+						bound: new google.maps.LatLngBounds(null),
+						autoFit: matches[i].getAttribute('data-auto-fit'),
+						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh'),
+						ignoreEvents: 0,
+						refreshes: 0
 					};
 					matches[i].style.display = 'block';
 					q.maps.push(m);
 				}
 				if (model.icon && model.icon.url) {
+					var datum = root.terratype.parseLatLng(model.position.datum);
+					var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
 					m.positions.push({
 						id: id,
 						label: matches[i].getAttribute('data-label-id'),
@@ -201,12 +206,13 @@
 						},
 						autoShowLabel: matches[i].getAttribute('data-auto-show-label')
 					});
+					m.bound.extend(latlng);
 				}
 			}
 		},
 		render: function (m) {
-			m.ignoreEvents = 0;
 			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.terrain);
+			m.center = (m.autoFit) ? (new google.maps.LatLngBounds(m.bound.getSouthWest(), m.bound.getNorthEast())).getCenter() : m.positions[0].latlng;
 			m.gmap = new root.google.maps.Map(document.getElementById(m.div), {
 				disableDefaultUI: false,
 				scrollwheel: false,
@@ -248,11 +254,11 @@
 					mm.zoom = mm.gmap.getZoom();
 				});
 				root.google.maps.event.addListenerOnce(mm.gmap, 'tilesloaded', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
+					var el = document.getElementById(mm.div);
+					if (root.terratype.isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
+						console.log('tilesloaded:' + mm.id);
+						q.refresh(mm);
 					}
-					q.refresh(mm);
-					mm.status = 2;
 				});
 				root.google.maps.event.addListener(mm.gmap, 'resize', function () {
 					if (mm.ignoreEvents > 0) {
@@ -283,7 +289,6 @@
 				m.ginfos[p] = null;
 				var l = (item.label) ? document.getElementById(item.label) : null;
 				if (l) {
-
 					m.ginfos[p] = new root.google.maps.InfoWindow({
 						content: l
 					});
@@ -301,12 +306,6 @@
 								mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
 							}
 						});
-					}
-
-					if (item.autoShowLabel) {
-						root.setTimeout(function () {
-							m.ginfos[p].open(m.gmap, m.gmarkers[p]);
-						}, 100);
 					}
 				}
 			}
@@ -328,34 +327,58 @@
 				q.refresh(m);
 			}
 		},
+		resetCenter: function (m) {
+			if (m.autoFit) {
+				m.gmap.setZoom(20);
+				m.gmap.fitBounds(m.bound);
+			}
+			m.gmap.setCenter(m.center);
+		},
+		checkResetCenter: function (m) {
+			if (m.refreshes == 0) {
+				console.log('checkResetCenter: ' + m.id);
+				for (var p = 0; p != m.positions.length; p++) {
+					var item = m.positions[p];
+					if (item.autoShowLabel) {
+						with ({
+							mm: m,
+							pp: p
+						}) {
+							root.setTimeout(function () {
+								mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
+							}, 100);
+						}
+					}
+				}
+				m.status = 2;
+			}
+			if (m.refreshes == 0 || m.recenterAfterRefresh) {
+				q.resetCenter(m);
+			}
+			m.refreshes++;
+		},
 		refresh: function (m) {
 			m.ignoreEvents++;
-			m.gmap.setZoom(m.zoom);
-			q.closeInfoWindows(m);
-			m.gmap.setCenter(m.center);
 			with ({
 				mm: m
 			}) {
 				root.google.maps.event.addListenerOnce(mm.gmap, 'idle', function () {
 					if (mm.idle == null) {
-						//console.warn(mm.id + ': refresh() end: already ran backup timer');
 						return;
 					}
 					mm.ignoreEvents--;
 					if (mm.ignoreEvents == 0) {
-						mm.gmap.setCenter(mm.center);
+						q.checkResetCenter(mm);
 						clearTimeout(mm.idle);
 						mm.idle = null;
 					}
-					//console.warn(mm.id + ': refresh() end: ignoreEvents = ' + mm.ignoreEvents);
+					if (mm.idle) {
+						clearTimeout(mm.idle);
+					}
 				});
-				if (mm.idle) {
-					clearTimeout(mm.idle);
-				}
 				mm.idle = setTimeout(function () {
 					if (mm.ignoreEvents != 0) {
-						//console.warn(mm.id + ': refresh() end: running backup timer');
-						mm.gmap.setCenter(mm.center);
+						q.checkResetCenter(mm);
 						mm.ignoreEvents = 0
 					}
 					clearTimeout(mm.idle);
@@ -363,15 +386,14 @@
 				}, 5000);
 			}
 			root.google.maps.event.trigger(m.gmap, 'resize');
-			//console.warn(m.id + ' refresh(): ignoreEvents = ' + m.ignoreEvents);
 		},
 		idleJs: function (m) {
 			//  Monitor dom changes via Javascript
-			var element = document.getElementById(m.div);
-			var newValue = element.parentElement.offsetTop + element.parentElement.offsetWidth;
-			var newSize = element.clientHeight * element.clientWidth;
-			var show = !(element.style.display && typeof element.style.display == 'string' && element.style.display.toLowerCase() == 'none');
-			var visible = show && root.terratype.isElementInViewport(element);
+			var el = document.getElementById(m.div);
+			var newValue = el.parentElement.offsetTop + el.parentElement.offsetWidth;
+			var newSize = el.clientHeight * el.clientWidth;
+			var show = !(el.style.display && typeof el.style.display == 'string' && el.style.display.toLowerCase() == 'none');
+			var visible = show && root.terratype.isElementInViewport(el);
 			if (newValue != 0 && show == false) {
 				//console.log('A ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
 				//  Was hidden, now being shown
@@ -401,12 +423,12 @@
 		},
 		idleJquery: function (m) {
 			//  Monitor dom changes via jQuery
-			var element = jQuery(document.getElementById(m.div));
-			var show = !(element.is(':hidden'));
-			var visible = element.is(':visible');
+			var el = jQuery(document.getElementById(m.div));
+			var show = !(el.is(':hidden'));
+			var visible = el.is(':visible');
 			if (show == visible) {
 				if (show) {
-					var newSize = element.height() * element.width();
+					var newSize = el.height() * el.width();
 					if (newSize != m.divoldsize) {
 						q.refresh(m);
 					}
@@ -415,13 +437,13 @@
 				return;
 			}
 			if (show) {
-				element.hide();
+				el.hide();
 				m.divoldsize = 0;
 				return;
 			}
-			element.show();
+			el.show();
 			q.refresh(m);
-			m.divoldsize = element.height() * element.width();
+			m.divoldsize = el.height() * el.width();
 		}
 	};
 
