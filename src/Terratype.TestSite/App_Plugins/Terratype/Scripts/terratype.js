@@ -1,11 +1,79 @@
 ﻿(function (root) {
 
+	Number.isInteger = Number.isInteger || function (value) {
+		return typeof value === "number" &&
+			isFinite(value) &&
+			Math.floor(value) === value;
+	};
+
     var packageName = 'Terratype';
 
     if (!root.terratype) {
         root.terratype = {
             loading: false,
-            providers: {}
+            providers: {},
+            event: {
+            	events: [],
+            	register: function (id, name, scope, object, func) {
+            		//gm.originalConsole.log("Register " + name + ":" + id);
+            		root.terratype.event.events.push({
+            			id: id,
+            			name: name,
+            			func: func,
+            			scope: scope,
+            			object: object
+            		});
+            	},
+            	cancel: function (id) {
+            		var newEvents = [];
+            		angular.forEach(root.terratype.event.events, function (e, i) {
+            			if (e.id != id) {
+            				newEvents.push(e);
+            			} else {
+            				//gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
+            			}
+            		});
+            		root.terratype.event.events = newEvents;
+            	},
+            	broadcast: function (name) {
+            		//var log = 'Broadcast ' + name + ' ';
+            		angular.forEach(root.terratype.event.events, function (e, i) {
+            			if (e.name == name) {
+            				//log += e.id + ',';
+            				e.func.call(e.scope, e.object);
+            			}
+            		});
+            		//gm.originalConsole.log(log);
+            	},
+            	broadcastSingle: function (name, counter) {
+            		var loop = 0;
+            		while (loop != 2 && root.terratype.event.events.length != 0) {
+            			if (counter >= root.terratype.event.events.length) {
+            				counter = 0;
+            				loop++;
+            			}
+
+            			var e = root.terratype.event.events[counter++];
+            			if (e.name == name) {
+            				e.func.call(e.scope, e.object);
+            				return counter;
+            			}
+            		}
+            		return null;
+            	},
+            	present: function (id) {
+            		if (id) {
+            			var count = 0;
+            			angular.forEach(root.terratype.event.events, function (e, i) {
+            				if (e.id != id) {
+            					count++;
+            				}
+            			});
+            			return count;
+            		}
+            		return root.terratype.event.events.length;
+            	}
+            }
         };
     }
 
@@ -127,7 +195,7 @@
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.14';
+                    r += '?cache=1.0.15';
                 }
                 return r;
             },

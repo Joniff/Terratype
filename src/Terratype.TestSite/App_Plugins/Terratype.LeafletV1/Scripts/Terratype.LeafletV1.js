@@ -1,78 +1,8 @@
 ﻿(function (root) {
-    var identifier = 'Terratype.LeafletV1';
 
-    Number.isInteger = Number.isInteger || function (value) {
-        return typeof value === "number" &&
-               isFinite(value) &&
-               Math.floor(value) === value;
-    };
-
-    var event = {
-        events: [],
-        register: function (id, name, scope, object, func) {
-            //sub.originalConsole.log("Register " + name + ":" + id);
-
-            event.events.push({
-                id: id,
-                name: name,
-                func: func,
-                scope: scope,
-                object: object
-            });
-        },
-        cancel: function (id) {
-            var newEvents = [];
-            angular.forEach(event.events, function (e, i) {
-                if (e.id != id) {
-                    newEvents.push(e);
-                } else {
-                    //sub.originalConsole.log("Cancel " + e.name + ":" + e.id);
-                }
-            });
-            event.events = newEvents;
-        },
-        broadcast: function (name) {
-            var log = 'Broadcast ' + name + ' ';
-            angular.forEach(event.events, function (e, i) {
-                if (e.name == name) {
-                    log += e.id + ',';
-                    e.func.call(e.scope, e.object);
-                }
-            });
-            //sub.originalConsole.log(log);
-        },
-        broadcastSingle: function (name, counter) {
-            var loop = 0;
-            while (loop != 2 && event.events.length != 0) {
-                if (counter >= event.events.length) {
-                    counter = 0;
-                    loop++;
-                }
-
-                var e = event.events[counter++];
-                if (e.name == name) {
-                    e.func.call(e.scope, e.object);
-                    return counter;
-                }
-            }
-            return null;
-        },
-        present: function (id) {
-            if (id) {
-                var count = 0;
-                angular.forEach(event.events, function (e, i) {
-                    if (e.id != id) {
-                        count++;
-                    }
-                });
-                return count;
-            }
-            return event.events.length;
-        }
-    }
-
-    //  Subsystem that loads or destroys Leaflet maps
+	//  Subsystem that loads or destroys Leaflet maps
     var sub = {
+    	id: 'Terratype.LeafletV1',
         poll: 250,
         destroySubsystem: function () {
             if (sub.running) {
@@ -90,7 +20,7 @@
                 return;
             }
             sub.running = setInterval(function () {
-                sub.single = event.broadcastSingle('gmaprefresh', sub.single);
+            	sub.single = root.terratype.event.broadcastSingle(sub.id + '.refresh', sub.single);
                 if (sub.single == null) {
                     sub.destroySubsystem();
                 }
@@ -215,7 +145,6 @@
     }
 
     var provider = {
-        identifier: identifier,
         datumWait: 330,
         translate: true,
         mapSources: [],
@@ -231,7 +160,7 @@
                     },
                     zoom: 12,
                     provider: {
-                        id: identifier,
+                        id: sub.id,
                         layers: [{
                             maxZoom: 18,
                             id: 'OpenStreetMap.Mapnik'
@@ -260,18 +189,18 @@
                 tileServerById: {},
                 tileServerByCoordinateSystemAndId: {},
                 init: function (done) {
-                    //event.cancel(id);
+                    //root.terratype.event.cancel(id);
                     scope.mapSourceByCoordinateSystem = {};
                     scope.mapSourceById = {};
                     scope.tileServerByCoordinateSystemAndMapSource = {};
                     scope.tileServerById = {};
                     scope.tileServerByCoordinateSystemAndId = {};
-                    var t = root.terratype.leaflet.translate;
-                    root.terratype.leaflet.translate = true;
+                    var t = root.terratype.providers[sub.id].translate;
+                    root.terratype.providers[sub.id].translate = true;
                     var tc = 0;
                     //  Calculate all language values
-                    for (var t1 = 0; t1 != root.terratype.leaflet.tileServers.length; t1++) {
-                        var ms = root.terratype.leaflet.tileServers[t1];
+                    for (var t1 = 0; t1 != root.terratype.providers[sub.id].tileServers.length; t1++) {
+                    	var ms = root.terratype.providers[sub.id].tileServers[t1];
                         scope.mapSourceById[ms.id] = ms;
                         if (!t) {
                             (function (ms) {
@@ -387,25 +316,25 @@
                             httpCalls: {
                             },
                             files: {
-                                logo: urlProvider(identifier, 'images/Logo.png'),
-                                mapExample: urlProvider(identifier, 'images/Example.png'),
+                                logo: urlProvider(sub.id, 'images/Logo.png'),
+                                mapExample: urlProvider(sub.id, 'images/Example.png'),
                                 views: {
                                     config: {
-                                        definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                        appearance: urlProvider(identifier, 'views/config.appearance.html', true),
-                                        search: urlProvider(identifier, 'views/config.search.html', true)
+                                        definition: urlProvider(sub.id, 'views/config.definition.html', true),
+                                        appearance: urlProvider(sub.id, 'views/config.appearance.html', true),
+                                        search: urlProvider(sub.id, 'views/config.search.html', true)
                                     },
                                     editor: {
-                                        appearance: urlProvider(identifier, 'views/editor.appearance.html', true)
+                                        appearance: urlProvider(sub.id, 'views/editor.appearance.html', true)
                                     },
                                     grid: {
-                                        appearance: urlProvider(identifier, 'views/grid.appearance.html', true)
+                                        appearance: urlProvider(sub.id, 'views/grid.appearance.html', true)
                                     }
                                 }
                             },
                             setProvider: function () {
-                                if (vm().provider.id != identifier) {
-                                    event.cancel(id);
+                                if (vm().provider.id != sub.id) {
+                                    root.terratype.event.cancel(id);
                                 }
                             },
                             setCoordinateSystem: function () {
@@ -756,7 +685,7 @@
                         clearTimeout(scope.reloadTimer);
                         scope.reloadTimer = null;
                     }
-                    event.cancel(id);
+                    root.terratype.event.cancel(id);
                     //angular.forEach(scope.gevents, function (gevent) {
                     //    gevent.removeHooks();
                     //});
@@ -878,29 +807,29 @@
                             scope.layers = null;
                             scope.minZoom = null;
                             scope.maxZoom = null;
-                            event.register(id, 'gmaperror', scope, this, function (s) {
+                            root.terratype.event.register(id, sub.id + '.error', scope, this, function (s) {
                                 //sub.originalConsole.warn(id + ': Map error');
                                 vm().status = {
                                     failed: true,
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
-                            event.register(id, 'gmapkilled', scope, this, function (s) {
+                            root.terratype.event.register(id, sub.id + '.killed', scope, this, function (s) {
                                 //sub.originalConsole.warn(id + ': Map killed');
                                 vm().status = {
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
 
-                            event.register(id, 'gmaprefresh', scope, this, function (s) {
+                            root.terratype.event.register(id, sub.id + '.refresh', scope, this, function (s) {
                                 //sub.originalConsole.warn(id + ': Map refresh(). div=' + scope.div + ', gmap=' + scope.gmap);
                                 if (!L) {
                                     scope.reloadMap.call(scope);
@@ -1096,9 +1025,19 @@
 
                 }
             }
-            scope.init(done);
+
+            var timer = root.setInterval(function () {
+            	if (root.terratype.providers[sub.id].tileServers) {
+            		root.clearInterval(timer);
+            		scope.init(done);
+            	}
+            }, 500);
         }
     }
 
-    root.terratype.providers[identifier] = provider;
+    if (root.terratype.providers[sub.id]) {
+    	angular.extend(root.terratype.providers[sub.id], provider);
+    } else {
+    	root.terratype.providers[sub.id] = provider;
+    }
 }(window));

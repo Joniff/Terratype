@@ -70,7 +70,8 @@
     <key alias="stylingColbalt">Colbalt</key>
     <key alias="stylingCrisp">Crisp</key>
     <key alias="stylingDark">Dark</key>
-    <key alias="stylingDesert">Desert</key>
+	<key alias="stylingDiscreet">Discreet</key>
+	<key alias="stylingDesert">Desert</key>
     <key alias="stylingFlat">Flat</key>
     <key alias="stylingHopper">Hopper</key>
     <key alias="stylingHotel">Hotel</key>
@@ -81,12 +82,16 @@
     <key alias="stylingMutedBlue">Muted Blue</key>
     <key alias="stylingNight">Night</key>
     <key alias="stylingOldDryMud">Old Dry Mud</key>
-    <key alias="stylingPaleDawn">Pale Dawn</key>
-    <key alias="stylingRedAlert">Red Alert</key>
+	<key alias="stylingOrange">Orange</key>
+	<key alias="stylingPaleDawn">Pale Dawn</key>
+	<key alias="stylingPastel">Pastel</key>
+	<key alias="stylingRedAlert">Red Alert</key>
     <key alias="stylingRetro">Retro</key>
     <key alias="stylingShiftWorker">Shift Worker</key>
     <key alias="stylingSilver">Silver</key>
-    <key alias="stylingUnsaturatedBrowns">Unsaturated Browns</key>
+	<key alias="stylingSpots">Spots</key>
+	<key alias="stylingTuristic">Turistic</key>
+	<key alias="stylingUnsaturatedBrowns">Unsaturated Browns</key>
 
     <key alias="roadsLabel">Roads:</key>
     <key alias="roadsDescription">Do you want roads to appear on the map</key>

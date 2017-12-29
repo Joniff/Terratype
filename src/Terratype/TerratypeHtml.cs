@@ -173,6 +173,16 @@ namespace Terratype
             return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
         }
 
+        private static string UrlPath(string file, bool cache = true)
+        {
+            var result = "/App_Plugins/Terratype/" + file;
+            if (cache)
+            {
+                result += "?cache=1.0.15";
+            }
+            return result;
+        }
+
         public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
         {
             if (options == null && map == null)
@@ -246,11 +256,22 @@ namespace Terratype
             var builder = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
             using (var writer = new HtmlTextWriter(builder))
             {
+	            const string guid = "9b5a5783-242f-4f75-b31f-d506dcf22bf9";
+
                 writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype));
                 writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
                 var hasLabel = map != null && (label != null || (map.Label != null && map.Label.HasContent));
                 var labelId = (hasLabel) ? nameof(Terratype) + Guid.NewGuid().ToString() : null;
+
+				if (!HttpContext.Current.Items.Contains(guid))
+				{
+					HttpContext.Current.Items.Add(guid, true);
+					writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/terratype.renderer.js"));
+					writer.AddAttribute("defer", "");
+					writer.RenderBeginTag(HtmlTextWriterTag.Script);
+					writer.RenderEndTag();
+				}					
 
                 merge.Provider.GetHtml(writer, options.MapSetId ?? Counter, merge, labelId, merge.Height, options.Language, options.DomMonitorType);
                 if (hasLabel)

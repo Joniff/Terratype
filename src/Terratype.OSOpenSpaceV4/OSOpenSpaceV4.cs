@@ -56,7 +56,8 @@ namespace Terratype.Providers
         }
 
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
-            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript)
+            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false)
         {
             throw new NotImplementedException();
         }

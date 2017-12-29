@@ -189,7 +189,8 @@ namespace Terratype.Providers
         /// <param name="label"></param>
         /// <returns></returns>
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
-            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript)
+            string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false)
         {
             const string guid = "af82089e-e9b9-4b8b-9f2a-bed92279dc6b";
             var id = nameof(Terratype) + nameof(BingMapsV8) + Guid.NewGuid().ToString();
@@ -197,6 +198,14 @@ namespace Terratype.Providers
             writer.AddAttribute("data-bingmapsv8", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
+			if (AutoShowLabel)
+			{
+				writer.AddAttribute("data-auto-show-label", true.ToString());
+			}
+			if (AutoRecenterAfterRefresh)
+			{
+				writer.AddAttribute("data-recenter-after-refresh", true.ToString());
+			}
             if (labelId != null)
             {
                 writer.AddAttribute("data-label-id", labelId);

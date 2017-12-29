@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.15**
+
+	Updated markercluster for GMaps
+	Fixed error converting model when using ModelsBuilder
+	Added 3 more Google map styles
+
 **1.0.14**
 
 	Updated GMaps versions

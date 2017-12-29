@@ -1,74 +1,10 @@
 ﻿(function (root) {
-    var identifier = 'Terratype.BingMapsV8';
     var Wgs84 = 'WGS84';
     var Gcj02 = 'GCJ02';
 
-    var event = {
-        events: [],
-        register: function (id, name, scope, object, func) {
-            //gm.originalConsole.log("Register " + name + ":" + id);
-
-            event.events.push({
-                id: id,
-                name: name,
-                func: func,
-                scope: scope,
-                object: object
-            });
-        },
-        cancel: function (id) {
-            var newEvents = [];
-            angular.forEach(event.events, function (e, i) {
-                if (e.id != id) {
-                    newEvents.push(e);
-                } else {
-                    //gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
-                }
-            });
-            event.events = newEvents;
-        },
-        broadcast: function (name) {
-            var log = 'Broadcast ' + name + ' ';
-            angular.forEach(event.events, function (e, i) {
-                if (e.name == name) {
-                    log += e.id + ',';
-                    e.func.call(e.scope, e.object);
-                }
-            });
-            //gm.originalConsole.log(log);
-        },
-        broadcastSingle: function (name, counter) {
-            var loop = 0;
-            while (loop != 2 && event.events.length != 0) {
-                if (counter >= event.events.length) {
-                    counter = 0;
-                    loop++;
-                }
-
-                var e = event.events[counter++];
-                if (e.name == name) {
-                    e.func.call(e.scope, e.object);
-                    return counter;
-                }
-            }
-            return null;
-        },
-        present: function (id) {
-            if (id) {
-                var count = 0;
-                angular.forEach(event.events, function (e, i) {
-                    if (e.id != id) {
-                        count++;
-                    }
-                });
-                return count;
-            }
-            return event.events.length;
-        }
-    }
-
     //  Subsystem that loads or destroys Bing Map library
     var gm = {
+    	id: 'Terratype.BingMapsV8',
         originalConsole: root.console,
         domain: null,
         version: null,
@@ -93,7 +29,7 @@
                 if ((a.indexOf('Bing Maps API') != -1 || a.indexOf('Bing Maps Javascript API') != -1) &&
                     (a.indexOf('MissingKeyMapError') != -1 || a.indexOf('ApiNotActivatedMapError') != -1 ||
                     a.indexOf('InvalidKeyMapError') != -1 || a.indexOf('not authorized') != -1 || a.indexOf('RefererNotAllowedMapError') != -1)) {
-                    event.broadcast('gmaperror');
+                	root.terratype.event.broadcast(gm.id + '.error');
                     gm.destroySubsystem();
                     return;
                 }
@@ -183,7 +119,7 @@
                 //gm.originalConsole.warn('Waiting for previous subsystem to die');
                 if (gm.ticks() > start) {
                     clearInterval(wait);
-                    event.broadcast('gmapkilled');
+                    root.terratype.event.broadcast(gm.id + '.killed');
                     gm.destroySubsystem();
                 } else if (gm.status == gm.subsystemCompleted || gm.status == gm.subsystemUninitiated || gm.status == gm.subsystemInit) {
                     //gm.originalConsole.warn('Creating new subsystem');
@@ -229,7 +165,7 @@
                                 case gm.subsystemReadBingJs:
                                     if (gm.ticks() > start) {
                                         clearInterval(timer);
-                                        event.broadcast('gmaperror');
+                                        root.terratype.event.broadcast(gm.id + '.error');
                                         gm.destroySubsystem();
                                     }
                                     break;
@@ -238,10 +174,10 @@
                                     if (gm.isBingMapsLoaded()) {
                                         gm.installFakeConsole();
                                         gm.status = gm.subsystemLoadedBingJs;
-                                        event.broadcast('gmaprefresh');
+                                        root.terratype.event.broadcast(gm.id + '.refresh');
                                     } else if (gm.ticks() > start) {
                                         clearInterval(timer);
-                                        event.broadcast('gmaperror');
+                                        root.terratype.event.broadcast(gm.id + '.error');
                                         gm.destroySubsystem();
                                     }
                                     break;
@@ -253,7 +189,7 @@
 
                                 case gm.subsystemCooloff:
                                 case gm.subsystemCompleted:
-                                    single = event.broadcastSingle('gmaprefresh', single);
+                                	single = root.terratype.event.broadcastSingle(gm.id + '.refresh', single);
                                     if (single == null) {
                                         clearInterval(timer);
                                         gm.destroySubsystem();
@@ -383,7 +319,6 @@
     }
 
     var provider = {
-        identifier: identifier,
         datumWait: 330,
         css: [],
         js: [],
@@ -397,7 +332,7 @@
                     },
                     zoom: 12,
                     provider: {
-                        id: identifier, 
+                        id: gm.id, 
                         version: 'release',
                         forceHttps: true,
                         language: '',
@@ -439,7 +374,7 @@
                     config().search = gm.mergeJson(scope.defaultConfig.search, config().search);
                 },
                 init: function () {
-                    //event.cancel(id);
+                    //root.terratype.event.cancel(id);
                     if (store().position) {
                         if (typeof store().position.datum === 'string') {
                             vm().position.datum = scope.parse.call(scope, store().position.datum);
@@ -451,30 +386,30 @@
                     done({
                         httpCalls: {
                             'apiKey': {
-                                when: 'config.provider.id=' + identifier,
+                                when: 'config.provider.id=' + gm.id,
                                 field: 'config.provider.apiKey',
                                 values: []
                             }
                         },
                         files: {
-                            logo: urlProvider(identifier, 'images/Logo.png'),
-                            mapExample: urlProvider(identifier, 'images/Example.png'),
+                            logo: urlProvider(gm.id, 'images/Logo.png'),
+                            mapExample: urlProvider(gm.id, 'images/Example.png'),
                             views: {
                                 config: {
-                                    definition: urlProvider(identifier, 'views/config.definition.html', true),
-                                    appearance: urlProvider(identifier, 'views/config.appearance.html', true),
-                                    search: urlProvider(identifier, 'views/config.search.html', true)
+                                    definition: urlProvider(gm.id, 'views/config.definition.html', true),
+                                    appearance: urlProvider(gm.id, 'views/config.appearance.html', true),
+                                    search: urlProvider(gm.id, 'views/config.search.html', true)
                                 },
                                 editor: {
-                                    appearance: urlProvider(identifier, 'views/editor.appearance.html', true)
+                                    appearance: urlProvider(gm.id, 'views/editor.appearance.html', true)
                                 },
                                 grid: {
-                                    appearance: urlProvider(identifier, 'views/grid.appearance.html', true)
+                                    appearance: urlProvider(gm.id, 'views/grid.appearance.html', true)
                                 }
                             }
                         },
                         setProvider: function () {
-                            if (vm().provider.id != identifier) {
+                            if (vm().provider.id != gm.id) {
                                 scope.destroy();
                             }
                         },
@@ -589,7 +524,7 @@
                     });
                 },
                 destroy: function () {
-                    event.cancel(id);
+                    root.terratype.event.cancel(id);
                     if (scope.loadMapWait) {
                         clearTimeout(scope.loadMapWait);
                         scope.loadMapWait = null;
@@ -722,28 +657,28 @@
                             scope.div = null;
                             scope.divoldsize = 0;
                             scope.divwait = gm.timeout / gm.poll;
-                            event.register(id, 'gmaperror', scope, this, function (s) {
+                            root.terratype.event.register(id, gm.id + '.error', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map error');
                                 vm().status = {
                                     failed: true,
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
-                            event.register(id, 'gmapkilled', scope, this, function (s) {
+                            root.terratype.event.register(id, gm.id + '.killed', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map killed');
                                 vm().status = {
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
-                            event.register(id, 'gmaprefresh', scope, this, function (s) {
+                            root.terratype.event.register(id, gm.id + '.refresh', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map refresh(). div=' + scope.div + ', gmap=' + scope.gmap);
                                 if (!root.Microsoft) {
                                     scope.reloadMap.call(scope);
@@ -765,7 +700,7 @@
                                             duplicate: true,
                                             reload: true
                                         };
-                                        event.cancel(id);
+                                        root.terratype.event.cancel(id);
                                         updateView();
                                         return;
                                     }
@@ -1132,5 +1067,5 @@
         }
     }
 
-    root.terratype.providers[identifier] = provider;
+    root.terratype.providers[gm.id] = provider;
 }(window));

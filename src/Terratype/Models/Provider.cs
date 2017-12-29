@@ -85,6 +85,6 @@ namespace Terratype.Models
         }
 
         public abstract void GetHtml(HtmlTextWriter writer, int id, Models.Model model, string labelId = null, int? height = null, string language = null, 
-            Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript);
+            Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript, bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false);
     }
 }

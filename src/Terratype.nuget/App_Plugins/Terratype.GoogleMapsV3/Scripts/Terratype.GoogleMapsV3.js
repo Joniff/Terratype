@@ -1,70 +1,6 @@
 ﻿(function (root) {
     var identifier = 'Terratype.GoogleMapsV3';
 
-    var event = {
-        events: [],
-        register: function (id, name, scope, object, func) {
-            //gm.originalConsole.log("Register " + name + ":" + id);
-
-            event.events.push({
-                id: id,
-                name: name,
-                func: func,
-                scope: scope,
-                object: object
-            });
-        },
-        cancel: function (id) {
-            var newEvents = [];
-            angular.forEach(event.events, function (e, i) {
-                if (e.id != id) {
-                    newEvents.push(e);
-                } else {
-                    //gm.originalConsole.log("Cancel " + e.name + ":" + e.id);
-                }
-            });
-            event.events = newEvents;
-        },
-        broadcast: function (name) {
-            var log = 'Broadcast ' + name + ' ';
-            angular.forEach(event.events, function (e, i) {
-                if (e.name == name) {
-                    log += e.id + ',';
-                    e.func.call(e.scope, e.object);
-                }
-            });
-            //gm.originalConsole.log(log);
-        },
-        broadcastSingle: function (name, counter) {
-            var loop = 0;
-            while (loop != 2 && event.events.length != 0) {
-                if (counter >= event.events.length) {
-                    counter = 0;
-                    loop++;
-                }
-
-                var e = event.events[counter++];
-                if (e.name == name) {
-                    e.func.call(e.scope, e.object);
-                    return counter;
-                }
-            }
-            return null;
-        },
-        present: function (id) {
-            if (id) {
-                var count = 0;
-                angular.forEach(event.events, function (e, i) {
-                    if (e.id != id) {
-                        count++;
-                    }
-                });
-                return count;
-            }
-            return event.events.length;
-        }
-    }
-
     //  Subsystem that loads or destroys Google Map library
     var gm = {
         originalConsole: root.console,
@@ -91,7 +27,7 @@
                 if ((a.indexOf('Google Maps API') != -1 || a.indexOf('Google Maps Javascript API') != -1) &&
                     (a.indexOf('MissingKeyMapError') != -1 || a.indexOf('ApiNotActivatedMapError') != -1 ||
                     a.indexOf('InvalidKeyMapError') != -1 || a.indexOf('not authorized') != -1 || a.indexOf('RefererNotAllowedMapError') != -1)) {
-                    event.broadcast('gmaperror');
+                	root.terratype.event.broadcast('gmaperror');
                     gm.destroySubsystem();
                 }
                 try {
@@ -166,7 +102,7 @@
                 //gm.originalConsole.warn('Waiting for previous subsystem to die');
                 if (gm.ticks() > start) {
                     clearInterval(wait);
-                    event.broadcast('gmapkilled');
+                    root.terratype.event.broadcast('gmapkilled');
                     gm.destroySubsystem();
                 } else if (gm.status == gm.subsystemCompleted || gm.status == gm.subsystemUninitiated || gm.status == gm.subsystemInit) {
                     //gm.originalConsole.warn('Creating new subsystem');
@@ -218,7 +154,7 @@
                                 case gm.subsystemReadGoogleJs:
                                     if (gm.ticks() > start) {
                                         clearInterval(timer);
-                                        event.broadcast('gmaperror');
+                                        root.terratype.event.broadcast('gmaperror');
                                         gm.destroySubsystem();
                                     }
                                     break;
@@ -226,12 +162,12 @@
                                 case gm.subsystemCheckGoogleJs:
                                     if (gm.ticks() > start) {
                                         clearInterval(timer);
-                                        event.broadcast('gmaperror');
+                                        root.terratype.event.broadcast('gmaperror');
                                         gm.destroySubsystem();
                                     } else if (gm.isGoogleMapsLoaded()) {
                                         gm.installFakeConsole();
                                         gm.status = gm.subsystemLoadedGoogleJs;
-                                        event.broadcast('gmaprefresh');
+                                        root.terratype.event.broadcast('gmaprefresh');
                                     }
                                     break;
 
@@ -242,7 +178,7 @@
 
                                 case gm.subsystemCooloff:
                                 case gm.subsystemCompleted:
-                                    single = event.broadcastSingle('gmaprefresh', single);
+                                	single = root.terratype.event.broadcastSingle('gmaprefresh', single);
                                     if (single == null) {
                                         clearInterval(timer);
                                         gm.destroySubsystem();
@@ -857,7 +793,7 @@
                     }
                 },
                 init: function () {
-                    //event.cancel(id);
+                	//root.terratype.event.cancel(id);
                     if (model().position) {
                         if (typeof model().position.datum === 'string') {
                             view().position.datum = scope.parse.call(scope, model().position.datum);
@@ -883,7 +819,7 @@
                         },
                         setProvider: function () {
                             if (config().provider.id != identifier) {
-                                event.cancel(id);
+                            	root.terratype.event.cancel(id);
                             }
                         },
                         setCoordinateSystem: function () {
@@ -990,7 +926,7 @@
                     }
                 },
                 destroy: function () {
-                    event.cancel(id);
+                	root.terratype.event.cancel(id);
                     if (scope.loadMapWait) {
                         clearTimeout(scope.loadMapWait);
                         scope.loadMapWait = null;
@@ -1110,28 +1046,28 @@
                             scope.div = null;
                             scope.divoldsize = 0;
                             scope.divwait = gm.timeout / gm.poll;
-                            event.register(id, 'gmaperror', scope, this, function (s) {
+                            root.terratype.event.register(id, 'gmaperror', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map error');
                                 view().status = {
                                     failed: true,
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
-                            event.register(id, 'gmapkilled', scope, this, function (s) {
+                            root.terratype.event.register(id, 'gmapkilled', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map killed');
                                 view().status = {
                                     reload: true
                                 };
-                                event.cancel(id);
+                                root.terratype.event.cancel(id);
                                 clearInterval(scope.superWaiter);
                                 scope.superWaiter = null;
                                 updateView();
                             });
-                            event.register(id, 'gmaprefresh', scope, this, function (s) {
+                            root.terratype.event.register(id, 'gmaprefresh', scope, this, function (s) {
                                 //gm.originalConsole.warn(id + ': Map refresh(). div=' + scope.div + ', gmap=' + scope.gmap);
                                 if (!root.google) {
                                     scope.reloadMap.call(scope);
@@ -1152,7 +1088,7 @@
                                             duplicate: true,
                                             reload: true
                                         };
-                                        event.cancel(id);
+                                        root.terratype.event.cancel(id);
                                         updateView();
                                         return;
                                     }

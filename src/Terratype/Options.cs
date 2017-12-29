@@ -26,12 +26,12 @@ namespace Terratype
         public int? MapSetId { get; set; }
 
         /// <summary>
-        /// Initial zoom of this map set, if not set will use the zoom of the first map of set
+        /// Initial zoom of this map set, if not set will pick a zoom that allows all markers to be visible
         /// </summary>
         public int? Zoom { get; set; }
 
         /// <summary>
-        /// Initial position that you wish to display this map, if not set will use the position of the first map
+        /// Initial position that you wish to display this map, if not will try and display all markers
         /// </summary>
         public Models.Position Position { get; set; }
 
@@ -72,7 +72,11 @@ namespace Terratype
 		/// <summary>
 		/// Should the label be visible straight away
 		/// </summary>
-		//public bool AutoShowLabel { get; set; }
+		public bool AutoShowLabel { get; set; }
 
+		/// <summary>
+		/// Should the map recenter after a window resize
+		/// </summary>
+		public bool AutoRecenterAfterRefresh { get; set; }
     }
 }

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype\Css\label.standard.css" />
+    <Content Include="App_Plugins\Terratype\Scripts\terratype.renderer.js" />
     <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
     <Content Include="App_Plugins\Terratype\Views\label.standard.html" />
     <EmbeddedResource Include="App_Plugins\Terratype\Lang\en-us.xml">
