@@ -1,125 +1,10 @@
 ﻿(function (root) {
 
+	var isGmapsReady = false;
+
 	var q = {
 		id: 'Terratype.GoogleMapsV3',
-		status: 0,
 		maps: [],
-		markerClustererUrl: function () {
-			return document.getElementsByClassName(q.id)[0].getAttribute('data-markerclusterer-url')
-		},
-		mapTypeIds: function (basic, satellite, terrain) {
-			var mapTypeIds = [];
-			if (basic) {
-				mapTypeIds.push('roadmap');
-			}
-			if (satellite) {
-				mapTypeIds.push('satellite');
-			}
-			if (terrain) {
-				mapTypeIds.push('terrain');
-			}
-
-			if (mapTypeIds.length == 0) {
-				mapTypeIds.push('roadmap');
-			}
-			return mapTypeIds;
-		},
-		init: function () {
-			q.load();
-			if (q.domDetectionType == 1) {
-				counter = 0;
-				var t = setInterval(function () {
-					//  Is jquery loaded
-					if (root.jQuery) {
-						clearInterval(t);
-						q.updateJquery();
-					}
-					if (++counter > q.jqueryLoadWait) {
-						//  We have waited long enough for jQuery to load, and nothing, so default to javascript
-						console.warn("Terratype was asked to use jQuery to monitor DOM changes, yet no jQuery library was detected. Terratype has defaulted to using javascript to detect DOM changes instead");
-						clearInterval(t);
-						q.domDetectionType = 0;
-						q.updateJs();
-					}
-				}, q.poll);
-			} else {
-				q.updateJs();
-			}
-		},
-		updateJs: function () {
-			//  Use standard JS to monitor page resizes, dom changes, scrolling
-			var counter = 0;
-			var mapsRunning = 0;
-			var timer = setInterval(function () {
-				if (counter == q.maps.length) {
-					if (mapsRunning == 0) {
-						//  There are no maps running
-						clearInterval(timer);
-					}
-					counter = 0;
-					mapsRunning = 0;
-				}
-				var m = q.maps[counter];
-				if (m.status != -1 && m.positions.length != 0) {
-					mapsRunning++;
-					if (m.status == 0) {
-						q.render(m);
-					} else {
-						if (m.domDetectionType == 2) {
-							m.status = -1;
-						} else if (m.domDetectionType == 1 && root.jQuery) {
-							root.terratype.idleJquery(m, q.refresh);
-						} else {
-							root.terratype.idleJs(m, q.refresh);
-						}
-					}
-				}
-				counter++;
-			}, q.poll);
-		},
-		updateJquery: function () {
-			//  Can only be used, if all DOM updates happen via jQuery.
-			var counter = 0;
-			var timer = setInterval(function () {
-				if (counter == q.maps.length) {
-					clearInterval(timer);
-					if (q.domDetectionType != 2) {
-						jQuery(window).on('DOMContentLoaded load resize scroll touchend', function () {
-							counter = 0;
-							var timer2 = setInterval(function () {
-								if (counter == q.maps.length) {
-									clearInterval(timer2);
-								} else {
-									var m = q.maps[counter];
-									if (m.status > 0 && m.positions.length != 0) {
-										if (m.domDetectionType == 1) {
-											q.idleJquery(m);
-										} else {
-											q.idleJs(m);
-										}
-									}
-									counter++;
-								}
-							}, q.poll);
-						});
-					}
-				} else {
-					var m = q.maps[counter];
-					if (m.status == 0 && m.positions.length != 0) {
-						q.render(m);
-					}
-					counter++;
-				}
-			}, q.poll);
-		},
-		getMap: function (mapId) {
-			for (var i = 0; i != q.maps.length; i++) {
-				if (q.maps[i].id == mapId) {
-					return q.maps[i];
-				}
-			}
-			return null;
-		},
 		defaultProvider: {
 			predefineStyling: 'retro',
 			showRoads: true,
@@ -155,59 +40,57 @@
 			},
 			draggable: true
 		},
-
-		domDetectionType: 99,
-		load: function () {
-			var matches = document.getElementsByClassName(q.id);
-			for (var i = 0; i != matches.length; i++) {
-				mapId = matches[i].getAttribute('data-map-id');
-				id = matches[i].getAttribute('data-id');
-				var domDetectionType = parseInt(matches[i].getAttribute('data-dom-detection-type'));
-				if (q.domDetectionType > domDetectionType) {
-					q.domDetectionType = domDetectionType;
-				}
-				var model = JSON.parse(unescape(matches[i].getAttribute('data-googlemapsv3')));
-				var m = q.getMap(mapId);
-				if (m == null) {
-					m = {
-						id: mapId,
-						div: id,
-						zoom: model.zoom,
-						provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
-						positions: [],
-						center: null,
-						divoldsize: 0,
-						status: 0,
-						visible: false,
-						domDetectionType: domDetectionType,
-						bound: new google.maps.LatLngBounds(null),
-						autoFit: matches[i].getAttribute('data-auto-fit'),
-						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh'),
-						ignoreEvents: 0,
-						refreshes: 0
-					};
-					matches[i].style.display = 'block';
-					q.maps.push(m);
-				}
-				if (model.icon && model.icon.url) {
-					var datum = root.terratype.parseLatLng(model.position.datum);
-					var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
-					m.positions.push({
-						id: id,
-						label: matches[i].getAttribute('data-label-id'),
-						latlng: latlng,
-						icon: {
-							url: root.terratype.configIconUrl(model.icon.url),
-							scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
-							anchor: new root.google.maps.Point(
-								root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-								root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
-						},
-						autoShowLabel: matches[i].getAttribute('data-auto-show-label')
-					});
-					m.bound.extend(latlng);
-				}
+		ready: function () {
+			return isGmapsReady;
+		},
+		loadMap: function (model, match) {
+			return {
+				zoom: model.zoom,
+				provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
+				positions: [],
+				center: null,
+				bound: new google.maps.LatLngBounds(null)
+			};
+		},
+		loadMarker: function (m, model, match) {
+			if (model.icon && model.icon.url) {
+				var datum = root.terratype.parseLatLng(model.position.datum);
+				var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
+				m.positions.push({
+					id: id,
+					label: match.getAttribute('data-label-id'),
+					latlng: latlng,
+					icon: {
+						url: root.terratype.configIconUrl(model.icon.url),
+						scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
+						anchor: new root.google.maps.Point(
+							root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+							root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
+					},
+					autoShowLabel: match.getAttribute('data-auto-show-label')
+				});
+				m.bound.extend(latlng);
 			}
+		},
+		markerClustererUrl: function () {
+			return document.getElementsByClassName(q.id)[0].getAttribute('data-markerclusterer-url')
+		},
+		mapTypeIds: function (basic, satellite, terrain) {
+			var mapTypeIds = [];
+			if (basic) {
+				mapTypeIds.push('roadmap');
+			}
+			if (satellite) {
+				mapTypeIds.push('satellite');
+			}
+			if (terrain) {
+				mapTypeIds.push('terrain');
+			}
+
+			if (mapTypeIds.length == 0) {
+				mapTypeIds.push('roadmap');
+			}
+			return mapTypeIds;
 		},
 		render: function (m) {
 			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.terrain);
@@ -242,41 +125,36 @@
 					position: m.provider.zoomControl.position
 				}
 			});
-			with ({
-				mm: m
-			}) {
-				root.google.maps.event.addListener(mm.gmap, 'zoom_changed', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
-					}
-					q.closeInfoWindows(mm);
-					mm.zoom = mm.gmap.getZoom();
-				});
-				root.google.maps.event.addListenerOnce(mm.gmap, 'tilesloaded', function () {
-					var el = document.getElementById(mm.div);
-					if (root.terratype.isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
-						console.log('tilesloaded:' + mm.id);
-						q.refresh(mm);
-					}
-				});
-				root.google.maps.event.addListener(mm.gmap, 'resize', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
-					}
-					q.checkResize(mm);
-				});
-				root.google.maps.event.addListener(mm.gmap, 'click', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
-					}
-					q.closeInfoWindows(mm);
-				});
-			}
+			root.google.maps.event.addListener(m.gmap, 'zoom_changed', function () {
+				if (m.ignoreEvents > 0) {
+					return;
+				}
+				q.closeInfoWindows(m);
+				m.zoom = m.gmap.getZoom();
+				root.terratype.callZoom(q, m);
+			});
+			root.google.maps.event.addListenerOnce(m.gmap, 'tilesloaded', function () {
+				var el = document.getElementById(m.div);
+				if (root.terratype.isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
+					q.refresh(m);
+				}
+			});
+			root.google.maps.event.addListener(m.gmap, 'resize', function () {
+				if (m.ignoreEvents > 0) {
+					return;
+				}
+				q.checkResize(m);
+			});
+			root.google.maps.event.addListener(m.gmap, 'click', function () {
+				if (m.ignoreEvents > 0) {
+					return;
+				}
+				q.closeInfoWindows(m);
+			});
 			m.ginfos = [];
 			m.gmarkers = [];
 
-			for (var p = 0; p != m.positions.length; p++) {
-				var item = m.positions[p];
+			root.terratype.forEach(m.positions, function (p, item) {
 				m.gmarkers[p] = new root.google.maps.Marker({
 					map: m.gmap,
 					position: item.latlng,
@@ -291,35 +169,34 @@
 					m.ginfos[p] = new root.google.maps.InfoWindow({
 						content: l
 					});
-					with ({
-						mm: m,
-						pp: p
-					}) {
-						mm.gmarkers[p].addListener('click', function () {
-							//console.warn(mm.id + ': iconClick(): ignoreEvents = ' + mm.ignoreEvents);
-							if (mm.ignoreEvents > 0) {
-								return;
-							}
-							q.closeInfoWindows(mm);
-							if (mm.ginfos[pp] != null) {
-								mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
-							}
-						});
-					}
+					m.gmarkers[p].addListener('click', function () {
+						//console.warn(mm.id + ': iconClick(): ignoreEvents = ' + mm.ignoreEvents);
+						if (m.ignoreEvents > 0) {
+							return;
+						}
+						q.closeInfoWindows(m);
+						if (m.ginfos[p] != null) {
+							q.openInfoWindow(m, p);
+						}
+					});
 				}
-			}
+			});
 
 			if (m.positions.length > 1) {
 				m.markerclusterer = new MarkerClusterer(m.gmap, m.gmarkers, { imagePath: q.markerClustererUrl() });
 			}
 			m.status = 1;
 		},
+		openInfoWindow: function (m, p) {
+			m.ginfos[p].open(m.gmap, m.gmarkers[p]);
+			root.terratype.callClick(q, m, p);
+		},
 		closeInfoWindows: function (m) {
-			for (var p = 0; p != m.positions.length; p++) {
+			root.terratype.forEach(m.positions, function (p, item) {
 				if (m.ginfos[p] != null) {
 					m.ginfos[p].close();
 				}
-			}
+			});
 		},
 		checkResize: function (m) {
 			if (!m.gmap.getBounds().contains(m.center)) {
@@ -336,67 +213,61 @@
 		},
 		checkResetCenter: function (m) {
 			if (m.refreshes == 0) {
-				console.log('checkResetCenter: ' + m.id);
-				for (var p = 0; p != m.positions.length; p++) {
-					var item = m.positions[p];
+				root.terratype.forEach(m.positions, function (p, item) {
 					if (item.autoShowLabel) {
-						with ({
-							mm: m,
-							pp: p
-						}) {
-							root.setTimeout(function () {
-								mm.ginfos[pp].open(mm.gmap, mm.gmarkers[pp]);
-							}, 100);
-						}
+						root.setTimeout(function () {
+							m.ginfos[p].open(m.gmap, m.gmarkers[p]);
+						}, 100);
 					}
-				}
+				});
 				m.status = 2;
 			}
 			if (m.refreshes == 0 || m.recenterAfterRefresh) {
 				q.resetCenter(m);
 			}
-			m.refreshes++;
+			if (m.refreshes++ == 0) {
+				root.terratype.callRender(q, m);
+			} else {
+				root.terratype.callRefresh(q, m);
+			}
 		},
 		refresh: function (m) {
 			m.ignoreEvents++;
-			with ({
-				mm: m
-			}) {
-				root.google.maps.event.addListenerOnce(mm.gmap, 'idle', function () {
-					if (mm.idle == null) {
-						return;
-					}
-					mm.ignoreEvents--;
-					if (mm.ignoreEvents == 0) {
-						q.checkResetCenter(mm);
-						clearTimeout(mm.idle);
-						mm.idle = null;
-					}
-					if (mm.idle) {
-						clearTimeout(mm.idle);
-					}
-				});
-				mm.idle = setTimeout(function () {
-					if (mm.ignoreEvents != 0) {
-						q.checkResetCenter(mm);
-						mm.ignoreEvents = 0
-					}
-					clearTimeout(mm.idle);
-					mm.idle = null;
-				}, 5000);
-			}
+			root.google.maps.event.addListenerOnce(m.gmap, 'idle', function () {
+				if (m.idle == null) {
+					return;
+				}
+				m.ignoreEvents--;
+				if (m.ignoreEvents == 0) {
+					q.checkResetCenter(m);
+					root.clearTimeout(m.idle);
+					m.idle = null;
+				}
+				if (m.idle) {
+					root.clearTimeout(m.idle);
+				}
+			});
+			m.idle = root.setTimeout(function () {
+				if (m.ignoreEvents != 0) {
+					q.checkResetCenter(m);
+					m.ignoreEvents = 0
+				}
+				root.clearTimeout(m.idle);
+				m.idle = null;
+			}, 5000);
 			root.google.maps.event.trigger(m.gmap, 'resize');
 		}
 	};
 
+	var timer = root.setInterval(function () {
+		if (root.terratype && root.terratype.addProvider) {
+			root.terratype.addProvider(q.id, q);
+			root.clearInterval(timer);
+		}
+	}, 250);
+
 	root.TerratypeGoogleMapsV3CallbackRender = function () {
-		var timer = root.setInterval(function () {
-			if (root.terratype) {
-				root.clearInterval(timer);
-				root.terratype.addProvider(q.id, q);
-				root.setTimeout(q.init, 100);
-			}
-		}, 500);
+		isGmapsReady = true;
 	}
 }(window));
 

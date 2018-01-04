@@ -105,6 +105,7 @@
 					return;
 				}
 				m.zoom = m.gmap.getZoom();
+				root.terratype.callZoom(q, m);
 			});
 			m.gmap.on('load', function () {
 				if (m.ignoreEvents > 0) {
