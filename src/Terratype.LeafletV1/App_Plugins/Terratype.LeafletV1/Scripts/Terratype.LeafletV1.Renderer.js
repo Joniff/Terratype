@@ -111,7 +111,7 @@
 				if (m.ignoreEvents > 0) {
 					return;
 				}
-				var el = document.getElementById(mm.div);
+				var el = document.getElementById(m.div);
 				if (root.terratype.isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
 					q.refresh(m);
 				}
@@ -140,14 +140,9 @@
 					}
 
 					if (item.autoShowLabel) {
-						with ({
-							mm: m,
-							pp: p
-						}) {
-							root.setTimeout(function () {
-								mm.ginfos[pp].openPopup();
-							}, 100);
-						}
+						root.setTimeout(function () {
+							m.ginfos[p].openPopup();
+						}, 100);
 					}
 
 				}

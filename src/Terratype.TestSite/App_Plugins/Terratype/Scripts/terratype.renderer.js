@@ -316,7 +316,7 @@
 					} else {
 						var provider = root.terratype.providers[providers[providerCounter]];
 
-						if (provider.status == 2 && mapCounter < provider.maps.length) {
+						if (provider.status == 3 && mapCounter < provider.maps.length) {
 							var m = provider.maps[mapCounter++];
 							switch (m.status) {
 								case 0:		//	Needs rendering
@@ -394,7 +394,18 @@
 									}
 									break;
 
-								case 2:		//	Monitoring
+								case 2:		//	Has loaded
+									activeCounter++;
+									var cont = true;
+									if (provider.prerender) {
+										(function (p) { cont = provider.prerender.call(p); })(provider);
+									}
+									if (cont) {
+										provider.status = 3;
+									}
+									break;
+
+								case 3:		//	Monitoring
 									activeCounter++;
 									if (mapRunning == 0) {
 										provider.status = -1;

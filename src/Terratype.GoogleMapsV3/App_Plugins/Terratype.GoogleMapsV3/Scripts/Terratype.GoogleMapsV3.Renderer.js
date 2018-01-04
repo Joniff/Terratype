@@ -170,7 +170,6 @@
 						content: l
 					});
 					m.gmarkers[p].addListener('click', function () {
-						//console.warn(mm.id + ': iconClick(): ignoreEvents = ' + mm.ignoreEvents);
 						if (m.ignoreEvents > 0) {
 							return;
 						}
@@ -216,7 +215,7 @@
 				root.terratype.forEach(m.positions, function (p, item) {
 					if (item.autoShowLabel) {
 						root.setTimeout(function () {
-							m.ginfos[p].open(m.gmap, m.gmarkers[p]);
+							q.openInfoWindow(m, p);
 						}, 100);
 					}
 				});

@@ -1,76 +1,11 @@
 ﻿(function (root) {
 
+	var isBingReady = false;
 	var allowBingToHandleResizes = true;
 
 	var q = {
 		id: 'Terratype.BingMapsV8',
-		status: 0,
 		maps: [],
-		mapTypeIds: function (basic, satellite, streetView, style) {
-			var mapTypeIds = [];
-			if (basic) {
-				if (style != '') {
-					mapTypeIds.push(root.Microsoft.Maps.MapTypeId[style]);
-				} else {
-					mapTypeIds.push(root.Microsoft.Maps.MapTypeId.road);
-				}
-			}
-			if (satellite) {
-				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.aerial);
-			}
-			if (streetView) {
-				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.streetside);
-			}
-			if (mapTypeIds.length == 0) {
-				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.road);
-			}
-
-			return mapTypeIds;
-		},
-		init: function () {
-			if (q.load()) {
-				root.Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', q.update);
-			} else {
-				q.update();
-			}
-		},
-		update: function () {
-			if (allowBingToHandleResizes) {
-				q.updateBing();
-			} else {
-				if (q.domDetectionType == 1) {
-					counter = 0;
-					var t = setInterval(function () {
-						//  Is jquery loaded
-						if (root.jQuery) {
-							clearInterval(t);
-							root.terratype.updateJquery(q.maps, q.render, q.refresh);
-						}
-						if (++counter > q.jqueryLoadWait) {
-							//  We have waited long enough for jQuery to load, and nothing, so default to javascript
-							console.warn("Terratype was asked to use jQuery to monitor DOM changes, yet no jQuery library was detected. Terratype has defaulted to using javascript to detect DOM changes instead");
-							clearInterval(t);
-							q.domDetectionType = 0;
-							root.terratype.updateJs(q.maps, q.render, q.refresh);
-						}
-					}, root.terratype.poll);
-				} else {
-					root.terratype.updateJs(q.maps, q.render, q.refresh);
-				}
-			}
-		},
-		updateBing: function () {
-			//  Let Bing monitor page resizes, dom changes, scrolling
-			var counter = 0;
-			var timer = setInterval(function () {
-				if (counter == q.maps.length) {
-					clearInterval(timer);
-					return;
-				}
-				q.render(q.maps[counter]);
-				counter++;
-			}, q.poll);
-		},
 		defaultProvider: {
 			position: {
 				datum: "55.4063207,10.3870147"
@@ -105,61 +40,94 @@
 				enable: 0,
 			}
 		},
-		domDetectionType: 99,
-		load: function () {
-			var needTraffic = false;
-			var matches = document.getElementsByClassName(q.id);
-			for (var i = 0; i != matches.length; i++) {
-				mapId = matches[i].getAttribute('data-map-id');
-				id = matches[i].getAttribute('data-id');
-				var domDetectionType = parseInt(matches[i].getAttribute('data-dom-detection-type'));
-				if (q.domDetectionType > domDetectionType) {
-					q.domDetectionType = domDetectionType;
-				}
-				var model = JSON.parse(unescape(matches[i].getAttribute('data-bingmapsv8')));
+		ready: function () {
+			return isBingReady;
+		},
+		loadMap: function (model, match) {
+			return {
+				zoom: model.zoom,
+				provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
+				positions: [],
+				height: model.height,
+				maxLat: -360.0,
+				maxLng: -360.0,
+				minLat: 360,
+				minLng: 360,
+				maxIconSize: 0,
+			};
+		},
+		needTraffic: false,
+		trafficLoaded: false,
+		loadMarker: function (m, model, match) {
+			if (model.icon && model.icon.url) {
 				var datum = root.terratype.parseLatLng(model.position.datum);
 				var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
-				var m = q.getMap(mapId);
-				if (m == null) {
-					m = {
-						id: mapId,
-						div: id,
-						zoom: model.zoom,
-						provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
-						positions: [],
-						center: latlng,
-						divoldsize: 0,
-						status: 0,
-						visible: false,
-						height: model.height,
-						domDetectionType: domDetectionType,
-						autoFit: matches[i].getAttribute('data-auto-fit'),
-						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh')
-					};
-					matches[i].style.display = 'block';
-					q.maps.push(m);
+				m.positions.push({
+					id: id,
+					label: match.getAttribute('data-label-id'),
+					latlng: latlng,
+					icon: model.icon.url,
+					anchor: new root.Microsoft.Maps.Point(
+						root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+						root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
+					autoShowLabel: match.getAttribute('data-auto-show-label')
+				});
+				if (latlng.latitude > m.maxLat) {
+					m.maxLat = latlng.latitude;
 				}
-				if (model.icon && model.icon.url) {
-					m.positions.push({
-						id: id,
-						label: matches[i].getAttribute('data-label-id'),
-						latlng: latlng,
-						icon: model.icon.url,
-						anchor: new root.Microsoft.Maps.Point(
-							root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-							root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
-						autoShowLabel: matches[i].getAttribute('data-auto-show-label')
-					});
+				if (latlng.latitude < m.minLat) {
+					m.minLat = latlng.latitude;
 				}
-				if (model.provider.traffic.enable == true) {
-					needTraffic = true;
+				if (latlng.longitude > m.maxLng) {
+					m.maxLng = latlng.longitude;
+				}
+				if (latlng.longitude < m.minLng) {
+					m.minLng = latlng.longitude;
+				}
+				if (model.icon.size.width > m.maxIconSize) {
+					m.maxIconSize = model.icon.size.width;
+				}
+				if (model.icon.size.height > m.maxIconSize) {
+					m.maxIconSize = model.icon.size.height;
 				}
 			}
-			return needTraffic;
+			if (model.provider.traffic.enable == true && q.needTraffic == false) {
+				q.needTraffic = true;
+				root.Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', function () { q.trafficLoaded = true; });
+			}
+		},
+		prerender: function () {
+			return q.needTraffic == q.trafficLoaded;
+		},
+		mapTypeIds: function (basic, satellite, streetView, style) {
+			var mapTypeIds = [];
+			if (basic) {
+				if (style != '') {
+					mapTypeIds.push(root.Microsoft.Maps.MapTypeId[style]);
+				} else {
+					mapTypeIds.push(root.Microsoft.Maps.MapTypeId.road);
+				}
+			}
+			if (satellite) {
+				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.aerial);
+			}
+			if (streetView) {
+				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.streetside);
+			}
+			if (mapTypeIds.length == 0) {
+				mapTypeIds.push(root.Microsoft.Maps.MapTypeId.road);
+			}
+
+			return mapTypeIds;
 		},
 		render: function (m) {
+			if (allowBingToHandleResizes) {
+				q.domDetectionType = 2;
+			}
 			m.ignoreEvents = 0;
 			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.streetView, m.provider.predefineStyling);
+			m.bound = new Microsoft.Maps.LocationRect.fromEdges(m.maxLat, m.minLng, m.minLat, m.maxLng);
+			m.center = (m.autoFit) ? m.bound.center : m.positions[0].latlng;
 			m.gmap = new root.Microsoft.Maps.Map(document.getElementById(m.div), {
 				credentials: m.provider.apiKey,
 				enableSearchLogo: false,
@@ -177,12 +145,17 @@
 				fixedMapPosition: allowBingToHandleResizes,
 				height: m.height
 			});
-			m.gmap.setView({
-				center: m.center,
-				zoom: m.zoom,
+			var view = {
 				mapTypeId: mapTypeIds[0],
 				labelOverlay: m.provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
-			});
+			}
+			if (m.autoFit) {
+				view.bounds = m.bound;
+			} else {
+				view.center = m.center;
+				view.zoom = m.zoom;
+			}
+			m.gmap.setView(view);
 			if (m.provider.traffic.enable == true) {
 				m.traffic = new root.Microsoft.Maps.Traffic.TrafficManager(m.gmap);
 				m.traffic.show();
@@ -193,28 +166,22 @@
 				}
 			}
 
-			with ({
-				mm: m
-			}) {
-				root.Microsoft.Maps.Events.addHandler(mm.gmap, 'viewchangeend', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
-					}
-					mm.zoom = mm.gmap.getZoom();
-					q.closeInfoWindows(mm);
-				});
-				root.Microsoft.Maps.Events.addHandler(mm.gmap, 'click', function () {
-					if (mm.ignoreEvents > 0) {
-						return;
-					}
-					q.closeInfoWindows(mm);
-				});
-			}
+			root.Microsoft.Maps.Events.addHandler(m.gmap, 'viewchangeend', function () {
+				if (m.ignoreEvents > 0) {
+					return;
+				}
+				m.zoom = m.gmap.getZoom();
+				q.closeInfoWindows(m);
+			});
+			root.Microsoft.Maps.Events.addHandler(m.gmap, 'click', function () {
+				if (m.ignoreEvents > 0) {
+					return;
+				}
+				q.closeInfoWindows(m);
+			});
 			m.ginfos = [];
 			m.gmarkers = [];
-			for (var p = 0; p != m.positions.length; p++) {
-				var item = m.positions[p];
-
+			root.terratype.forEach(m.positions, function (p, item) {
 				m.gmarkers[p] = new root.Microsoft.Maps.Pushpin(item.latlng, {
 					id: item.id,
 					draggable: false,
@@ -224,44 +191,30 @@
 
 				m.ginfos[p] = null;
 				if (document.getElementById(item.label) != null) {
-					with ({
-						mm: m,
-						pp: p
-					}) {
-						mm.ginfos[pp] = new root.Microsoft.Maps.Infobox(item.latlng, {
-							description: ' ',
-							visible: false,
-							pushpin: mm.gmarkers[pp]
-						});
-						mm.ginfos[pp]._options.description = document.getElementById(item.label).innerHTML;
-						mm.ginfos[pp].setMap(mm.gmap);
-						root.Microsoft.Maps.Events.addHandler(mm.gmarkers[pp], 'click', function () {
-							if (mm.ignoreEvents > 0) {
-								return;
-							}
-							q.closeInfoWindows(mm);
-							if (mm.ginfos[pp]) {
-								mm.ginfos[pp].setOptions({
-									visible: !mm.ginfos[pp].getVisible()
-								});
-							}
-						});
-					}
-
-					if (item.autoShowLabel) {
-						with ({
-							mm: m,
-							pp: p
-						}) {
-							root.setTimeout(function () {
-								mm.ginfos[pp].setOptions({
-									visible: true
-								});
-							}, 100);
+					m.ginfos[p] = new root.Microsoft.Maps.Infobox(item.latlng, {
+						description: ' ',
+						visible: false,
+						pushpin: m.gmarkers[p]
+					});
+					m.ginfos[p]._options.description = document.getElementById(item.label).innerHTML;
+					m.ginfos[p].setMap(m.gmap);
+					root.Microsoft.Maps.Events.addHandler(m.gmarkers[p], 'click', function () {
+						if (m.ignoreEvents > 0) {
+							return;
 						}
-					}
+						q.closeInfoWindows(m);
+						if (m.ginfos[p]) {
+							q.openInfoWindow(m, p);
+						}
+					});
 				}
-			}
+
+				if (item.autoShowLabel) {
+					root.setTimeout(function () {
+						q.openInfoWindow(m, p);
+					}, 100);
+				}
+			});
 
 			if (m.positions.length > 1) {
 				m.clusterLayer = new root.Microsoft.Maps.ClusterLayer(m.gmarkers);
@@ -271,14 +224,20 @@
 			}
 			m.status = 1;
 		},
+		openInfoWindow: function (m, p) {
+			m.ginfos[p].setOptions({
+				visible: true
+			});
+			root.terratype.callClick(q, m, p);
+		},
 		closeInfoWindows: function (m) {
-			for (var p = 0; p != m.positions.length; p++) {
+			root.terratype.forEach(m.positions, function (p, item) {
 				if (m.ginfos[p] != null && m.ginfos[p].getVisible()) {
 					m.ginfos[p].setOptions({
 						visible: false
 					});
 				}
-			}
+			});
 		},
 		checkResize: function (m) {
 			if (!m.gmap.getBounds().contains(m.center)) {
@@ -307,26 +266,32 @@
 				}
 			}
 			if (found == false) {
-				mapId = mapTypeIds[i];
+				mapId = mapTypeIds[0];
 			}
 			m.gmap.setMapType(Microsoft.Maps.MapTypeId.mercator);
 			setTimeout(function () {
 				m.gmap.setMapType(mapId);
 				m.ignoreEvents--;
+
+				if (m.refreshes++ == 0) {
+					root.terratype.callRender(q, m);
+				} else {
+					root.terratype.callRefresh(q, m);
+				}
 			}, 1)
 		},
 	};
 
+	var timer = root.setInterval(function () {
+		if (root.terratype && root.terratype.addProvider) {
+			root.terratype.addProvider(q.id, q);
+			root.clearInterval(timer);
+		}
+	}, 250);
 
 	root.TerratypeBingMapsV8CallbackRender = function () {
 		root.Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function () {
-			var timer = root.setInterval(function () {
-				if (root.terratype) {
-					root.clearInterval(timer);
-					root.terratype.addProvider(q.id, q);
-					root.setTimeout(q.init, 100);
-    			}
-    		}, 500);
+			isBingReady = true;
         });
     }
 }(window));
