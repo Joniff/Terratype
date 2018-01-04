@@ -290,15 +290,10 @@
     ]
 
     var timer = root.setInterval(function () {
-    	if (!root.terratype) {
+    	if (!root.terratype || !root.terratype.providers[id]) {
     		return;
     	}
     	root.clearInterval(timer);
-
-    	if (!root.terratype.providers[id]) {
-    		root.terratype.providers[id] = {};
-    	}
-
     	root.terratype.providers[id].translate = false;
     	root.terratype.providers[id].tileServers = tileServers;
     }, 500);

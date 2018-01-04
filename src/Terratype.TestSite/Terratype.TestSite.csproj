@@ -485,7 +485,6 @@
     <Content Include="Views\Single1.cshtml" />
     <Content Include="Views\Single2.cshtml" />
     <Content Include="Views\GridMap.cshtml" />
-    <Content Include="Views\Single4.cshtml" />
     <Content Include="Views\Bing.cshtml" />
     <Content Include="App_Plugins\ModelsBuilder\package.manifest" />
     <Content Include="config\ClientDependency.config" />
@@ -516,6 +515,13 @@
     <Content Include="config\BaseRestExtensions.config" />
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
+    <Content Include="Views\Leaflet.cshtml" />
+    <Content Include="Views\BlogOverview.cshtml" />
+    <Content Include="Views\BlogPost.cshtml" />
+    <Content Include="Views\Daniel.cshtml" />
+    <Content Include="Views\Master.cshtml" />
+    <Content Include="Views\NestedMap.cshtml" />
+    <Content Include="Views\TextPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

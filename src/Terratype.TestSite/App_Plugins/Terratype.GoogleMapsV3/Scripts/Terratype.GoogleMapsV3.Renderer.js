@@ -2,12 +2,11 @@
 
 	var q = {
 		id: 'Terratype.GoogleMapsV3',
-		poll: 100,
-		jqueryLoadWait: 30,
+		status: 0,
+		maps: [],
 		markerClustererUrl: function () {
 			return document.getElementsByClassName(q.id)[0].getAttribute('data-markerclusterer-url')
 		},
-		maps: [],
 		mapTypeIds: function (basic, satellite, terrain) {
 			var mapTypeIds = [];
 			if (basic) {
@@ -69,9 +68,9 @@
 						if (m.domDetectionType == 2) {
 							m.status = -1;
 						} else if (m.domDetectionType == 1 && root.jQuery) {
-							q.idleJquery(m);
+							root.terratype.idleJquery(m, q.refresh);
 						} else {
-							q.idleJs(m);
+							root.terratype.idleJs(m, q.refresh);
 						}
 					}
 				}
@@ -212,7 +211,7 @@
 		},
 		render: function (m) {
 			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.terrain);
-			m.center = (m.autoFit) ? (new google.maps.LatLngBounds(m.bound.getSouthWest(), m.bound.getNorthEast())).getCenter() : m.positions[0].latlng;
+			m.center = (m.autoFit) ? m.bound.getCenter() : m.positions[0].latlng;
 			m.gmap = new root.google.maps.Map(document.getElementById(m.div), {
 				disableDefaultUI: false,
 				scrollwheel: false,
@@ -332,6 +331,7 @@
 				m.gmap.setZoom(20);
 				m.gmap.fitBounds(m.bound);
 			}
+			m.zoom = m.gmap.getZoom();
 			m.gmap.setCenter(m.center);
 		},
 		checkResetCenter: function (m) {
@@ -386,64 +386,6 @@
 				}, 5000);
 			}
 			root.google.maps.event.trigger(m.gmap, 'resize');
-		},
-		idleJs: function (m) {
-			//  Monitor dom changes via Javascript
-			var el = document.getElementById(m.div);
-			var newValue = el.parentElement.offsetTop + el.parentElement.offsetWidth;
-			var newSize = el.clientHeight * el.clientWidth;
-			var show = !(el.style.display && typeof el.style.display == 'string' && el.style.display.toLowerCase() == 'none');
-			var visible = show && root.terratype.isElementInViewport(el);
-			if (newValue != 0 && show == false) {
-				//console.log('A ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  Was hidden, now being shown
-				document.getElementById(m.div).style.display = 'block';
-			} else if (newValue == 0 && show == true) {
-				//console.log('B ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  Was shown, now being hidden
-				document.getElementById(m.div).style.display = 'none';
-				m.visible = false;
-			}
-			else if (visible == true && m.divoldsize != 0 && newSize != 0 && m.divoldsize != newSize) {
-				//console.log('C ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  showing, just been resized and map is visible
-				q.refresh(m);
-				m.visible = true;
-			} else if (visible == true && m.visible == false) {
-				//console.log('D ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  showing and map just turned visible
-				q.refresh(m);
-				m.visible = true;
-			} else if (visible == false && m.visible == true) {
-				//console.log('E ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  was visible, but now hiding
-				m.visible = false;
-			}
-			m.divoldsize = newSize;
-		},
-		idleJquery: function (m) {
-			//  Monitor dom changes via jQuery
-			var el = jQuery(document.getElementById(m.div));
-			var show = !(el.is(':hidden'));
-			var visible = el.is(':visible');
-			if (show == visible) {
-				if (show) {
-					var newSize = el.height() * el.width();
-					if (newSize != m.divoldsize) {
-						q.refresh(m);
-					}
-					m.divoldsize = newSize;
-				}
-				return;
-			}
-			if (show) {
-				el.hide();
-				m.divoldsize = 0;
-				return;
-			}
-			el.show();
-			q.refresh(m);
-			m.divoldsize = el.height() * el.width();
 		}
 	};
 

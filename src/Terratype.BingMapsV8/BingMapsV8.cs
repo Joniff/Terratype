@@ -195,7 +195,7 @@ namespace Terratype.Providers
             const string guid = "af82089e-e9b9-4b8b-9f2a-bed92279dc6b";
             var id = nameof(Terratype) + nameof(BingMapsV8) + Guid.NewGuid().ToString();
 
-            writer.AddAttribute("data-bingmapsv8", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
+            writer.AddAttribute("data-model", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
 			if (AutoShowLabel)

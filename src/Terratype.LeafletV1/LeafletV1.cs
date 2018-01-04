@@ -127,7 +127,7 @@ namespace Terratype.Providers
                 UrlPath("css/MarkerCluster.css"),
                 UrlPath("css/MarkerCluster.Default.css")
             }), System.Text.Encoding.Default));
-            writer.AddAttribute("data-leafletv1", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
+            writer.AddAttribute("data-model", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
 			if (AutoShowLabel)

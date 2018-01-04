@@ -4,7 +4,7 @@
 
 	var q = {
 		id: 'Terratype.BingMapsV8',
-		poll: 100,
+		status: 0,
 		maps: [],
 		mapTypeIds: function (basic, satellite, streetView, style) {
 			var mapTypeIds = [];
@@ -44,18 +44,18 @@
 						//  Is jquery loaded
 						if (root.jQuery) {
 							clearInterval(t);
-							q.updateJquery();
+							root.terratype.updateJquery(q.maps, q.render, q.refresh);
 						}
 						if (++counter > q.jqueryLoadWait) {
 							//  We have waited long enough for jQuery to load, and nothing, so default to javascript
 							console.warn("Terratype was asked to use jQuery to monitor DOM changes, yet no jQuery library was detected. Terratype has defaulted to using javascript to detect DOM changes instead");
 							clearInterval(t);
 							q.domDetectionType = 0;
-							q.updateJs();
+							root.terratype.updateJs(q.maps, q.render, q.refresh);
 						}
-					}, q.poll);
+					}, root.terratype.poll);
 				} else {
-					q.updateJs();
+					root.terratype.updateJs(q.maps, q.render, q.refresh);
 				}
 			}
 		},
@@ -70,80 +70,6 @@
 				q.render(q.maps[counter]);
 				counter++;
 			}, q.poll);
-		},
-		updateJs: function () {
-			//  Use standard JS to monitor page resizes, dom changes, scrolling
-			var counter = 0;
-			var mapsRunning = 0;
-			var timer = setInterval(function () {
-				if (counter == q.maps.length) {
-					if (mapsRunning == 0) {
-						//  There are no maps running
-						clearInterval(timer);
-					}
-					counter = 0;
-					mapsRunning = 0;
-				}
-				var m = q.maps[counter];
-				if (m.status != -1 && m.positions.length != 0) {
-					mapsRunning++;
-					if (m.status == 0) {
-						q.render(m);
-					} else {
-						if (m.domDetectionType == 2) {
-							m.status = -1;
-						} else if (m.domDetectionType == 1 && root.jQuery) {
-							q.idleJquery(m);
-						} else {
-							q.idleJs(m);
-						}
-					}
-				}
-				counter++;
-			}, q.poll);
-		},
-		updateJquery: function () {
-			//  Can only be used, if all DOM updates happen via jQuery.
-			var counter = 0;
-			var timer = setInterval(function () {
-				if (counter == q.maps.length) {
-					clearInterval(timer);
-					if (q.domDetectionType != 2) {
-						jQuery(window).on('DOMContentLoaded load resize scroll touchend', function () {
-							counter = 0;
-							var timer2 = setInterval(function () {
-								if (counter == q.maps.length) {
-									clearInterval(timer2);
-								} else {
-									var m = q.maps[counter];
-									if (m.status > 0 && m.positions.length != 0) {
-										if (m.domDetectionType == 1) {
-											q.idleJquery(m);
-										} else {
-											q.idleJs(m);
-										}
-									}
-									counter++;
-								}
-							}, q.poll);
-						});
-					}
-				} else {
-					var m = q.maps[counter];
-					if (m.status == 0 && m.positions.length != 0) {
-						q.render(m);
-					}
-					counter++;
-				}
-			}, q.poll);
-		},
-		getMap: function (mapId) {
-			for (var i = 0; i != q.maps.length; i++) {
-				if (q.maps[i].id == mapId) {
-					return q.maps[i];
-				}
-			}
-			return null;
 		},
 		defaultProvider: {
 			position: {
@@ -209,7 +135,7 @@
 						domDetectionType: domDetectionType,
 						autoFit: matches[i].getAttribute('data-auto-fit'),
 						recenterAfterRefresh: matches[i].getAttribute('data-recenter-after-refresh')
-				};
+					};
 					matches[i].style.display = 'block';
 					q.maps.push(m);
 				}
@@ -389,64 +315,6 @@
 				m.ignoreEvents--;
 			}, 1)
 		},
-		idleJs: function (m) {
-			//  Monitor dom changes via Javascript
-			var element = document.getElementById(m.div);
-			var newValue = element.parentElement.offsetTop + element.parentElement.offsetWidth;
-			var newSize = element.clientHeight * element.clientWidth;
-			var show = !(element.style.display && typeof element.style.display == 'string' && element.style.display.toLowerCase() == 'none');
-			var visible = show && root.terratype.isElementInViewport(element);
-			if (newValue != 0 && show == false) {
-				//console.log('A ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  Was hidden, now being shown
-				document.getElementById(m.div).style.display = 'block';
-			} else if (newValue == 0 && show == true) {
-				//console.log('B ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  Was shown, now being hidden
-				document.getElementById(m.div).style.display = 'none';
-				m.visible = false;
-			}
-			else if (visible == true && m.divoldsize != 0 && newSize != 0 && m.divoldsize != newSize) {
-				//console.log('C ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  showing, just been resized and map is visible
-				q.refresh(m);
-				m.visible = true;
-			} else if (visible == true && m.visible == false) {
-				//console.log('D ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  showing and map just turned visible
-				q.refresh(m);
-				m.visible = true;
-			} else if (visible == false && m.visible == true) {
-				//console.log('E ' + m.id + ': in viewport = ' + visible + ', showing = ' + show);
-				//  was visible, but now hiding
-				m.visible = false;
-			}
-			m.divoldsize = newSize;
-		},
-		idleJquery: function (m) {
-			//  Monitor dom changes via jQuery
-			var element = jQuery(document.getElementById(m.div));
-			var show = !(element.is(':hidden'));
-			var visible = element.is(':visible');
-			if (show == visible) {
-				if (show) {
-					var newSize = element.height() * element.width();
-					if (newSize != m.divoldsize) {
-						q.refresh(m);
-					}
-					m.divoldsize = newSize;
-				}
-				return;
-			}
-			if (show) {
-				element.hide();
-				m.divoldsize = 0;
-				return;
-			}
-			element.show();
-			q.refresh(m);
-			m.divoldsize = element.height() * element.width();
-		}
 	};
 
 

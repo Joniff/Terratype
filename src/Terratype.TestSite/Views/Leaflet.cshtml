@@ -1,4 +1,4 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Umbraco.Web.PublishedContentModels.Single4>
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Umbraco.Web.PublishedContentModels.Leaflet>
 @using Terratype;
 @{
     Layout = null;
@@ -31,70 +31,56 @@
                     Zoom
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Zoom
+                    @Model.Content.LeafletMap.Zoom
                 </dd>
                 <dt>
                     Lookup
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Lookup
+                    @Model.Content.LeafletMap.Lookup
                 </dd>
                 <dt>
                     Position
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Position
+                    @Model.Content.LeafletMap.Position
                 </dd>
                 <dt>
                     Coordinate System
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Position.Id
+                    @Model.Content.LeafletMap.Position.Id
                 </dd>
                 <dt>
                     Provider
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Provider.Id
+                    @Model.Content.LeafletMap.Provider.Id
                 </dd>
                 <dt>
                     Icon Url
                 </dt>
                 <dd>
-                    @Model.Content.Map4.Icon.Url
+                    @Model.Content.LeafletMap.Icon.Url
                 </dd>
                 <dt>
                     Map Sources
                 </dt>
                 <dd>
-                    @(Newtonsoft.Json.JsonConvert.SerializeObject((Model.Content.Map4.Provider as Terratype.Providers.LeafletV1).MapSources))
+                    @(Newtonsoft.Json.JsonConvert.SerializeObject((Model.Content.LeafletMap.Provider as Terratype.Providers.LeafletV1).MapSources))
                 </dd>
 
             </dl>
             <div id="pretend-accordion" style="display:@(Request.QueryString[" show"] != null ? "display" : "none" );">
-                <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
+                @*
+				<div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                     This is an empty div
                 </div>
+				*@
 
-                @Html.Terratype(new Options
-                {
-                    Provider = new Terratype.Providers.LeafletV1()
-                    {
-                        ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
-                        {
-                            Enable = true,
-                            Position = Terratype.Providers.LeafletV1.ControlPositions.BottomRight
-                        }
-                    },
-                    MapSetId = 11,
-                    Zoom = 3,
-                    Position = new Terratype.CoordinateSystems.Wgs84("50,0"),
-                    Height = 700
-
-                })
                 @Html.Terratype(
                     new Options {
-                        MapSetId = 11,
+                        MapSetId = 1,
                         Icon = new Terratype.Models.Icon
                         {
                             Url = new Uri("https://d30y9cdsu7xlg0.cloudfront.net/png/4096-200.png"),
@@ -110,10 +96,12 @@
                             }
                         }
                         }, 
-                    Model.Content.Map4)
+                    Model.Content.LeafletMap)
+				@*
                 <div style="height:1000px;background-color:antiquewhite;text-align:center;vertical-align:central;">
                     This is an empty div
                 </div>
+				*@
             </div>
             <button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
         </fieldset>

@@ -260,7 +260,7 @@ namespace Terratype.Providers
             var id = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
 
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
-            writer.AddAttribute("data-googlemapsv3", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
+            writer.AddAttribute("data-model", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
             writer.AddAttribute("data-map-id", "m" + mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
 
