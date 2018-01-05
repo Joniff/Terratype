@@ -143,7 +143,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 10 }, map,
+			@Html.Terratype(new Options { MapSetId = 10, AutoFit = true }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -172,8 +172,7 @@
 		   }
 	   },
 	   MapSetId = 11,
-	   Zoom = 4,
-	   Position = new Terratype.CoordinateSystems.Wgs84("20,80"),
+	   AutoFit = true,
 	   Icon = new Terratype.Models.Icon
 	   {
 		   Url = new Uri("https://d30y9cdsu7xlg0.cloudfront.net/png/4096-200.png"),
@@ -219,7 +218,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 11, Height = 800, Zoom = 5 }, map,
+			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true }, map,
 				@<text>
 					@name is at @map.Position
 				</text>

@@ -368,9 +368,11 @@
 											var m = root.terratype.getMap(provider.maps, mapId);
 											if (m == null) {
 												match.style.display = 'block';
-												m = root.terratype.mergeJson((provider.loadMap) ?
-													provider.loadMap.call(provider, model, match) :
-													{}, {
+												var loadMap = {};
+												if (provider.loadMap) {
+													(function (p, model, match) { loadMap = provider.loadMap.call(p, model, match); })(provider, m, model, match);
+												}
+												m = root.terratype.mergeJson(loadMap, {
 													ignoreEvents: 0,
 													refreshes: 0,
 													id: mapId,

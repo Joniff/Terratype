@@ -293,9 +293,13 @@
 				var activeCounter = 0;
 				var mapCounter = 0;
 				var mapRunning = 0;
-				var jQueryMonitoring
 				if (root.terratype.initTimer != null) {
 					root.clearInterval(root.terratype.initTimer);
+					for (var provider in root.terratype.providers) {
+						provider.status = 0;
+						provider.maps = [];
+						//TODO: Need a way to remove existing maps
+					}
 				}
 				root.terratype.initTimer = root.setInterval(function () {
 					kill++;
@@ -327,9 +331,9 @@
 
 								case 1:		//	Needs monitoring
 									if (root.jQuery && provider.domDetectionType == 1) {
-										if (jQueryMonitoring == false) {
+										if (root.terratype.jQueryMonitoring == false) {
 											root.jQuery(window).on('DOMContentLoaded load resize scroll touchend', root.terratype.jQueryMonitor);
-											jQueryMonitoring = true;
+											root.terratype.jQueryMonitoring = true;
 										}
 									} else if (provider.domDetectionType != 2) {
 										activeCounter++;
@@ -368,9 +372,11 @@
 											var m = root.terratype.getMap(provider.maps, mapId);
 											if (m == null) {
 												match.style.display = 'block';
-												m = root.terratype.mergeJson((provider.loadMap) ?
-													provider.loadMap.call(provider, model, match) :
-													{}, {
+												var loadMap = {};
+												if (provider.loadMap) {
+													(function (p, model, match) { loadMap = provider.loadMap.call(p, model, match); })(provider, m, model, match);
+												}
+												m = root.terratype.mergeJson(loadMap, {
 													ignoreEvents: 0,
 													refreshes: 0,
 													id: mapId,

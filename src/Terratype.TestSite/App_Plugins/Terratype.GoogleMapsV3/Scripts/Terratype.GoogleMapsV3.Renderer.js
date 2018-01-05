@@ -49,11 +49,11 @@
 				provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
 				positions: [],
 				center: null,
-				bound: new google.maps.LatLngBounds(null)
+				bound: new root.google.maps.LatLngBounds(null)
 			};
 		},
 		loadMarker: function (m, model, match) {
-			if (model.icon && model.icon.url) {
+			if (model.icon && model.icon.url && model.position) {
 				var datum = root.terratype.parseLatLng(model.position.datum);
 				var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
 				m.positions.push({
@@ -205,7 +205,8 @@
 		resetCenter: function (m) {
 			if (m.autoFit) {
 				m.gmap.setZoom(20);
-				m.gmap.fitBounds(m.bound);
+				var bound = new root.google.maps.LatLngBounds(m.bound.getSouthWest(), m.bound.getNorthEast());
+				m.gmap.fitBounds(bound);
 			}
 			m.zoom = m.gmap.getZoom();
 			m.gmap.setCenter(m.center);

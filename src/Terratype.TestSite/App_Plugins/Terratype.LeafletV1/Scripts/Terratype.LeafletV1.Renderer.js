@@ -58,7 +58,7 @@
 				}
 			}
 
-			if (model.icon && model.icon.url) {
+			if (model.icon && model.icon.url && model.position) {
 				var datum = root.terratype.parseLatLng(model.position.datum);
 				var latlng = new L.latLng(datum.latitude, datum.longitude);
 				m.bound.extend(latlng);
@@ -99,7 +99,6 @@
 					position: q.controlPosition(m.provider.zoomControl.position)
 				}).addTo(m.gmap);
 			}
-
 			m.gmap.on('zoomend', function () {
 				if (m.ignoreEvents > 0) {
 					return;
@@ -196,7 +195,8 @@
 			if (m.refreshes == 0 || m.recenterAfterRefresh) {
 				if (m.autoFit) {
 					m.gmap.setZoom(m.maxZoom);
-					m.gmap.fitBounds(m.bound);
+					var bound = new L.latLngBounds(m.bound.getNorthEast(), m.bound.getSouthWest());
+					m.gmap.fitBounds(bound);
 				}
 				m.zoom = m.gmap.getZoom();
 				m.gmap.setView(m.center, m.zoom);
