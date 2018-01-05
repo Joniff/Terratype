@@ -151,11 +151,10 @@
 				}
 				q.closeInfoWindows(m);
 			});
-			m.ginfos = [];
-			m.gmarkers = [];
+			var markers = [];
 
 			root.terratype.forEach(m.positions, function (p, item) {
-				m.gmarkers[p] = new root.google.maps.Marker({
+				item.marker = new root.google.maps.Marker({
 					map: m.gmap,
 					position: item.latlng,
 					id: item.id,
@@ -163,37 +162,39 @@
 					icon: item.icon
 				});
 
-				m.ginfos[p] = null;
+				item.info = null;
 				var l = (item.label) ? document.getElementById(item.label) : null;
 				if (l) {
-					m.ginfos[p] = new root.google.maps.InfoWindow({
+					item.info = new root.google.maps.InfoWindow({
 						content: l
 					});
-					m.gmarkers[p].addListener('click', function () {
+					item.marker.addListener('click', function () {
 						if (m.ignoreEvents > 0) {
 							return;
 						}
 						q.closeInfoWindows(m);
-						if (m.ginfos[p] != null) {
+						if (item.info != null) {
 							q.openInfoWindow(m, p);
 						}
 					});
 				}
+				markers.push(item.marker);
 			});
 
 			if (m.positions.length > 1) {
-				m.markerclusterer = new MarkerClusterer(m.gmap, m.gmarkers, { imagePath: q.markerClustererUrl() });
+				m.markerclusterer = new MarkerClusterer(m.gmap, markers, { imagePath: q.markerClustererUrl() });
 			}
 			m.status = 1;
 		},
 		openInfoWindow: function (m, p) {
-			m.ginfos[p].open(m.gmap, m.gmarkers[p]);
-			root.terratype.callClick(q, m, p);
+			var item = m.positions[p];
+			item.info.open(m.gmap, item.marker);
+			root.terratype.callClick(q, m, item);
 		},
 		closeInfoWindows: function (m) {
 			root.terratype.forEach(m.positions, function (p, item) {
-				if (m.ginfos[p] != null) {
-					m.ginfos[p].close();
+				if (item.info != null) {
+					item.info.close();
 				}
 			});
 		},

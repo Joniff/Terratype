@@ -94,7 +94,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 2 }, map,
+			@Html.Terratype(new Options { MapSetId = 2, AutoShowLabel = true }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -194,7 +194,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 11 }, map,
+			@Html.Terratype(new Options { MapSetId = 11, AutoShowLabel = true }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -218,7 +218,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true }, map,
+			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true, AutoShowLabel = true }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -228,6 +228,12 @@
 
 
 	<button onclick="var a = document.getElementById('pretend-accordion7');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+	<script>
+		terratype.onClick(function (provider, map, marker) { console.log(provider.id + ', ' + map.id + ', ' + marker.id); });
+
+	</script>
 
 
 </body>

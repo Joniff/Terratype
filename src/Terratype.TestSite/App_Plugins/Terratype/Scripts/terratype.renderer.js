@@ -30,31 +30,31 @@
 				root.terratype.callEvent(0, provider);
 			},
 			onLoad: function (f) {
-				events[1].push(f);
+				root.terratype.events[1].push(f);
 			},
 			callLoad: function (provider, map) {
 				root.terratype.callEvent(1, provider, map);
 			},
 			onRender: function (f) {
-				events[2].push(f);
+				root.terratype.events[2].push(f);
 			},
 			callRender: function (provider, map) {
 				root.terratype.callEvent(2, provider, map);
 			},
 			onRefresh: function (f) {
-				events[3].push(f);
+				root.terratype.events[3].push(f);
 			},
 			callRefresh: function (provider, map) {
 				root.terratype.callEvent(3, provider, map);
 			},
 			onClick: function (f) {
-				events[4].push(o);
+				root.terratype.events[4].push(f);
 			},
 			callClick: function (provider, map, marker) {
 				root.terratype.callEvent(4, provider, map, marker);
 			},
 			onZoom: function (f) {
-				events[5].push(f);
+				root.terratype.events[5].push(f);
 			},
 			callZoom: function (provider, map) {
 				root.terratype.callEvent(5, provider, map);
@@ -293,9 +293,13 @@
 				var activeCounter = 0;
 				var mapCounter = 0;
 				var mapRunning = 0;
-				var jQueryMonitoring
 				if (root.terratype.initTimer != null) {
 					root.clearInterval(root.terratype.initTimer);
+					for (var provider in root.terratype.providers) {
+						provider.status = 0;
+						provider.maps = [];
+						//TODO: Need a way to remove existing maps
+					}
 				}
 				root.terratype.initTimer = root.setInterval(function () {
 					kill++;
@@ -327,9 +331,9 @@
 
 								case 1:		//	Needs monitoring
 									if (root.jQuery && provider.domDetectionType == 1) {
-										if (jQueryMonitoring == false) {
+										if (root.terratype.jQueryMonitoring == false) {
 											root.jQuery(window).on('DOMContentLoaded load resize scroll touchend', root.terratype.jQueryMonitor);
-											jQueryMonitoring = true;
+											root.terratype.jQueryMonitoring = true;
 										}
 									} else if (provider.domDetectionType != 2) {
 										activeCounter++;
@@ -370,7 +374,7 @@
 												match.style.display = 'block';
 												var loadMap = {};
 												if (provider.loadMap) {
-													(function (p, model, match) { loadMap = provider.loadMap.call(p, model, match); })(provider, m, model, match);
+													(function (p, model, match) { loadMap = provider.loadMap.call(p, model, match); })(provider, model, match);
 												}
 												m = root.terratype.mergeJson(loadMap, {
 													ignoreEvents: 0,

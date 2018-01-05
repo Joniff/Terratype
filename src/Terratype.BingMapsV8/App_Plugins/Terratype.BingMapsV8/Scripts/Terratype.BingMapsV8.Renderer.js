@@ -183,31 +183,29 @@
 				}
 				q.closeInfoWindows(m);
 			});
-			m.ginfos = [];
-			m.gmarkers = [];
+			var markers = [];
 			root.terratype.forEach(m.positions, function (p, item) {
-				m.gmarkers[p] = new root.Microsoft.Maps.Pushpin(item.latlng, {
+				item.marker = new root.Microsoft.Maps.Pushpin(item.latlng, {
 					id: item.id,
 					draggable: false,
 					icon: item.icon,
 					anchor: item.anchor
 				});
 
-				m.ginfos[p] = null;
 				if (document.getElementById(item.label) != null) {
-					m.ginfos[p] = new root.Microsoft.Maps.Infobox(item.latlng, {
+					item.info = new root.Microsoft.Maps.Infobox(item.latlng, {
 						description: ' ',
 						visible: false,
-						pushpin: m.gmarkers[p]
+						pushpin: item.marker
 					});
-					m.ginfos[p]._options.description = document.getElementById(item.label).innerHTML;
-					m.ginfos[p].setMap(m.gmap);
-					root.Microsoft.Maps.Events.addHandler(m.gmarkers[p], 'click', function () {
+					item.info._options.description = document.getElementById(item.label).innerHTML;
+					item.info.setMap(m.gmap);
+					root.Microsoft.Maps.Events.addHandler(item.marker, 'click', function () {
 						if (m.ignoreEvents > 0) {
 							return;
 						}
 						q.closeInfoWindows(m);
-						if (m.ginfos[p]) {
+						if (item.info) {
 							q.openInfoWindow(m, p);
 						}
 					});
@@ -218,26 +216,28 @@
 						q.openInfoWindow(m, p);
 					}, 100);
 				}
+				markers.push(item.marker);
 			});
 
 			if (m.positions.length > 1) {
-				m.clusterLayer = new root.Microsoft.Maps.ClusterLayer(m.gmarkers);
+				m.clusterLayer = new root.Microsoft.Maps.ClusterLayer(markers);
 				m.gmap.layers.insert(m.clusterLayer);
 			} else {
-				m.gmap.entities.push(m.gmarkers[0]);
+				m.gmap.entities.push(m.positions[0].marker);
 			}
 			m.status = 1;
 		},
 		openInfoWindow: function (m, p) {
-			m.ginfos[p].setOptions({
+			var item = m.positions[p];
+			item.info.setOptions({
 				visible: true
 			});
-			root.terratype.callClick(q, m, p);
+			root.terratype.callClick(q, m, item);
 		},
 		closeInfoWindows: function (m) {
 			root.terratype.forEach(m.positions, function (p, item) {
-				if (m.ginfos[p] != null && m.ginfos[p].getVisible()) {
-					m.ginfos[p].setOptions({
+				if (item.info != null && item.info.getVisible()) {
+					item.info.setOptions({
 						visible: false
 					});
 				}

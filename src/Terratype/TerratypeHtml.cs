@@ -268,7 +268,7 @@ namespace Terratype
 				{
 					HttpContext.Current.Items.Add(guid, true);
 					writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/terratype.renderer.js"));
-					writer.AddAttribute("defer", "");
+					//writer.AddAttribute("defer", "");
 					writer.RenderBeginTag(HtmlTextWriterTag.Script);
 					writer.RenderEndTag();
 				}					

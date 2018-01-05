@@ -121,34 +121,32 @@
 				}
 				q.refresh(m);
 			});
-			m.ginfos = [];
-			m.gmarkers = [];
 			m.cluster = m.positions.length > 1 ? L.markerClusterGroup({ chunkedLoading: m.positions.length > 100, zoomToBoundsOnClick: true }) : null;
 
 			root.terratype.forEach(m.positions, function (p, item) {
-				m.gmarkers[p] = L.marker(item.latlng, {
+				item.marker = L.marker(item.latlng, {
 					draggable: false,
 					id: 'terratype_' + id + '_marker',
 					icon: item.icon
 				});
-				m.ginfos[p] = null;
+				item.info = null;
 				if (item.label) {
 					var l = document.getElementById(item.label);
 					if (l) {
-						m.ginfos[p] = m.gmarkers[p].bindPopup(l.innerHTML);
+						item.info = item.marker.bindPopup(l.innerHTML);
 					}
 
 					if (item.autoShowLabel) {
 						root.setTimeout(function () {
-							m.ginfos[p].openPopup();
+							item.info.openPopup();
 						}, 100);
 					}
 
 				}
 				if (m.cluster != null) {
-					m.cluster.addLayer(m.gmarkers[p]);
+					m.cluster.addLayer(item.marker);
 				} else {
-					m.gmarkers[p].addTo(m.gmap);
+					item.marker.addTo(m.gmap);
 				}
 			});
 
@@ -171,7 +169,9 @@
 			return 'topleft';
 		},
 		openInfoWindow: function (m, p) {
-			m.gmarkers[p].openPopup();
+			var item = m.positions[p];
+			item.info.openPopup();
+			root.terratype.callClick(q, m, item);
 		},
 		closeInfoWindows: function (m) {
 			m.gmap.closePopup();
@@ -186,7 +186,7 @@
 				root.terratype.forEach(m.positions, function (p, item) {
 					if (item.autoShowLabel) {
 						root.setTimeout(function () {
-							m.gmarkers[p].openPopup();
+							item.info.openPopup();
 						}, 100);
 					}
 				});
