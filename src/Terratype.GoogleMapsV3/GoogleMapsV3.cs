@@ -254,14 +254,18 @@ namespace Terratype.Providers
         /// <returns></returns>
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
             string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
-			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false)
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
         {
             const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
-            var id = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
+			var generatedId = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
+			if (Tag == null) 
+			{
+				Tag = generatedId;
+			}
 
             writer.AddAttribute("data-markerclusterer-url", UrlPath("images/m", false));
             writer.AddAttribute("data-model", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
-            writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-map-id", mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
 
 			if (AutoShowLabel)
@@ -280,7 +284,8 @@ namespace Terratype.Providers
             {
                 writer.AddAttribute("data-label-id", labelId);
             }
-            writer.AddAttribute("data-id", id);
+            writer.AddAttribute("data-id", generatedId);
+            writer.AddAttribute("data-tag", Tag);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
             writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(GoogleMapsV3));
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -305,7 +310,7 @@ namespace Terratype.Providers
                 writer.RenderEndTag();
             }
 
-            writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, generatedId);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Height, (height != null ? height : model.Height).ToString() + "px");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
             writer.RenderEndTag();

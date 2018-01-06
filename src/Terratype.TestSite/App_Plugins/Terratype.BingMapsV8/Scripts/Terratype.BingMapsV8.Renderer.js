@@ -64,6 +64,7 @@
 				var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
 				m.positions.push({
 					id: id,
+					tag: match.getAttribute('data-tag'),
 					label: match.getAttribute('data-label-id'),
 					latlng: latlng,
 					icon: model.icon.url,
@@ -174,8 +175,12 @@
 				if (m.ignoreEvents > 0) {
 					return;
 				}
-				m.zoom = m.gmap.getZoom();
-				q.closeInfoWindows(m);
+				var zoom = m.gmap.getZoom();
+				if (zoom != m.zoom) {
+					m.zoom = zoom;
+					root.terratype.callZoom(q, m, m.zoom);
+					q.closeInfoWindows(m);
+				}
 			});
 			root.Microsoft.Maps.Events.addHandler(m.gmap, 'click', function () {
 				if (m.ignoreEvents > 0) {
@@ -209,13 +214,13 @@
 							q.openInfoWindow(m, p);
 						}
 					});
+					if (root.terratype.domDetectionType == 2 && item.autoShowLabel) {
+						root.setTimeout(function () {
+							q.openInfoWindow(m, p);
+						}, 100);
+					}
 				}
 
-				if (item.autoShowLabel) {
-					root.setTimeout(function () {
-						q.openInfoWindow(m, p);
-					}, 100);
-				}
 				markers.push(item.marker);
 			});
 
@@ -276,6 +281,16 @@
 					m.gmap.setMapType(mapId);
 				}
 				m.ignoreEvents--;
+
+				if (m.refreshes == 0) {
+					root.terratype.forEach(m.positions, function (p, item) {
+						if (item.autoShowLabel) {
+							root.setTimeout(function () {
+								q.openInfoWindow(m, p);
+							}, 100);
+						}
+					});
+				}
 
 				if (m.refreshes == 0 || m.recenterAfterRefresh) {
 					m.gmap.setView({

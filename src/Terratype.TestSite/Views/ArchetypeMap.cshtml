@@ -58,7 +58,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 1, AutoFit = true, AutoRecenterAfterRefresh = true }, map,
+			@Html.Terratype(new Options { MapSetId = 1, AutoFit = true, AutoRecenterAfterRefresh = true, Tag = name }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -94,7 +94,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 2, AutoShowLabel = true }, map,
+			@Html.Terratype(new Options { MapSetId = 2, AutoShowLabel = true, Tag = name }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -143,7 +143,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 10, AutoFit = true }, map,
+			@Html.Terratype(new Options { MapSetId = 10, AutoFit = true, Tag = name }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -194,7 +194,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 11, AutoShowLabel = true }, map,
+			@Html.Terratype(new Options { MapSetId = 11, AutoShowLabel = true, Tag = name }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -218,7 +218,7 @@
 			var name = record.GetValue<string>("name");
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
-			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true, AutoShowLabel = true }, map,
+			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true, AutoShowLabel = true, Tag = name }, map,
 				@<text>
 					@name is at @map.Position
 				</text>
@@ -231,7 +231,12 @@
 
 
 	<script>
-		terratype.onClick(function (provider, map, marker) { console.log(provider.id + ', ' + map.id + ', ' + marker.id); });
+		terratype.onInit(function (provider) { console.log('onInit: ' + provider.id); });
+		terratype.onLoad(function (provider, map) { console.log('onLoad: ' + provider.id + ', ' + map.id); });
+		terratype.onRender(function (provider, map) { console.log('onRender: ' + provider.id + ', ' + map.id); });
+		terratype.onRefresh(function (provider, map) { console.log('onRefresh: ' + provider.id + ', ' + map.id); });
+		terratype.onZoom(function (provider, map) { console.log('onZoom: ' + provider.id + ', ' + map.id); });
+		terratype.onClick(function (provider, map, marker) { console.log('onClick: ' + provider.id + ', ' + map.id + ', ' + marker.tag); });
 
 	</script>
 

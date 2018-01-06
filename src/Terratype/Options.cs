@@ -83,5 +83,10 @@ namespace Terratype
 		/// Should the map try and display all markers
 		/// </summary>
 		public bool AutoFit { get; set; }
+
+		/// <summary>
+		/// Tag for map marker
+		/// </summary>
+		public string Tag { get; set; }
     }
 }

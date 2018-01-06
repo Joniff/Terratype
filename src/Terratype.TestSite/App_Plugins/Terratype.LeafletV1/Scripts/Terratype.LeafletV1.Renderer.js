@@ -62,15 +62,18 @@
 				var datum = root.terratype.parseLatLng(model.position.datum);
 				var latlng = new L.latLng(datum.latitude, datum.longitude);
 				m.bound.extend(latlng);
+				var anchor = [root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+					root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
 				m.positions.push({
 					id: id,
+					tag: match.getAttribute('data-tag'),
 					label: match.getAttribute('data-label-id'),
 					latlng: latlng,
 					icon: L.icon({
 						iconUrl: root.terratype.configIconUrl(model.icon.url),
 						iconSize: [model.icon.size.width, model.icon.size.height],
-						iconAnchor: [root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-							root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)]
+						iconAnchor: anchor,
+						popupAnchor: [anchor[0] - (model.icon.size.width / 2), -anchor[1]]
 					}),
 					autoShowLabel: match.getAttribute('data-auto-show-label')
 				});
@@ -104,7 +107,7 @@
 					return;
 				}
 				m.zoom = m.gmap.getZoom();
-				root.terratype.callZoom(q, m);
+				root.terratype.callZoom(q, m, m.zoom);
 			});
 			m.gmap.on('load', function () {
 				if (m.ignoreEvents > 0) {
@@ -121,10 +124,18 @@
 				}
 				q.refresh(m);
 			});
+			m.gmap.on('click', function () {
+				q.closeInfoWindows(m);
+			});
 			m.cluster = m.positions.length > 1 ? L.markerClusterGroup({ chunkedLoading: m.positions.length > 100, zoomToBoundsOnClick: true }) : null;
+
+			m.featureGroup = L.featureGroup().addTo(m.gmap).on('click', function (e) {
+				q.openInfoWindow(m, e.layer.options.index);
+			});
 
 			root.terratype.forEach(m.positions, function (p, item) {
 				item.marker = L.marker(item.latlng, {
+					index: p,
 					draggable: false,
 					id: 'terratype_' + id + '_marker',
 					icon: item.icon
@@ -133,15 +144,13 @@
 				if (item.label) {
 					var l = document.getElementById(item.label);
 					if (l) {
-						item.info = item.marker.bindPopup(l.innerHTML);
+						item.info = item.marker.addTo(m.featureGroup).bindPopup(l.innerHTML);
+						if (root.terratype.domDetectionType == 2 && item.autoShowLabel) {
+							root.setTimeout(function () {
+								q.openInfoWindow(m, p);
+							}, 100);
+						}
 					}
-
-					if (item.autoShowLabel) {
-						root.setTimeout(function () {
-							item.info.openPopup();
-						}, 100);
-					}
-
 				}
 				if (m.cluster != null) {
 					m.cluster.addLayer(item.marker);
@@ -186,7 +195,7 @@
 				root.terratype.forEach(m.positions, function (p, item) {
 					if (item.autoShowLabel) {
 						root.setTimeout(function () {
-							item.info.openPopup();
+							q.openInfoWindow(m, p);
 						}, 100);
 					}
 				});

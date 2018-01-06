@@ -58,6 +58,7 @@
 				var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
 				m.positions.push({
 					id: id,
+					tag: match.getAttribute('data-tag'),
 					label: match.getAttribute('data-label-id'),
 					latlng: latlng,
 					icon: {
@@ -131,7 +132,7 @@
 				}
 				q.closeInfoWindows(m);
 				m.zoom = m.gmap.getZoom();
-				root.terratype.callZoom(q, m);
+				root.terratype.callZoom(q, m, m.zoom);
 			});
 			root.google.maps.event.addListenerOnce(m.gmap, 'tilesloaded', function () {
 				var el = document.getElementById(m.div);
@@ -177,6 +178,11 @@
 							q.openInfoWindow(m, p);
 						}
 					});
+					if (root.terratype.domDetectionType == 2 && item.autoShowLabel) {
+						root.setTimeout(function () {
+							q.openInfoWindow(m, p);
+						}, 100);
+					}
 				}
 				markers.push(item.marker);
 			});

@@ -190,13 +190,17 @@ namespace Terratype.Providers
         /// <returns></returns>
         public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
             string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
-			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false)
+			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
         {
             const string guid = "af82089e-e9b9-4b8b-9f2a-bed92279dc6b";
-            var id = nameof(Terratype) + nameof(BingMapsV8) + Guid.NewGuid().ToString();
+			var generatedId = nameof(Terratype) + nameof(BingMapsV8) + Guid.NewGuid().ToString();
+			if (Tag == null) 
+			{
+				Tag = generatedId;
+			}
 
             writer.AddAttribute("data-model", HttpUtility.UrlEncode(JsonConvert.SerializeObject(model), System.Text.Encoding.Default));
-            writer.AddAttribute("data-map-id", "m" + mapId.ToString());
+            writer.AddAttribute("data-map-id", mapId.ToString());
             writer.AddAttribute("data-dom-detection-type", ((int) domMonitorType).ToString());
 			if (AutoShowLabel)
 			{
@@ -214,7 +218,8 @@ namespace Terratype.Providers
             {
                 writer.AddAttribute("data-label-id", labelId);
             }
-            writer.AddAttribute("data-id", id);
+            writer.AddAttribute("data-id", generatedId);
+            writer.AddAttribute("data-tag", Tag);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Display, "none");
             writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(BingMapsV8));
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
@@ -236,7 +241,7 @@ namespace Terratype.Providers
             writer.WriteFullBeginTag("style");
 
             writer.Write('#');
-            writer.Write(id);
+            writer.Write(generatedId);
             writer.WriteLine(" .switchSlot.labelToggle {display:none;}");
 
 
@@ -244,44 +249,44 @@ namespace Terratype.Providers
             if (provider.Variety.Basic == false || (provider.Variety.Basic == true && provider.PredefineStyling == "ordnanceSurvey"))
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" .slot.road {display:none;}");
             }
             if (provider.Variety.Basic == false || (provider.Variety.Basic == true && provider.PredefineStyling != "ordnanceSurvey"))
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" .slot.ordnanceSurvey {display:none;}");
             }
             if (provider.Variety.Satellite == false)
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" .slot.aerial {display:none;}");
             }
             if (provider.Variety.StreetView == false)
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" .slot.streetside {display:none;}");
             }
             if (provider.Variety.Basic == false && provider.Variety.Satellite == false && provider.Variety.StreetView == true)
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" .streetsideExit {display:none;}");
             }
             if (provider.Breadcrumb.Enable == false)
             {
                 writer.Write('#');
-                writer.Write(id);
+                writer.Write(generatedId);
                 writer.WriteLine(" streetsideText {display:none;}");
             }
             writer.WriteEndTag("style");
 
             writer.AddStyleAttribute(HtmlTextWriterStyle.Height, (height != null ? height : model.Height).ToString() + "px");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
-            writer.AddAttribute(HtmlTextWriterAttribute.Id, id);
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, generatedId);
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
             writer.RenderEndTag();
             writer.RenderEndTag();

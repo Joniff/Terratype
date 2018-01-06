@@ -56,8 +56,8 @@
 			onZoom: function (f) {
 				root.terratype.events[5].push(f);
 			},
-			callZoom: function (provider, map) {
-				root.terratype.callEvent(5, provider, map);
+			callZoom: function (provider, map, zoomLevel) {
+				root.terratype.callEvent(5, provider, map, zoomLevel);
 			},
 			//refresh: function (id) {
 			//},
@@ -394,7 +394,7 @@
 											}
 										});
 										root.terratype.forEach(provider.maps, function (i, m) {
-											root.terratype.callInit(provider, m);
+											root.terratype.callLoad(provider, m);
 										});
 										provider.status = 2;
 									}
