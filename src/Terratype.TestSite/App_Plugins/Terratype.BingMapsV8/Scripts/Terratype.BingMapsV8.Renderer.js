@@ -71,7 +71,7 @@
 					_anchor: new root.Microsoft.Maps.Point(
 						root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
 						root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
-					autoShowLabel: match.getAttribute('data-auto-show-label')
+					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
 				});
 				if (latlng.latitude > m._maxLat) {
 					m._maxLat = latlng.latitude;
@@ -162,12 +162,12 @@
 				labelOverlay: m._provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
 			});
 			if (m._provider.traffic.enable == true) {
-				m.traffic = new root.Microsoft.Maps.Traffic.TrafficManager(m.handle);
-				m.traffic.show();
+				m._traffic = new root.Microsoft.Maps.Traffic.TrafficManager(m.handle);
+				m._traffic.show();
 				if (m._provider.traffic.legend) {
-					m.traffic.showLegend();
+					m._traffic.showLegend();
 				} else {
-					m.traffic.hideLegend();
+					m._traffic.hideLegend();
 				}
 			}
 
@@ -225,8 +225,8 @@
 			});
 
 			if (m.positions.length > 1) {
-				m.clusterLayer = new root.Microsoft.Maps.ClusterLayer(markers);
-				m.handle.layers.insert(m.clusterLayer);
+				m._clusterLayer = new root.Microsoft.Maps.ClusterLayer(markers);
+				m.handle.layers.insert(m._clusterLayer);
 			} else {
 				m.handle.entities.push(m.positions[0].handle);
 			}

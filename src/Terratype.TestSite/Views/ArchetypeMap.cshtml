@@ -59,9 +59,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(new Options { MapSetId = 1, AutoFit = true, AutoRecenterAfterRefresh = true, Tag = name }, map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 		}
 	</div>
@@ -77,17 +77,17 @@
 	<div id="pretend-accordion3" style="display:@(Request.QueryString["show3"] != null ? "display" : "none");">
 
 		@Html.Terratype(new Options
-		{
-			Provider = new Terratype.Providers.GoogleMapsV3()
-			{
-				Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
-				{
-					Satellite = true
-				}
-			},
-			MapSetId = 2,
-			AutoFit = true
-		})
+   {
+	   Provider = new Terratype.Providers.GoogleMapsV3()
+	   {
+		   Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
+		   {
+			   Satellite = true
+		   }
+	   },
+	   MapSetId = 2,
+	   AutoFit = true
+   })
 
 		@foreach (var record in Model.Content.Archetype)
 		{
@@ -95,9 +95,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(new Options { MapSetId = 2, AutoShowLabel = true, Tag = name }, map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 		}
 	</div>
@@ -118,9 +118,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 
 			<br />
@@ -144,9 +144,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(new Options { MapSetId = 10, AutoFit = true, Tag = name }, map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 		}
 	</div>
@@ -195,9 +195,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(new Options { MapSetId = 11, AutoShowLabel = true, Tag = name }, map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 		}
 	</div>
@@ -219,9 +219,9 @@
 			var map = record.GetValue<Terratype.Models.Model>("location");
 
 			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true, AutoShowLabel = true, Tag = name }, map,
-				@<text>
-					@name is at @map.Position
-				</text>
+	@<text>
+		@name is at @map.Position
+	</text>
 			)
 		}
 	</div>
@@ -230,15 +230,17 @@
 	<button onclick="var a = document.getElementById('pretend-accordion7');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 
 
-	<script>
-		terratype.onInit(function (provider) { console.log('onInit: ' + provider.id); });
-		terratype.onLoad(function (provider, map) { console.log('onLoad: ' + provider.id + ', ' + map.id); });
-		terratype.onRender(function (provider, map) { console.log('onRender: ' + provider.id + ', ' + map.id); });
-		terratype.onRefresh(function (provider, map) { console.log('onRefresh: ' + provider.id + ', ' + map.id); });
-		terratype.onZoom(function (provider, map, zoom) { console.log('onZoom: ' + provider.id + ', ' + map.id + ', ' + zoom); });
-		terratype.onClick(function (provider, map, marker) { console.log('onClick: ' + provider.id + ', ' + map.id + ', ' + marker.tag); });
-
-	</script>
+	
+@Html.Terratype(new Options { AutoShowLabel = true, Tag = "marker1" }, Map,
+  @<text>
+    Popup text
+  </text>
+)
+<script>
+  terratype.onClick(function (provider, map, marker) {
+    console.log('onClick: ' + provider.id + ', ' + map.id + ', ' + marker.tag);
+  });
+</script>
 
 
 </body>

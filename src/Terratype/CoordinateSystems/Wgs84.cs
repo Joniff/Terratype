@@ -10,7 +10,7 @@ namespace Terratype.CoordinateSystems
     {
         public static string _Id = "WGS84";
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public override string Id
         {
             get

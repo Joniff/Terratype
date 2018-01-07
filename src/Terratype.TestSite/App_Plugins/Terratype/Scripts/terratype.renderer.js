@@ -390,8 +390,8 @@
 													_divoldsize: 0,
 													_status: 0,
 													visible: false,
-													autoFit: match.getAttribute('data-auto-fit'),
-													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh'),
+													autoFit: match.getAttribute('data-auto-fit') ? true : false,
+													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh') ? true : false,
 													handle: null,
 													positions: [],
 													getPosition(tag) {

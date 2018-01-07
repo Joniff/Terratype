@@ -390,8 +390,8 @@
 													_divoldsize: 0,
 													_status: 0,
 													visible: false,
-													autoFit: match.getAttribute('data-auto-fit'),
-													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh'),
+													autoFit: match.getAttribute('data-auto-fit') ? true : false,
+													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh') ? true : false,
 													handle: null,
 													positions: [],
 													getPosition(tag) {
@@ -409,6 +409,9 @@
 														var show = !(el.style.display && typeof el.style.display == 'string' && el.style.display.toLowerCase() == 'none');
 														var visible = show && root.terratype._isElementInViewport(document.getElementById(m._div));
 														return visible && newValue > 0 && newSize > 0;
+													},
+													refresh: function () {
+														(function (p, m) { provider.refresh.call(p, m); })(provider, m);
 													}
 												});
 												provider.maps.push(m);

@@ -67,7 +67,7 @@
 							root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
 							root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
 					},
-					autoShowLabel: match.getAttribute('data-auto-show-label')
+					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
 				});
 				m._bound.extend(latlng);
 			}

@@ -11,7 +11,7 @@ namespace Terratype.CoordinateSystems
     {
         public static string _Id = "GCJ02";
 
-        [JsonProperty]
+        [JsonProperty(PropertyName = "id")]
         public override string Id
         {
             get

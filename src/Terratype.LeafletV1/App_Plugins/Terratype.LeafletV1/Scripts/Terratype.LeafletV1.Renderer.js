@@ -75,7 +75,7 @@
 						iconAnchor: anchor,
 						popupAnchor: [anchor[0] - (model.icon.size.width / 2), -anchor[1]]
 					}),
-					autoShowLabel: match.getAttribute('data-auto-show-label')
+					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
 				});
 			}
 			if (root.terratype.providers[q.id]._loadCss == false) {
