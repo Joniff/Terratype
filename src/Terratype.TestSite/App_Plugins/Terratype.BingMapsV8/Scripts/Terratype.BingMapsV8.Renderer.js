@@ -6,7 +6,7 @@
 	var q = {
 		id: 'Terratype.BingMapsV8',
 		maps: [],
-		defaultProvider: {
+		_defaultProvider: {
 			position: {
 				datum: "55.4063207,10.3870147"
 			},
@@ -43,64 +43,64 @@
 		ready: function () {
 			return isBingReady;
 		},
-		loadMap: function (model, match) {
+		_loadMap: function (model, match) {
 			return {
-				zoom: model.zoom,
-				provider: root.terratype.mergeJson(q.defaultProvider, model.provider),
-				positions: [],
-				height: model.height,
-				maxLat: -360.0,
-				maxLng: -360.0,
-				minLat: 360,
-				minLng: 360,
-				maxIconSize: 0,
+				_provider: root.terratype._mergeJson(q._defaultProvider, model.provider),
+				_center: null,
+				_height: model.height,
+				_maxLat: -360.0,
+				_maxLng: -360.0,
+				_minLat: 360,
+				_minLng: 360,
+				_maxIconSize: 0,
 			};
 		},
-		needTraffic: false,
-		trafficLoaded: false,
-		loadMarker: function (m, model, match) {
+		_needTraffic: false,
+		_trafficLoaded: false,
+		_loadMarker: function (m, model, match) {
 			if (model.icon && model.icon.url && model.position) {
-				var datum = root.terratype.parseLatLng(model.position.datum);
+				var datum = root.terratype._parseLatLng(model.position.datum);
 				var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
 				m.positions.push({
 					id: id,
 					tag: match.getAttribute('data-tag'),
 					label: match.getAttribute('data-label-id'),
-					latlng: latlng,
+					position: model.position,
+					_latlng: latlng,
 					icon: model.icon.url,
-					anchor: new root.Microsoft.Maps.Point(
-						root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-						root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
+					_anchor: new root.Microsoft.Maps.Point(
+						root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+						root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
 					autoShowLabel: match.getAttribute('data-auto-show-label')
 				});
-				if (latlng.latitude > m.maxLat) {
-					m.maxLat = latlng.latitude;
+				if (latlng.latitude > m._maxLat) {
+					m._maxLat = latlng.latitude;
 				}
-				if (latlng.latitude < m.minLat) {
-					m.minLat = latlng.latitude;
+				if (latlng.latitude < m._minLat) {
+					m._minLat = latlng.latitude;
 				}
-				if (latlng.longitude > m.maxLng) {
-					m.maxLng = latlng.longitude;
+				if (latlng.longitude > m._maxLng) {
+					m._maxLng = latlng.longitude;
 				}
-				if (latlng.longitude < m.minLng) {
-					m.minLng = latlng.longitude;
+				if (latlng.longitude < m._minLng) {
+					m._minLng = latlng.longitude;
 				}
-				if (model.icon.size.width > m.maxIconSize) {
-					m.maxIconSize = model.icon.size.width;
+				if (model.icon.size.width > m._maxIconSize) {
+					m._maxIconSize = model.icon.size.width;
 				}
-				if (model.icon.size.height > m.maxIconSize) {
-					m.maxIconSize = model.icon.size.height;
+				if (model.icon.size.height > m._maxIconSize) {
+					m._maxIconSize = model.icon.size.height;
 				}
 			}
-			if (model.provider.traffic.enable == true && q.needTraffic == false) {
-				q.needTraffic = true;
-				root.Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', function () { q.trafficLoaded = true; });
+			if (model.provider.traffic.enable == true && q._needTraffic == false) {
+				q._needTraffic = true;
+				root.Microsoft.Maps.loadModule('Microsoft.Maps.Traffic', function () { q._trafficLoaded = true; });
 			}
 		},
-		prerender: function () {
-			return q.needTraffic == q.trafficLoaded;
+		_prerender: function () {
+			return q._needTraffic == q._trafficLoaded;
 		},
-		mapTypeIds: function (basic, satellite, streetView, style) {
+		_mapTypeIds: function (basic, satellite, streetView, style) {
 			var mapTypeIds = [];
 			if (basic) {
 				if (style != '') {
@@ -121,149 +121,148 @@
 
 			return mapTypeIds;
 		},
-		log2: Math.log(2),
-		calculateZoom: function (m) {
-			var el = document.getElementById(m.div);
+		_log2: Math.log(2),
+		_calculateZoom: function (m) {
+			var el = document.getElementById(m._div);
 			if (el.clientWidth <= 0 || el.clientHeight <= 0) {
 				return 1;
 			}
-			var buffer = m.maxIconSize * 2;
-			var zoomWidth = Math.log(1.40625 * (el.clientWidth - buffer) / m.bound.width) / q.log2;
-			var zoomHeight = Math.log(0.703125 * (el.clientHeight - buffer) / m.bound.height) / q.log2;
+			var buffer = m._maxIconSize * 2;
+			var zoomWidth = Math.log(1.40625 * (el.clientWidth - buffer) / m._bound.width) / q._log2;
+			var zoomHeight = Math.log(0.703125 * (el.clientHeight - buffer) / m._bound.height) / q._log2;
 
 			return (zoomHeight < zoomWidth) ? zoomHeight : zoomWidth;
 		},
-		render: function (m) {
-			m.ignoreEvents = 0;
-			var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.streetView, m.provider.predefineStyling);
-			m.bound = new Microsoft.Maps.LocationRect.fromEdges(m.maxLat, m.minLng, m.minLat, m.maxLng);
-			m.center = (m.autoFit) ? m.bound.center : m.positions[0].latlng;
-			m.gmap = new root.Microsoft.Maps.Map(document.getElementById(m.div), {
-				credentials: m.provider.apiKey,
+		_render: function (m) {
+			m._ignoreEvents = 0;
+			var mapTypeIds = q._mapTypeIds(m._provider.variety.basic, m._provider.variety.satellite, m._provider.variety.streetView, m._provider.predefineStyling);
+			m._bound = new Microsoft.Maps.LocationRect.fromEdges(m._maxLat, m._minLng, m._minLat, m._maxLng);
+			m._center = (m.autoFit) ? m._bound.center : m.positions[0].latlng;
+			m.handle = new root.Microsoft.Maps.Map(document.getElementById(m._div), {
+				credentials: m._provider.apiKey,
 				enableSearchLogo: false,
-				showBreadcrumb: m.provider.breadcrumb.enable,
+				showBreadcrumb: m._provider.breadcrumb.enable,
 				showCopyright: false,
-				showDashboard: m.provider.dashboard.enable,
+				showDashboard: m._provider.dashboard.enable,
 				showMapTypeSelector: mapTypeIds.length > 1,
-				showScalebar: m.provider.scale.enable,
-				disableBirdseye: !m.provider.variety.satellite,
+				showScalebar: m._provider.scale.enable,
+				disableBirdseye: !m._provider.variety.satellite,
 				disableScrollWheelZoom: true,
-				labelOverlay: m.provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
-				allowHidingLabelsOfRoad: !m.provider.showLabels,
-				showMapLabels: m.provider.showLabels,
+				labelOverlay: m._provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
+				allowHidingLabelsOfRoad: !m._provider.showLabels,
+				showMapLabels: m._provider.showLabels,
 				mapTypeId: mapTypeIds[0],
 				fixedMapPosition: allowBingToHandleResizes,
-				height: m.height
+				height: m._height
 			});
-			m.gmap.setView({
-				center: m.center,
-				zoom: m.autoFit ? q.calculateZoom(m) : m.zoom,
+			m.handle.setView({
+				center: m._center,
+				zoom: m.autoFit ? q._calculateZoom(m) : m.zoom,
 				mapTypeId: mapTypeIds[0],
-				labelOverlay: m.provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
+				labelOverlay: m._provider.showLabels ? root.Microsoft.Maps.LabelOverlay.visible : root.Microsoft.Maps.LabelOverlay.hidden,
 			});
-			if (m.provider.traffic.enable == true) {
-				m.traffic = new root.Microsoft.Maps.Traffic.TrafficManager(m.gmap);
+			if (m._provider.traffic.enable == true) {
+				m.traffic = new root.Microsoft.Maps.Traffic.TrafficManager(m.handle);
 				m.traffic.show();
-				if (m.provider.traffic.legend) {
+				if (m._provider.traffic.legend) {
 					m.traffic.showLegend();
 				} else {
 					m.traffic.hideLegend();
 				}
 			}
 
-			root.Microsoft.Maps.Events.addHandler(m.gmap, 'viewchangeend', function () {
-				if (m.ignoreEvents > 0) {
+			root.Microsoft.Maps.Events.addHandler(m.handle, 'viewchangeend', function () {
+				if (m._ignoreEvents > 0) {
 					return;
 				}
-				var zoom = m.gmap.getZoom();
+				var zoom = m.handle.getZoom();
 				if (zoom != m.zoom) {
 					m.zoom = zoom;
-					root.terratype.callZoom(q, m, m.zoom);
+					root.terratype._callZoom(q, m, m.zoom);
 					q.closeInfoWindows(m);
 				}
 			});
-			root.Microsoft.Maps.Events.addHandler(m.gmap, 'click', function () {
-				if (m.ignoreEvents > 0) {
+			root.Microsoft.Maps.Events.addHandler(m.handle, 'click', function () {
+				if (m._ignoreEvents > 0) {
 					return;
 				}
 				q.closeInfoWindows(m);
 			});
 			var markers = [];
-			root.terratype.forEach(m.positions, function (p, item) {
-				item.marker = new root.Microsoft.Maps.Pushpin(item.latlng, {
+			root.terratype._forEach(m.positions, function (p, item) {
+				item.handle = new root.Microsoft.Maps.Pushpin(item._latlng, {
 					id: item.id,
 					draggable: false,
 					icon: item.icon,
-					anchor: item.anchor
+					anchor: item._anchor
 				});
 
 				if (document.getElementById(item.label) != null) {
-					item.info = new root.Microsoft.Maps.Infobox(item.latlng, {
+					item._info = new root.Microsoft.Maps.Infobox(item._latlng, {
 						description: ' ',
 						visible: false,
-						pushpin: item.marker
+						pushpin: item.handle
 					});
-					item.info._options.description = document.getElementById(item.label).innerHTML;
-					item.info.setMap(m.gmap);
-					root.Microsoft.Maps.Events.addHandler(item.marker, 'click', function () {
-						if (m.ignoreEvents > 0) {
+					item._info._options.description = document.getElementById(item.label).innerHTML;
+					item._info.setMap(m.handle);
+					root.Microsoft.Maps.Events.addHandler(item.handle, 'click', function () {
+						if (m._ignoreEvents > 0) {
 							return;
 						}
 						q.closeInfoWindows(m);
-						if (item.info) {
+						if (item._info) {
 							q.openInfoWindow(m, p);
 						}
 					});
-					if (root.terratype.domDetectionType == 2 && item.autoShowLabel) {
+					if (root.terratype._domDetectionType == 2 && item.autoShowLabel) {
 						root.setTimeout(function () {
 							q.openInfoWindow(m, p);
 						}, 100);
 					}
 				}
 
-				markers.push(item.marker);
+				markers.push(item.handle);
 			});
 
 			if (m.positions.length > 1) {
 				m.clusterLayer = new root.Microsoft.Maps.ClusterLayer(markers);
-				m.gmap.layers.insert(m.clusterLayer);
+				m.handle.layers.insert(m.clusterLayer);
 			} else {
-				m.gmap.entities.push(m.positions[0].marker);
+				m.handle.entities.push(m.positions[0].handle);
 			}
-			m.status = 1;
 		},
 		openInfoWindow: function (m, p) {
 			var item = m.positions[p];
-			item.info.setOptions({
+			item._info.setOptions({
 				visible: true
 			});
-			root.terratype.callClick(q, m, item);
+			root.terratype._callClick(q, m, item);
 		},
 		closeInfoWindows: function (m) {
-			root.terratype.forEach(m.positions, function (p, item) {
-				if (item.info != null && item.info.getVisible()) {
-					item.info.setOptions({
+			root.terratype._forEach(m.positions, function (p, item) {
+				if (item._info != null && item._info.getVisible()) {
+					item._info.setOptions({
 						visible: false
 					});
 				}
 			});
 		},
-		checkResize: function (m) {
-			if (!m.gmap.getBounds().contains(m.center)) {
+		_checkResize: function (m) {
+			if (!m.handle.getBounds().contains(m._center)) {
 				q.refresh(m);
 			}
 		},
 		refresh: function (m) {
-			if (m.ignoreEvents > 0) {
+			if (m._ignoreEvents > 0) {
 				return;
 			}
-			m.ignoreEvents++;
+			m._ignoreEvents++;
 			if (!allowBingToHandleResizes) {
-				m.gmap.setView({
+				m.handle.setView({
 					zoom: m.zoom
 				});
-				var mapId = m.gmap.getMapTypeId();
-				var mapTypeIds = q.mapTypeIds(m.provider.variety.basic, m.provider.variety.satellite, m.provider.variety.streetView, m.provider.predefineStyling);
+				var mapId = m.handle.getMapTypeId();
+				var mapTypeIds = q._mapTypeIds(m._provider.variety.basic, m._provider.variety.satellite, m._provider.variety.streetView, m._provider.predefineStyling);
 				var found = false;
 				for (var i = 0; i != mapTypeIds.length; i++) {
 					if (mapTypeIds[i] == mapId) {
@@ -274,16 +273,16 @@
 				if (found == false) {
 					mapId = mapTypeIds[0];
 				}
-				m.gmap.setMapType(Microsoft.Maps.MapTypeId.mercator);
+				m.handle.setMapType(Microsoft.Maps.MapTypeId.mercator);
 			}
 			setTimeout(function () {
 				if (!allowBingToHandleResizes) {
-					m.gmap.setMapType(mapId);
+					m.handle.setMapType(mapId);
 				}
-				m.ignoreEvents--;
+				m._ignoreEvents--;
 
-				if (m.refreshes == 0) {
-					root.terratype.forEach(m.positions, function (p, item) {
+				if (m._refreshes == 0) {
+					root.terratype._forEach(m.positions, function (p, item) {
 						if (item.autoShowLabel) {
 							root.setTimeout(function () {
 								q.openInfoWindow(m, p);
@@ -292,25 +291,26 @@
 					});
 				}
 
-				if (m.refreshes == 0 || m.recenterAfterRefresh) {
-					m.gmap.setView({
-						center: m.center,
-						zoom: m.autoFit ? q.calculateZoom(m) : m.zoom
+				if (m._refreshes == 0 || m.recenterAfterRefresh) {
+					m.handle.setView({
+						center: m._center,
+						zoom: m.autoFit ? q._calculateZoom(m) : m.zoom
 					});
 				}
 
-				if (m.refreshes++ == 0) {
-					root.terratype.callRender(q, m);
+				if (m._refreshes++ == 0) {
+					root.terratype._opacityShow(m);
+					root.terratype._callRender(q, m);
 				} else {
-					root.terratype.callRefresh(q, m);
+					root.terratype._callRefresh(q, m);
 				}
 			}, 1)
 		},
 	};
 
 	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype.addProvider) {
-			root.terratype.addProvider(q.id, q);
+		if (root.terratype && root.terratype._addProvider) {
+			root.terratype._addProvider(q.id, q);
 			root.clearInterval(timer);
 		}
 	}, 250);

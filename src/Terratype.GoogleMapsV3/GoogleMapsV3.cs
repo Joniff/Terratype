@@ -312,6 +312,8 @@ namespace Terratype.Providers
 
             writer.AddAttribute(HtmlTextWriterAttribute.Id, generatedId);
             writer.AddStyleAttribute(HtmlTextWriterStyle.Height, (height != null ? height : model.Height).ToString() + "px");
+            writer.AddStyleAttribute("opacity", "0.01");
+            writer.AddStyleAttribute("filter", "alpha(opacity=1)");
             writer.RenderBeginTag(HtmlTextWriterTag.Div);
             writer.RenderEndTag();
             writer.RenderEndTag();

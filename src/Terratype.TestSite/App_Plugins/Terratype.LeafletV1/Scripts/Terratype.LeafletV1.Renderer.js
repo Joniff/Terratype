@@ -2,7 +2,7 @@
 	var q = {
 		id: 'Terratype.LeafletV1',
 		maps: [],
-		defaultProvider: {
+		_defaultProvider: {
 			layers: [{
 				maxZoom: 18,
 				id: 'OpenStreetMap.Mapnik'
@@ -16,24 +16,23 @@
 			return (L && L.MarkerClusterGroup && root.terratype && root.terratype.providers && typeof
 				root.terratype.providers[q.id] !== 'undefined' && typeof root.terratype.providers[q.id].tileServers !== 'undefined');
 		},
-		loadMap: function (model, match) {
+		_loadMap: function (model, match) {
 			return {
-				zoom: model.zoom,
-				provider: (q.defaultProvider) ?
-					root.terratype.mergeJson(q.defaultProvider, model.provider) :
+				_provider: (q._defaultProvider) ?
+					root.terratype._mergeJson(q._defaultProvider, model.provider) :
 					model.provider,
-				positions: [],
-				minZoom: null,
-				maxZoom: null,
-				layers: null,
-				bound: new L.latLngBounds(),
+				_minZoom: null,
+				_maxZoom: null,
+				_layers: null,
+				_bound: new L.latLngBounds(),
+				_center: null,
 				positions: []
 			};
 		},
-		loadCss: false,
-		loadMarker: function (m, model, match) {
-			if (m.layers == null && model.provider.mapSources && model.provider.mapSources.length != 0) {
-				m.layers = [];
+		_loadCss: false,
+		_loadMarker: function (m, model, match) {
+			if (m._layers == null && model.provider.mapSources && model.provider.mapSources.length != 0) {
+				m._layers = [];
 				for (var g = 0; g != model.provider.mapSources.length; g++) {
 					var p = root.terratype.providers[q.id];
 					for (var j = 0; j != p.tileServers.length; j++) {
@@ -45,12 +44,12 @@
 								options.maxZoom = ts.maxZoom;
 								options.attribution = ts.attribution,
 								options.key = model.provider.mapSources[g].key
-								m.layers.push(L.tileLayer(ts.url, options));
-								if (m.minZoom == null || ts.minZoom < m.minZoom) {
-									m.minZoom = ts.minZoom;
+								m._layers.push(L.tileLayer(ts.url, options));
+								if (m._minZoom == null || ts.minZoom < m._minZoom) {
+									m._minZoom = ts.minZoom;
 								}
-								if (m.maxZoom == null || ts.maxZoom > m.minZoom) {
-									m.maxZoom = ts.maxZoom;
+								if (m._maxZoom == null || ts.maxZoom > m._minZoom) {
+									m._maxZoom = ts.maxZoom;
 								}
 							}
 						}
@@ -59,18 +58,19 @@
 			}
 
 			if (model.icon && model.icon.url && model.position) {
-				var datum = root.terratype.parseLatLng(model.position.datum);
+				var datum = root.terratype._parseLatLng(model.position.datum);
 				var latlng = new L.latLng(datum.latitude, datum.longitude);
-				m.bound.extend(latlng);
-				var anchor = [root.terratype.getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-					root.terratype.getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
+				m._bound.extend(latlng);
+				var anchor = [root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+					root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
 				m.positions.push({
 					id: id,
 					tag: match.getAttribute('data-tag'),
 					label: match.getAttribute('data-label-id'),
-					latlng: latlng,
-					icon: L.icon({
-						iconUrl: root.terratype.configIconUrl(model.icon.url),
+					position: model.position,
+					_latlng: latlng,
+					_icon: L.icon({
+						iconUrl: root.terratype._configIconUrl(model.icon.url),
 						iconSize: [model.icon.size.width, model.icon.size.height],
 						iconAnchor: anchor,
 						popupAnchor: [anchor[0] - (model.icon.size.width / 2), -anchor[1]]
@@ -78,93 +78,92 @@
 					autoShowLabel: match.getAttribute('data-auto-show-label')
 				});
 			}
-			if (root.terratype.providers[q.id].loadCss == false) {
-				root.terratype.loadCss(JSON.parse(unescape(match.getAttribute('data-css-files'))));
-				root.terratype.providers[q.id].loadCss = true;
+			if (root.terratype.providers[q.id]._loadCss == false) {
+				root.terratype._loadCss(JSON.parse(unescape(match.getAttribute('data-css-files'))));
+				root.terratype.providers[q.id]._loadCss = true;
 			}
 		},
-		render: function (m) {
-			m.ignoreEvents = 0;
-			m.center = (m.autoFit) ? m.bound.getCenter() : m.positions[0].latlng;
-			m.gmap = L.map(document.getElementById(m.div), {
-				center: m.center,
+		_render: function (m) {
+			m._ignoreEvents = 0;
+			m._center = (m.autoFit) ? m._bound.getCenter() : m.positions[0]._latlng;
+			m.handle = L.map(document.getElementById(m._div), {
+				center: m._center,
 				zoom: m.zoom,
-				minZoom: m.minZoom,
-				maxZoom: m.maxZoom,
-				layers: m.layers,
+				minZoom: m._minZoom,
+				maxZoom: m._maxZoom,
+				layers: m._layers,
 				scrollWheelZoom: false,
 				attributionControl: false,
 				zoomControl: false
 			});
-			m.zoomControl = null;
-			if (m.provider.zoomControl.enable) {
-				m.zoomControl = L.control.zoom({
-					position: q.controlPosition(m.provider.zoomControl.position)
-				}).addTo(m.gmap);
+			m._zoomControl = null;
+			if (m._provider.zoomControl.enable) {
+				m._zoomControl = L.control.zoom({
+					position: q._controlPosition(m._provider.zoomControl.position)
+				}).addTo(m.handle);
 			}
-			m.gmap.on('zoomend', function () {
-				if (m.ignoreEvents > 0) {
+			m.handle.on('zoomend', function () {
+				if (m._ignoreEvents > 0) {
 					return;
 				}
-				m.zoom = m.gmap.getZoom();
-				root.terratype.callZoom(q, m, m.zoom);
+				m.zoom = m.handle.getZoom();
+				root.terratype._callZoom(q, m, m.zoom);
 			});
-			m.gmap.on('load', function () {
-				if (m.ignoreEvents > 0) {
+			m.handle.on('load', function () {
+				if (m._ignoreEvents > 0) {
 					return;
 				}
-				var el = document.getElementById(m.div);
-				if (root.terratype.isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
+				var el = document.getElementById(m._div);
+				if (root.terratype._isElementInViewport(el) && el.clientHeight != 0 && el.clientWidth != 0) {
 					q.refresh(m);
 				}
 			});
-			m.gmap.on('resize', function () {
-				if (m.ignoreEvents > 0) {
+			m.handle.on('resize', function () {
+				if (m._ignoreEvents > 0) {
 					return;
 				}
 				q.refresh(m);
 			});
-			m.gmap.on('click', function () {
+			m.handle.on('click', function () {
 				q.closeInfoWindows(m);
 			});
-			m.cluster = m.positions.length > 1 ? L.markerClusterGroup({ chunkedLoading: m.positions.length > 100, zoomToBoundsOnClick: true }) : null;
+			m._cluster = m.positions.length > 1 ? L.markerClusterGroup({ chunkedLoading: m.positions.length > 100, zoomToBoundsOnClick: true }) : null;
 
-			m.featureGroup = L.featureGroup().addTo(m.gmap).on('click', function (e) {
+			m._featureGroup = L.featureGroup().addTo(m.handle).on('click', function (e) {
 				q.openInfoWindow(m, e.layer.options.index);
 			});
 
-			root.terratype.forEach(m.positions, function (p, item) {
-				item.marker = L.marker(item.latlng, {
+			root.terratype._forEach(m.positions, function (p, item) {
+				item.handle = L.marker(item._latlng, {
 					index: p,
 					draggable: false,
-					id: 'terratype_' + id + '_marker',
-					icon: item.icon
+					id: 'terratype_' + item.id + '_marker',
+					icon: item._icon
 				});
-				item.info = null;
+				item._info = null;
 				if (item.label) {
 					var l = document.getElementById(item.label);
 					if (l) {
-						item.info = item.marker.addTo(m.featureGroup).bindPopup(l.innerHTML);
-						if (root.terratype.domDetectionType == 2 && item.autoShowLabel) {
+						item._info = item.handle.addTo(m._featureGroup).bindPopup(l.innerHTML);
+						if (root.terratype._domDetectionType == 2 && item.autoShowLabel) {
 							root.setTimeout(function () {
 								q.openInfoWindow(m, p);
 							}, 100);
 						}
 					}
 				}
-				if (m.cluster != null) {
-					m.cluster.addLayer(item.marker);
+				if (m._cluster != null) {
+					m._cluster.addLayer(item.handle);
 				} else {
-					item.marker.addTo(m.gmap);
+					item.handle.addTo(m.handle);
 				}
 			});
 
-			if (m.cluster != null) {
-				m.gmap.addLayer(m.cluster);
+			if (m._cluster != null) {
+				m.handle.addLayer(m._cluster);
 			}
-			m.status = 1;
 		},
-		controlPosition: function (i) {
+		_controlPosition: function (i) {
 			switch (parseInt(i)) {
 				case 1:
 					return 'topleft';
@@ -179,64 +178,65 @@
 		},
 		openInfoWindow: function (m, p) {
 			var item = m.positions[p];
-			item.info.openPopup();
-			root.terratype.callClick(q, m, item);
+			item._info.openPopup();
+			root.terratype._callClick(q, m, item);
 		},
 		closeInfoWindows: function (m) {
-			m.gmap.closePopup();
+			m.handle.closePopup();
 		},
-		checkResize: function (m) {
-			if (!m.gmap.getBounds().contains(m.center)) {
+		_checkResize: function (m) {
+			if (!m.handle.getBounds().contains(m._center)) {
 				q.refresh(m);
 			}
 		},
-		reset: function (m) {
-			if (m.refreshes == 0) {
-				root.terratype.forEach(m.positions, function (p, item) {
+		_reset: function (m) {
+			if (m._refreshes == 0) {
+				root.terratype._forEach(m.positions, function (p, item) {
 					if (item.autoShowLabel) {
 						root.setTimeout(function () {
 							q.openInfoWindow(m, p);
 						}, 100);
 					}
 				});
-				m.status = 2;
+				m._status = 2;
 			}
-			if (m.refreshes == 0 || m.recenterAfterRefresh) {
+			if (m._refreshes == 0 || m.recenterAfterRefresh) {
 				if (m.autoFit) {
-					m.gmap.setZoom(m.maxZoom);
-					var bound = new L.latLngBounds(m.bound.getNorthEast(), m.bound.getSouthWest());
-					m.gmap.fitBounds(bound);
+					m.handle.setZoom(m._maxZoom);
+					var bound = new L.latLngBounds(m._bound.getNorthEast(), m._bound.getSouthWest());
+					m.handle.fitBounds(bound);
 				}
-				m.zoom = m.gmap.getZoom();
-				m.gmap.setView(m.center, m.zoom);
+				m.zoom = m.handle.getZoom();
+				m.handle.setView(m._center, m.zoom);
 			}
 
-			if (m.refreshes++ == 0) {
-				root.terratype.callRender(q, m);
+			if (m._refreshes++ == 0) {
+				root.terratype._opacityShow(m);
+				root.terratype._callRender(q, m);
 			} else {
-				root.terratype.callRefresh(q, m);
+				root.terratype._callRefresh(q, m);
 			}
 		},
 		refresh: function (m) {
-			m.ignoreEvents++;
+			m._ignoreEvents++;
 			if (m.recenterAfterRefresh) {
-				m.gmap.setZoom(m.zoom);
-				m.gmap.setView(m.center);
+				m.handle.setZoom(m.zoom);
+				m.handle.setView(m._center);
 			}
-			m.gmap.invalidateSize();
+			m.handle.invalidateSize();
 			setTimeout(function () {
-				if (m.cluster != null) {
-					m.cluster.refreshClusters();
+				if (m._cluster != null) {
+					m._cluster.refreshClusters();
 				}
-				q.reset(m);
-				m.ignoreEvents--;
+				q._reset(m);
+				m._ignoreEvents--;
 			}, 1);
 		}
 	};
 
 	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype.addProvider) {
-			root.terratype.addProvider(q.id, q);
+		if (root.terratype && root.terratype._addProvider) {
+			root.terratype._addProvider(q.id, q);
 			root.clearInterval(timer);
 		}
 	}, 250);

@@ -235,7 +235,7 @@
 		terratype.onLoad(function (provider, map) { console.log('onLoad: ' + provider.id + ', ' + map.id); });
 		terratype.onRender(function (provider, map) { console.log('onRender: ' + provider.id + ', ' + map.id); });
 		terratype.onRefresh(function (provider, map) { console.log('onRefresh: ' + provider.id + ', ' + map.id); });
-		terratype.onZoom(function (provider, map) { console.log('onZoom: ' + provider.id + ', ' + map.id); });
+		terratype.onZoom(function (provider, map, zoom) { console.log('onZoom: ' + provider.id + ', ' + map.id + ', ' + zoom); });
 		terratype.onClick(function (provider, map, marker) { console.log('onClick: ' + provider.id + ', ' + map.id + ', ' + marker.tag); });
 
 	</script>
