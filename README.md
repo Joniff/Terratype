@@ -47,6 +47,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 	Fixed error converting model when using ModelsBuilder
 	Added 3 more Google map styles
 	Added Javascript event library
+	Added AutoFit, AutoShowLabel & AutoRecenterAfterRefresh to options
 
 **1.0.14**
 
