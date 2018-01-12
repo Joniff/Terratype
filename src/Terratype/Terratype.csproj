@@ -33,8 +33,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Frisk\Frisk.cs" />
+    <Compile Include="Indexer\ContentService.cs" />
+    <Compile Include="Indexer\Register.cs" />
     <Compile Include="Json\Json.cs" />
     <Compile Include="Labels\Standard.cs" />
+    <Compile Include="Models\Indexer.cs" />
     <Compile Include="Models\Label.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Models\LatLng.cs" />

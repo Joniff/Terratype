@@ -23,7 +23,8 @@ namespace Terratype.Frisk
         {
             typeof(Models.Position),
             typeof(Models.Provider),
-            typeof(Models.Label)
+            typeof(Models.Label),
+			typeof(Models.Indexer)
         };
 
         private static void registerAssembly(Assembly currAssembly, ref Dictionary<string, Dictionary<string, Type>> installed)
