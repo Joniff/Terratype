@@ -154,8 +154,8 @@
         };
     }]);
 
-    angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService',
-        function ($scope, $timeout, $http, localizationService) {
+	angular.module('umbraco').controller('terratype', ['$scope', '$timeout', '$http', 'localizationService', 
+		function ($scope, $timeout, $http, localizationService) {
         $scope.config = null;
         $scope.store = null;
         $scope.vm = null;
@@ -191,7 +191,7 @@
             }
         }
 
-        $scope.terratype = {
+		$scope.terratype = {
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
@@ -407,7 +407,7 @@
                 if ($scope.vm().configgering) {
                     $scope.store().position.precision = $scope.vm().position.precision;
                 }
-                $scope.vm().provider.events.setCoordinateSystem();
+				$scope.vm().provider.events.setCoordinateSystem();
             },
             setLabel: function (id) {
                 if (id) {

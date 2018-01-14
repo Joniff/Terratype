@@ -263,7 +263,11 @@ namespace Terratype.Models
                         field = field.Next as JProperty;
                     }
                 }
-                model.Icon = new Models.Icon(item.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
+				var icon = item.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase);
+				if (icon != null)
+				{
+					model.Icon = icon.ToObject<Models.Icon>();
+				}
             }
 
             var position = item.GetValue(Json.PropertyName<Model>(nameof(Model.Position)), StringComparison.InvariantCultureIgnoreCase);

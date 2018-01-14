@@ -5,10 +5,12 @@ using Umbraco.Web.PropertyEditors;
 
 namespace Terratype.ListView
 {
-	[PropertyEditor(nameof(Terratype), nameof(Terratype), "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.15", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
+	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorAlias, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.15", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
 	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.15")]
     public class TerratypeListViewPropertyEditor : PropertyEditor
 	{
+		public const string PropertyEditorAlias = nameof(Terratype) + "." + nameof(Terratype.ListView);
+
 		protected override PreValueEditor CreatePreValueEditor()
 		{
 			return new TerratypePreValueEditor();

@@ -18,7 +18,8 @@ namespace Terratype.Indexer
 
 		public override bool Add(string key, Terratype.Models.Model model, IEnumerable<string> ancestors)
 		{
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+			return false;
 		}
 
 		public override bool Delete(string key)

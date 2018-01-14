@@ -34,6 +34,14 @@
   <ItemGroup>
     <Compile Include="Frisk\Frisk.cs" />
     <Compile Include="Indexer\ContentService.cs" />
+    <Compile Include="Indexer\ProcessorService\DataTypeId.cs" />
+    <Compile Include="Indexer\ProcessorService\Task.cs" />
+    <Compile Include="Indexer\Processors\Archetype.cs" />
+    <Compile Include="Indexer\Processors\Grid.cs" />
+    <Compile Include="Indexer\Processors\NestedContent.cs" />
+    <Compile Include="Indexer\ProcessorService\PropertyBase.cs" />
+    <Compile Include="Indexer\Results.cs" />
+    <Compile Include="Indexer\Processors\Generic.cs" />
     <Compile Include="Indexer\Register.cs" />
     <Compile Include="Json\Json.cs" />
     <Compile Include="Labels\Standard.cs" />
