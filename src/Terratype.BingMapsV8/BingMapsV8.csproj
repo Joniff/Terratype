@@ -65,6 +65,7 @@
     <Content Include="App_Plugins\Terratype.BingMapsV8\Views\grid.appearance.html" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Terratype.BingMapsV8.nuspec">
       <SubType>Designer</SubType>

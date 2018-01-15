@@ -67,7 +67,7 @@
 
     <asp:HiddenField runat="server" ID="IsChangingPasswordField" Value="false" />
 
-    <asp:PlaceHolder runat="server" ID="ResetPlaceHolder">
+    <asp:PlaceHolder runat="server" ID="ResetPlaceHolder" Visible="<%#Provider.EnablePasswordReset %>">
         <div class="umb-el-wrap">
             <label class="control-label" for="<%=ResetPasswordCheckBox.ClientID %>"><%=umbraco.ui.GetText("user", "resetPassword")%></label>
             <div class="controls controls-row">

@@ -9,19 +9,6 @@ namespace Terratype.Indexer
 {
 	public class Register : ApplicationEventHandler
 	{
-        /// <inheritdoc />
-        /// <summary>
-        /// Overrides the ApplicationEventHandler ApplicationStarting method
-        /// </summary>
-        /// <param name="umbracoApplication">The Umbraco Application</param>
-        /// <param name="applicationContext">The Application Context</param>
-        protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-        {
-            base.ApplicationStarting(umbracoApplication, applicationContext);
-
-            //ServerRegistrarResolver.Current.SetServerRegistrar(new FrontEndReadOnlyServerRegistrar());
-        }
-
 		private IEnumerable<Terratype.Models.Indexer> indexers;
 
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)

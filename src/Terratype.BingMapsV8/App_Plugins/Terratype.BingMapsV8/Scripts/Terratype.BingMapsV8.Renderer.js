@@ -58,38 +58,43 @@
 		_needTraffic: false,
 		_trafficLoaded: false,
 		_loadMarker: function (m, model, match) {
-			if (model.icon && model.icon.url && model.position) {
+			if (model.position) {
 				var datum = root.terratype._parseLatLng(model.position.datum);
 				var latlng = new root.Microsoft.Maps.Location(datum.latitude, datum.longitude);
-				m.positions.push({
-					id: id,
-					tag: match.getAttribute('data-tag'),
-					label: match.getAttribute('data-label-id'),
-					position: model.position,
-					_latlng: latlng,
-					icon: model.icon.url,
-					_anchor: new root.Microsoft.Maps.Point(
-						root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-						root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
-					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
-				});
-				if (latlng.latitude > m._maxLat) {
-					m._maxLat = latlng.latitude;
+				if (m._center == null) {
+					m._center = latlng;
 				}
-				if (latlng.latitude < m._minLat) {
-					m._minLat = latlng.latitude;
-				}
-				if (latlng.longitude > m._maxLng) {
-					m._maxLng = latlng.longitude;
-				}
-				if (latlng.longitude < m._minLng) {
-					m._minLng = latlng.longitude;
-				}
-				if (model.icon.size.width > m._maxIconSize) {
-					m._maxIconSize = model.icon.size.width;
-				}
-				if (model.icon.size.height > m._maxIconSize) {
-					m._maxIconSize = model.icon.size.height;
+				if (model.icon && model.icon.url) {
+					m.positions.push({
+						id: id,
+						tag: match.getAttribute('data-tag'),
+						label: match.getAttribute('data-label-id'),
+						position: model.position,
+						_latlng: latlng,
+						icon: model.icon.url,
+						_anchor: new root.Microsoft.Maps.Point(
+							root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+							root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
+						autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
+					});
+					if (latlng.latitude > m._maxLat) {
+						m._maxLat = latlng.latitude;
+					}
+					if (latlng.latitude < m._minLat) {
+						m._minLat = latlng.latitude;
+					}
+					if (latlng.longitude > m._maxLng) {
+						m._maxLng = latlng.longitude;
+					}
+					if (latlng.longitude < m._minLng) {
+						m._minLng = latlng.longitude;
+					}
+					if (model.icon.size.width > m._maxIconSize) {
+						m._maxIconSize = model.icon.size.width;
+					}
+					if (model.icon.size.height > m._maxIconSize) {
+						m._maxIconSize = model.icon.size.height;
+					}
 				}
 			}
 			if (model.provider.traffic.enable == true && q._needTraffic == false) {
@@ -137,7 +142,9 @@
 			m._ignoreEvents = 0;
 			var mapTypeIds = q._mapTypeIds(m._provider.variety.basic, m._provider.variety.satellite, m._provider.variety.streetView, m._provider.predefineStyling);
 			m._bound = new Microsoft.Maps.LocationRect.fromEdges(m._maxLat, m._minLng, m._minLat, m._maxLng);
-			m._center = (m.autoFit) ? m._bound.center : m.positions[0].latlng;
+			if (m.autoFit) {
+				m._center = m._bound.center;
+			}
 			m.handle = new root.Microsoft.Maps.Map(document.getElementById(m._div), {
 				credentials: m._provider.apiKey,
 				enableSearchLogo: false,

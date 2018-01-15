@@ -51,25 +51,30 @@
 			};
 		},
 		_loadMarker: function (m, model, match) {
-			if (model.icon && model.icon.url && model.position) {
+			if (model.position) {
 				var datum = root.terratype._parseLatLng(model.position.datum);
 				var latlng = new root.google.maps.LatLng(datum.latitude, datum.longitude);
-				m.positions.push({
-					id: id,
-					tag: match.getAttribute('data-tag'),
-					label: match.getAttribute('data-label-id'),
-					position: model.position,
-					_latlng: latlng,
-					_icon: {
-						url: root.terratype._configIconUrl(model.icon.url),
-						scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
-						anchor: new root.google.maps.Point(
-							root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-							root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
-					},
-					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
-				});
-				m._bound.extend(latlng);
+				if (m._center == null) {
+					m._center = latlng;
+				}
+				if (model.icon && model.icon.url) {
+					m.positions.push({
+						id: id,
+						tag: match.getAttribute('data-tag'),
+						label: match.getAttribute('data-label-id'),
+						position: model.position,
+						_latlng: latlng,
+						_icon: {
+							url: root.terratype._configIconUrl(model.icon.url),
+							scaledSize: new root.google.maps.Size(model.icon.size.width, model.icon.size.height),
+							anchor: new root.google.maps.Point(
+								root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+								root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height))
+						},
+						autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
+					});
+					m._bound.extend(latlng);
+				}
 			}
 		},
 		_markerClustererUrl: function () {
@@ -94,7 +99,9 @@
 		},
 		_render: function (m) {
 			var mapTypeIds = q._mapTypeIds(m._provider.variety.basic, m._provider.variety.satellite, m._provider.variety.terrain);
-			m._center = (m.autoFit) ? m._bound.getCenter() : m.positions[0]._latlng;
+			if (m.autoFit) {
+				m._center = m._bound.getCenter();
+			}
 			m.handle = new root.google.maps.Map(document.getElementById(m._div), {
 				disableDefaultUI: false,
 				scrollwheel: false,
