@@ -24,7 +24,8 @@ namespace Terratype.Frisk
             typeof(Models.Position),
             typeof(Models.Provider),
             typeof(Models.Label),
-			typeof(Models.Indexer)
+			typeof(Indexer.Index),
+			typeof(Indexer.Searchers.ISearch<Indexer.Searchers.ISearchRequest>)
         };
 
         private static void registerAssembly(Assembly currAssembly, ref Dictionary<string, Dictionary<string, Type>> installed)
@@ -48,16 +49,37 @@ namespace Terratype.Frisk
 
                 foreach (var interest in interests)
                 {
-                    if (type.IsSubclassOf(interest))
-                    {
-                        var derivedObject = System.Activator.CreateInstance(type) as IFrisk;
-                        if (derivedObject != null)
-                        {
-                            installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
-                        }
-                    }
-                }
+                    if ((type.BaseType == null || type.BaseType.Name != interest.Name ||
+                         type.BaseType.Namespace != interest.Namespace) && !type.IsSubclassOf(interest))
+					{
+						continue;
+					}
 
+					IFrisk derivedObject = null;
+					if (type.ContainsGenericParameters)
+					{
+						var cn = type.GetTypeInfo().GenericTypeParameters[0].Namespace + "." + type.GetTypeInfo().GenericTypeParameters[0].Name;
+						var ci = Activator.CreateInstance(currAssembly.FullName, cn);
+
+						var pn = type.GetTypeInfo().Namespace + "." + type.GetTypeInfo().Name;
+
+						var t = type.GetGenericTypeDefinition().Name;
+						var t1 = type.GetTypeInfo().GenericTypeParameters;
+						Type tt = Type.GetType(pn).MakeGenericType(ci.GetType());
+
+						var f = Activator.CreateInstance(tt);
+
+						derivedObject = System.Activator.CreateInstance(type.GetGenericTypeDefinition().MakeGenericType(type.GetTypeInfo().GenericTypeParameters)) as IFrisk;
+					}
+					else
+					{
+						derivedObject = System.Activator.CreateInstance(type) as IFrisk;
+					}
+					if (derivedObject != null)
+					{
+						installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
+					}
+				}
             }
         }
 

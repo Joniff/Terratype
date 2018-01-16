@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Terratype.Indexer.Searchers;
 
 namespace Terratype.Indexer
 {
-    public class Sql : Terratype.Models.Indexer
+	public class Sql : Index, IAncestorSearch<AncestorSearchRequest>
     {
         public override string Id
         {
@@ -16,18 +14,18 @@ namespace Terratype.Indexer
             }
         }
 
-		public override bool Add(string key, Terratype.Models.Model model, IEnumerable<string> ancestors)
+		public override bool Add(IEnumerable<Entry> contents)
 		{
             //throw new NotImplementedException();
 			return false;
 		}
 
-		public override bool Delete(string key)
+		public override bool Delete(IEnumerable<Entry> contents)
 		{
             throw new NotImplementedException();
 		}
 
-		public override IEnumerable<Terratype.Models.Model> Search(string ancestor)
+		public IEnumerable<Entry> Execute(AncestorSearchRequest request)
 		{
             throw new NotImplementedException();
 		}

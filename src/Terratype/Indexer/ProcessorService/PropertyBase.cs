@@ -9,10 +9,10 @@ namespace Terratype.Indexer.ProcessorService
 {
 	public abstract class PropertyBase
 	{
-		public Results Results { get; internal set; }
+		public IList<Entry> Results { get; internal set; }
 		public Stack<Task> Tasks { get; internal set; }
 
-		public PropertyBase(Results results, Stack<Task> tasks)
+		public PropertyBase(IList<Entry> results, Stack<Task> tasks)
 		{
 			Results = results;
 			Tasks = tasks;

@@ -9,12 +9,12 @@ namespace Terratype.Indexer
 {
 	public class Register : ApplicationEventHandler
 	{
-		private IEnumerable<Terratype.Models.Indexer> indexers;
+		private IEnumerable<Index> indexers;
 
         protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
         {
             base.ApplicationStarted(umbracoApplication, applicationContext);
-			indexers = Terratype.Models.Indexer.Register.Select(x =>  System.Activator.CreateInstance(x.Value) as Terratype.Models.Indexer);
+			indexers = Index.Register.Select(x =>  System.Activator.CreateInstance(x.Value) as Index);
 			if (indexers.Any())
 			{
 				Umbraco.Core.Services.ContentService.Published += ContentService_Published;
@@ -24,24 +24,28 @@ namespace Terratype.Indexer
 
 		private void ContentService_Published(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> contents)
 		{
-			foreach (var indexer in indexers)
+			var entries = new ContentService().Entries(contents.PublishedEntities);
+
+			if (entries.Any())
 			{
-				var service = new ContentService(indexer);
-				foreach (var content in contents.PublishedEntities)
+				foreach (var indexer in indexers)
 				{
-					service.Save(content);
+					indexer.Add(entries);
 				}
 			}
+
+			var results = Index.Search(new Terratype.Indexer.Searchers.AncestorSearchRequest());
 		}
 
 		private void ContentService_UnPublished(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> contents)
 		{
-			foreach (var indexer in indexers)
+			var entries = new ContentService().Entries(contents.PublishedEntities);
+
+			if (entries.Any())
 			{
-				var service = new ContentService(indexer);
-				foreach (var content in contents.PublishedEntities)
+				foreach (var indexer in indexers)
 				{
-					service.Delete(content);
+					indexer.Delete(entries);
 				}
 			}
 		}

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Elasticsearch
+namespace Terratype.Indexer
 {
-    public class Elasticsearch : Terratype.Models.Indexer
+    public class Elasticsearch : Index
     {
         public override string Id
         {
@@ -16,20 +16,14 @@ namespace Elasticsearch
             }
         }
 
-		public override bool Add(string key, Terratype.Models.Model model, IEnumerable<string> ancestors)
+		public override bool Add(IEnumerable<Entry> contents)
 		{
             throw new NotImplementedException();
 		}
 
-		public override bool Delete(string key)
+		public override bool Delete(IEnumerable<Entry> contents)
 		{
             throw new NotImplementedException();
 		}
-
-		public override IEnumerable<Terratype.Models.Model> Search(string ancestor)
-		{
-            throw new NotImplementedException();
-		}
-
 	}
 }

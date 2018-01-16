@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -207,6 +208,69 @@ namespace Terratype.Models
             return typeof(Model).IsAssignableFrom(objectType);
         }
 
+		/// <summary>
+		/// Binds to a version of GetPreValuesByDataTypeId() that only exists in later versions of Umbraco (7.6 or 7.7)
+		/// </summary>
+		/// <param name="guid">Guid of property type</param>
+		/// <returns>Content as created in DataType editor</returns>
+		private IEnumerable<string> GetPreValuesByDataTypeId(Guid guid)
+		{
+			var dataService = ApplicationContext.Current.Services.DataTypeService;
+			var guidMethod = dataService.GetType().GetMethod(
+				nameof(dataService.GetPreValuesByDataTypeId), 
+				new Type[] {typeof(Guid) });
+			if (guidMethod == null)
+			{
+				return null;
+			}
+			return (guidMethod.Invoke(dataService, new object[] { guid }) as IEnumerable<string>);
+		}
+
+		private JObject Definition(JObject obj)
+		{
+			var token = obj.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase);
+			if (token == null)
+			{
+				return null;
+			}
+
+			int id = 0;
+			Guid guid = Guid.Empty;
+			switch (token.Type)
+			{
+				case JTokenType.Guid:
+					guid = token.Value<Guid>();
+					break;
+
+				case JTokenType.Integer:
+					id = token.Value<int>();
+					break;
+
+				case JTokenType.String:
+					var text = token.Value<string>();
+					if (!int.TryParse(text, out id))
+					{
+						Guid.TryParse(text, out guid);
+					}
+					break;
+			}
+
+			string json = null;
+			if (id != 0)
+			{
+				json = ApplicationContext.Current.Services.DataTypeService.GetPreValuesByDataTypeId(token.Value<int>()).FirstOrDefault();
+			}
+			else if (guid != Guid.Empty)
+			{
+				json = GetPreValuesByDataTypeId(token.Value<Guid>()).FirstOrDefault();
+			}
+			else
+			{
+				return null;
+			}
+			return JObject.Parse(json);
+		}
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var model = new Model();
@@ -216,32 +280,27 @@ namespace Terratype.Models
             model.Zoom = item.GetValue(Json.PropertyName<Model>(nameof(Model.Zoom)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
             model.Height = item.GetValue(Json.PropertyName<Model>(nameof(Model.Height)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 400;
 
-            int? datatypeId = item.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
-            if (datatypeId != null)
-            {
-                var values = ApplicationContext.Current.Services.DataTypeService.GetPreValuesByDataTypeId((int)datatypeId);
-                var json = JObject.Parse(values.First());
-                if (json != null)
+			var definition = Definition(item);
+			if (definition != null)
+			{
+                var config = definition.GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
+                if (config != null)
                 {
-                    var config = JObject.Parse(values.First()).GetValue("config", StringComparison.InvariantCultureIgnoreCase) as JObject;
-                    if (config != null)
+                    model.Height = config.GetValue(Json.PropertyName<Model>(nameof(Model.Height)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
+                    model.Icon = new Models.Icon(config.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
+                    var provider = config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
+                    if (provider != null)
                     {
-                        model.Height = config.GetValue(Json.PropertyName<Model>(nameof(Model.Height)), StringComparison.InvariantCultureIgnoreCase)?.Value<int>() ?? 0;
-                        model.Icon = new Models.Icon(config.GetValue(Json.PropertyName<Model>(nameof(Model.Icon)), StringComparison.InvariantCultureIgnoreCase).ToObject<Models.Icon>());
-                        var provider = config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase);
-                        if (provider != null)
+                        var field = provider.First as JProperty;
+                        while (field != null)
                         {
-                            var field = provider.First as JProperty;
-                            while (field != null)
+                            if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
                             {
-                                if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
-                                    model.Provider = (Provider)config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
-                                    break;
-                                }
-                                field = field.Next as JProperty;
+                                System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
+                                model.Provider = (Provider)config.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
+                                break;
                             }
+                            field = field.Next as JProperty;
                         }
                     }
                 }

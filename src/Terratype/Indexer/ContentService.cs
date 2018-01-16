@@ -10,13 +10,7 @@ namespace Terratype.Indexer
 {
 	public class ContentService
 	{
-		private Models.Indexer Indexer;
 		private const string KeySeperator = ".";
-
-		public ContentService(Models.Indexer indexer)
-		{
-			Indexer = indexer;
-		}
 
 		private string Identity(Umbraco.Core.Models.IContent content)
 		{
@@ -26,64 +20,6 @@ namespace Terratype.Indexer
 			}
 			return content.Path + KeySeperator + content.SortOrder.ToString() + KeySeperator + content.Name + KeySeperator + content.CreateDate.Ticks.ToString();
 		}
-
-		private bool IsJson(string json)
-		{
-            json = json.Trim();
-			var end = json.Length - 1;
-            return (json[0] == '{' && json[end] == '}') || 
-				(json[0] == '[' && json[end] == ']');
-		}
-
-		public Results Execute(string key, Umbraco.Core.Models.IContent content)
-		{
-			var results = new Results();
-			var tasks = new Stack<Task>();
-
-			var processors = new List<PropertyBase>
-			{
-				new Processors.Archetype(results, tasks),
-				new Processors.Grid(results, tasks),
-				new Processors.NestedContent(results, tasks),
-				new Processors.Generic(results, tasks)
-			};
-			var keys = new List<string>
-			{
-				key
-			};
-
-			foreach (var property in content.Properties.Where(x => x.Value is string))
-			{
-				if (IsJson(property.Value as string))
-				{
-					var task = new Task
-					{
-						PropertyEditorAlias = property.PropertyType.PropertyEditorAlias,
-						Keys = keys,
-						Json = JObject.Parse(property.Value as string),
-						DataTypeId = new DataTypeId(property.PropertyType.DataTypeDefinitionId)
-					};
-					task.Keys.Add(property.PropertyType.Alias);
-					tasks.Push(task);
-				}
-			}
-
-			while (tasks.Any())
-			{
-				var task = tasks.Pop();
-
-				foreach (var processor in processors)
-				{
-					if (processor.Process(task))
-					{
-						break;
-					}
-				}
-			}
-
-			return results;
-		}
-
 		private IEnumerable<string> Ancestors(Umbraco.Core.Models.IContent content)
 		{
 			var results = new List<string>();
@@ -101,27 +37,54 @@ namespace Terratype.Indexer
 			}
 			return results;
 		}
-		public void Save(Umbraco.Core.Models.IContent content)
+
+		public IEnumerable<Entry> Entries(IEnumerable<Umbraco.Core.Models.IContent> contents)
 		{
-			var found = Execute(Identity(content), content);
-			if (!found.Any())
+			var results = new List<Entry>();
+			var tasks = new Stack<Task>();
+
+			var processors = new List<PropertyBase>
 			{
-				return;
+				new Processors.TerratypeProcessor(results, tasks),
+				new Processors.ArchetypeProcessor(results, tasks),
+				new Processors.GridProcessor(results, tasks),
+				new Processors.NestedContentProcessor(results, tasks),
+				new Processors.GenericProcessor(results, tasks)
+			};
+
+			foreach (var content in contents)
+			{
+				var keys = new List<string>
+				{
+					Identity(content)
+				};
+
+				var ancestor = Ancestors(content);
+
+				foreach (var property in content.Properties.Where(x => x.Value is string))
+				{
+					if (Helper.IsJson(property.Value as string))
+					{
+						tasks.Push(new Task(ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(property.Value as string), 
+							new DataTypeId(property.PropertyType.DataTypeDefinitionId), keys, property.PropertyType.Alias));
+					}
+				}
 			}
 
-			var ancestors = Ancestors(content);
-			foreach (var model in found)
+			while (tasks.Any())
 			{
-				Indexer.Add(model.Key, model.Value, ancestors);
-			}
-		}
+				var task = tasks.Pop();
 
-		public void Delete(Umbraco.Core.Models.IContent content)
-		{
-			foreach (var model in Execute(Identity(content), content))
-			{
-				Indexer.Delete(model.Key);
+				foreach (var processor in processors)
+				{
+					if (processor.Process(task))
+					{
+						break;
+					}
+				}
 			}
+
+			return results;
 		}
 	}
 }

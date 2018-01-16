@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Lucene
+namespace Terratype.Indexer
 {
-    public class Lucene : Terratype.Models.Indexer
+	public class Lucene : Index
     {
         public override string Id
         {
@@ -16,17 +13,12 @@ namespace Lucene
             }
         }
 
-		public override bool Add(string key, Terratype.Models.Model model, IEnumerable<string> ancestors)
+		public override bool Add(IEnumerable<Entry> contents)
 		{
             throw new NotImplementedException();
 		}
 
-		public override bool Delete(string key)
-		{
-            throw new NotImplementedException();
-		}
-
-		public override IEnumerable<Terratype.Models.Model> Search(string ancestor)
+		public override bool Delete(IEnumerable<Entry> contents)
 		{
             throw new NotImplementedException();
 		}
