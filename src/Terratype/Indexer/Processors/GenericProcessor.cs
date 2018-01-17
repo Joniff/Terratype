@@ -22,7 +22,7 @@ namespace Terratype.Indexer.Processors
 					int? datatypeId = obj.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
 					if (datatypeId != null)
 					{
-						this.Results.Add(new Entry(task.Ancestors, task.Keys, new Models.Model(obj)));
+						this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Model(obj)));
 					}
 				}
 				else
@@ -30,7 +30,7 @@ namespace Terratype.Indexer.Processors
 					JProperty field = task.Json.First as JProperty;
 					while (field != null)
 					{
-						Tasks.Push(new Task(task.Ancestors, task.PropertyEditorAlias, field.Value, null, task.Keys, field.Name));
+						Tasks.Push(new Task(task.Id, task.Ancestors, task.PropertyEditorAlias, field.Value, null, task.Keys, field.Name));
 						field = field.Next as JProperty;
 					}
 				}
@@ -41,7 +41,7 @@ namespace Terratype.Indexer.Processors
 				int count = 0;
 				foreach (var token in task.Json.ToArray())
 				{
-					Tasks.Push(new Task(task.Ancestors, task.PropertyEditorAlias, token, null, task.Keys, count));
+					Tasks.Push(new Task(task.Id, task.Ancestors, task.PropertyEditorAlias, token, null, task.Keys, count));
 					count++;
 				}
 				return true;

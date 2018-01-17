@@ -8,7 +8,7 @@ namespace Terratype.Indexer.Searchers
 {
 	public class AncestorSearchRequest : ISearchRequest
 	{
-		public object Ancestor { get; set; }
+		public Guid Ancestor { get; set; }
 	}
 
 	public interface IAncestorSearch<AncestorSearchRequest> : ISearch<ISearchRequest>

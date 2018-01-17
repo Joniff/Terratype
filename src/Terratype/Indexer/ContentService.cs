@@ -20,19 +20,20 @@ namespace Terratype.Indexer
 			}
 			return content.Path + KeySeperator + content.SortOrder.ToString() + KeySeperator + content.Name + KeySeperator + content.CreateDate.Ticks.ToString();
 		}
-		private IEnumerable<string> Ancestors(Umbraco.Core.Models.IContent content)
+		private IEnumerable<Guid> Ancestors(Umbraco.Core.Models.IContent content)
 		{
-			var results = new List<string>();
-			foreach (var id in content.Path.Split(new char[] {','}).Select(x => int.Parse(x)).Where(x => x != Umbraco.Core.Constants.System.Root))
+			var results = new List<Guid>();
+			foreach (var id in content.Path.Split(new char[] {','}).Select(x => int.Parse(x)).Where(x => x != Umbraco.Core.Constants.System.Root && x != content.Id))
 			{
-				var attempt = ApplicationContext.Current.Services.EntityService.GetKeyForId(id, Umbraco.Core.Models.UmbracoObjectTypes.ContentItem);
+				var attempt = ApplicationContext.Current.Services.EntityService.GetKeyForId(id, Umbraco.Core.Models.UmbracoObjectTypes.Document);
 				if (attempt.Success)
 				{
-					results.Insert(0, attempt.Result.ToString());
+					results.Insert(0, attempt.Result);
 				}
 				else
 				{
-					results.Insert(0, id.ToString());
+					var parent = ApplicationContext.Current.Services.ContentService.GetById(id);
+					results.Insert(0, parent.Key);
 				}
 			}
 			return results;
@@ -65,7 +66,7 @@ namespace Terratype.Indexer
 				{
 					if (Helper.IsJson(property.Value as string))
 					{
-						tasks.Push(new Task(ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(property.Value as string), 
+						tasks.Push(new Task(content.Key, ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(property.Value as string), 
 							new DataTypeId(property.PropertyType.DataTypeDefinitionId), keys, property.PropertyType.Alias));
 					}
 				}

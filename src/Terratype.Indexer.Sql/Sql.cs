@@ -14,15 +14,10 @@ namespace Terratype.Indexer
             }
         }
 
-		public override bool Add(IEnumerable<Entry> contents)
+		public override bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add)
 		{
             //throw new NotImplementedException();
-			return false;
-		}
-
-		public override bool Delete(IEnumerable<Entry> contents)
-		{
-            throw new NotImplementedException();
+			return true;
 		}
 
 		public IEnumerable<Entry> Execute(AncestorSearchRequest request)

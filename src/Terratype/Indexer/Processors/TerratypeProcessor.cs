@@ -14,15 +14,17 @@ namespace Terratype.Indexer.Processors
 
 		public override bool Process(Task task)
 		{
-			if (string.Compare(task.PropertyEditorAlias, Terratype.TerratypePropertyEditor.PropertyEditorAlias, true) != 0 || 
-				task.Json.Type != JTokenType.Object || ((int?) task.DataTypeId) == null)
+			if (string.Compare(task.PropertyEditorAlias, Terratype.TerratypePropertyEditor.PropertyEditorAlias, true) != 0 || task.Json.Type != JTokenType.Object)
 			{
 				return false;
 			}
 
 			var obj = task.Json as JObject;
-			obj.Add(new JProperty("datatypeId", (int) task.DataTypeId));
-			this.Results.Add(new Entry(task.Keys, task.Ancestors, new Models.Model(obj)));
+			if ((int?) task.DataTypeId != null)
+			{
+				obj.Add(new JProperty("datatypeId", (int) task.DataTypeId));
+			}
+			this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Model(obj)));
 			return true;
 		}
 	}

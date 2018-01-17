@@ -13,12 +13,7 @@ namespace Terratype.Indexer
             }
         }
 
-		public override bool Add(IEnumerable<Entry> contents)
-		{
-            throw new NotImplementedException();
-		}
-
-		public override bool Delete(IEnumerable<Entry> contents)
+		public override bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add)
 		{
             throw new NotImplementedException();
 		}

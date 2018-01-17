@@ -19,35 +19,46 @@ namespace Terratype.Indexer
 			{
 				Umbraco.Core.Services.ContentService.Published += ContentService_Published;
 				Umbraco.Core.Services.ContentService.UnPublished += ContentService_UnPublished;
+				Umbraco.Core.Services.ContentService.Deleted += ContentService_Deleted;
+				Umbraco.Core.Services.ContentService.Moved += ContentService_Moved;
+			}
+		}
+
+		private void Sync(IEnumerable<Guid> remove, IEnumerable<Umbraco.Core.Models.IContent> add)
+		{
+			IEnumerable<Entry> entries = null;
+			if (add != null && add.Any())
+			{
+				entries = new ContentService().Entries(add);
+			}
+
+			if (remove.Any() || (entries != null && entries.Any()))
+			{
+				foreach (var indexer in indexers)
+				{
+					indexer.Sync(remove, entries);
+				}
 			}
 		}
 
 		private void ContentService_Published(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> contents)
 		{
-			var entries = new ContentService().Entries(contents.PublishedEntities);
-
-			if (entries.Any())
-			{
-				foreach (var indexer in indexers)
-				{
-					indexer.Add(entries);
-				}
-			}
-
-			var results = Index.Search(new Terratype.Indexer.Searchers.AncestorSearchRequest());
+			Sync(contents.PublishedEntities.Select(x => x.Key), contents.PublishedEntities);
 		}
 
 		private void ContentService_UnPublished(Umbraco.Core.Publishing.IPublishingStrategy sender, Umbraco.Core.Events.PublishEventArgs<Umbraco.Core.Models.IContent> contents)
 		{
-			var entries = new ContentService().Entries(contents.PublishedEntities);
+			Sync(contents.PublishedEntities.Select(x => x.Key), null);
+		}
 
-			if (entries.Any())
-			{
-				foreach (var indexer in indexers)
-				{
-					indexer.Delete(entries);
-				}
-			}
+		private void ContentService_Deleted(Umbraco.Core.Services.IContentService sender, Umbraco.Core.Events.DeleteEventArgs<Umbraco.Core.Models.IContent> e)
+		{
+			Sync(e.DeletedEntities.Select(x => x.Key), null);
+		}
+
+		private void ContentService_Moved(Umbraco.Core.Services.IContentService sender, Umbraco.Core.Events.MoveEventArgs<Umbraco.Core.Models.IContent> e)
+		{
+			Sync(e.MoveInfoCollection.Select(x => x.Entity.Key), e.MoveInfoCollection.Where(x => x.Entity.Published).Select(x => x.Entity));
 		}
 	}
 }

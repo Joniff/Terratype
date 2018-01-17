@@ -52,6 +52,10 @@ namespace Terratype.Indexer.Processors
 				foreach (var prop in ContentType(contentTypeAlias).CompositionPropertyTypes)
 				{
 					var value = obj.GetValue(prop.Alias, StringComparison.InvariantCultureIgnoreCase);
+					if (value == null)
+					{
+						continue;
+					}
 
 					if (value.Type == JTokenType.String)
 					{
@@ -63,7 +67,7 @@ namespace Terratype.Indexer.Processors
 					}
 					if (value.Type == JTokenType.Array || value.Type == JTokenType.Object)
 					{
-						Tasks.Push(new Task(task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeDefinitionId), task.Keys, index, prop.Alias));
+						Tasks.Push(new Task(task.Id, task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeDefinitionId), task.Keys, index, prop.Alias));
 					}
 				}
 				index++;

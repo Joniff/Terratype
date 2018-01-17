@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace Terratype.Indexer.ProcessorService
 {
 	public class Task
 	{
-		public IEnumerable<string> Ancestors;
+		public Guid Id;
+		public IEnumerable<Guid> Ancestors;
 		public string PropertyEditorAlias;
 		public List<string> Keys; 
 		public JToken Json;
@@ -15,8 +17,9 @@ namespace Terratype.Indexer.ProcessorService
 		{
 		}
 
-		public Task(IEnumerable<string> ancestors, string propertyEditorAlias, JToken json, DataTypeId dataTypeId, List<string> keys, params object[] newKeys)
+		public Task(Guid id, IEnumerable<Guid> ancestors, string propertyEditorAlias, JToken json, DataTypeId dataTypeId, List<string> keys, params object[] newKeys)
 		{
+			Id = id;
 			Ancestors = ancestors;
 			PropertyEditorAlias = propertyEditorAlias;
 			Keys = new List<string>();

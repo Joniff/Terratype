@@ -11,9 +11,7 @@ namespace Terratype.Indexer
 	{
         public abstract string Id { get; }
 
-		public abstract bool Add(IEnumerable<Entry> contents);
-
-		public abstract bool Delete(IEnumerable<Entry> contents);
+		public abstract bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add);
 
         public static IDictionary<string, Type> Register
         {

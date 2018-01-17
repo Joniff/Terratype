@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,9 @@ namespace Terratype.Indexer
 	{
 		private const char KeySeperator = '\x1f';
 
-		public IEnumerable<string> Ancestors { get; set; }
+		public Guid Id { get; set; }
+
+		public IEnumerable<Guid> Ancestors { get; set; }
 
 		public string Key { get; set;}
 
@@ -36,22 +39,25 @@ namespace Terratype.Indexer
 
 		public Models.Model Map {get; set; }
 
-		public Entry(string key, IEnumerable<string> ancestors, Models.Model map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, string key, Models.Model map)
 		{
+			Id = id;
 			Key = key;
 			Map = map;
 			Ancestors = ancestors;
 		}
 
-		public Entry(string[] keys, IEnumerable<string> ancestors, Models.Model map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, string[] keys, Models.Model map)
 		{
+			Id = id;
 			Keys = keys;
 			Map = map;
 			Ancestors = ancestors;
 		}
 
-		public Entry(IEnumerable<string> keys, IEnumerable<string> ancestors, Models.Model map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, IEnumerable<string> keys, Models.Model map)
 		{
+			Id = id;
 			Keys = keys;
 			Map = map;
 			Ancestors = ancestors;
