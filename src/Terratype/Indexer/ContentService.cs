@@ -5,6 +5,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using Terratype.Indexer.ProcessorService;
 using Umbraco.Core;
+using Umbraco.Core.Logging;
 
 namespace Terratype.Indexer
 {
@@ -78,9 +79,16 @@ namespace Terratype.Indexer
 
 				foreach (var processor in processors)
 				{
-					if (processor.Process(task))
+					try
 					{
-						break;
+						if (processor.Process(task))
+						{
+							break;
+						}
+					}
+					catch (Exception ex)
+					{
+						LogHelper.Error<ContentService>($"Error proccesing {task.Id} content node with {processor.GetType().Name}", ex);
 					}
 				}
 			}

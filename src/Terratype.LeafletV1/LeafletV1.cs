@@ -20,37 +20,14 @@ namespace Terratype.Providers
         }
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.LeafletV1";
-            }
-        }
+        public override string Id => "Terratype.LeafletV1";
 
-        public override string Name
-        {
-            get
-            {
-                return "terratypeLeafletV1_name";                   //  Value in language file
-            }
-        }
+        public override string Name => "terratypeLeafletV1_name";                   //  Value in language file
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeLeafletV1_description";            //  Value in language file
-            }
-        }
+        public override string Description => "terratypeLeafletV1_description";            //  Value in language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeLeafletV1_referenceUrl";            //  Value in language file
-            }
-        }
+        public override string ReferenceUrl => "terratypeLeafletV1_referenceUrl";            //  Value in language file
+
         public override IDictionary<string, Type> CoordinateSystems
         {
             get

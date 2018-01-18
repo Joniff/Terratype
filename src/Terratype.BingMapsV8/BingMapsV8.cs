@@ -21,44 +21,15 @@ namespace Terratype.Providers
         }
 
         [JsonProperty]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.BingMapsV8";
-            }
-        }
-        public override string Name
-        {
-            get
-            {
-                return "terratypeBingMapsV8_name";              //  Value is in language file
-            }
-        }
+        public override string Id => "Terratype.BingMapsV8";
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeBingMapsV8_description";       //  Value is in language file
-            }
-        }
+        public override string Name => "terratypeBingMapsV8_name";              //  Value is in language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeBingMapsV8_description";       //  Value is in language file
-            }
-        }
+        public override string Description => "terratypeBingMapsV8_description";       //  Value is in language file
 
-        public override bool CanSearch
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override string ReferenceUrl => "terratypeBingMapsV8_description";       //  Value is in language file
+
+        public override bool CanSearch => true;
 
         public override IDictionary<string, Type> CoordinateSystems
         {

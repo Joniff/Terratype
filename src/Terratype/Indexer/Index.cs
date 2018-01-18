@@ -11,6 +11,8 @@ namespace Terratype.Indexer
 	{
         public abstract string Id { get; }
 
+		public abstract bool MasterOnly { get; }
+
 		public abstract bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add);
 
         public static IDictionary<string, Type> Register
@@ -21,7 +23,7 @@ namespace Terratype.Indexer
             }
         }
 
-		public static IEnumerable<Entry> Search(Searchers.ISearchRequest search)
+		public static IEnumerable<Models.Model> Search(Searchers.ISearchRequest search)
 		{
 			//	See if we can find an indexer that can handle our request
 			foreach (var index in Register)
@@ -36,7 +38,7 @@ namespace Terratype.Indexer
 							new Type[] {search.GetType()});
 						if (method != null)
 						{
-							return method.Invoke(indexer, new object[] { search }) as IEnumerable<Entry>;
+							return method.Invoke(indexer, new object[] { search }) as IEnumerable<Models.Model>;
 						}
 					}
 				}

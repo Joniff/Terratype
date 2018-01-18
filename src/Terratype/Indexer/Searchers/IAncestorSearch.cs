@@ -13,6 +13,6 @@ namespace Terratype.Indexer.Searchers
 
 	public interface IAncestorSearch<AncestorSearchRequest> : ISearch<ISearchRequest>
 	{
-		IEnumerable<Entry> Execute(AncestorSearchRequest request);
+		IEnumerable<Models.Model> Execute(AncestorSearchRequest request);
 	}
 }

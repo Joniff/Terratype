@@ -13,29 +13,9 @@ namespace Terratype.Labels
         public static string _Id = "standard";
 
         [JsonProperty]
-        public override string Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "terratypeLabelStandard_name";                    //  Value is in the language file
-            }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return "terratypeLabelStandard_description";                    //  Value is in the language file
-            }
-        }
+        public override string Id => _Id;
+        public override string Name => "terratypeLabelStandard_name";                    //  Value is in the language file
+        public override string Description => "terratypeLabelStandard_description";                    //  Value is in the language file
 
         [JsonProperty(PropertyName = "foreground")]
         public int Foreground { get; set; }
@@ -47,17 +27,8 @@ namespace Terratype.Labels
         [JsonProperty(PropertyName = "content")]
         public IHtmlString Content { get; set; }
 
-        public override bool HasContent
-        {
-            get
-            {
-                return !String.IsNullOrWhiteSpace(Content.ToString());
-            }
-        }
+        public override bool HasContent => !String.IsNullOrWhiteSpace(Content.ToString());
 
-        public override void GetHtml(HtmlTextWriter writer, Models.Model model)
-        {
-            writer.Write(this.Content.ToString());
-        }
+        public override void GetHtml(HtmlTextWriter writer, Models.Model model) => writer.Write(this.Content.ToString());
     }
 }

@@ -24,37 +24,13 @@ namespace Terratype.Providers
         }
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.GoogleMapsV3";
-            }
-        }
+        public override string Id => "Terratype.GoogleMapsV3";
 
-        public override string Name
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_name";            //  Value is in the language file
-            }
-        }
+        public override string Name =>"terratypeGoogleMapsV3_name";            //  Value is in the language file
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_description";     //  Value is in the language file
-            }
-        }
+        public override string Description => "terratypeGoogleMapsV3_description";     //  Value is in the language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_referenceUrl";    //  Value is in the language file
-            }
-        }
+        public override string ReferenceUrl => "terratypeGoogleMapsV3_referenceUrl";    //  Value is in the language file
 
         public override IDictionary<string, Type> CoordinateSystems
         {
@@ -71,13 +47,8 @@ namespace Terratype.Providers
             }
         }
 
-        public override bool CanSearch
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanSearch => true;
+
 
         [JsonProperty(PropertyName = "version")]
         public string Version { get; set; }
