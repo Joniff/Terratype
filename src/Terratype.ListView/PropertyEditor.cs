@@ -5,22 +5,22 @@ using Umbraco.Web.PropertyEditors;
 
 namespace Terratype.ListView
 {
-	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorAlias, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.15", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.15")]
+	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorAlias, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.16", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.16")]
     public class TerratypeListViewPropertyEditor : PropertyEditor
 	{
 		public const string PropertyEditorAlias = nameof(Terratype) + "." + nameof(Terratype.ListView);
 
 		protected override PreValueEditor CreatePreValueEditor()
 		{
-			return new TerratypePreValueEditor();
+			return new TerratypeListViewPreValueEditor();
 		}
 
 		public TerratypeListViewPropertyEditor()
 		{
             _defaultPreVals = new Dictionary<string, object>
             {
-                { "definition", "{ \"config\": {\"height\": 400, \"gridHeight\": 400, \"debug\": 0, \"icon\": {\"id\":\"redmarker\"}, \"label\": {\"enable\": false, \"editPosition\":\"0\", \"id\": \"standard\"}}}" }
+                { "definition", "{ \"datatype\": -1}" }
             };
 		}
 
@@ -31,9 +31,9 @@ namespace Terratype.ListView
 			set { _defaultPreVals = value; }
 		}
 
-		internal class TerratypePreValueEditor : PreValueEditor
+		internal class TerratypeListViewPreValueEditor : PreValueEditor
 		{
-			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.15", Description = "", HideLabel = true)]
+			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.16", Description = "", HideLabel = true)]
             public Models.Model Definition { get; set; }
 
         }

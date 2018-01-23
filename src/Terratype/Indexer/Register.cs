@@ -64,7 +64,7 @@ namespace Terratype.Indexer
 
 		private void ContentService_RepublishAll(PageCacheRefresher sender, CacheRefresherEventArgs e)
 		{
-			if (AllowProcessing)
+			if (e.MessageType == MessageType.RefreshAll && AllowProcessing)
 			{
 				var contents = new Stack<Umbraco.Core.Models.IContent>();
 				var contentService = ApplicationContext.Current.Services.ContentService;

@@ -38,6 +38,7 @@
     <Compile Include="Indexer\ProcessorService\DataTypeId.cs" />
     <Compile Include="Indexer\ProcessorService\Task.cs" />
     <Compile Include="Indexer\Processors\ArchetypeProcessor.cs" />
+    <Compile Include="Indexer\Processors\StackedContentProcessor.cs" />
     <Compile Include="Indexer\Processors\TerratypeProcessor.cs" />
     <Compile Include="Indexer\Processors\GridProcessor.cs" />
     <Compile Include="Indexer\Processors\NestedContentProcessor.cs" />

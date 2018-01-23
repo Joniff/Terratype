@@ -71,7 +71,7 @@
 						label: match.getAttribute('data-label-id'),
 						position: model.position,
 						_latlng: latlng,
-						icon: model.icon.url,
+						_icon: model.icon.url,
 						_anchor: new root.Microsoft.Maps.Point(
 							root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
 							root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
@@ -200,7 +200,7 @@
 				item.handle = new root.Microsoft.Maps.Pushpin(item._latlng, {
 					id: item.id,
 					draggable: false,
-					icon: item.icon,
+					icon: item._icon,
 					anchor: item._anchor
 				});
 

@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.16**
+
+	Fixed custom icons in GMaps when rendering
+	Custom Position setting for map fixed when rendering
+
+
 **1.0.15**
 
 	Updated markercluster for GMaps

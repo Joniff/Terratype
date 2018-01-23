@@ -14,7 +14,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.LeafletV1/" + file;
             if (cache)
             {
-                result += "?cache=1.0.15";
+                result += "?cache=1.0.16";
             }
             return result;
         }

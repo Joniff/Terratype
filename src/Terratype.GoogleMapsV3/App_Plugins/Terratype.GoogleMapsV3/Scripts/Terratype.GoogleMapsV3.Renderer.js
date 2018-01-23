@@ -166,7 +166,7 @@
 					position: item._latlng,
 					id: item.id,
 					draggable: false,
-					icon: item.icon
+					icon: item._icon
 				});
 
 				item._info = null;

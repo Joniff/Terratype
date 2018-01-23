@@ -156,11 +156,17 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Our.Umbraco.InnerContent, Version=1.0.6286.21529, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Our.Umbraco.InnerContent.Core.1.0.3\lib\net45\Our.Umbraco.InnerContent.dll</HintPath>
+    </Reference>
     <Reference Include="Our.Umbraco.NestedContent, Version=0.3.6033.18955, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Our.Umbraco.NestedContent.0.3.0\lib\net45\Our.Umbraco.NestedContent.dll</HintPath>
     </Reference>
     <Reference Include="Our.Umbraco.PropertyEditorConverters, Version=3.1.3.98, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Our.Umbraco.CoreValueConverters.3.1.3\lib\net45\Our.Umbraco.PropertyEditorConverters.dll</HintPath>
+    </Reference>
+    <Reference Include="Our.Umbraco.StackedContent, Version=1.0.6286.25615, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Our.Umbraco.StackedContent.1.0.4\lib\net45\Our.Umbraco.StackedContent.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -307,6 +313,13 @@
     <Content Include="App_Plugins\Grid\Config\FanoeConfig.txt" />
     <Content Include="App_Plugins\Grid\Editors\Views\media_with_description.html" />
     <Content Include="App_Plugins\Grid\Editors\Views\quote_with_description.html" />
+    <Content Include="App_Plugins\InnerContent\css\innercontent.css" />
+    <Content Include="App_Plugins\InnerContent\js\innercontent.controllers.js" />
+    <Content Include="App_Plugins\InnerContent\js\innercontent.resources.js" />
+    <Content Include="App_Plugins\InnerContent\views\innercontent.dialog.html" />
+    <Content Include="App_Plugins\InnerContent\views\innercontent.doctypepicker.html" />
+    <Content Include="App_Plugins\InnerContent\views\innercontent.doctypetabpicker.html" />
+    <Content Include="App_Plugins\InnerContent\views\innercontent.overlay.html" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.htm" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
@@ -317,6 +330,10 @@
     <Content Include="App_Plugins\NestedContent\Views\nestedcontent.doctypepicker.html" />
     <Content Include="App_Plugins\NestedContent\Views\nestedcontent.editor.html" />
     <Content Include="App_Plugins\NestedContent\Views\nestedcontent.html" />
+    <Content Include="App_Plugins\StackedContent\css\stackedcontent.css" />
+    <Content Include="App_Plugins\StackedContent\js\stackedcontent.controllers.js" />
+    <Content Include="App_Plugins\StackedContent\js\stackedcontent.resources.js" />
+    <Content Include="App_Plugins\StackedContent\views\stackedcontent.html" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -457,6 +474,8 @@
     <Content Include="config\BaseRestExtensions.config" />
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
+    <Content Include="App_Plugins\InnerContent\package.manifest" />
+    <Content Include="App_Plugins\StackedContent\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />

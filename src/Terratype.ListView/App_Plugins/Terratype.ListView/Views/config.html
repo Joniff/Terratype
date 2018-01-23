@@ -1,0 +1,20 @@
+﻿<div class="ng-cloak terratype-listview" ng-controller="terratypelistview as vm" ng-init="vm.init()" ng-show="!vm.loading">
+    <div class="umb-el-wrap control-group">
+        <div ng-show="vm.datatypes.length != 0">
+            <label for="terratypelistview_{{identifier}}_datatype" class="control-label">
+                <localize key="terratypeListViewConfig_dataTypeLabel">Map:</localize>
+                <small>
+                    <localize key="terratypeListViewConfig_dataTypeDescription">Which map would you like to use to display the list view</localize>
+                </small>
+            </label>
+            <div class="controls">
+                <select id="terratypelistview_{{identifier}}_datatype" ng-model="vm.datatype.id" class="umb-editor" ng-change="vm.setMap(vm.datatype.id)" ng-options="p.id as p.name for p in vm.datatypes" style="float:left;"></select>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div ng-show="vm.datatypes.length == 0" style="color:red;">
+            <localize key="terratypeListViewConfig_mapProviderError">Need to create a Terratype datatype before creating a list view based off it</localize>
+        </div>
+    </div>
+    <br />
+</div>

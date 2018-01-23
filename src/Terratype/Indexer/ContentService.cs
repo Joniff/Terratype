@@ -51,6 +51,7 @@ namespace Terratype.Indexer
 				new Processors.ArchetypeProcessor(results, tasks),
 				new Processors.GridProcessor(results, tasks),
 				new Processors.NestedContentProcessor(results, tasks),
+				new Processors.StackedContentProcessor(results, tasks),
 				new Processors.GenericProcessor(results, tasks)
 			};
 
