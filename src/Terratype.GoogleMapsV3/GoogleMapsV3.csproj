@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,6 +84,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="packages.config" />
     <None Include="Terratype.GoogleMapsV3.nuspec">
       <SubType>Designer</SubType>
@@ -100,7 +103,17 @@
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.min.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.min.js">
+      <DependentUpon>Terratype.GoogleMapsV3.js</DependentUpon>
+    </Content>
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.bundle.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.bundle.min.js">
+      <DependentUpon>Terratype.GoogleMapsV3.Renderer.bundle.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.min.js">
+      <DependentUpon>Terratype.GoogleMapsV3.Renderer.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.search.html" />
@@ -112,6 +125,13 @@
     <PostBuildEvent>$(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
 xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

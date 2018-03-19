@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype.BingMapsV8/Scripts/Terratype.BingMapsV8.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.BingMapsV8/Scripts/Terratype.BingMapsV8.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.BingMapsV8/Scripts/Terratype.BingMapsV8.Renderer.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.BingMapsV8/Scripts/Terratype.BingMapsV8.Renderer.js"
+    ]
+  }
+]

@@ -388,7 +388,7 @@
 													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh') ? true : false,
 													handle: null,
 													positions: [],
-													getPosition(tag) {
+													getPosition: function (tag) {
 														for (var i = 0; i != m._positions.length; i++) {
 															if (m._positions[i].tag == tag) {
 																return m._positions[i];

@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype.ListView/Scripts/terratype.listview.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.ListView/Scripts/terratype.listview.js"
+    ]
+  }
+]

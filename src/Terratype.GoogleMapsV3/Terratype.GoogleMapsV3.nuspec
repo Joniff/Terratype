@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Google Maps Gmaps Open Street View</tags>
     <dependencies>
-      <dependency id="Terratype" version="1.0.16" />
+      <dependency id="Terratype" version="1.0.17" />
     </dependencies>
   </metadata>
   <files>

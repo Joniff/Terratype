@@ -269,7 +269,7 @@
     <key alias="typeAutocomplete">Enable Search with Autocomplete</key>
 
     <key alias="countryLabel">Limit:</key>
-    <key alias="countryDescription">Limited all search results to a particular country or countries</key>
+    <key alias="countryDescription">Limit all search results to a particular country or countries</key>
     <key alias="countryAF">Afghanistan</key>
     <key alias="countryAX">Aland Islands</key>
     <key alias="countryAL">Albania</key>

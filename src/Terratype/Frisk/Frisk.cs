@@ -28,6 +28,21 @@ namespace Terratype.Frisk
 			typeof(Indexer.Searchers.ISearch<Indexer.Searchers.ISearchRequest>)
         };
 
+		private static bool IsInterfaceOf(Type got, Type lookingFor)
+		{
+			var inters = got.GetInterfaces();
+			if (inters.Length > 0)
+			{
+				foreach (var inter in inters)
+				{
+					if ((inter.Name == lookingFor.Name && inter.Namespace == lookingFor.Namespace) || IsInterfaceOf(inter, lookingFor))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
         private static void registerAssembly(Assembly currAssembly, ref Dictionary<string, Dictionary<string, Type>> installed)
         {
             Type[] typesInAsm;
@@ -49,35 +64,13 @@ namespace Terratype.Frisk
 
                 foreach (var interest in interests)
                 {
-                    if ((type.BaseType == null || type.BaseType.Name != interest.Name ||
-                         type.BaseType.Namespace != interest.Namespace) && !type.IsSubclassOf(interest))
+					if (type.IsSubclassOf(interest) || (interest.GenericTypeArguments.Length > 0 && IsInterfaceOf(type, interest)))
 					{
-						continue;
-					}
-
-					IFrisk derivedObject = null;
-					if (type.ContainsGenericParameters)
-					{
-						var cn = type.GetTypeInfo().GenericTypeParameters[0].Namespace + "." + type.GetTypeInfo().GenericTypeParameters[0].Name;
-						var ci = Activator.CreateInstance(currAssembly.FullName, cn);
-
-						var pn = type.GetTypeInfo().Namespace + "." + type.GetTypeInfo().Name;
-
-						var t = type.GetGenericTypeDefinition().Name;
-						var t1 = type.GetTypeInfo().GenericTypeParameters;
-						Type tt = Type.GetType(pn).MakeGenericType(ci.GetType());
-
-						var f = Activator.CreateInstance(tt);
-
-						derivedObject = System.Activator.CreateInstance(type.GetGenericTypeDefinition().MakeGenericType(type.GetTypeInfo().GenericTypeParameters)) as IFrisk;
-					}
-					else
-					{
-						derivedObject = System.Activator.CreateInstance(type) as IFrisk;
-					}
-					if (derivedObject != null)
-					{
-						installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
+						var derivedObject = Activator.CreateInstance(type) as IFrisk;
+						if (derivedObject != null)
+						{
+							installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
+						}
 					}
 				}
             }

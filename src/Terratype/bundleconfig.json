@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype/Scripts/terratype.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype/Scripts/terratype.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype/Scripts/terratype.renderer.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype/Scripts/terratype.renderer.js"
+    ]
+  }
+]

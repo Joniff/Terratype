@@ -1,0 +1,21 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.Renderer.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.Renderer.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.Renderer.bundle.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.GoogleMapsV3/Scripts/markerclusterer.js",
+      "App_Plugins/Terratype.GoogleMapsV3/Scripts/Terratype.GoogleMapsV3.Renderer.js"
+    ]
+  }
+]

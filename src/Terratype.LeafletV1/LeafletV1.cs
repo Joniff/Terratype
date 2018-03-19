@@ -14,7 +14,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.LeafletV1/" + file;
             if (cache)
             {
-                result += "?cache=1.0.16";
+                result += "?cache=1.0.17";
             }
             return result;
         }
@@ -136,11 +136,16 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.js"));
+#else
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.bundle.min.js"));
+#endif
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
@@ -155,6 +160,7 @@ namespace Terratype.Providers
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
+#endif
             }
 
             writer.AddAttribute(HtmlTextWriterAttribute.Id, generatedId);

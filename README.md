@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+** 1.0.17 **
+	
+	Fixed error converting old properties (https://our.umbraco.org/projects/backoffice-extensions/terratype/bugs-questions/90338-keynotfoundexception-in-publishedcache#comment-285442)
+	Fixed no click event for some markers in JS client library 
+	Fixed loading Generic providers 
+
 **1.0.16**
 
 	Fixed custom icons in GMaps when rendering

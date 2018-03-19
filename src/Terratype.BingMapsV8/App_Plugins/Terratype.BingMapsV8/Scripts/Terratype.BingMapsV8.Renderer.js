@@ -226,8 +226,11 @@
 							q.openInfoWindow(m, p);
 						}, 100);
 					}
+				} else {
+					root.Microsoft.Maps.Events.addHandler(item.handle, 'click', function () {
+						root.terratype._callClick(q, m, item);
+					});
 				}
-
 				markers.push(item.handle);
 			});
 
@@ -315,12 +318,16 @@
 		},
 	};
 
-	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype._addProvider) {
-			root.terratype._addProvider(q.id, q);
-			root.clearInterval(timer);
-		}
-	}, 250);
+	if (root.terratype && root.terratype._addProvider) {
+		root.terratype._addProvider(q.id, q);
+	} else {
+		var timer = root.setInterval(function () {
+			if (root.terratype && root.terratype._addProvider) {
+				root.terratype._addProvider(q.id, q);
+				root.clearInterval(timer);
+			}
+		}, 100);
+	}
 
 	root.TerratypeBingMapsV8CallbackRender = function () {
 		root.Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function () {

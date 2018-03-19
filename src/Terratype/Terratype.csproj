@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype\Css\label.standard.css" />
+    <Content Include="App_Plugins\Terratype\Scripts\terratype.min.js">
+      <DependentUpon>terratype.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype\Scripts\terratype.renderer.js" />
     <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
     <Content Include="App_Plugins\Terratype\Views\label.standard.html" />
@@ -86,6 +91,10 @@
     <None Include="app.config" />
     <None Include="App_Plugins\Terratype\package.manifest" />
     <None Include="App_Plugins\Terratype\Views\grid.cshtml" />
+    <None Include="bundleconfig.json" />
+    <None Include="bundleconfig.json.bindings">
+      <DependentUpon>bundleconfig.json</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Terratype.nuspec">
       <SubType>Designer</SubType>
@@ -296,6 +305,13 @@ $(solutiondir)nuget\nuget.exe pack "$(ProjectPath)"
 xcopy "$(targetdir)*.nupkg" "$(solutiondir)nuget\" /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <Import Project="..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.2.6.362\build\BuildBundlerMinifier.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

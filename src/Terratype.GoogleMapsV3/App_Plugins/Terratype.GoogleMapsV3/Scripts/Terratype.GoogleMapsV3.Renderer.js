@@ -186,9 +186,13 @@
 					});
 					if (root.terratype._domDetectionType == 2 && item.autoShowLabel) {
 						root.setTimeout(function () {
-							q.openInfoWindow(m, p);
+							q.openInfoWindow(m, m.positions[p]);
 						}, 100);
 					}
+				} else {
+					item.handle.addListener('click', function () {
+						root.terratype._callClick(q, m, item);
+					});
 				}
 				markers.push(item.handle);
 			});
@@ -270,12 +274,16 @@
 		}
 	};
 
-	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype._addProvider) {
-			root.terratype._addProvider(q.id, q);
-			root.clearInterval(timer);
-		}
-	}, 250);
+	if (root.terratype && root.terratype._addProvider) {
+		root.terratype._addProvider(q.id, q);
+	} else {
+		var timer = root.setInterval(function () {
+			if (root.terratype && root.terratype._addProvider) {
+				root.terratype._addProvider(q.id, q);
+				root.clearInterval(timer);
+			}
+		}, 100);
+	}
 
 	root.TerratypeGoogleMapsV3CallbackRender = function () {
 		isGmapsReady = true;

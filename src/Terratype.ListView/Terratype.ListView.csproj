@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bundleconfig.json" />
     <None Include="packages.config" />
     <None Include="Terratype.ListView.nuspec">
       <SubType>Designer</SubType>
@@ -167,6 +168,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype.ListView\Scripts\terratype.listview.js" />
+    <Content Include="App_Plugins\Terratype.ListView\Scripts\terratype.listview.min.js">
+      <DependentUpon>terratype.listview.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.ListView\Views\config.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -164,6 +164,7 @@
 				} else {
 					item.handle.addTo(m.handle);
 				}
+				item.handle.on('click', function (e) { root.terratype._callClick(q, m, item); });
 			});
 
 			if (m._cluster != null) {
@@ -241,13 +242,16 @@
 		}
 	};
 
-	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype._addProvider) {
-			root.terratype._addProvider(q.id, q);
-			root.clearInterval(timer);
-		}
-	}, 250);
-
+	if (root.terratype && root.terratype._addProvider) {
+		root.terratype._addProvider(q.id, q);
+	} else {
+		var timer = root.setInterval(function () {
+			if (root.terratype && root.terratype._addProvider) {
+				root.terratype._addProvider(q.id, q);
+				root.clearInterval(timer);
+			}
+		}, 100);
+	}
 }(window));
 
 

@@ -71,7 +71,7 @@
 						label: match.getAttribute('data-label-id'),
 						position: model.position,
 						_latlng: latlng,
-						icon: model.icon.url,
+						_icon: model.icon.url,
 						_anchor: new root.Microsoft.Maps.Point(
 							root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
 							root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)),
@@ -200,7 +200,7 @@
 				item.handle = new root.Microsoft.Maps.Pushpin(item._latlng, {
 					id: item.id,
 					draggable: false,
-					icon: item.icon,
+					icon: item._icon,
 					anchor: item._anchor
 				});
 
@@ -226,8 +226,11 @@
 							q.openInfoWindow(m, p);
 						}, 100);
 					}
+				} else {
+					root.Microsoft.Maps.Events.addHandler(item.handle, 'click', function () {
+						root.terratype._callClick(q, m, item);
+					});
 				}
-
 				markers.push(item.handle);
 			});
 
@@ -315,12 +318,16 @@
 		},
 	};
 
-	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype._addProvider) {
-			root.terratype._addProvider(q.id, q);
-			root.clearInterval(timer);
-		}
-	}, 250);
+	if (root.terratype && root.terratype._addProvider) {
+		root.terratype._addProvider(q.id, q);
+	} else {
+		var timer = root.setInterval(function () {
+			if (root.terratype && root.terratype._addProvider) {
+				root.terratype._addProvider(q.id, q);
+				root.clearInterval(timer);
+			}
+		}, 100);
+	}
 
 	root.TerratypeBingMapsV8CallbackRender = function () {
 		root.Microsoft.Maps.loadModule("Microsoft.Maps.Clustering", function () {
