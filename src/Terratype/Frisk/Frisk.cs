@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-
+using Umbraco.Core.Logging;
 
 namespace Terratype.Frisk
 {
@@ -73,11 +73,18 @@ namespace Terratype.Frisk
                 //  First read those in current domain
                 foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (!currAssembly.IsDynamic)
+                    try
                     {
-                        filenames.Add(currAssembly.Location.ToLowerInvariant());
+                        if (!currAssembly.IsDynamic)
+                        {
+                            filenames.Add(currAssembly.Location.ToLowerInvariant());
+                        }
+                        registerAssembly(currAssembly, ref installed);
                     }
-                    registerAssembly(currAssembly, ref installed);
+                    catch(Exception ex)
+                    {
+                        LogHelper.Error(typeof(Frisk), $"TerraType: Error registering assemblies in AppDomain, asesembly {currAssembly.FullName}", ex);
+                    }
                 }
 
                 //  Now see if any dlls haven't been loaded yet
