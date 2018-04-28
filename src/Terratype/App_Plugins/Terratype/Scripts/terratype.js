@@ -1058,7 +1058,7 @@
                     }
                     $scope.terratype.setLabelView($scope.config().label);
                     if ($scope.terratype.gridOverlay.dataTypes.length == 0) {
-                        $http.get($scope.terratype.controller('datatypes')).then(function success(response) {
+                        $http.get($scope.terratype.controller('maps')).then(function success(response) {
                             $scope.terratype.gridOverlay.dataTypes = response.data;
                             $scope.terratype.gridOverlay.displayLoad();
                         });
@@ -1187,7 +1187,7 @@
                     $scope.store = function () {
                         return $scope.control.value;
                     }
-                    $http.get($scope.terratype.controller('datatypes?id=' + $scope.control.value.datatypeId)).then(function success(response) {
+                    $http.get($scope.terratype.controller('maps?id=' + $scope.control.value.datatypeId)).then(function success(response) {
                         if (response.data.length == 1) {
                             var c = angular.copy(response.data[0].config);
                             $scope.viewmodel.config = c.config;

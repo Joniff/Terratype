@@ -563,6 +563,7 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(solutiondir)src\Terratype\App_Plugins\*.*" "$(ProjectDir)App_Plugins\" /Y /e
+xcopy "$(solutiondir)src\Terratype.ListView\App_Plugins\*.*" "$(ProjectDir)App_Plugins\" /Y /e
 xcopy "$(solutiondir)src\Terratype.GoogleMapsV3\App_Plugins\*.*" "$(ProjectDir)App_Plugins\" /Y /e
 xcopy "$(solutiondir)src\Terratype.BingMapsV8\App_Plugins\*.*" "$(ProjectDir)App_Plugins\" /Y /e
 xcopy "$(solutiondir)src\Terratype.LeafletV1\App_Plugins\*.*" "$(ProjectDir)App_Plugins\" /Y /e

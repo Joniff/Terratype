@@ -101,6 +101,5 @@ namespace Terratype.CoordinateSystems
         {
             Datum = datum;
         }
-
     }
 }

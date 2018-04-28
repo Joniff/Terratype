@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alias="terratypeListViewConfig">
+	<key alias="dataTypeLabel">Map:</key>
+    <key alias="dataTypeDescription">Which map would you like to use to display the list view</key>
+	<key alias="mapProviderError">Need to create a Terratype datatype before creating a list view based off it</key>
+  </area>
+
+</language>

@@ -11,7 +11,11 @@ namespace Terratype.Models
     [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
     public abstract class Position : Frisk.IFrisk
     {
-        /// <summary>
+        private const double EarthRadius = 63781370.0;		//	meters at the equator
+		private const double EarthSquash = 136139.22846149;	//	Difference between equator and polar circle in meters
+		private const double RoundingError = 0.000001;		//	Rounding error
+
+		/// <summary>
         /// Unique identifier of coordinate system
         /// </summary>
         [JsonProperty(PropertyName = "id")]
@@ -163,5 +167,58 @@ namespace Terratype.Models
                 return ToString();
             }
         }
+
+		/// <summary>
+		/// Distance in meters between this position and another position using Haversine formula
+		/// </summary>
+		/// <param name="other">The other position to compare distance against</param>
+		/// <returns>Number of km between the two positions</returns>
+		public virtual double Distance(Position other)
+		{
+			if (other == null)
+			{
+				throw new NullReferenceException();
+			}
+			var one = ToWgs84();
+			var two = other.ToWgs84();
+			double longitude = (one.Longitude - two.Longitude) / 2.0;
+			double latitude = (one.Latitude - two.Latitude) / 2.0;
+			double rad = Math.Sqrt(Math.Pow(Math.Sin(latitude), 2.0) + Math.Cos(one.Latitude) * Math.Cos(two.Latitude) * Math.Pow(Math.Sin(longitude), 2.0));
+			if (rad > 1.0)
+			{
+				rad = 1.0;
+			}
+			return ((EarthRadius - (EarthSquash * Math.Abs(two.Latitude + latitude))) * (2.0 * Math.Asin(rad)));
+		}
+
+		/// <summary>
+		/// Distance in km between this position and another position
+		/// </summary>
+		/// <param name="other">The other position to compare distance against</param>
+		/// <returns>Number of km between the two positions</returns>
+		public virtual double DistanceInKM(Position other) => Distance(other) / 1000.0;
+		
+		/// <summary>
+		/// Distance in miles between this position and another position
+		/// </summary>
+		/// <param name="other">The other position to compare distance against</param>
+		/// <returns>Number of miles between the two positions</returns>
+		public virtual double DistanceInMiles(Position other) => Distance(other) / 1609.34;
+
+		/// <summary>
+		/// Are the two positons referencesing the same location, within a margin of error
+		/// </summary>
+		/// <param name="other">The other position to compare against</param>
+		/// <returns>True if the two positons are referencing the same position</returns>
+		public virtual bool Equal(Position other)
+		{
+			if (other == null)
+			{
+				throw new NullReferenceException();
+			}
+			var one = ToWgs84();
+			var two = other.ToWgs84();
+			return (Math.Abs(one.Latitude - two.Latitude) < RoundingError && Math.Abs(one.Longitude - two.Longitude) < RoundingError);
+		}
     }
 }
