@@ -1,23 +1,109 @@
 ﻿<div class="ng-cloak terratype-listview" ng-controller="terratypelistview as vm" ng-init="vm.init()" ng-show="!vm.loading">
-    <div class="umb-el-wrap control-group">
-        <div ng-show="vm.datatypes.length != 0 || vm.loading == true">
-            <label for="terratypelistview_{{identifier}}_datatype" class="control-label">
-                <localize key="terratypeListViewConfig_dataTypeLabel">Map:</localize>
-                <small>
-                    <localize key="terratypeListViewConfig_dataTypeDescription">Which map would you like to use to display the list view</localize>
-                </small>
-            </label>
-			<div class="controls">
-				<select id="terratypelistview_{{identifier}}_datatype" ng-model="vm.datatype.id" class="umb-editor" ng-change="vm.setMap(vm.datatype.id)" ng-options="p.id as p.name for p in vm.datatypes" style="float:left;"></select>
-				<div ng-show="vm.loading == true" style="float:left;margin-left:10px;">
-					<img ng-src="{{vm.images.loading}}" />
-				</div>
-				<div style="clear:both;"></div>
+	<div ng-show="vm.datatypes.length == 0 && vm.loading != true">
+		<div class="umb-el-wrap control-group">
+			<div style="color:red;">
+				<localize key="terratypeListViewConfig_mapProviderError">Need to create a Terratype datatype before creating a list view based off it</localize>
 			</div>
-        </div>
-        <div ng-show="vm.datatypes.length == 0 && vm.loading != true" style="color:red;">
-            <localize key="terratypeListViewConfig_mapProviderError">Need to create a Terratype datatype before creating a list view based off it</localize>
-        </div>
-    </div>
-    <br />
+		</div>
+	</div>
+	<section>
+		<h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+			<localize key="terratypeConfig_definitionHeading">Configure</localize>
+		</h4>
+		<div ng-show="vm.datatypes.length != 0 || vm.loading == true">
+			<div class="umb-el-wrap control-group">
+				<label for="terratypelistview_{{identifier}}_datatype" class="control-label">
+					<localize key="terratypeListViewConfig_dataTypeLabel">Map:</localize>
+					<small>
+						<localize key="terratypeListViewConfig_dataTypeDescription">Which map would you like to use to display the list view</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<select id="terratypelistview_{{identifier}}_datatype" ng-model="vm.config().datatype.id" class="umb-editor" ng-options="p.id as p.name for p in vm.datatypes" style="float:left;"></select>
+					<div ng-show="vm.loading == true" style="float:left;margin-left:10px;">
+						<img ng-src="{{vm.images.loading}}" />
+					</div>
+					<div style="clear:both;"></div>
+				</div>
+			</div>
+			<div class="umb-el-wrap control-group">
+				<label for="terratypelistview_{{identifier}}_displaymap" class="control-label">
+					<localize key="terratypeListViewConfig_displayMapLabel">Display Map:</localize>
+					<small>
+						<localize key="terratypeListViewConfig_displayMapDescription">Display Terratype map</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<input type="checkbox" id="terratypelistview_{{identifier}}_displaymap" ng-model="vm.config().displayMap" />
+				</div>
+			</div>
+			<div class="umb-el-wrap control-group">
+				<label for="terratypelistview_{{identifier}}_displaylist" class="control-label">
+					<localize key="terratypeListViewConfig_displayListLabel">Display List:</localize>
+					<small>
+						<localize key="terratypeListViewConfig_displayListDescription">Display list of map nodes</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<input type="checkbox" id="terratypelistview_{{identifier}}_displaylist" ng-model="vm.config().displayList" />
+				</div>
+			</div>
+			<div class="umb-el-wrap control-group" ng-if="vm.config().displayList">
+				<label for="terratypelistview_{{identifier}}_listtemplate" class="control-label">
+					<localize key="terratypeListViewConfig_listTemplateLabel">List template:</localize>
+					<small>
+						<localize key="terratypeListViewConfig_listTemplateDescription">Decide what value(s) to use to render a descandant Terratype map</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<input type="text" id="terratypelistview_{{identifier}}_listtemplate" ng-model="vm.config().listTemplate" class="umb-editor ng-pristine ng-valid" localize="placeholder" placeholder="@terratypeListViewConfig_listTemplatePlaceholder" />
+					<div>
+						<small>
+							<localize key="terratypeListViewConfig_listTemplateHelp">Help</localize>
+						</small>
+					</div>
+				</div>
+			</div>
+			<div class="umb-el-wrap control-group" ng-if="vm.config().displayList">
+				<label for="terratypelistview_{{identifier}}_listpagesize" class="control-label">
+					<localize key="terratypeListViewConfig_listPageSizeLabel">List Page Size:</localize>
+					<small>
+						<localize key="terratypeListViewConfig_listPageSizeDescription">Description</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<input type="number" id="terratypelistview_{{identifier}}_listpagesize" ng-model="vm.config().listPageSize" class="umb-editor ng-pristine ng-valid ng-valid-number" localize="placeholder" placeholder="@terratypeListViewConfig_listPageSizeDescription" />
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+			<localize key="terratypeConfig_debugHeading">Debugger</localize>
+		</h4>
+		<div class="umb-el-wrap control-group">
+			<label for="terratype_{{identifier}}_debug" class="control-label">
+				<localize key="terratypeConfig_debugJsonLabel">Show Json:</localize>
+				<small>
+					<localize key="terratypeListViewConfig_debugJsonDescription">Do you want to show the listview or a json editor</localize>
+				</small>
+			</label>
+			<div class="controls">
+				<select id="terratype_{{identifier}}_debug" ng-model="vm.config().debug" class="umb-editor">
+					<option value="0" terratype-translate="@terratypeListViewConfig_debugJsonDisable"></option>
+					<option value="1" terratype-translate="@terratypeListViewConfig_debugJsonEnable"></option>
+					<option value="2" terratype-translate="@terratypeListViewConfig_debugJsonBoth"></option>
+				</select>
+			</div>
+		</div>
+		<div ng-show="vm.config().debug != 0">
+			<textarea style="height:200px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
+			<div style="text-align:center;background-color:khaki;color:darkred;">
+				<small>
+					<localize key="terratypeConfig_debugJsonLiveDescription">Warning</localize>
+				</small>
+			</div>
+		</div>
+	</section>
 </div>

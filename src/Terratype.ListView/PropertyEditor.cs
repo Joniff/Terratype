@@ -25,7 +25,7 @@ namespace Terratype.ListView
 		{
             _defaultPreVals = new Dictionary<string, object>
             {
-                { "definition", "{ \"datatype\": -1}" }
+                { "definition", "{ \"datatype\": { \"id\": null}, \"displayMap\": true, \"displayList\": true, \"listTemplate\": \"\", \"listPageSize\": 10, \"debug\": 0 }" }
             };
 		}
 

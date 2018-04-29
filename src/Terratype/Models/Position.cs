@@ -11,8 +11,7 @@ namespace Terratype.Models
     [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
     public abstract class Position : Frisk.IFrisk
     {
-        private const double EarthRadius = 63781370.0;		//	meters at the equator
-		private const double EarthSquash = 136139.22846149;	//	Difference between equator and polar circle in meters
+        private const double EarthRadius = 6371000;			//	meters
 		private const double RoundingError = 0.000001;		//	Rounding error
 
 		/// <summary>
@@ -181,14 +180,12 @@ namespace Terratype.Models
 			}
 			var one = ToWgs84();
 			var two = other.ToWgs84();
-			double longitude = (one.Longitude - two.Longitude) / 2.0;
-			double latitude = (one.Latitude - two.Latitude) / 2.0;
-			double rad = Math.Sqrt(Math.Pow(Math.Sin(latitude), 2.0) + Math.Cos(one.Latitude) * Math.Cos(two.Latitude) * Math.Pow(Math.Sin(longitude), 2.0));
-			if (rad > 1.0)
-			{
-				rad = 1.0;
-			}
-			return ((EarthRadius - (EarthSquash * Math.Abs(two.Latitude + latitude))) * (2.0 * Math.Asin(rad)));
+			double latitude = Math.Sin((one.Latitude - two.Latitude) * Math.PI / 360.0);
+			double longitude = Math.Sin((one.Longitude - two.Longitude) * Math.PI / 360.0);
+			double rad = latitude * latitude + longitude * longitude * 
+				Math.Cos(one.Latitude * Math.PI / 180.0) * 
+				Math.Cos(two.Latitude * Math.PI / 180.0);
+			return EarthRadius * 2.0 * Math.Asin((rad > 1.0) ? 1.0 : Math.Sqrt(rad));
 		}
 
 		/// <summary>
@@ -196,7 +193,7 @@ namespace Terratype.Models
 		/// </summary>
 		/// <param name="other">The other position to compare distance against</param>
 		/// <returns>Number of km between the two positions</returns>
-		public virtual double DistanceInKM(Position other) => Distance(other) / 1000.0;
+		public virtual double DistanceInKm(Position other) => Distance(other) / 1000.0;
 		
 		/// <summary>
 		/// Distance in miles between this position and another position
