@@ -16615,8 +16615,7 @@
 				_maxZoom: null,
 				_layers: null,
 				_bound: new L.latLngBounds(),
-				_center: null,
-				positions: []
+				_center: null
 			};
 		},
 		_loadCss: false,
