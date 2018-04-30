@@ -1,9 +1,9 @@
 ﻿(function (root) {
 
-	angular.module('umbraco').controller('terratypelistview', ['$scope', '$timeout', '$http', 'localizationService', 
+	angular.module('umbraco').controller('terratypelistviewconfig', ['$scope', '$timeout', '$http', 'localizationService', 
 		function ($scope, $timeout, $http, localizationService) {
 
-		var vm = angular.extend(this, {
+		var fix = angular.extend(this, {
 			loading: true,
 			datatypes: [],
 			config: function () {
@@ -17,7 +17,7 @@
 			controller: function (a) {
 				return Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/Terratype/ajax/' + a;
 			},
-			init: function () {
+			initConfig: function () {
 				if (typeof ($scope.model.value) === 'string') {
 					$scope.model.value = ($scope.model.value != '') ? JSON.parse($scope.model.value) : {};
 				}

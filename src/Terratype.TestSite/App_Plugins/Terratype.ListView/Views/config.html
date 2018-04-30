@@ -1,5 +1,5 @@
-﻿<div class="ng-cloak terratype-listview" ng-controller="terratypelistview as vm" ng-init="vm.init()" ng-show="!vm.loading">
-	<div ng-show="vm.datatypes.length == 0 && vm.loading != true">
+﻿<div class="ng-cloak terratype-listview" ng-controller="terratypelistviewconfig as vm" ng-init="fix.initConfig()" ng-show="!fix.loading">
+	<div ng-show="fix.datatypes.length == 0 && fix.loading != true">
 		<div class="umb-el-wrap control-group">
 			<div style="color:red;">
 				<localize key="terratypeListViewConfig_mapProviderError">Need to create a Terratype datatype before creating a list view based off it</localize>
@@ -10,7 +10,7 @@
 		<h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
 			<localize key="terratypeConfig_definitionHeading">Configure</localize>
 		</h4>
-		<div ng-show="vm.datatypes.length != 0 || vm.loading == true">
+		<div ng-show="fix.datatypes.length != 0 || fix.loading == true">
 			<div class="umb-el-wrap control-group">
 				<label for="terratypelistview_{{identifier}}_datatype" class="control-label">
 					<localize key="terratypeListViewConfig_dataTypeLabel">Map:</localize>
@@ -19,9 +19,9 @@
 					</small>
 				</label>
 				<div class="controls">
-					<select id="terratypelistview_{{identifier}}_datatype" ng-model="vm.config().datatype.id" class="umb-editor" ng-options="p.id as p.name for p in vm.datatypes" style="float:left;"></select>
-					<div ng-show="vm.loading == true" style="float:left;margin-left:10px;">
-						<img ng-src="{{vm.images.loading}}" />
+					<select id="terratypelistview_{{identifier}}_datatype" ng-model="fix.config().datatype.id" class="umb-editor" ng-options="p.id as p.name for p in fix.datatypes" style="float:left;"></select>
+					<div ng-show="fix.loading == true" style="float:left;margin-left:10px;">
+						<img ng-src="{{fix.images.loading}}" />
 					</div>
 					<div style="clear:both;"></div>
 				</div>
@@ -34,7 +34,7 @@
 					</small>
 				</label>
 				<div class="controls">
-					<input type="checkbox" id="terratypelistview_{{identifier}}_displaymap" ng-model="vm.config().displayMap" />
+					<input type="checkbox" id="terratypelistview_{{identifier}}_displaymap" ng-model="fix.config().displayMap" />
 				</div>
 			</div>
 			<div class="umb-el-wrap control-group">
@@ -45,10 +45,10 @@
 					</small>
 				</label>
 				<div class="controls">
-					<input type="checkbox" id="terratypelistview_{{identifier}}_displaylist" ng-model="vm.config().displayList" />
+					<input type="checkbox" id="terratypelistview_{{identifier}}_displaylist" ng-model="fix.config().displayList" />
 				</div>
 			</div>
-			<div class="umb-el-wrap control-group" ng-if="vm.config().displayList">
+			<div class="umb-el-wrap control-group" ng-if="fix.config().displayList">
 				<label for="terratypelistview_{{identifier}}_listtemplate" class="control-label">
 					<localize key="terratypeListViewConfig_listTemplateLabel">List template:</localize>
 					<small>
@@ -56,7 +56,7 @@
 					</small>
 				</label>
 				<div class="controls">
-					<input type="text" id="terratypelistview_{{identifier}}_listtemplate" ng-model="vm.config().listTemplate" class="umb-editor ng-pristine ng-valid" localize="placeholder" placeholder="@terratypeListViewConfig_listTemplatePlaceholder" />
+					<input type="text" id="terratypelistview_{{identifier}}_listtemplate" ng-model="fix.config().listTemplate" class="umb-editor ng-pristine ng-valid" localize="placeholder" placeholder="@terratypeListViewConfig_listTemplatePlaceholder" />
 					<div>
 						<small>
 							<localize key="terratypeListViewConfig_listTemplateHelp">Help</localize>
@@ -64,7 +64,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="umb-el-wrap control-group" ng-if="vm.config().displayList">
+			<div class="umb-el-wrap control-group" ng-if="fix.config().displayList">
 				<label for="terratypelistview_{{identifier}}_listpagesize" class="control-label">
 					<localize key="terratypeListViewConfig_listPageSizeLabel">List Page Size:</localize>
 					<small>
@@ -72,7 +72,7 @@
 					</small>
 				</label>
 				<div class="controls">
-					<input type="number" id="terratypelistview_{{identifier}}_listpagesize" ng-model="vm.config().listPageSize" class="umb-editor ng-pristine ng-valid ng-valid-number" localize="placeholder" placeholder="@terratypeListViewConfig_listPageSizeDescription" />
+					<input type="number" id="terratypelistview_{{identifier}}_listpagesize" ng-model="fix.config().listPageSize" class="umb-editor ng-pristine ng-valid ng-valid-number" localize="placeholder" placeholder="@terratypeListViewConfig_listPageSizePlaceholder" />
 				</div>
 			</div>
 		</div>
@@ -90,15 +90,15 @@
 				</small>
 			</label>
 			<div class="controls">
-				<select id="terratype_{{identifier}}_debug" ng-model="vm.config().debug" class="umb-editor">
+				<select id="terratype_{{identifier}}_debug" ng-model="fix.config().debug" class="umb-editor">
 					<option value="0" terratype-translate="@terratypeListViewConfig_debugJsonDisable"></option>
 					<option value="1" terratype-translate="@terratypeListViewConfig_debugJsonEnable"></option>
 					<option value="2" terratype-translate="@terratypeListViewConfig_debugJsonBoth"></option>
 				</select>
 			</div>
 		</div>
-		<div ng-show="vm.config().debug != 0">
-			<textarea style="height:200px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
+		<div ng-show="fix.config().debug != 0">
+			<textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
 			<div style="text-align:center;background-color:khaki;color:darkred;">
 				<small>
 					<localize key="terratypeConfig_debugJsonLiveDescription">Warning</localize>

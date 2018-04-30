@@ -157,7 +157,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Plugins\Terratype.ListView\Images\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terratype\Terratype.csproj">
       <Project>{5034528f-401c-4fd4-8f42-23b378c7140d}</Project>
@@ -172,6 +174,7 @@
     <Content Include="App_Plugins\Terratype.ListView\Scripts\terratype.listview.min.js">
       <DependentUpon>terratype.listview.js</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Terratype.ListView\Views\editor.html" />
     <Content Include="App_Plugins\Terratype.ListView\Views\config.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

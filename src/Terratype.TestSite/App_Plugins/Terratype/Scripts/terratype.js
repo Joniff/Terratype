@@ -73,7 +73,416 @@
             		}
             		return root.terratype.event.events.length;
             	}
-            }
+			},
+			absoluteUrl: function (url) {
+				if (!url) {
+					return '';
+				}
+				if (url.indexOf('//') != -1) {
+					//  Is an absolute address
+					return url;
+				}
+				//  Must be a relative address
+				if (url.substring(0, 1) != '/') {
+					url = '/' + url;
+				}
+
+				return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
+			},
+			iconCustom: function (icon, config) {
+				if (!icon.anchor.horizontal.isManual) {
+					switch (icon.anchor.horizontal.automatic) {
+						case 'left':
+							icon.anchor.horizontal.manual = 0;
+							break;
+						case 'center':
+							icon.anchor.horizontal.manual = ((config.size.width - 1) / 2) | 0;
+							break;
+						case 'right':
+							icon.anchor.horizontal.manual = config.size.width - 1;
+							break;
+					}
+				}
+				if (!icon.anchor.vertical.isManual) {
+					switch (icon.anchor.vertical.automatic) {
+						case 'top':
+							icon.anchor.vertical.manual = 0;
+							break;
+						case 'center':
+							icon.anchor.vertical.manual = ((config.size.height - 1) / 2) | 0;
+							break;
+						case 'bottom':
+							icon.anchor.vertical.manual = config.size.height - 1;
+							break;
+					}
+				}
+			},
+			predefine: [
+			{
+				id: '',
+				name: '[Custom]',
+				url: '',
+				shadowUrl: '',
+				size: {
+					width: 32,
+					height: 32
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'bottom'
+				}
+			},
+			{
+				id: 'redmarker',
+				name: 'Red Marker',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png',
+				shadowUrl: '',
+				size: {
+					width: 22,
+					height: 40
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'bottom'
+				}
+			},
+			{
+				id: 'greenmarker',
+				name: 'Green Marker',
+				url: 'https://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2',
+				shadowUrl: '',
+				size: {
+					width: 22,
+					height: 43
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'bottom'
+				}
+			},
+			{
+				id: 'bluemarker',
+				name: 'Blue Marker',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png',
+				shadowUrl: '',
+				size: {
+					width: 22,
+					height: 40
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'bottom'
+				}
+			},
+			{
+				id: 'purplemarker',
+				name: 'Purple Marker',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-ad.png',
+				shadowUrl: '',
+				size: {
+					width: 22,
+					height: 40
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'bottom'
+				}
+			},
+			{
+				id: 'goldstar',
+				name: 'Gold Star',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/star_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 42,
+					height: 42
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'greyhome',
+				name: 'Grey Home',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redshoppingcart',
+				name: 'Red Shopping Cart',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/supermarket_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'blueshoppingcart',
+				name: 'Blue Shopping Cart',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/supermarket_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redhotspring',
+				name: 'Red Hot Spring',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/jp/hot_spring_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'reddharma',
+				name: 'Red Dharma',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_dharma_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'browndharma',
+				name: 'Brown Dharma',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_dharma_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redjain',
+				name: 'Red Jain',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_jain_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'brownjain',
+				name: 'Brown Jain',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_jain_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redshopping',
+				name: 'Red Shopping',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/shopping_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'blueshopping',
+				name: 'Blue Shopping',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/shopping_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redharbour',
+				name: 'Red Harbour',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/harbour_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'blueharbour',
+				name: 'Blue Harbour',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/harbour_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'orangeumbraco',
+				name: 'Orange Umbraco',
+				url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo.png',
+				shadowUrl: '',
+				size: {
+					width: 32,
+					height: 32
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'blackumbraco',
+				name: 'Black Umbraco',
+				url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_black.png',
+				shadowUrl: '',
+				size: {
+					width: 32,
+					height: 32
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'whiteumbraco',
+				name: 'White Umbraco',
+				url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_white.png',
+				shadowUrl: '',
+				size: {
+					width: 32,
+					height: 32
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'redcircle',
+				name: 'Red Circle',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_search_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'orangecircle',
+				name: 'Orange Circle',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/ad_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'browncircle',
+				name: 'Brown Circle',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_establishment_v_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'greencircle',
+				name: 'Green Circle',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_recreation_v_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+			{
+				id: 'bluecircle',
+				name: 'Blue Circle',
+				url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_retail_v_L_8x.png&scale=2',
+				shadowUrl: '',
+				size: {
+					width: 48,
+					height: 48
+				},
+				anchor: {
+					horizontal: 'center',
+					vertical: 'center'
+				}
+			},
+            ]
         };
     }
 
@@ -442,64 +851,28 @@
             iconPredefineChangeInternal: function (id) {
                 var index = 0;
                 if (id) {
-                    var index = $scope.terratype.mapId($scope.terratype.icon.predefine, id);
+                    var index = $scope.terratype.mapId(root.terratype.predefine, id);
                     if (id == -1) {
                         index = 0;
                     }
                 }
-                $scope.config().icon.id = id;
-                $scope.config().icon.url = $scope.terratype.icon.predefine[index].url;
-                $scope.config().icon.size = $scope.terratype.icon.predefine[index].size;
-                $scope.config().icon.anchor = $scope.terratype.icon.predefine[index].anchor;
+				$scope.config().icon.id = id;
+				var icon = root.terratype.predefine[index];
+                $scope.config().icon.url = icon.url;
+				$scope.config().icon.size = icon.size;
+				$scope.config().icon.anchor = icon.anchor;
                 $scope.terratype.iconAnchor();
             },
             iconPredefineChange: function (id) {
                 $scope.terratype.iconPredefineChangeInternal(id);
                 $scope.vm().provider.events.setIcon();
             },
-            absoluteUrl: function (url) {
-                if (!url) {
-                    return '';
-                }
-                if (url.indexOf('//') != -1) {
-                    //  Is an absolute address
-                    return url;
-                }
-                //  Must be a relative address
-                if (url.substring(0, 1) != '/') {
-                    url = '/' + url;
-                }
-
-                return root.location.protocol + '//' + root.location.hostname + (root.location.port ? ':' + root.location.port : '') + url;
+			absoluteUrl: function (url) {
+				return root.terratype.absoluteUrl(url);
             },
             iconCustom: function () {
-                $scope.config().icon.id = $scope.terratype.icon.predefine[0].id;
-                if (!$scope.vm().icon.anchor.horizontal.isManual) {
-                    switch ($scope.vm().icon.anchor.horizontal.automatic) {
-                        case 'left':
-                            $scope.vm().icon.anchor.horizontal.manual = 0;
-                            break;
-                        case 'center':
-                            $scope.vm().icon.anchor.horizontal.manual = (($scope.config().icon.size.width - 1) / 2) | 0;
-                            break;
-                        case 'right':
-                            $scope.vm().icon.anchor.horizontal.manual = $scope.config().icon.size.width - 1;
-                            break;
-                    }
-                }
-                if (!$scope.vm().icon.anchor.vertical.isManual) {
-                    switch ($scope.vm().icon.anchor.vertical.automatic) {
-                        case 'top':
-                            $scope.vm().icon.anchor.vertical.manual = 0;
-                            break;
-                        case 'center':
-                            $scope.vm().icon.anchor.vertical.manual = (($scope.config().icon.size.height - 1) / 2) | 0;
-                            break;
-                        case 'bottom':
-                            $scope.vm().icon.anchor.vertical.manual = $scope.config().icon.size.height - 1;
-                            break;
-                    }
-                }
+                $scope.config().icon.id = root.terratype.predefine[0].id;
+				root.terratype.iconCustom($scope.vm().icon, $scope.config().icon);
             },
             iconImageChange: function () {
                 $scope.vm().icon.urlFailed = '';
@@ -528,373 +901,7 @@
                 anchor: {
                     horizontal: {},
                     vertical: {}
-                },
-                predefine: [
-                {
-                    id: '',
-                    name: '[Custom]',
-                    url: '',
-                    shadowUrl: '',
-                    size: {
-                        width: 32,
-                        height: 32
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'bottom'
-                    }
-                },
-                {
-                    id: 'redmarker',
-                    name: 'Red Marker',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 22,
-                        height: 40
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'bottom'
-                    }
-                },
-                {
-                    id: 'greenmarker',
-                    name: 'Green Marker',
-                    url: 'https://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2',
-                    shadowUrl: '',
-                    size: {
-                        width: 22,
-                        height: 43
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'bottom'
-                    }
-                },
-                {
-                    id: 'bluemarker',
-                    name: 'Blue Marker',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-waypoint-blue.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 22,
-                        height: 40
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'bottom'
-                    }
-                },
-                {
-                    id: 'purplemarker',
-                    name: 'Purple Marker',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-ad.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 22,
-                        height: 40
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'bottom'
-                    }
-                },
-                {
-                    id: 'goldstar',
-                    name: 'Gold Star',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/star_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 42,
-                        height: 42
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'greyhome',
-                    name: 'Grey Home',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/home_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redshoppingcart',
-                    name: 'Red Shopping Cart',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/supermarket_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'blueshoppingcart',
-                    name: 'Blue Shopping Cart',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/supermarket_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redhotspring',
-                    name: 'Red Hot Spring',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/jp/hot_spring_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'reddharma',
-                    name: 'Red Dharma',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_dharma_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'browndharma',
-                    name: 'Brown Dharma',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_dharma_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redjain',
-                    name: 'Red Jain',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_jain_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'brownjain',
-                    name: 'Brown Jain',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/worship_jain_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redshopping',
-                    name: 'Red Shopping',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/shopping_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'blueshopping',
-                    name: 'Blue Shopping',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/shopping_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redharbour',
-                    name: 'Red Harbour',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/harbour_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'blueharbour',
-                    name: 'Blue Harbour',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/harbour_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'orangeumbraco',
-                    name: 'Orange Umbraco',
-                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 32,
-                        height: 32
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'blackumbraco',
-                    name: 'Black Umbraco',
-                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_black.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 32,
-                        height: 32
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'whiteumbraco',
-                    name: 'White Umbraco',
-                    url: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/application/logo_white.png',
-                    shadowUrl: '',
-                    size: {
-                        width: 32,
-                        height: 32
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'redcircle',
-                    name: 'Red Circle',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_search_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'orangecircle',
-                    name: 'Orange Circle',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/ad_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'browncircle',
-                    name: 'Brown Circle',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_establishment_v_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'greencircle',
-                    name: 'Green Circle',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_recreation_v_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                {
-                    id: 'bluecircle',
-                    name: 'Blue Circle',
-                    url: 'https://mt.google.com/vt/icon/name=icons/spotlight/generic_retail_v_L_8x.png&scale=2',
-                    shadowUrl: '',
-                    size: {
-                        width: 48,
-                        height: 48
-                    },
-                    anchor: {
-                        horizontal: 'center',
-                        vertical: 'center'
-                    }
-                },
-                ]
+                }
             },
             loadEditor: function (id, initial, completed) {
                 //console.log('loadEditor(): ' + id)
@@ -1248,7 +1255,7 @@
                         }
                     }
                 }, $scope.terratype.poll);
-            }
+			}
         }
 
         $scope.parentScope = function () {
