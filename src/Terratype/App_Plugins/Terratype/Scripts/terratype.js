@@ -869,7 +869,7 @@
             },
 			absoluteUrl: function (url) {
 				return root.terratype.absoluteUrl(url);
-            },
+			},
             iconCustom: function () {
                 $scope.config().icon.id = root.terratype.predefine[0].id;
 				root.terratype.iconCustom($scope.vm().icon, $scope.config().icon);
@@ -901,7 +901,8 @@
                 anchor: {
                     horizontal: {},
                     vertical: {}
-                }
+				},
+				predefine: root.terratype.predefine
             },
             loadEditor: function (id, initial, completed) {
                 //console.log('loadEditor(): ' + id)
