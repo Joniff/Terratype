@@ -41,9 +41,9 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
-** 1.0.17 **
+**1.0.17**
 	
-	Fixed error converting old properties (https://our.umbraco.org/projects/backoffice-extensions/terratype/bugs-questions/90338-keynotfoundexception-in-publishedcache#comment-285442)
+	Fixed error converting old properties (https://bit.ly/2HEgf4x)
 	Fixed no click event for some markers in JS client library 
 	Fixed rendering issue in IE11 for Bing and Leaflet maps
 	Fixed loading Generic providers
