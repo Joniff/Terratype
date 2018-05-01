@@ -45,7 +45,10 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 	
 	Fixed error converting old properties (https://our.umbraco.org/projects/backoffice-extensions/terratype/bugs-questions/90338-keynotfoundexception-in-publishedcache#comment-285442)
 	Fixed no click event for some markers in JS client library 
-	Fixed loading Generic providers 
+	Fixed rendering issue in IE11 for Bing and Leaflet maps
+	Fixed loading Generic providers
+	Added distance calculation for positions using Haversine formula
+	Minified & bundle js files
 
 **1.0.16**
 
@@ -158,7 +161,7 @@ Current Roadmap
 
 	Include stylised maps for Leaflet, using own Tile Servers (Likely to be free or paid for service depending on your data usage)
 
-	Adding an ArcGIS and CartoDB providers - likely to charge for these providers, to recupe development and cover maintance costs (My thinking is better to have working providers for money, than broken providers for free)
+	Adding an ArcGIS, CartoDB & MapBox providers - likely to charge for these providers, to recupe development and cover maintance costs (My thinking is better to have working providers for money, than broken providers for free)
 
 	Allow Null Position maps, so allowing maps that have no current location. This includes allowing null position as the starting location of a map
 	
