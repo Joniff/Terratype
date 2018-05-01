@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Terratype</id>
-    <version>$version$</version>
+    <version>1.0.18</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Joniff</owners>

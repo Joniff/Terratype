@@ -7,9 +7,9 @@ namespace Terratype.ListView
 {
 	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorName, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.16", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
 #if DEBUG
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.17")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.18")]
 #else
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.min.js?cache=1.0.17")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.min.js?cache=1.0.18")]
 #endif
     public class TerratypeListViewPropertyEditor : PropertyEditor
 	{
@@ -38,7 +38,7 @@ namespace Terratype.ListView
 
 		internal class TerratypeListViewPreValueEditor : PreValueEditor
 		{
-			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.17", Description = "", HideLabel = true)]
+			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.18", Description = "", HideLabel = true)]
             public Models.Model Definition { get; set; }
 
         }

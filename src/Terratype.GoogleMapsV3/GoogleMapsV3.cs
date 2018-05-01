@@ -1,16 +1,13 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.UI;
+using Newtonsoft.Json;
 
 namespace Terratype.Providers
 {
-    [JsonObject(MemberSerialization.OptIn)]
+	[JsonObject(MemberSerialization.OptIn)]
     public class GoogleMapsV3 : Models.Provider
     {
         private string UrlPath(string file, bool cache = true)
@@ -18,7 +15,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
             if (cache)
             {
-                result += "?cache=1.0.17";
+                result += "?cache=1.0.18";
             }
             return result;
         }

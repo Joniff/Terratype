@@ -41,6 +41,10 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.18**
+	
+	Removed Minifier dependancy
+
 **1.0.17**
 	
 	Fixed error converting old properties (https://bit.ly/2HEgf4x)
