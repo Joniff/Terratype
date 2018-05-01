@@ -113,6 +113,8 @@
     <key alias="versionDescription">Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)</key>
     <key alias="version3">Stable</key>
     <key alias="version3exp">Experimental</key>
+	<key alias="version332">3.32 (Released 13 February 2018)</key>
+	<key alias="version331">3.31 (Released 13 February 2018)</key>
 	<key alias="version330">3.30 (Released 15 August 2017)</key>
 	<key alias="version329">3.29 (Released 5 July 2017)</key>
 	<key alias="version328">3.28 (Released 15 February 2017)</key>
@@ -357,7 +359,7 @@
     <key alias="typeError"><![CDATA[Need to enable <a href="https://console.developers.google.com/apis" target="_blank">Google Places API Web Service</a> for your Google API Key]]></key>
 
     <key alias="countryLabel">Limit:</key>
-    <key alias="countryDescription">Limited all search results to a particular country or countries</key>
+    <key alias="countryDescription">Limit all search results to a particular country or countries</key>
     <key alias="countryMax"><![CDATA[NOTE: Google Maps V{{view().provider.version}} has a limited of only allowing search restrictions to one country. From version 3.27 onwards, this restriction has been increased to five]]></key>
     <key alias="countryAF">Afghanistan</key>
     <key alias="countryAX">Aland Islands</key>

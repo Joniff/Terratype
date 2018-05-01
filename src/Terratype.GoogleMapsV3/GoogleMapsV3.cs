@@ -18,43 +18,19 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
             if (cache)
             {
-                result += "?cache=1.0.15";
+                result += "?cache=1.0.17";
             }
             return result;
         }
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.GoogleMapsV3";
-            }
-        }
+        public override string Id => "Terratype.GoogleMapsV3";
 
-        public override string Name
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_name";            //  Value is in the language file
-            }
-        }
+        public override string Name =>"terratypeGoogleMapsV3_name";            //  Value is in the language file
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_description";     //  Value is in the language file
-            }
-        }
+        public override string Description => "terratypeGoogleMapsV3_description";     //  Value is in the language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeGoogleMapsV3_referenceUrl";    //  Value is in the language file
-            }
-        }
+        public override string ReferenceUrl => "terratypeGoogleMapsV3_referenceUrl";    //  Value is in the language file
 
         public override IDictionary<string, Type> CoordinateSystems
         {
@@ -71,13 +47,8 @@ namespace Terratype.Providers
             }
         }
 
-        public override bool CanSearch
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanSearch => true;
+
 
         [JsonProperty(PropertyName = "version")]
         public string Version { get; set; }
@@ -293,17 +264,21 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.GoogleMapsV3.Renderer.js"));
+#else
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.GoogleMapsV3.Renderer.bundle.min.js"));
+#endif
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
-
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/markerclusterer.min.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
-
+#endif
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, GoogleScript(model));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);

@@ -312,7 +312,7 @@ namespace Terratype.Controllers
 
 
         [System.Web.Http.HttpGet]
-        public IEnumerable<DataType> DataTypes(int? id = null)
+        public IEnumerable<DataType> Maps(int? id = null)
         {
             var results = new List<DataType>();
             var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
@@ -359,6 +359,30 @@ namespace Terratype.Controllers
                         config = json
                     });
                 }
+            }
+            return results;
+        }
+
+        [System.Web.Http.HttpGet]
+        public IEnumerable<DataType> DataTypes(int? id = null)
+        {
+            var results = new List<DataType>();
+            var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
+
+            foreach (var datatype in datatypes)
+            {
+                var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
+                var json = JObject.Parse(values.First());
+                if (json == null)
+                {
+                    continue;
+                }
+                results.Add(new DataType()
+                {
+                    id = datatype.Id,
+                    name = datatype.Name,
+                    config = json
+                });
             }
             return results;
         }

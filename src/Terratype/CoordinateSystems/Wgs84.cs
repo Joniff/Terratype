@@ -11,37 +11,10 @@ namespace Terratype.CoordinateSystems
         public static string _Id = "WGS84";
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "terratypeWgs84_name";
-            }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return "terratypeWgs84_description";
-            }
-        }
-
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeWgs84_referenceUrl";
-            }
-        }
+        public override string Id => _Id;
+        public override string Name => "terratypeWgs84_name";
+        public override string Description => "terratypeWgs84_description";
+        public override string ReferenceUrl => "terratypeWgs84_referenceUrl";
 
         public override Models.LatLng ToWgs84()
         {
@@ -128,6 +101,5 @@ namespace Terratype.CoordinateSystems
         {
             Datum = datum;
         }
-
     }
 }

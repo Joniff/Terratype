@@ -25,8 +25,7 @@
 				_maxZoom: null,
 				_layers: null,
 				_bound: new L.latLngBounds(),
-				_center: null,
-				positions: []
+				_center: null
 			};
 		},
 		_loadCss: false,
@@ -57,26 +56,31 @@
 				}
 			}
 
-			if (model.icon && model.icon.url && model.position) {
+			if (model.position) {
 				var datum = root.terratype._parseLatLng(model.position.datum);
 				var latlng = new L.latLng(datum.latitude, datum.longitude);
-				m._bound.extend(latlng);
-				var anchor = [root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
+				if (m._center == null) {
+					m._center = latlng;
+				}
+				if (model.icon && model.icon.url) {
+					m._bound.extend(latlng);
+					var anchor = [root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
 					root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
-				m.positions.push({
-					id: id,
-					tag: match.getAttribute('data-tag'),
-					label: match.getAttribute('data-label-id'),
-					position: model.position,
-					_latlng: latlng,
-					_icon: L.icon({
-						iconUrl: root.terratype._configIconUrl(model.icon.url),
-						iconSize: [model.icon.size.width, model.icon.size.height],
-						iconAnchor: anchor,
-						popupAnchor: [anchor[0] - (model.icon.size.width / 2), -anchor[1]]
-					}),
-					autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
-				});
+					m.positions.push({
+						id: id,
+						tag: match.getAttribute('data-tag'),
+						label: match.getAttribute('data-label-id'),
+						position: model.position,
+						_latlng: latlng,
+						_icon: L.icon({
+							iconUrl: root.terratype._configIconUrl(model.icon.url),
+							iconSize: [model.icon.size.width, model.icon.size.height],
+							iconAnchor: anchor,
+							popupAnchor: [anchor[0] - (model.icon.size.width / 2), -anchor[1]]
+						}),
+						autoShowLabel: match.getAttribute('data-auto-show-label') ? true : false
+					});
+				}
 			}
 			if (root.terratype.providers[q.id]._loadCss == false) {
 				root.terratype._loadCss(JSON.parse(unescape(match.getAttribute('data-css-files'))));
@@ -85,7 +89,9 @@
 		},
 		_render: function (m) {
 			m._ignoreEvents = 0;
-			m._center = (m.autoFit) ? m._bound.getCenter() : m.positions[0]._latlng;
+			if (m.autoFit) {
+				m._center = m._bound.getCenter();
+			}
 			m.handle = L.map(document.getElementById(m._div), {
 				center: m._center,
 				zoom: m.zoom,
@@ -157,6 +163,7 @@
 				} else {
 					item.handle.addTo(m.handle);
 				}
+				item.handle.on('click', function (e) { root.terratype._callClick(q, m, item); });
 			});
 
 			if (m._cluster != null) {
@@ -234,13 +241,16 @@
 		}
 	};
 
-	var timer = root.setInterval(function () {
-		if (root.terratype && root.terratype._addProvider) {
-			root.terratype._addProvider(q.id, q);
-			root.clearInterval(timer);
-		}
-	}, 250);
-
+	if (root.terratype && root.terratype._addProvider) {
+		root.terratype._addProvider(q.id, q);
+	} else {
+		var timer = root.setInterval(function () {
+			if (root.terratype && root.terratype._addProvider) {
+				root.terratype._addProvider(q.id, q);
+				root.clearInterval(timer);
+			}
+		}, 100);
+	}
 }(window));
 
 

@@ -15,50 +15,21 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.BingMapsV8/" + file;
             if (cache)
             {
-                result += "?cache=1.0.15";
+                result += "?cache=1.0.17";
             }
             return result;
         }
 
         [JsonProperty]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.BingMapsV8";
-            }
-        }
-        public override string Name
-        {
-            get
-            {
-                return "terratypeBingMapsV8_name";              //  Value is in language file
-            }
-        }
+        public override string Id => "Terratype.BingMapsV8";
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeBingMapsV8_description";       //  Value is in language file
-            }
-        }
+        public override string Name => "terratypeBingMapsV8_name";              //  Value is in language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeBingMapsV8_description";       //  Value is in language file
-            }
-        }
+        public override string Description => "terratypeBingMapsV8_description";       //  Value is in language file
 
-        public override bool CanSearch
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override string ReferenceUrl => "terratypeBingMapsV8_description";       //  Value is in language file
+
+        public override bool CanSearch => true;
 
         public override IDictionary<string, Type> CoordinateSystems
         {
@@ -227,7 +198,11 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.BingMapsV8.Renderer.js"));
+#else
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.BingMapsV8.Renderer.min.js"));
+#endif
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();

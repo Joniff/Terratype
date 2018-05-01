@@ -1,0 +1,30 @@
+﻿<div class="ng-cloak terratype" ng-controller="terratypelistviewconfig as fix" ng-init="terratype.initListView()" ng-show="!fix.vm().loading">
+	<div>
+		<div ng-if="fix.vm()isPreview">
+			<div ng-style="{'background-image':'url(' + terratype.urlProvider('Terratype.ListView', '/Images/Example.png') + ')','padding-top': '10px 0 10px 25px', 'margin':'-40px -10px 0 -10px', 'height':'100px'}">
+				<div style="text-align:center">
+					<div ng-if="fix.config().debug == 1">
+						<h2 style="padding-top:25px;">
+							<localize key="terratypeEditor_debugMode">DEBUG MODE</localize>
+						</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div ng-if="!fix.vm().isPreview">
+			<div ng-if="fix.config().debug != 1">
+				<style ng-bind-html="'@media (max-width:767px) { #terratype_' + identifier + '_editor_appearance_start {clear:both;}}'">
+				</style>
+				<div id="terratype_{{identifier}}_editor_appearance_start" style="height:1px;">&nbsp;</div>
+				<ng-include src="vm().provider.events.files.views.editor.appearance">
+				</ng-include>
+			</div>
+			<div ng-if="fix.config().debug != 0">
+				<div ng-show="fix.vm().error" style="color:red;">
+					<localize key="terratypeEditor_error">Error loading Terratype control, the json below is corrupt</localize>
+				</div>
+				<textarea style="height:300px;width:100%;margin:20px 10px 0 0;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
+			</div>
+		</div>
+	</div>
+</div>

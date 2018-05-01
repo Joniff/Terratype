@@ -1,0 +1,29 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype.LeafletV1/Scripts/leaflet-providers.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.LeafletV1/Scripts/leaflet-providers.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.LeafletV1/Scripts/Terratype.LeafletV1.Renderer.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.LeafletV1/Scripts/Terratype.LeafletV1.Renderer.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.LeafletV1/Scripts/tileservers.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.LeafletV1/Scripts/tileservers.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype.LeafletV1/Scripts/Terratype.LeafletV1.Renderer.bundle.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.LeafletV1/Scripts/leaflet-src.js",
+      "App_Plugins/Terratype.LeafletV1/Scripts/leaflet.markercluster-src.js",
+      "App_Plugins/Terratype.LeafletV1/Scripts/tileservers.js",
+      "App_Plugins/Terratype.LeafletV1/Scripts/Terratype.LeafletV1.Renderer.js"
+    ]
+  }
+]

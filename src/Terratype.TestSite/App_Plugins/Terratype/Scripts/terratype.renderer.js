@@ -58,12 +58,6 @@
 			_callZoom: function (provider, map, zoomLevel) {
 				root.terratype._callEvent(5, provider, map, zoomLevel);
 			},
-			//refresh: function (id) {
-			//},
-			//zoom: function (id, level) {
-			//},
-			//setPosition: function (id, datum) {
-			//},
 			_forEach: function (obj, func) {
 				for (var i = 0; i != obj.length; i++) {
 					(function (f, i, o) { f(i, o); })(func, i, obj[i]);
@@ -394,7 +388,7 @@
 													recenterAfterRefresh: match.getAttribute('data-recenter-after-refresh') ? true : false,
 													handle: null,
 													positions: [],
-													getPosition(tag) {
+													getPosition: function (tag) {
 														for (var i = 0; i != m._positions.length; i++) {
 															if (m._positions[i].tag == tag) {
 																return m._positions[i];

@@ -178,7 +178,7 @@ namespace Terratype
             var result = "/App_Plugins/Terratype/" + file;
             if (cache)
             {
-                result += "?cache=1.0.15";
+                result += "?cache=1.0.17";
             }
             return result;
         }
@@ -267,7 +267,11 @@ namespace Terratype
 				if (!HttpContext.Current.Items.Contains(guid))
 				{
 					HttpContext.Current.Items.Add(guid, true);
+#if DEBUG
 					writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/terratype.renderer.js"));
+#else
+					writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/terratype.renderer.min.js"));
+#endif
 					//writer.AddAttribute("defer", "");
 					writer.RenderBeginTag(HtmlTextWriterTag.Script);
 					writer.RenderEndTag();

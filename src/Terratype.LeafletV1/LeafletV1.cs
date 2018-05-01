@@ -14,43 +14,20 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.LeafletV1/" + file;
             if (cache)
             {
-                result += "?cache=1.0.15";
+                result += "?cache=1.0.17";
             }
             return result;
         }
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return "Terratype.LeafletV1";
-            }
-        }
+        public override string Id => "Terratype.LeafletV1";
 
-        public override string Name
-        {
-            get
-            {
-                return "terratypeLeafletV1_name";                   //  Value in language file
-            }
-        }
+        public override string Name => "terratypeLeafletV1_name";                   //  Value in language file
 
-        public override string Description
-        {
-            get
-            {
-                return "terratypeLeafletV1_description";            //  Value in language file
-            }
-        }
+        public override string Description => "terratypeLeafletV1_description";            //  Value in language file
 
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeLeafletV1_referenceUrl";            //  Value in language file
-            }
-        }
+        public override string ReferenceUrl => "terratypeLeafletV1_referenceUrl";            //  Value in language file
+
         public override IDictionary<string, Type> CoordinateSystems
         {
             get
@@ -159,11 +136,16 @@ namespace Terratype.Providers
             if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
             {
                 HttpContext.Current.Items.Add(guid, true);
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.js"));
+#else
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.bundle.min.js"));
+#endif
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
+#if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
@@ -178,6 +160,7 @@ namespace Terratype.Providers
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
+#endif
             }
 
             writer.AddAttribute(HtmlTextWriterAttribute.Id, generatedId);

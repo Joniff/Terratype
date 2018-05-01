@@ -23,9 +23,26 @@ namespace Terratype.Frisk
         {
             typeof(Models.Position),
             typeof(Models.Provider),
-            typeof(Models.Label)
+            typeof(Models.Label),
+			typeof(Indexer.Index),
+			typeof(Indexer.Searchers.ISearch<Indexer.Searchers.ISearchRequest>)
         };
 
+		private static bool IsInterfaceOf(Type got, Type lookingFor)
+		{
+			var inters = got.GetInterfaces();
+			if (inters.Length > 0)
+			{
+				foreach (var inter in inters)
+				{
+					if ((inter.Name == lookingFor.Name && inter.Namespace == lookingFor.Namespace) || IsInterfaceOf(inter, lookingFor))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
         private static void registerAssembly(Assembly currAssembly, ref Dictionary<string, Dictionary<string, Type>> installed)
         {
             Type[] typesInAsm;
@@ -47,16 +64,15 @@ namespace Terratype.Frisk
 
                 foreach (var interest in interests)
                 {
-                    if (type.IsSubclassOf(interest))
-                    {
-                        var derivedObject = System.Activator.CreateInstance(type) as IFrisk;
-                        if (derivedObject != null)
-                        {
-                            installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
-                        }
-                    }
-                }
-
+					if (type.IsSubclassOf(interest) || (interest.GenericTypeArguments.Length > 0 && IsInterfaceOf(type, interest)))
+					{
+						var derivedObject = Activator.CreateInstance(type) as IFrisk;
+						if (derivedObject != null)
+						{
+							installed[interest.FullName].Add(derivedObject.Id, derivedObject.GetType());
+						}
+					}
+				}
             }
         }
 

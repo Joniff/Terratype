@@ -18,7 +18,7 @@ namespace Terratype
     {
         public bool IsConverter(PublishedPropertyType propertyType)
         {
-            return propertyType.PropertyEditorAlias == "Terratype";
+            return propertyType.PropertyEditorAlias == TerratypePropertyEditor.PropertyEditorAlias;
         }
 
 		private void MergeJson(JObject data, JObject config, string fieldName)

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alias="terratypeListViewConfig">
+	<key alias="dataTypeLabel">Map:</key>
+    <key alias="dataTypeDescription">Which map would you like to use to display the list view</key>
+	<key alias="mapProviderError">Need to create a Terratype datatype before creating a list view based off it</key>
+	<key alias="displayMapLabel">Display Map:</key>
+	<key alias="displayMapDescription">Display A Terratype map with individual map markers representing all descandant Terratype maps</key>
+	<key alias="displayListLabel">Display List:</key>
+	<key alias="displayListDescription">Display a list of all descandant Terratype maps</key>
+	<key alias="debugJsonDescription">Do you want to show the listview or a json editor. This is for developer debugging purposes only and shows the underlying values being stored for this data type. Editing of the values directly influences the control</key>
+	<key alias="debugJsonDisable">Show listview only</key>
+	<key alias="debugJsonEnable">Show json only</key>
+	<key alias="debugJsonBoth">Show both listview and json</key>
+	<key alias="listTemplateLabel">List Template:</key>
+	<key alias="listTemplateDescription">Decide what value(s) to use to render a descandant Terratype map</key>
+	<key alias="listTemplateHelp"><![CDATA[Usage:<br />&nbsp;{{parent.name}} = Name of content node<br />&nbsp;{{search}} = Search value]]></key>
+	<key alias="listTemplatePlaceholder">Template values</key>
+	<key alias="listPageSizeLabel">List Page Size:</key>
+	<key alias="listPageSizeDescription">How many list items to display per page</key>
+	<key alias="listPagePlaceholder">Page size</key>
+  </area>
+
+</language>

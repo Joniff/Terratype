@@ -1,0 +1,9 @@
+﻿{
+    "javascript" : [
+        '~/App_Plugins/InnerContent/js/innercontent.resources.js',
+        '~/App_Plugins/InnerContent/js/innercontent.controllers.js'
+    ],
+    "css" : [
+        "~/App_Plugins/InnerContent/css/innercontent.css"
+    ]
+}

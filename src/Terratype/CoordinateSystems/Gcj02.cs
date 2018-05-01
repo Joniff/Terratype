@@ -12,37 +12,10 @@ namespace Terratype.CoordinateSystems
         public static string _Id = "GCJ02";
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "terratypeGcj02_name";
-            }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return "terratypeGcj02_description";
-            }
-        }
-
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeGcj02_referenceUrl";
-            }
-        }
+        public override string Id => _Id;
+        public override string Name => "terratypeGcj02_name";
+        public override string Description => "terratypeGcj02_description";
+        public override string ReferenceUrl => "terratypeGcj02_referenceUrl";
 
         private double transformLat(double x, double y)
         {

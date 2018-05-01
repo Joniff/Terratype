@@ -196,5 +196,63 @@ namespace Terratype.Tests.CoordinateSystems
                 }
             }
         }
+
+        [TestMethod]
+		public void TwoPositions_KnownDistanceApart_CorrectDistance()
+		{
+            foreach (var culture in Cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+                var newyork = new Terratype.CoordinateSystems.Wgs84("40.7128,-74.0060");
+				var paris = new Terratype.CoordinateSystems.Wgs84("48.8566,2.3522");
+				var moscow = new Terratype.CoordinateSystems.Wgs84("55.7558,37.6173");
+				var toyko = new Terratype.CoordinateSystems.Wgs84("35.6895,139.6917");
+				var cario = new Terratype.CoordinateSystems.Wgs84("30.0444,31.3257");
+				var sydney = new Terratype.CoordinateSystems.Wgs84("-33.8688,151.2093");
+				var rio = new Terratype.CoordinateSystems.Wgs84("-22.9068,-43.1729");
+				var johannesburg = new Terratype.CoordinateSystems.Wgs84("-26.2041,28.0473");
+
+				Assert.AreEqual(newyork.Distance(paris), paris.Distance(newyork), 1.0);
+				Assert.AreEqual(moscow.DistanceInKm(sydney), sydney.DistanceInKm(moscow), 1.0);
+				Assert.AreEqual(rio.DistanceInMiles(toyko), toyko.DistanceInMiles(rio), 1.0);
+				Assert.AreEqual(johannesburg.Distance(cario), cario.Distance(johannesburg), 1.0);
+
+				Assert.AreEqual(newyork.Distance(paris), 5837241.0, 10000.0);
+				Assert.AreEqual(newyork.DistanceInKm(paris), 5837.0, 10.0);
+				Assert.AreEqual(newyork.DistanceInMiles(paris), 3627.0, 10.0);
+
+				Assert.AreEqual(moscow.Distance(johannesburg), 9158713.0, 10000.0);
+				Assert.AreEqual(toyko.Distance(rio), 18567042.0, 10000.0);
+				Assert.AreEqual(sydney.Distance(rio), 13521033.0, 10000.0);
+
+			}
+		}
+
+        [TestMethod]
+		public void TwoPositions_UnKnownDistanceApart_WithinEarth()
+		{
+            foreach (var culture in Cultures)
+            {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+                var attempts = 1000;
+                while (--attempts != 0)
+                {
+                    var latlng1 = RandomLatLng();
+                    var latlng2 = RandomLatLng();
+
+                    var startWgs84 = new Terratype.CoordinateSystems.Wgs84(
+						latlng1.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
+                        latlng1.Longitude.ToString(CultureInfo.InvariantCulture));
+
+                    var endWgs84 = new Terratype.CoordinateSystems.Wgs84(
+						latlng2.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
+                        latlng2.Longitude.ToString(CultureInfo.InvariantCulture));
+
+					var distance = startWgs84.Distance(endWgs84);
+					Assert.IsTrue(distance > 0.0 && distance < 20000000.0);		//	Somewhere on Earth
+					Assert.AreEqual(distance, endWgs84.Distance(startWgs84), 1000.0);
+				}
+			}
+		}
     }
 }

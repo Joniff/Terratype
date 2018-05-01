@@ -11,36 +11,10 @@ namespace Terratype.CoordinateSystems
         public static string _Id = "BD09";
 
         [JsonProperty(PropertyName = "id")]
-        public override string Id
-        {
-            get
-            {
-                return _Id;
-            }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return "terratypeBd09_name";                    //  Value is in the language file
-            }
-        }
-
-        public override string Description
-        {
-            get
-            {
-                return "terratypeBd09_description";             //  Value is in the language file
-            }
-        }
-        public override string ReferenceUrl
-        {
-            get
-            {
-                return "terratypeBd09_referenceUrl";            //  Value is in the language file
-            }
-        }
+        public override string Id => _Id;
+        public override string Name => "terratypeBd09_name";                    //  Value is in the language file
+        public override string Description => "terratypeBd09_description";             //  Value is in the language file
+        public override string ReferenceUrl => "terratypeBd09_referenceUrl";            //  Value is in the language file
 
         public override Models.LatLng ToWgs84()
         {
