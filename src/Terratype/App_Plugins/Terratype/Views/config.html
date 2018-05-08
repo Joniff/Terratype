@@ -15,9 +15,19 @@
                 <div style="clear:both;"></div>
             </div>
         </div>
-        <div ng-show="vm().providers.length == 0" style="color:red;">
-            <localize key="terratypeConfig_mapProviderError">No Terratype map providers have been installed</localize>
-        </div>
+        <div ng-if="vm().providers.length == 0">
+			<div style="color:red;">
+				<localize key="terratypeConfig_mapProviderError">No Terratype map providers have been installed</localize>
+			</div>
+			<br />
+			<button type="button" ng-click="terratype.providerTest()" localize="title" title="@terratypeConfig_mapProviderTestTitle"><localize key="terratypeConfig_mapProviderTest">Test providers</localize></button>        
+			<br />
+			<div>
+				<ul>
+					<li ng-repeat="t in vm().providerTestResults track by $index"><span>{{t}}</span></li>
+				</ul>
+			</div>
+		</div>
     </div>
     <br />
     <fieldset ng-if="vm().provider.id && vm().providerLoading == false" style="padding-left:15px;">
@@ -265,33 +275,44 @@
 
         </section>
 
-        <section>
-            <h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
-                <localize key="terratypeConfig_debugHeading">Debugger</localize>
-            </h4>
-            <div class="umb-el-wrap control-group">
-                <label for="terratype_{{identifier}}_debug" class="control-label">
-                    <localize key="terratypeConfig_debugJsonLabel">Show Json:</localize>
-                    <small>
-                        <localize key="terratypeConfig_debugJsonDescription">Do you want to show the map or a json editor</localize>
-                    </small>
-                </label>
-                <div class="controls">
-                    <select id="terratype_{{identifier}}_debug" ng-model="config().debug" class="umb-editor">
-                        <option value="0" terratype-translate="@terratypeConfig_debugJsonDisable"></option>
-                        <option value="1" terratype-translate="@terratypeConfig_debugJsonEnable"></option>
-                        <option value="2" terratype-translate="@terratypeConfig_debugJsonBoth"></option>
-                    </select>
-                </div>
-            </div>
-            <div ng-show="config().debug != 0">
-                <textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
-                <div style="text-align:center;background-color:khaki;color:darkred;">
-                    <small>
-                        <localize key="terratypeConfig_debugJsonLiveDescription">Warning</localize>
-                    </small>
-                </div>
-            </div>
-        </section>
+		<section>
+			<h4 style="background-color:#dfdfdf;padding: 5px 0 5px 5px;margin-left:-5px;">
+				<localize key="terratypeConfig_debugHeading">Debugger</localize>
+			</h4>
+			<div class="umb-el-wrap control-group">
+				<label for="terratype_{{identifier}}_debug" class="control-label">
+					<localize key="terratypeConfig_debugJsonLabel">Show Json:</localize>
+					<small>
+						<localize key="terratypeConfig_debugJsonDescription">Do you want to show the map or a json editor</localize>
+					</small>
+				</label>
+				<div class="controls">
+					<select id="terratype_{{identifier}}_debug" ng-model="config().debug" class="umb-editor">
+						<option value="0" terratype-translate="@terratypeConfig_debugJsonDisable"></option>
+						<option value="1" terratype-translate="@terratypeConfig_debugJsonEnable"></option>
+						<option value="2" terratype-translate="@terratypeConfig_debugJsonBoth"></option>
+					</select>
+				</div>
+			</div>
+			<div ng-show="config().debug != 0">
+				<textarea style="height:300px;width:100%;margin-top:20px;background-color:khaki;color:black;" spellcheck=false ng-model="model.value" terratype-json></textarea>
+				<div style="text-align:center;background-color:khaki;color:darkred;">
+					<small>
+						<localize key="terratypeConfig_debugJsonLiveDescription">Warning</localize>
+					</small>
+				</div>
+			</div>
+			<br />
+
+			<div class="umb-el-wrap control-group">
+				<button type="button" ng-click="terratype.providerTest()" localize="title" title="@terratypeConfig_mapProviderTestTitle"><localize key="terratypeConfig_mapProviderTest">Test providers</localize></button>
+				<br />
+				<div>
+					<ul>
+						<li ng-repeat="t in vm().providerTestResults track by $index"><span>{{t}}</span></li>
+					</ul>
+				</div>
+			</div>
+		</section>
     </fieldset>
 </div>

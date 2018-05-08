@@ -49,8 +49,10 @@
     <key alias="mapProviderLabel">Map Provider:</key>
     <key alias="mapProviderDescription">Select which system you wish to use to display maps</key>
     <key alias="mapProviderError"><![CDATA[No Terratype map providers have been installed. Please read the <a href="https://github.com/Joniff/Terratype#installing-providers">documentation</a> for details on how to install providers]]></key>
+	<key alias="mapProviderTest">Test Providers</key>
+	<key alias="mapProviderTestTitle">This will run an internal test for providers</key>
 
-    <key alias="definitionHeading">Configure</key>
+	<key alias="definitionHeading">Configure</key>
     <key alias="definitionCoordinateSystemLabel">Coordinate System:</key>
     <key alias="definitionCoordinateSystemDescription">Which Geodetic Coordinate System do you wish to use to present and store locations</key>
 

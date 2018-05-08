@@ -439,5 +439,16 @@ namespace Terratype.Controllers
             }
             return results;
         }
+
+        [System.Web.Http.HttpGet]
+        public IEnumerable<string> TestProviders()
+        {
+			return Frisk.Frisk.Test(typeof(Models.Provider), new string[] 
+			{
+				"terratype.bingmapsv8.dll", 
+				"terratype.googlemapsv3.dll", 
+				"terratype.leafletv1.dll"
+			});
+		}
     }
 }

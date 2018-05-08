@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using Umbraco.Core;
@@ -315,8 +316,36 @@ namespace Terratype.Models
                     {
                         if (String.Equals(field.Name, nameof(Provider.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            System.Type providerType = Provider.Register[field.Value.ToObject<string>()];
-                            model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
+							var providerId = field.Value.ToObject<string>();
+							System.Type providerType;
+							if (!Provider.Register.TryGetValue(providerId, out providerType))
+							{
+								var error = new StringBuilder();
+								error.Append(providerId);
+								error.Append(" is not a currently loaded Terratype Provider.");
+								if (Provider.Register.Count == 0)
+								{
+									error.Append("Currently there are no Providers available.");
+								}
+								else
+								{
+									error.Append("The loaded Providers are ");
+									var count = 0;
+									foreach (var loaded in Provider.Register)
+									{
+										if (count++ != 0)
+										{
+											error.Append(", ");
+										}
+										error.Append(loaded.Key);
+									}
+									error.Append(".");
+								}
+								throw new NotSupportedException(error.ToString());
+							}
+
+                            model.Provider = (Provider)item.GetValue(Json.PropertyName<Model>(nameof(Model.Provider)), 
+								StringComparison.InvariantCultureIgnoreCase).ToObject(providerType);
                             break;
                         }
                         field = field.Next as JProperty;
@@ -337,7 +366,34 @@ namespace Terratype.Models
                 {
                     if (String.Equals(field.Name, Json.PropertyName<Position>(nameof(Position.Id)), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        System.Type positionType = Position.Register[field.Value.ToObject<string>()];
+						var positionId = field.Value.ToObject<string>();
+						System.Type positionType;
+						if (!Position.Register.TryGetValue(positionId, out positionType))
+						{
+							var error = new StringBuilder();
+							error.Append(positionId);
+							error.Append(" is not a currently loaded Terratype Position.");
+							if (Position.Register.Count == 0)
+							{
+								error.Append("Currently there are no Positions available.");
+							}
+							else
+							{
+								error.Append("The loaded Positions are ");
+								var count = 0;
+								foreach (var loaded in Position.Register)
+								{
+									if (count++ != 0)
+									{
+										error.Append(", ");
+									}
+									error.Append(loaded.Key);
+								}
+								error.Append(".");
+							}
+							throw new NotSupportedException(error.ToString());
+						}
+
                         model.Position = Models.Position.Create(positionType);
                         break;
                     }
@@ -363,8 +419,35 @@ namespace Terratype.Models
                 {
                     if (String.Equals(field.Name, Json.PropertyName<Label>(nameof(Label.Id)), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        System.Type labelType = Label.Register[field.Value.ToObject<string>()];
-                        model.Label = (Label)item.GetValue(Json.PropertyName<Model>(nameof(Model.Label)), StringComparison.InvariantCultureIgnoreCase).ToObject(labelType);
+						var labelId = field.Value.ToObject<string>();
+						System.Type labelType;
+						if (!Label.Register.TryGetValue(labelId, out labelType))
+						{
+							var error = new StringBuilder();
+							error.Append(labelId);
+							error.Append(" is not a currently loaded Terratype Label.");
+							if (Label.Register.Count == 0)
+							{
+								error.Append("Currently there are no Labels available.");
+							}
+							else
+							{
+								error.Append("The loaded labels are ");
+								var count = 0;
+								foreach (var loaded in Label.Register)
+								{
+									if (count++ != 0)
+									{
+										error.Append(", ");
+									}
+									error.Append(loaded.Key);
+								}
+								error.Append(".");
+							}
+							throw new NotSupportedException(error.ToString());
+						}
+                        model.Label = (Label)item.GetValue(Json.PropertyName<Model>(nameof(Model.Label)), 
+							StringComparison.InvariantCultureIgnoreCase).ToObject(labelType);
                         break;
                     }
                     field = field.Next as JProperty;

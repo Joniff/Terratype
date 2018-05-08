@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 
@@ -43,6 +44,7 @@ namespace Terratype.Frisk
 			}
 			return false;
 		}
+
         private static void registerAssembly(Assembly currAssembly, ref Dictionary<string, Dictionary<string, Type>> installed)
         {
             Type[] typesInAsm;
@@ -92,8 +94,8 @@ namespace Terratype.Frisk
                     if (!currAssembly.IsDynamic)
                     {
                         filenames.Add(currAssembly.Location.ToLowerInvariant());
+	                    registerAssembly(currAssembly, ref installed);
                     }
-                    registerAssembly(currAssembly, ref installed);
                 }
 
                 //  Now see if any dlls haven't been loaded yet
@@ -110,10 +112,11 @@ namespace Terratype.Frisk
                     try
                     {
                         var currAssembly = Assembly.ReflectionOnlyLoadFrom(file.FullName);
-                        if (!currAssembly.IsDynamic)
+                        if (currAssembly.IsDynamic)
                         {
-                            filenames.Add(currAssembly.Location.ToLowerInvariant());
+							continue;
                         }
+						filenames.Add(currAssembly.Location.ToLowerInvariant());
                         registerAssembly(currAssembly, ref installed);
                     }
                     catch (BadImageFormatException)
@@ -134,5 +137,95 @@ namespace Terratype.Frisk
             return new Dictionary<string, Type>();  //  Return empty dictionary
         }
 
+		private static IEnumerable<string> testFile(Type lookFor, Assembly currAssembly)
+		{
+			var results = new List<string>();
+
+            Type[] typesInAsm;
+            try
+            {
+                typesInAsm = currAssembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                typesInAsm = ex.Types;
+            }
+
+			int count = 0;
+
+            foreach (Type type in typesInAsm)
+            {
+                if (type == null || !type.IsClass || type.IsAbstract)
+                {
+                    continue;
+                }
+
+				if (type.IsSubclassOf(lookFor) || (lookFor.GenericTypeArguments.Length > 0 && IsInterfaceOf(type, lookFor)))
+				{
+					count++;
+					var derivedObject = Activator.CreateInstance(type) as IFrisk;
+					if (derivedObject != null)
+					{
+						results.Add($"Correctly found and can instantiate {type.Name} in {currAssembly.Location}");
+						continue;
+					}
+					results.Add($"Found but can\'t instantiate {type.Name} in {currAssembly.Location}");
+					continue;
+				}
+			}
+
+			if (count == 0)
+			{
+				results.Add($"Not found {lookFor.Name} in {currAssembly.Location}");
+			}
+			return results;
+		}
+
+		public static IEnumerable<string> Test(Type lookFor, IEnumerable<string> files)
+		{
+			//	First see if we would find these files normally
+			var results = new List<string>();
+
+            foreach (Assembly currAssembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (currAssembly.IsDynamic)
+                {
+					continue;
+				}
+				var filename = Path.GetFileName(currAssembly.Location).ToLowerInvariant();
+				if (files.Any(x => x == filename))
+				{
+					results.Add($"Found {currAssembly.Location} Assembly in Current App Domain");
+					results.AddRange(testFile(lookFor, currAssembly));
+				}
+			}
+
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            var di = new DirectoryInfo(path);
+            foreach (var file in di.GetFiles("*.dll"))
+            {
+                try
+                {
+                    var currAssembly = Assembly.ReflectionOnlyLoadFrom(file.FullName);
+                    if (currAssembly.IsDynamic)
+                    {
+                        continue;
+                    }
+					var filename = Path.GetFileName(currAssembly.Location).ToLowerInvariant();
+					if (files.Any(x => x == filename))
+					{
+						results.Add($"Found {currAssembly.Location} Assembly in {di.FullName} folder");
+						results.AddRange(testFile(lookFor, currAssembly));
+					}
+                }
+                catch (BadImageFormatException)
+                {
+                    // Not a .net assembly  - ignore
+                }
+            }
+
+            return results;
+		}
     }
 }

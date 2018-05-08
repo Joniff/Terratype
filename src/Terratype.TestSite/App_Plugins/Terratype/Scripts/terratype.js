@@ -597,7 +597,8 @@
                     horizontal: {},
                     vertical: {}
                 }
-            }
+			},
+			providerTestResults: []
         }
 
 		$scope.terratype = {
@@ -1256,6 +1257,14 @@
                         }
                     }
                 }, $scope.terratype.poll);
+			},
+			providerTest: function () {
+				$scope.vm().providerTestResults = ['Loading...'];
+				$http.get($scope.terratype.controller('TestProviders')).then(function success(response) {
+					if (response.data.length != 0) {
+						$scope.vm().providerTestResults = response.data;
+					}
+				});
 			}
         }
 
