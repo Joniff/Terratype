@@ -1,5 +1,4 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.GridMap>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
 	Layout = null;
 }
@@ -12,4 +11,7 @@
 
 
 
-@CurrentPage.GetGridHtml(Html, "griddy")
+@*@CurrentPage.GetGridHtml(Html, "griddy")*@
+
+
+@Html.GetGridHtml(Model.Content.GetProperty("griddy"))

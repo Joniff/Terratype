@@ -249,28 +249,30 @@
 			}
 		},
 		refresh: function (m) {
-			m._ignoreEvents++;
-			root.google.maps.event.addListenerOnce(m.handle, 'idle', function () {
-				if (m._idle == null) {
-					return;
-				}
-				m._ignoreEvents--;
-				if (m._ignoreEvents == 0) {
-					q._checkResetCenter(m);
-				}
-				if (m._idle) {
+			if (m._ignoreEvents == 0) {
+				m._ignoreEvents++;
+				root.google.maps.event.addListenerOnce(m.handle, 'tilesloaded', function () {
+					if (m._idle == null) {
+						return;
+					}
+					m._ignoreEvents--;
+					if (m._ignoreEvents == 0) {
+						q._checkResetCenter(m);
+					}
+					if (m._idle) {
+						root.clearTimeout(m._idle);
+					}
+				});
+				m._idle = root.setTimeout(function () {
+					if (m._ignoreEvents != 0) {
+						q._checkResetCenter(m);
+						m._ignoreEvents = 0
+					}
 					root.clearTimeout(m._idle);
-				}
-			});
-			m._idle = root.setTimeout(function () {
-				if (m._ignoreEvents != 0) {
-					q._checkResetCenter(m);
-					m._ignoreEvents = 0
-				}
-				root.clearTimeout(m._idle);
-				m._idle = null;
-			}, 5000);
-			root.google.maps.event.trigger(m.handle, 'resize');
+					m._idle = null;
+				}, 5000);
+				root.google.maps.event.trigger(m.handle, 'resize');
+			}
 		}
 	};
 

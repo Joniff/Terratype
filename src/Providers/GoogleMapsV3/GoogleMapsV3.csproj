@@ -228,7 +228,14 @@
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.min.js" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.bundle.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.bundle.min.js">
+      <DependentUpon>Terratype.GoogleMapsV3.Renderer.bundle.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.min.js">
+      <DependentUpon>Terratype.GoogleMapsV3.Renderer.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.search.html" />

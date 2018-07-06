@@ -1,0 +1,1 @@
+https://our.umbraco.org/projects/backoffice-extensions/terratype/bugs-questions/92267-terratype-display-a-map-for-each-location-in-the-content-tree
