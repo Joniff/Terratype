@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+  <creator>
+    <name>Jonathan Richards</name>
+  </creator>
+
+  <area alias="terratypeS2">
+    <key alias="name">S2 Geometry</key>
+    <key alias="description">Spherical geometry from Google based on Hilbert </key>
+    <key alias="referenceUrl">https://www.microsoft.com/maps/choose-your-bing-maps-API.aspx</key>
+  </area>
+</language>

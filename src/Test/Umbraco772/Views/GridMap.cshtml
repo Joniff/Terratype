@@ -1,0 +1,17 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = null;
+}
+
+<div style="background-color:yellow;margin:5px;">
+
+
+
+</div>
+
+
+
+@*@CurrentPage.GetGridHtml(Html, "griddy")*@
+
+
+@Html.GetGridHtml(Model.Content.GetProperty("griddy"))

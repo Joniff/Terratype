@@ -1,0 +1,8 @@
+[
+  {
+    "outputFileName": "App_Plugins/Terratype.CoordinateSystems.S2/Scripts/Terratype.CoordinateSystems.S2.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype.CoordinateSystems.S2/Scripts/Terratype.CoordinateSystems.S2.js"
+    ]
+  }
+]

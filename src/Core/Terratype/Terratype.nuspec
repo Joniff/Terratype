@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Terratype</id>
+    <version>1.0.19</version>
+    <title>Terratype</title>
+    <authors>Jonathan Richards</authors>
+    <owners>Joniff</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Joniff/Terratype/master/docs/Licence.txt</licenseUrl>
+    <projectUrl>https://github.com/Joniff/Terratype</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Joniff/Terratype/master/src/Terratype/App_Plugins/Terratype/Images/Terratype.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Core Umbraco package for Mapping services</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Umbraco Google Maps Gmaps Open Street View</tags>
+    <dependencies>
+        <dependency id="UmbracoCms.Core" version="7.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="App_Plugins\**\*.*" target="content\App_Plugins" />
+  </files>
+</package>

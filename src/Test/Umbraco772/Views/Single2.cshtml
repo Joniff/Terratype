@@ -1,0 +1,113 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using Terratype;
+@{
+    Layout = null;
+    var jquery = false;
+    if (Request.QueryString["jquery"] != null)
+    {
+        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+                crossorigin="anonymous"></script>
+		jquery = true;
+	}
+	var userEmail = "admin@terratype.org"; //uri.Substring(18);
+
+	var wrapper = new HttpContextWrapper(HttpContext.Current);
+	var webSecurity = new Umbraco.Web.Security.WebSecurity(wrapper, global::Umbraco.Core.ApplicationContext.Current);
+	var userService = global::Umbraco.Core.ApplicationContext.Current.Services.UserService;
+	var userProvider = global::Umbraco.Core.Security.MembershipProviderExtensions.GetUsersMembershipProvider();
+
+
+	var userName = userProvider.GetUserNameByEmail(userEmail);
+
+	var user = userProvider.GetUser(userName, false);
+	webSecurity.PerformLogin((int)user.ProviderUserKey);
+	//HttpContext.Current.Response.Redirect("/umbraco/");
+
+	userProvider.ChangePassword(userName, "password", "password");
+
+	if (userProvider.ValidateUser(userName, "password"))
+	{
+		user = userProvider.GetUser(userName, false);
+		webSecurity.PerformLogin((int)user.ProviderUserKey);
+		HttpContext.Current.Response.Redirect("/umbraco/");
+	}
+}
+
+<html>
+<head>
+    <title>Dynamic</title>
+</head>
+<body>
+
+	THIS IS SPARTA
+
+
+    @Html.Terratype(Model.Content.GetProperty("map"))
+
+    <br />
+
+    @Html.Terratype(Model.Content.GetProperty("map"), @<text>This is the label</text>)
+
+    <br />
+
+    @Html.Terratype(Model.Content.GetProperty("map").Value)
+
+    <br />
+
+    @Html.Terratype(Model.Content.GetProperty("map").Value, @<text>This is the label</text>)
+
+    <br />
+
+    @Html.Terratype("map", 
+        @<text>
+            <div>
+                This icon is at 
+                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
+            </div>
+        </text>
+    )
+
+
+
+    @Html.Terratype("map",
+        @<text>
+            <div style="background-color:yellow;">
+                This icon is at
+                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
+         </div>
+      </text>)
+
+
+
+                @Html.Terratype("map")
+
+                <br />
+
+                @Html.Terratype("map", @<text>This is the label</text>)
+
+                <br />
+
+
+                @Html.Terratype(new Options
+{
+	DomMonitorType = Options.DomMonitorTypes.Disable
+    Provider = new Terratype.Providers.GoogleMapsV3()
+    {
+        Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
+        {
+            Satellite = false
+        }
+    },
+    Zoom = 3,
+    Position = new Terratype.CoordinateSystems.Wgs84("50,0")
+}, "map")
+
+
+
+
+
+
+</body>
+</html>

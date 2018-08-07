@@ -41,6 +41,14 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.19**
+	Complete rewrite of how providers are loaded
+	Amend to GMaps rendering to allow bypass of failback when first rendering or resizing
+
+**1.0.18**
+	
+	Removed Minifier dependancy
+
 **1.0.17**
 	
 	Fixed error converting old properties (https://bit.ly/2HEgf4x)
