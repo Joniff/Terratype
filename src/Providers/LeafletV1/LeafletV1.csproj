@@ -222,13 +222,26 @@
     <Content Include="App_Plugins\Terratype.LeafletV1\Images\marker-shadow.png" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Lang\en-us.xml" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-providers.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-providers.min.js">
+      <DependentUpon>leaflet-providers.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet-src.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster-src.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\leaflet.markercluster.js" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.bundle.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.bundle.min.js">
+      <DependentUpon>Terratype.LeafletV1.Renderer.bundle.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\Terratype.LeafletV1.Renderer.min.js">
+      <DependentUpon>Terratype.LeafletV1.Renderer.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\tileservers.js" />
+    <Content Include="App_Plugins\Terratype.LeafletV1\Scripts\tileservers.min.js">
+      <DependentUpon>tileservers.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.appearance.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.definition.html" />
     <Content Include="App_Plugins\Terratype.LeafletV1\Views\config.search.html" />

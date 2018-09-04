@@ -15,7 +15,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.BingMapsV8/" + file;
             if (cache)
             {
-                result += "?cache=1.0.19";
+                result += "?cache=1.0.20";
             }
             return result;
         }

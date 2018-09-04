@@ -113,7 +113,8 @@
     <key alias="versionDescription">Which release of Google Maps V3 would you like to target (Note: Even when specifying a specific version the loaded version will vary depending on your browser)</key>
     <key alias="version3">Stable</key>
     <key alias="version3exp">Experimental</key>
-	<key alias="version333">3.33 (Released 16 May 2018)</key>
+	<key alias="version334">3.34 (Released 14 August 2018)</key>
+	<key alias="version333">3.33 (Released 11 June 2018)</key>
 	<key alias="version332">3.32 (Released 13 February 2018)</key>
 	<key alias="version331">3.31 (Also Released 13 February 2018)</key>
 	<key alias="version330">3.30 (Released 15 August 2017)</key>

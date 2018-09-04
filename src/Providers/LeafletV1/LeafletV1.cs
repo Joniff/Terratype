@@ -14,7 +14,7 @@ namespace Terratype.Providers
             var result = "/App_Plugins/Terratype.LeafletV1/" + file;
             if (cache)
             {
-                result += "?cache=1.0.19";
+                result += "?cache=1.0.20";
             }
             return result;
         }
@@ -139,19 +139,19 @@ namespace Terratype.Providers
 #if DEBUG
                 writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.js"));
 #else
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.bundle.min.js"));
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.LeafletV1.Renderer.bundle.js"));
 #endif
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
 #if DEBUG
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.js"));
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet-src.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();
 
-                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.markercluster.js"));
+                writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/leaflet.markercluster-src.js"));
                 writer.AddAttribute("defer", "");
                 writer.RenderBeginTag(HtmlTextWriterTag.Script);
                 writer.RenderEndTag();

@@ -178,7 +178,7 @@ namespace Terratype
             var result = "/App_Plugins/Terratype/" + file;
             if (cache)
             {
-                result += "?cache=1.0.19";
+                result += "?cache=1.0.20";
             }
             return result;
         }

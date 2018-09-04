@@ -41,6 +41,11 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+**1.0.20**
+
+	Fixed missing resource files for Bing & Leaflet
+	Updated to use Leaflet version 1.3.4
+
 **1.0.19**
 
 	Complete rewrite of how providers are loaded

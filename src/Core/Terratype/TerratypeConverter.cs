@@ -21,11 +21,8 @@ namespace Terratype
             return propertyType.PropertyEditorAlias == TerratypePropertyEditor.PropertyEditorAlias;
         }
 
-		private void MergeJson(JObject data, JObject config, string fieldName)
-		{
-            data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(fieldName), 
-                config.GetValue(Json.PropertyName<Models.Model>(fieldName), StringComparison.InvariantCultureIgnoreCase))));
-		}
+		private void MergeJson(JObject data, JObject config, string fieldName) => 
+			data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Model>(fieldName), config.GetValue(Json.PropertyName<Models.Model>(fieldName), StringComparison.InvariantCultureIgnoreCase))));
 
         public object ConvertDataToSource(PublishedPropertyType propertyType, object source, bool preview)
         {

@@ -248,11 +248,16 @@
     <None Include="App_Plugins\Terratype\Views\grid.cshtml" />
     <None Include="bundleconfig.json" />
     <None Include="packages.config" />
-    <None Include="Terratype.nuspec" />
+    <None Include="Terratype.nuspec">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Terratype\Css\label.standard.css" />
+    <Content Include="App_Plugins\Terratype\Images\false.png" />
+    <Content Include="App_Plugins\Terratype\Images\loader.gif" />
     <Content Include="App_Plugins\Terratype\Images\Terratype.png" />
+    <Content Include="App_Plugins\Terratype\Images\true.png" />
     <Content Include="App_Plugins\Terratype\Lang\en-us.xml" />
     <Content Include="App_Plugins\Terratype\readme.txt" />
     <Content Include="App_Plugins\Terratype\Scripts\terratype.js" />

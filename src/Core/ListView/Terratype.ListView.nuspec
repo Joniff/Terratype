@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Terratype List View </tags>
     <dependencies>
-	  <dependency id="Terratype" version="1.0.19" />
+	  <dependency id="Terratype" version="1.0.20" />
 	</dependencies>
   </metadata>
   <files>

@@ -10,9 +10,9 @@
 				return $scope.model.value;
 			},
 			images: {
-				loading: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/loader.gif',
-				failed: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/false.png',
-				success: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/true.png',
+				loading: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/loader.gif',
+				failed: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/false.png',
+				success: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/true.png',
 			},
 			controller: function (a) {
 				return Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/Terratype/ajax/' + a;

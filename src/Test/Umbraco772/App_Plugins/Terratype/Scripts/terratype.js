@@ -605,14 +605,14 @@
             urlProvider: function (id, file, cache) {
                 var r = Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/' + id + '/' + file;
                 if (cache == true) {
-                    r += '?cache=1.0.19';
+                    r += '?cache=1.0.20';
                 }
                 return r;
             },
             images: {
-                loading: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/assets/img/loader.gif',
-                failed: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/false.png',
-                success: Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/images/true.png',
+				loading: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/loader.gif',
+				failed: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/false.png',
+				success: Umbraco.Sys.ServerVariables.umbracoSettings.appPluginsPath + '/Terratype/Images/true.png',
             },
             controller: function (a) {
                 return Umbraco.Sys.ServerVariables.umbracoSettings.umbracoPath + '/backoffice/' + packageName + '/ajax/' + a;

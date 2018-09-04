@@ -1,16 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace Terratype
 {
-    public static class Json
+	public static class Json
     {
         public static string PropertyName<T>(string name)
         {
@@ -23,7 +18,7 @@ namespace Terratype
             return name.ToLowerInvariant();
         }
     }
-    public class IHtmlStringConverter : Newtonsoft.Json.JsonConverter
+    public class IHtmlStringConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

@@ -5,11 +5,11 @@ using Umbraco.Web.PropertyEditors;
 
 namespace Terratype.ListView
 {
-	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorName, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.16", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
+	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorName, "/App_Plugins/Terratype.ListView/views/editor.html?cache=1.0.20", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]
 #if DEBUG
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.19")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.js?cache=1.0.20")]
 #else
-	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.min.js?cache=1.0.19")]
+	[PropertyEditorAsset(ClientDependencyType.Javascript, "/App_Plugins/Terratype.ListView/scripts/terratype.listview.min.js?cache=1.0.20")]
 #endif
     public class TerratypeListViewPropertyEditor : PropertyEditor
 	{
@@ -38,7 +38,7 @@ namespace Terratype.ListView
 
 		internal class TerratypeListViewPreValueEditor : PreValueEditor
 		{
-			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.19", Description = "", HideLabel = true)]
+			[PreValueField("definition", "Config", "/App_Plugins/Terratype.ListView/views/config.html?cache=1.0.20", Description = "", HideLabel = true)]
             public Models.Model Definition { get; set; }
 
         }
