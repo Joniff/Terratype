@@ -105,6 +105,23 @@
     <key alias="satelliteAttribution"><![CDATA[Map data &copy;2017]]></key>
   </area>
 
+  <area alias="terratypeLeafletV1Stamen">
+	<key alias="name">Stamen</key>
+	<key alias="description"><![CDATA[San Fransico based organisation that deliver maps with founding from CityTracking and the Knight Foundation]]></key>
+
+	<key alias="tonerName">Toner</key>
+	<key alias="tonerAttribution"><![CDATA[Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.]]></key>
+
+	<key alias="terrainName">Terrain</key>
+	<key alias="terrainAttribution"><![CDATA[Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.]]></key>
+
+	<key alias="watercolorName">Watercolor</key>
+	<key alias="watercolorAttribution">
+	  <![CDATA[Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.]]>
+	</key>
+  </area>
+
+
   <area alias="terratypeLeafletV1ConfigDefinition">
     <key alias="mapSourceLabel">Map Source:</key>
     <key alias="mapSourceDescription">Organisations or companies that delivers map based data compatible with Leaflet V1</key>

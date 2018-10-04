@@ -41,6 +41,12 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
  
 ### Log ###
 
+
+**1.0.21**
+
+	Added Stamen Tileserver to Leaflet
+	
+
 **1.0.20**
 
 	Fixed missing resource files for Bing & Leaflet
@@ -173,7 +179,9 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 Current Roadmap
 
-	Include stylised maps for Leaflet, using own Tile Servers (Likely to be free or paid for service depending on your data usage)
+	Include stylised maps for Leaflet, using own Tile Servers (Likely to be free or paid for service depending on your data usage).
+	
+	Implement http://humangeo.github.io/leaflet-tilefilter
 
 	Adding an ArcGIS, CartoDB & MapBox providers - likely to charge for these providers, to recupe development and cover maintance costs (My thinking is better to have working providers for money, than broken providers for free)
 

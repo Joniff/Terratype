@@ -65,7 +65,7 @@
 				if (model.icon && model.icon.url) {
 					m._bound.extend(latlng);
 					var anchor = [root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-					root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
+						root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
 					m.positions.push({
 						id: id,
 						tag: match.getAttribute('data-tag'),

@@ -232,7 +232,7 @@
 					url: 'http://t{s}.tianditu.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}',
 					id: 'TianDiTu.Basic',
 					name: 'terratypeLeafletV1TianDiTu_basicName',
-					attribution: 'terratypeLeafletV1TianDiTu_basicName',
+					attribution: 'terratypeLeafletV1TianDiTu_basicAttribution',
 					coordinateSystems: [Gcj02],
 					minZoom: 0,
 					maxZoom: 18,
@@ -244,7 +244,7 @@
 					url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
 					id: 'TianDiTu.Satellite',
 					name: 'terratypeLeafletV1TianDiTu_satelliteName',
-					attribution: 'terratypeLeafletV1TianDiTu_satelliteName',
+					attribution: 'terratypeLeafletV1TianDiTu_satelliteAttribution',
 					coordinateSystems: [Gcj02],
 					minZoom: 0,
 					maxZoom: 18,
@@ -256,7 +256,7 @@
 					url: 'http://t{s}.tianditu.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}',
 					id: 'TianDiTu.Terrain',
 					name: 'terratypeLeafletV1TianDiTu_terrainName',
-					attribution: 'terratypeLeafletV1TianDiTu_terrainName',
+					attribution: 'terratypeLeafletV1TianDiTu_terrainAttribution',
 					coordinateSystems: [Gcj02],
 					minZoom: 0,
 					maxZoom: 18,
@@ -278,7 +278,7 @@
 					url: 'http://www.google.cn/maps/vt?lyrs=m@189&gl=cn&x={x}&y={y}&z={z}',
 					id: 'GoogleCN.Basic',
 					name: 'terratypeLeafletV1GoogleCN_basicName',
-					attribution: 'terratypeLeafletV1GoogleCN_basicName',
+					attribution: 'terratypeLeafletV1GoogleCN_basicAttribution',
 					coordinateSystems: [Gcj02],
 					minZoom: 0,
 					maxZoom: 18,
@@ -290,7 +290,7 @@
 					url: 'http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}',
 					id: 'GoogleCN.Satellite',
 					name: 'terratypeLeafletV1GoogleCN_satelliteName',
-					attribution: 'terratypeLeafletV1GoogleCN_satelliteName',
+					attribution: 'terratypeLeafletV1GoogleCN_satelliteAttribution',
 					coordinateSystems: [Gcj02],
 					minZoom: 0,
 					maxZoom: 18,
@@ -298,6 +298,53 @@
 						subdomains: ''
 					}
 				}
+			]
+		},
+		{
+			id: 'Stamen',
+			name: 'terratypeLeafletV1Stamen_name',
+			description: 'terratypeLeafletV1Stamen_description',
+			key: {
+				enable: false,
+			},
+			tileServers: [
+				{
+					url: 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
+					id: 'Stamen.Toner',
+					name: 'terratypeLeafletV1Stamen_tonerName',
+					attribution: 'terratypeLeafletV1Stamen_tonerAttribution',
+					coordinateSystems: [Wgs84],
+					minZoom: 0,
+					maxZoom: 17,
+					options: {
+						subdomains: 'abcd'
+					}
+				},
+				{
+					url: 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
+					id: 'Stamen.Terrain',
+					name: 'terratypeLeafletV1Stamen_terrainName',
+					attribution: 'terratypeLeafletV1Stamen_terrainAttribution',
+					coordinateSystems: [Wgs84],
+					minZoom: 0,
+					maxZoom: 17,
+					options: {
+						subdomains: ''
+					}
+				},
+				{
+					url: 'http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
+					id: 'Stamen.Watercolor',
+					name: 'terratypeLeafletV1Stamen_watercolorName',
+					attribution: 'terratypeLeafletV1Stamen_watercolorAttribution',
+					coordinateSystems: [Wgs84],
+					minZoom: 0,
+					maxZoom: 17,
+					options: {
+						subdomains: ''
+					}
+				}
+
 			]
 		}
     ]
@@ -380,7 +427,7 @@
 				if (model.icon && model.icon.url) {
 					m._bound.extend(latlng);
 					var anchor = [root.terratype._getAnchorHorizontal(model.icon.anchor.horizontal, model.icon.size.width),
-					root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
+						root.terratype._getAnchorVertical(model.icon.anchor.vertical, model.icon.size.height)];
 					m.positions.push({
 						id: id,
 						tag: match.getAttribute('data-tag'),
