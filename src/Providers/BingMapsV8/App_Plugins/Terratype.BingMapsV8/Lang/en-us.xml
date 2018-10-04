@@ -23,11 +23,11 @@
     <key alias="apiKeyGet">[Get a key]</key>
     <key alias="apiKeyInvalid">Invalid API Key</key>
     <key alias="apiKeyValid">API Key is valid</key>
-    <key alias="retryTitle">Try and reload map using this Google Map API Key</key>
+    <key alias="retryTitle">Try and reload map using this Bing API Key</key>
     <key alias="retryLabel">Retry</key>
 
     <key alias="httpsLabel">Force Https:</key>
-    <key alias="httpsDescription">Force all Google Map requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP</key>
+    <key alias="httpsDescription">Force all Bing Maps requests to use HTTPS protocol, even if the Umbraco instance is running on HTTP. Only relevant when Umbraco is running on HTTP</key>
 
     <key alias="languageLabel">Language:</key>
     <key alias="languageDescription">Primary language used to display places</key>
