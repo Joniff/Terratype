@@ -6,41 +6,53 @@
 }
 
 <h1>
-    @Model.Content.Name - Combined maps with options
+	@Model.Content.Name - Combined maps with options
 </h1>
 
 
 <div id="pretend-accordion3" style="display:@(Request.QueryString["show3"] !=null ? "display":"none" );">
 
-    @Html.Terratype(new Options
-    {
-        Provider = new Terratype.Providers.GoogleMapsV3()
-        {
-            Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
-            {
-                Satellite = true
-            }
-        },
-        Height = 1000,
-        MapSetId = 1,
-        Zoom = 5,
-        Position = new Terratype.CoordinateSystems.Wgs84("-30,130")
-    })
+	@Html.Terratype(new Options
+	{
+		Provider = new Terratype.Providers.GoogleMapsV3(),
+		Height = 1000,
+		MapSetId = 1,
+		Zoom = 5,
+		Position = new Terratype.CoordinateSystems.Wgs84("-30,130")
+	})
 
-    @foreach (var record in Model.Content.Nested)
-    {
-        var name = record.GetPropertyValue<string>("mapName");
-        var map = record.GetPropertyValue<Terratype.Models.Model>("map");
+	@foreach (var record in Model.Content.Nested)
+	{
+		var name = record.GetPropertyValue<string>("mapName");
+		var map = record.GetPropertyValue<Terratype.Models.Model>("map");
+		map.Icon.Url = new Uri("https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png");
 
-        @Html.Terratype(new Options {
-			MapSetId = 1
+		@Html.Terratype(new Options {
+			MapSetId = 1,
+
 		}, map,
-            @<text>
-                @name is at @map.Position
-            </text>
-        )
-    }
+		@<text>
+		[{"link":"@name",
+		"title":"@map.Position"
+		}]</text>
+		)
+	}
 </div>
 
 
 <button onclick="var a = document.getElementById('pretend-accordion3');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
+<script>
+	terratype.onRender(function (provider, map) {
+		console.log('onRender: ' + provider.id + ', ' + map.id);
+
+		//if (provider.id == 'Terratype.GoogleMapsV3') {
+
+			map._markerclusterer.setMaxZoom(1);
+			map._markerclusterer.setGridSize(1);
+			map._markerclusterer.redraw();
+		//}
+	});
+</script>
+

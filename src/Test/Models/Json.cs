@@ -130,14 +130,6 @@ namespace Terratype.Test.Models
 
                 var provider = new Terratype.Providers.GoogleMapsV3()
                 {
-                    Version = "3",
-                    ApiKey = "XXXAAABBBCC1234567890abcdefghijklmnopqrstuvwxyz",
-                    ForceHttps = true,
-                    Language = "en-gb",
-                    PredefineStyling = "pretty",
-                    ShowRoads = false,
-                    ShowLandmarks = true,
-                    ShowLabels = false,
                     Variety = new Terratype.Providers.GoogleMapsV3.VarietyDefinition()
                     {
                         Selector = new Terratype.Providers.GoogleMapsV3.VarietyDefinition.SelectorDefinition()
@@ -178,6 +170,16 @@ namespace Terratype.Test.Models
                         }
                     }
                 };
+				PrivateObject providerAccessor = new PrivateObject(provider);
+				providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.Version), "3");
+				providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ApiKey), "XXXAAABBBCC1234567890abcdefghijklmnopqrstuvwxyz");
+                providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ForceHttps), true);
+                providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.Language), "en-gb");
+                providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.PredefineStyling), "pretty");
+                providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ShowRoads), false);
+                providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ShowLandmarks), true);
+				providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ShowLabels), false);
+
 
                 var model = new Terratype.Models.Model()
                 {

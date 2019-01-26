@@ -10,5 +10,18 @@
     "inputFiles": [
       "App_Plugins/Terratype/Scripts/terratype.renderer.js"
     ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype/Scripts/terratype2.js",
+    "inputFiles": [
+      "Scripts/Abstracts/*.js",
+      "Scripts/Models/*.js"
+    ]
+  },
+  {
+    "outputFileName": "App_Plugins/Terratype/Scripts/terratype2.min.js",
+    "inputFiles": [
+      "App_Plugins/Terratype/Scripts/terratype2.js"
+    ]
   }
 ]

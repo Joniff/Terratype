@@ -5,7 +5,10 @@ Map datatype for Umbraco V7
 
 ### Why? ###
 Wish to give your content editors or grid editors easy Maps to set real world locations. 
- 
+
+See https://umbraco.com/apps/terratype/ for more details
+
+
 ### Usage ###
 1. Install Terratype framework package via Nuget
    https://www.nuget.org/packages/Terratype/

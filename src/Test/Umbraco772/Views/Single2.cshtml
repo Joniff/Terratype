@@ -1,74 +1,74 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @using Terratype;
 @{
-    Layout = null;
-    var jquery = false;
-    if (Request.QueryString["jquery"] != null)
-    {
-        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-                crossorigin="anonymous"></script>
+	Layout = null;
+	var jquery = false;
+	if (Request.QueryString["jquery"] != null)
+	{
+		//  Add jquery to page, this will be picked up by Terratype and used instead of native js
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+				integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+				crossorigin="anonymous"></script>
 		jquery = true;
 	}
 }
 
 <html>
 <head>
-    <title>Dynamic</title>
+	<title>Dynamic</title>
 </head>
 <body>
 
 	THIS IS SPARTA
 
 
-    @Html.Terratype(Model.Content.GetProperty("map"))
+	@Html.Terratype(Model.Content.GetProperty("map"))
 
-    <br />
+	<br />
 
-    @Html.Terratype(Model.Content.GetProperty("map"), @<text>This is the label</text>)
+	@Html.Terratype(Model.Content.GetProperty("map"), @<text>This is the label</text>)
 
-    <br />
+	<br />
 
-    @Html.Terratype(Model.Content.GetProperty("map").Value)
+	@Html.Terratype(Model.Content.GetProperty("map").Value)
 
-    <br />
+	<br />
 
-    @Html.Terratype(Model.Content.GetProperty("map").Value, @<text>This is the label</text>)
+	@Html.Terratype(Model.Content.GetProperty("map").Value, @<text>This is the label</text>)
 
-    <br />
+	<br />
 
-    @Html.Terratype("map", 
-        @<text>
-            <div>
-                This icon is at 
-                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
-            </div>
-        </text>
-    )
-
-
-
-    @Html.Terratype("map",
-        @<text>
-            <div style="background-color:yellow;">
-                This icon is at
-                @((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
-         </div>
-      </text>)
+	@Html.Terratype("map", 
+		@<text>
+			<div>
+				This icon is at 
+				@((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
+			</div>
+		</text>
+	)
 
 
 
-    @Html.Terratype("map")
+	@Html.Terratype("map",
+		@<text>
+			<div style="background-color:yellow;">
+				This icon is at
+				@((Model.Content.GetProperty("map").Value as Terratype.Models.Model).Position)
+		 </div>
+	  </text>)
 
-    <br />
-
-    @Html.Terratype("map", @<text>This is the label</text>)
-
-    <br />
 
 
-    @Html.Terratype(new Options
+	@Html.Terratype("map")
+
+	<br />
+
+	@Html.Terratype("map", @<text>This is the label</text>)
+
+	<br />
+
+
+	@Html.Terratype(new Options
 	{
 		DomMonitorType = Options.DomMonitorTypes.Disable,
 		Provider = new Terratype.Providers.GoogleMapsV3()

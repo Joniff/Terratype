@@ -1,5 +1,64 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.NestedContentContainer>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Umbraco.Web.PublishedContentModels.NestedContentContainer>
+@using Terratype
 @{
 	Layout = null;
 }
+
+@*
+@Html.Terratype(
+	new Options {
+		MapSetId = 1
+	},
+	Model.Content.BingMap
+)
+
+<br />
+
+@Html.Terratype(
+	new Options {
+		MapSetId = 2
+	},
+	Model.Content.LeafleatMap
+)
+
+<br />
+
+@Html.Terratype(
+	new Options {
+		MapSetId = 3
+	},
+	Model.Content.GoogleMap
+)
+
+
+<br />
+
+@Html.Terratype(
+	new Options {
+		MapSetId = 4,
+		Provider = Model.Content.BingMap.Provider
+	},
+	Model.Content.GoogleMap
+)
+
+*@
+
+@{
+
+	//	Access the content node that contains the 10 maps
+	var styleMapsNode = Umbraco.TypedContent(1145);
+
+	//	Load the 10 maps into an array
+	var styleMaps = new List<Terratype.Models.Model> {
+		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("bingMap"), 
+		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("leafleatMap"), 
+		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("googleMap")
+	};
+
+}
+
+@Html.Terratype(new Options {
+		Position = new Terratype.CoordinateSystems.Wgs84("41.9028,12.4964"),
+		Zoom = 15
+	}, styleMaps[new Random().Next(0, styleMaps.Count)]
+)

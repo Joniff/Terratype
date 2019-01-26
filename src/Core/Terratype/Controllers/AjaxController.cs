@@ -264,7 +264,7 @@ namespace Terratype.Controllers
             {
                 if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    //  Is local file, so add our domain stuff and call ourselves. The reason we do this is incase there is a querystring on the end that needs processing. eg imageprocesser
+                    //  Is local file, so add our domain stuff and call ourselves. The reason we do this is incase there is a querystring on the end that needs processing. eg imageprocessor
                     url = new UriBuilder(UmbracoContext.HttpContext.Request.Url.Scheme, UmbracoContext.HttpContext.Request.Url.Host,
                         UmbracoContext.HttpContext.Request.Url.Port, url).Uri.ToString();
                 }

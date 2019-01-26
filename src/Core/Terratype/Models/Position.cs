@@ -7,127 +7,127 @@ using System.Reflection;
 
 namespace Terratype.Models
 {
-    [DebuggerDisplay("{DebugValue} ({Id})")]
-    [JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
-    public abstract class Position : Plugins.Resolver
-    {
+	[DebuggerDisplay("{DebugValue} ({Id})")]
+	[JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
+	public abstract class Position : Plugins.Resolver
+	{
 		public static Type ResolveType(string id) => ResolveType<Position>(id, nameof(Position)); 
 
 		public static Position Resolve(string id) => Resolve<Position>(id, nameof(Position)) as Position;
 
 		public static IEnumerable<string> InstalledTypes => InstalledTypes<Position>();
 
-        private const double EarthRadius = 6371000;			//	meters
+		private const double EarthRadius = 6371000;			//	meters
 		private const double RoundingError = 0.000001;		//	Rounding error
 
-        /// <summary>
-        /// Name of coordinate system
-        /// </summary>
-        public abstract string Name { get; }
+		/// <summary>
+		/// Name of coordinate system
+		/// </summary>
+		public abstract string Name { get; }
 
-        /// <summary>
-        /// Description of coordinate system
-        /// </summary>
-        public abstract string Description { get; }
+		/// <summary>
+		/// Description of coordinate system
+		/// </summary>
+		public abstract string Description { get; }
 
-        /// <summary>
-        /// Url that a developer can use to get more information about this coordinate system
-        /// </summary>
-        public abstract string ReferenceUrl { get; }
+		/// <summary>
+		/// Url that a developer can use to get more information about this coordinate system
+		/// </summary>
+		public abstract string ReferenceUrl { get; }
 
-        [JsonProperty(PropertyName = "datum")]
-        internal object _internalDatum { get; set; }
+		[JsonProperty(PropertyName = "datum")]
+		internal object _internalDatum { get; set; }
 
-        protected object _inheritedDatum
-        {
-            get
-            {
-                return _internalDatum;
-            }
-            set
-            {
-                _internalDatum = value;
-            }
-        }
+		protected object _inheritedDatum
+		{
+			get
+			{
+				return _internalDatum;
+			}
+			set
+			{
+				_internalDatum = value;
+			}
+		}
 
-        public virtual int Precision
-        {
-            get
-            {
-                return 6;       //  Depending on coordinate system, this means different thing
-            }
-        }
+		public virtual int Precision
+		{
+			get
+			{
+				return 6;       //  Depending on coordinate system, this means different thing
+			}
+		}
 
-        /// <summary>
-        /// To display position to user
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            if (_internalDatum is LatLng)
-            {
-                LatLng latlng = _internalDatum as LatLng;
-                return Math.Round(latlng.Latitude, Precision).ToString(CultureInfo.InvariantCulture) + "," +
-                    Math.Round(latlng.Longitude, Precision).ToString(CultureInfo.InvariantCulture);
-            }
-            if (_internalDatum is string)
-            {
-                return _internalDatum as string;
-            }
-            return null;
-        }
+		/// <summary>
+		/// To display position to user
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			if (_internalDatum is LatLng)
+			{
+				LatLng latlng = _internalDatum as LatLng;
+				return Math.Round(latlng.Latitude, Precision).ToString(CultureInfo.InvariantCulture) + "," +
+					Math.Round(latlng.Longitude, Precision).ToString(CultureInfo.InvariantCulture);
+			}
+			if (_internalDatum is string)
+			{
+				return _internalDatum as string;
+			}
+			return null;
+		}
 
-        /// <summary>
-        /// Parses human readable position
-        /// </summary>
-        public virtual void Parse(string datum)
-        {
-            if (!TryParse(datum))
-            {
-                throw new ArgumentException();
-            }
-        }
+		/// <summary>
+		/// Parses human readable position
+		/// </summary>
+		public virtual void Parse(string datum)
+		{
+			if (!TryParse(datum))
+			{
+				throw new ArgumentException();
+			}
+		}
 
-        /// <summary>
-        /// Parses human readable position if possible
-        /// </summary>
-        public virtual bool TryParse(string datum)
-        {
-            if (String.IsNullOrWhiteSpace(datum))
-            {
-                return false;
-            }
-            var args = datum.Split(',');
-            double lat = 0.0, lng = 0.0;
-            if (args.Length != 2 ||
-                !double.TryParse(args[0], NumberStyles.Any, CultureInfo.InvariantCulture, out lat) ||
-                !double.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out lng))
-            {
-                return false;
-            }
-            _internalDatum = Math.Round(lat, Precision).ToString(CultureInfo.InvariantCulture) + "," +
-                    Math.Round(lng, Precision).ToString(CultureInfo.InvariantCulture);
-            return true;
-        }
+		/// <summary>
+		/// Parses human readable position if possible
+		/// </summary>
+		public virtual bool TryParse(string datum)
+		{
+			if (String.IsNullOrWhiteSpace(datum))
+			{
+				return false;
+			}
+			var args = datum.Split(',');
+			double lat = 0.0, lng = 0.0;
+			if (args.Length != 2 ||
+				!double.TryParse(args[0], NumberStyles.Any, CultureInfo.InvariantCulture, out lat) ||
+				!double.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out lng))
+			{
+				return false;
+			}
+			_internalDatum = Math.Round(lat, Precision).ToString(CultureInfo.InvariantCulture) + "," +
+					Math.Round(lng, Precision).ToString(CultureInfo.InvariantCulture);
+			return true;
+		}
 
-        /// <summary>
-        /// Convert the current position to a Wgs84 location
-        /// </summary>
-        /// <returns>A Wgs84 location</returns>
-        public abstract LatLng ToWgs84();
+		/// <summary>
+		/// Convert the current position to a Wgs84 location
+		/// </summary>
+		/// <returns>A Wgs84 location</returns>
+		public abstract LatLng ToWgs84();
 
-        /// <summary>
-        /// Set the position to the Wgs84 location provided
-        /// </summary>
-        public abstract void FromWgs84(LatLng wgs84Position);
+		/// <summary>
+		/// Set the position to the Wgs84 location provided
+		/// </summary>
+		public abstract void FromWgs84(LatLng wgs84Position);
 
-        private string DebugValue
-        {
-            get
-            {
-                return ToString();
-            }
-        }
+		private string DebugValue
+		{
+			get
+			{
+				return ToString();
+			}
+		}
 
 		/// <summary>
 		/// Distance in meters between this position and another position using Haversine formula
@@ -179,5 +179,5 @@ namespace Terratype.Models
 			var two = other.ToWgs84();
 			return (Math.Abs(one.Latitude - two.Latitude) < RoundingError && Math.Abs(one.Longitude - two.Longitude) < RoundingError);
 		}
-    }
+	}
 }

@@ -8,8 +8,8 @@ namespace Terratype.Plugins
 {
 	public abstract class Resolver
 	{
-        [JsonProperty(PropertyName = "id")]
-        public abstract string Id { get; }
+		[JsonProperty(PropertyName = "id")]
+		public abstract string Id { get; }
 		
 		private static IDictionary<Guid, IDictionary<string, Type>> installed = new Dictionary<Guid, IDictionary<string, Type>>();
 

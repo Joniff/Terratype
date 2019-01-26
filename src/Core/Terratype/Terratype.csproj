@@ -205,10 +205,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorFilters\HueRotate.cs" />
+    <Compile Include="ColorFilters\Grayscale.cs" />
+    <Compile Include="ColorFilters\Invert.cs" />
+    <Compile Include="ColorFilters\Sepia.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
-    <Compile Include="CoordinateSystems\Bd09.cs" />
-    <Compile Include="CoordinateSystems\Gcj02.cs" />
-    <Compile Include="CoordinateSystems\Wgs84.cs" />
+    <Compile Include="CoordinateSystems\Bd09\Bd09.cs" />
+    <Compile Include="CoordinateSystems\Gcj02\Gcj02.cs" />
+    <Compile Include="CoordinateSystems\Wgs84\Wgs84.cs" />
     <Compile Include="Indexer\ContentService.cs" />
     <Compile Include="Indexer\Entry.cs" />
     <Compile Include="Indexer\Helper.cs" />
@@ -226,6 +230,8 @@
     <Compile Include="Indexer\Searchers\ISearch.cs" />
     <Compile Include="Json\Json.cs" />
     <Compile Include="Labels\Standard.cs" />
+    <Compile Include="Models\ColorFilter.cs" />
+    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\AnchorHorizontal.cs" />
     <Compile Include="Models\AnchorVertical.cs" />
     <Compile Include="Models\Icon.cs" />
@@ -234,6 +240,8 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="Models\Provider.cs" />
+    <Compile Include="Models\CoordinateDisplay.cs" />
+    <Compile Include="Models\Searcher.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Plugins\Resolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -268,12 +276,30 @@
     <Content Include="App_Plugins\Terratype\Scripts\terratype.renderer.min.js">
       <DependentUpon>terratype.renderer.js</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Terratype\Scripts\terratype2.js" />
+    <Content Include="App_Plugins\Terratype\Scripts\terratype2.min.js">
+      <DependentUpon>terratype2.js</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Terratype\Views\config.html" />
     <Content Include="App_Plugins\Terratype\Views\editor.html" />
     <Content Include="App_Plugins\Terratype\Views\grid.html" />
     <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
     <Content Include="App_Plugins\Terratype\Views\label.standard.html" />
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="CoordinateSystems\Wgs84\Wgs84.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\ColorFilterBase.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\LabelBase.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\CoordinateDisplayBase.ts" />
+    <TypeScriptCompile Include="Scripts\Models\Address.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\SearcherBase.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\ProviderBase.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\CoordinateSystemBase.ts" />
+    <TypeScriptCompile Include="Scripts\Models\Global.ts" />
+    <TypeScriptCompile Include="Scripts\Models\Position.ts" />
+    <TypeScriptCompile Include="Scripts\Abstracts\MapBase.ts" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <PropertyGroup>

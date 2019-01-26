@@ -48,18 +48,19 @@ namespace Terratype
 			}
 		}
 
-        protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-        {
+		protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+		{
 			base.ApplicationStarting(umbracoApplication, applicationContext);
 			Models.Position.RegisterType<Models.Position, CoordinateSystems.Bd09>(CoordinateSystems.Bd09._Id);
 			Models.Position.RegisterType<Models.Position, CoordinateSystems.Gcj02>(CoordinateSystems.Gcj02._Id);
 			Models.Position.RegisterType<Models.Position, CoordinateSystems.Wgs84>(CoordinateSystems.Wgs84._Id);
 			Models.Label.RegisterType<Models.Label, Labels.Standard>(Labels.Standard._Id);
-        }
+			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.Sepia._Id);
+		}
 
-        protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-        {
-            base.ApplicationStarted(umbracoApplication, applicationContext);
+		protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+		{
+			base.ApplicationStarted(umbracoApplication, applicationContext);
 			if (Indexer.IndexerBase.InstalledTypes.Any())
 			{
 				Indexers = Indexer.IndexerBase.InstalledTypes.Select(x => Indexer.IndexerBase.Resolve(x));

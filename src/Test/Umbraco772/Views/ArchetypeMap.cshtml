@@ -1,21 +1,20 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ArchetypeMap>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Umbraco.Web.PublishedContentModels.ArchetypeMap>
 @using Terratype;
 @{
-    Layout = null;
-    var jquery = false;
-    if (Request.QueryString["jquery"] != null)
-    {
-        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-                crossorigin="anonymous"></script>
-        jquery = true;
-    }
+	Layout = null;
+	var jquery = false;
+	if (Request.QueryString["jquery"] != null)
+	{
+		//  Add jquery to page, this will be picked up by Terratype and used instead of native js
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+				integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+				crossorigin="anonymous"></script>
+		jquery = true;
+	}
 }
 <html>
 <head>
-    <title>Archetype Maps</title>
+	<title>Archetype Maps</title>
 </head>
 <body>
 	Jquery is @jquery
@@ -162,32 +161,32 @@
 	<div id="pretend-accordion6" style="display:@(Request.QueryString["show6"] != null ? "display" : "none");">
 
 		@Html.Terratype(new Options
-   {
-	   Provider = new Terratype.Providers.LeafletV1()
-	   {
-		   ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
-		   {
-			   Enable = true,
-			   Position = Terratype.Providers.LeafletV1.ControlPositions.TopLeft
-		   }
-	   },
-	   MapSetId = 11,
-	   AutoFit = true,
-	   Icon = new Terratype.Models.Icon
-	   {
-		   Url = new Uri("https://d30y9cdsu7xlg0.cloudfront.net/png/4096-200.png"),
-		   Size = new Terratype.Models.Icon.SizeDefinition
-		   {
-			   Width = 48,
-			   Height = 48
-		   },
-		   Anchor = new Terratype.Models.Icon.AnchorDefinition
-		   {
-			   Horizontal = new Terratype.Models.AnchorHorizontal(Terratype.Models.AnchorHorizontal.Style.Center),
-			   Vertical = new Terratype.Models.AnchorVertical(Terratype.Models.AnchorVertical.Style.Center)
-		   }
-	   }
-   })
+		{
+			Provider = new Terratype.Providers.LeafletV1()
+			{
+				ZoomControl = new Terratype.Providers.LeafletV1.ZoomControlDefinition()
+				{
+					Enable = true,
+					Position = Terratype.Providers.LeafletV1.ControlPositions.TopLeft
+				}
+			},
+			MapSetId = 11,
+			AutoFit = true,
+			Icon = new Terratype.Models.Icon
+			{
+				Url = new Uri("https://d30y9cdsu7xlg0.cloudfront.net/png/4096-200.png"),
+				Size = new Terratype.Models.Icon.SizeDefinition
+				{
+					Width = 48,
+					Height = 48
+				},
+				Anchor = new Terratype.Models.Icon.AnchorDefinition
+				{
+					Horizontal = new Terratype.Models.AnchorHorizontal(Terratype.Models.AnchorHorizontal.Style.Center),
+					Vertical = new Terratype.Models.AnchorVertical(Terratype.Models.AnchorVertical.Style.Center)
+				}
+			}
+		})
 
 		@foreach (var record in Model.Content.Leaflet)
 		{
@@ -230,15 +229,155 @@
 	<button onclick="var a = document.getElementById('pretend-accordion7');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 
 
+	<div id="pretend-accordion8" style="display:@(Request.QueryString["show8"] != null ? "display" : "none");">
+
+		@foreach (var record in Model.Content.Bing)
+		{
+			var name = record.GetValue<string>("name");
+			var map = record.GetValue<Terratype.Models.Model>("location");
+
+			@Html.Terratype(new Options { MapSetId = 12, Provider = Model.Content.Leaflet[0].Provider }, map,
+				@<text>
+					@name is at @map.Position
+				</text>
+			)
+		}
+	</div>
+
+
+	<button onclick="var a = document.getElementById('pretend-accordion8');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
+
+
 	<script>
 		terratype.onInit(function (provider) {
 			console.log('onInit: ' + provider.id);
 		});
 		terratype.onLoad(function (provider, map) {
 			console.log('onLoad: ' + provider.id + ', ' + map.id);
+
+			if (provider.id == 'Terratype.GoogleMapsV3') {
+				var styledMapType = new google.maps.StyledMapType(
+					[
+						{ elementType: 'geometry', stylers: [{ color: '#ebe3cd' }] },
+						{ elementType: 'labels.text.fill', stylers: [{ color: '#523735' }] },
+						{ elementType: 'labels.text.stroke', stylers: [{ color: '#f5f1e6' }] },
+						{
+							featureType: 'administrative',
+							elementType: 'geometry.stroke',
+							stylers: [{ color: '#c9b2a6' }]
+						},
+						{
+							featureType: 'administrative.land_parcel',
+							elementType: 'geometry.stroke',
+							stylers: [{ color: '#dcd2be' }]
+						},
+						{
+							featureType: 'administrative.land_parcel',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#ae9e90' }]
+						},
+						{
+							featureType: 'landscape.natural',
+							elementType: 'geometry',
+							stylers: [{ color: '#dfd2ae' }]
+						},
+						{
+							featureType: 'poi',
+							elementType: 'geometry',
+							stylers: [{ color: '#dfd2ae' }]
+						},
+						{
+							featureType: 'poi',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#93817c' }]
+						},
+						{
+							featureType: 'poi.park',
+							elementType: 'geometry.fill',
+							stylers: [{ color: '#a5b076' }]
+						},
+						{
+							featureType: 'poi.park',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#447530' }]
+						},
+						{
+							featureType: 'road',
+							elementType: 'geometry',
+							stylers: [{ color: '#f5f1e6' }]
+						},
+						{
+							featureType: 'road.arterial',
+							elementType: 'geometry',
+							stylers: [{ color: '#fdfcf8' }]
+						},
+						{
+							featureType: 'road.highway',
+							elementType: 'geometry',
+							stylers: [{ color: '#f8c967' }]
+						},
+						{
+							featureType: 'road.highway',
+							elementType: 'geometry.stroke',
+							stylers: [{ color: '#e9bc62' }]
+						},
+						{
+							featureType: 'road.highway.controlled_access',
+							elementType: 'geometry',
+							stylers: [{ color: '#e98d58' }]
+						},
+						{
+							featureType: 'road.highway.controlled_access',
+							elementType: 'geometry.stroke',
+							stylers: [{ color: '#db8555' }]
+						},
+						{
+							featureType: 'road.local',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#806b63' }]
+						},
+						{
+							featureType: 'transit.line',
+							elementType: 'geometry',
+							stylers: [{ color: '#dfd2ae' }]
+						},
+						{
+							featureType: 'transit.line',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#8f7d77' }]
+						},
+						{
+							featureType: 'transit.line',
+							elementType: 'labels.text.stroke',
+							stylers: [{ color: '#ebe3cd' }]
+						},
+						{
+							featureType: 'transit.station',
+							elementType: 'geometry',
+							stylers: [{ color: '#dfd2ae' }]
+						},
+						{
+							featureType: 'water',
+							elementType: 'geometry.fill',
+							stylers: [{ color: '#b9d3c2' }]
+						},
+						{
+							featureType: 'water',
+							elementType: 'labels.text.fill',
+							stylers: [{ color: '#92998d' }]
+						}
+					],
+					{ name: 'zs123' });
+
+
+				map.handle.mapTypes.set('zs123', styledMapType);
+				map.handle.setMapTypeId('zs123');
+			}
 		});
 		terratype.onRender(function (provider, map) {
-			console.log('onRender: ' + provider.id + ', ' + map.id);
+			map._markerclusterer.setMaxZoom(1);
+			map._markerclusterer.setGridSize(1);
+			map._markerclusterer.redraw();
 		});
 		terratype.onRefresh(function (provider, map) {
 			console.log('onRefresh: ' + provider.id + ', ' + map.id);

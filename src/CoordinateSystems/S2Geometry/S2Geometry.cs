@@ -6,7 +6,7 @@ namespace Terratype.CoordinateSystems
 {
     //  http://s2geometry.io
     [JsonObject(MemberSerialization.OptIn)]
-    public class S2Geometrya : Terratype.Models.Position
+    public class S2Geometry : Terratype.Models.Position
     {
         [JsonProperty(PropertyName = "id")]
         public new const string Id = "S2Geometry";

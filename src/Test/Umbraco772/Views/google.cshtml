@@ -2,31 +2,24 @@
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @using Terratype;
 @{
-    Layout = null;
-    var jquery = false;
-    if (Request.QueryString["jquery"] != null)
-    {
-        //  Add jquery to page, this will be picked up by Terratype and used instead of native js
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-                integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-                crossorigin="anonymous"></script>
-        jquery = true;
-    }
+	Layout = null;
+	var jquery = false;
+	if (Request.QueryString["jquery"] != null)
+	{
+		//  Add jquery to page, this will be picked up by Terratype and used instead of native js
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"
+				integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+				crossorigin="anonymous"></script>
+		jquery = true;
+	}
 }
 
 <html>
 <head>
-    <title>Strongly Typed</title>
+	<title>Strongly Typed</title>
 </head>
 <body>
 	Jquery is @jquery
-
-	@{
-		var options = new Options { MapSetId = 1 };
-	}
-
-	@Html.Terratype((Terratype.Models.Model) Model.Content.GetProperty("map").Value)
-
 
 	<fieldset>
 		<legend>
@@ -101,8 +94,59 @@
 			})
 
 			@Html.Terratype(new Options { MapSetId = 2 }, Model.Content.Map)
+
 		</div>
 		<button onclick="var a = document.getElementById('pretend-accordion');a.style.display = (a.style.display=='none') ? 'block':'none'">Show/Hide Map</button>
 	</fieldset>
+
+	<script>
+			terratype.onRender(function (provider, map) {
+				console.log('onRender: ' + provider.id + ', ' + map.id);
+
+				if (provider.id == 'Terratype.GoogleMapsV3') {
+
+					map._markerclusterer.setMaxZoom(1);
+					map._markerclusterer.setGridSize(1);
+					map._markerclusterer.redraw();
+
+
+
+					//var styledMapType = new google.maps.StyledMapType(
+					//	[
+					//		//	This is just example styling, you are to place the real styling you want here
+
+					//		{ elementType: 'geometry', stylers: [{ color: '#ebe3cd' }] },
+					//		{ elementType: 'labels.text.fill', stylers: [{ color: '#523735' }] },
+					//		{ elementType: 'labels.text.stroke', stylers: [{ color: '#f5f1e6' }] },
+					//	],
+					//	{ name: 'zs123' });
+
+
+					//map.handle.mapTypes.set('zs123', styledMapType);
+					//map.handle.setMapTypeId('zs123');
+
+					//var highlight = new google.maps.FusionTablesLayer({
+					//	query: {
+					//		select: 'geometry',
+					//		from: '1N2LBk4JHwWpOY4d9fobIn27lfnZ5MDy-NoqqRpk',
+					//		where: "ISO_2DIGIT IN ('US', 'GB', 'DE')",
+					//		polygonOptions: {
+					//			fillColor: '#0000FF',
+					//			fillOpacity: 0.3
+					//		}
+					//	},
+					//	map: map.handle
+					//});
+
+					//highlight.setMap(map.handle);
+
+
+
+				}
+			});
+
+	</script>
+
+
 </body>
 </html>
