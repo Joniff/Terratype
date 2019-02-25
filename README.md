@@ -1,15 +1,15 @@
-# README #
+# README
 
-### Purpose ###
+### Purpose
 Map datatype for Umbraco V7 
 
-### Why? ###
+### Why?
 Wish to give your content editors or grid editors easy Maps to set real world locations. 
 
 See https://umbraco.com/apps/terratype/ for more details
 
 
-### Usage ###
+### Usage
 1. Install Terratype framework package via Nuget
    https://www.nuget.org/packages/Terratype/
 
@@ -27,12 +27,12 @@ See https://umbraco.com/apps/terratype/ for more details
 
 5. Create new content based off this document type
 
-### Documentation ###
+### Documentation
 
 https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 
-### Render ###
+### Render
 
 @using Terratype;
 
@@ -42,7 +42,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 
  
-### Log ###
+### Log
 
 
 **1.0.21**
@@ -178,7 +178,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 
 	
 	
-### Future development ###
+### Future development
 
 Current Roadmap
 
@@ -192,7 +192,7 @@ Current Roadmap
 	
 	
 	
-### Source code ###
+### Source code
 
 Download the source code, it should work for Visual Studio 2013 & 2015. If you set **Terratype.TestSite** as your **Set as Startup project** this should execute the test Umbraco website, where you can test maps under different scenarios. Once running, surf to http://localhost:60389/umbraco and at the login type **admin** for user and **password** for password.
 
