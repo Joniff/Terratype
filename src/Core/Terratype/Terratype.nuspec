@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Google Maps Gmaps Open Street View</tags>
     <dependencies>
-        <dependency id="UmbracoCms.Core" version="7.5.14" />
+        <dependency id="UmbracoCms.Core" version="[7.5.14,7.999.999]" />
     </dependencies>
   </metadata>
   <files>
