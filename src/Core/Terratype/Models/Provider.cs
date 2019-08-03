@@ -39,7 +39,7 @@ namespace Terratype.Models
 		/// <summary>
 		/// Labels that this map provider can handle
 		/// </summary>
-		public abstract IEnumerable<string> labels { get; }
+		public abstract IEnumerable<Label> Labels { get; }
 
 		/// <summary>
 		/// Can this map handle searches

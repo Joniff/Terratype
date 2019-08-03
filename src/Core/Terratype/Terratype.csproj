@@ -205,6 +205,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorFilters\Colorscale.cs" />
     <Compile Include="ColorFilters\HueRotate.cs" />
     <Compile Include="ColorFilters\Grayscale.cs" />
     <Compile Include="ColorFilters\Invert.cs" />
@@ -299,7 +300,9 @@
     <TypeScriptCompile Include="Scripts\Models\Position.ts" />
     <TypeScriptCompile Include="Scripts\Abstracts\MapBase.ts" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CoordinateDisplays\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\..\..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
   <PropertyGroup>

@@ -147,11 +147,25 @@
 	<key alias="degreeDescription">From 0 (No change), 180 (All colors flipped) to 360 (Back to no change)</key>
   </area>
 
-  <area alias="terratypeColorFilterGrayscale">
-	<key alias="name">Grayscale</key>
-	<key alias="description">Adjusts all the colors used by a certain degree around the color circle</key>
+  <area alias="terratypeColorFilterInvert">
+	<key alias="name">Invert</key>
+	<key alias="description">Replace every color with its opposite color</key>
 	<key alias="percentageLabel">Percentage</key>
 	<key alias="percentageDescription">From 0% (No change) to 100% (Complete)</key>
+  </area>
+
+  <area alias="terratypeColorFilterGrayscale">
+	<key alias="name">Grayscale</key>
+	<key alias="description">Turn the image into shades of Gray</key>
+	<key alias="percentageLabel">Percentage</key>
+	<key alias="percentageDescription">From 0% (No change) to 100% (Complete)</key>
+  </area>
+
+  <area alias="terratypeColorFilterColorscale">
+	<key alias="name">Colorscale</key>
+	<key alias="description">Turn the image into shades of any colour along the color wheel</key>
+	<key alias="percentageLabel">Degree</key>
+	<key alias="percentageDescription">From 0 (Brown) to 60 (Green), 150 (Blue), 240 (Megenta), 300 (Red)</key>
   </area>
 
 </language>

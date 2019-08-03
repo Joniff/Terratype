@@ -15,7 +15,7 @@ namespace Terratype.Providers
 			var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
 			if (cache)
 			{
-				result += "?cache=1.0.20";
+				result += "?cache=1.0.21";
 			}
 			return result;
 		}
@@ -216,12 +216,11 @@ namespace Terratype.Providers
 		/// <param name="language"></param>
 		/// <param name="label"></param>
 		/// <returns></returns>
-		public override void GetHtml(HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
 			string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
 			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
 		{
-			const string guid = "b72310d2-7041-4234-a6c5-6c5761dd708e";
-			var generatedId = nameof(Terratype) + nameof(GoogleMapsV3) + Guid.NewGuid().ToString();
+			var generatedId = nameof(Terratype) + nameof(GoogleMapsV3) + guid.ToString();
 			if (Tag == null) 
 			{
 				Tag = generatedId;
@@ -254,9 +253,10 @@ namespace Terratype.Providers
 			writer.AddAttribute(HtmlTextWriterAttribute.Class, nameof(Terratype) + '.' + nameof(GoogleMapsV3));
 			writer.RenderBeginTag(HtmlTextWriterTag.Div);
 
-			if (model.Icon != null && !HttpContext.Current.Items.Contains(guid))
+			const string addScriptOnce = "b72310d2-7041-4234-a6c5-6c5761dd708e";
+			if (model.Icon != null && !HttpContext.Current.Items.Contains(addScriptOnce))
 			{
-				HttpContext.Current.Items.Add(guid, true);
+				HttpContext.Current.Items.Add(addScriptOnce, true);
 #if DEBUG
 				writer.AddAttribute(HtmlTextWriterAttribute.Src, UrlPath("scripts/Terratype.GoogleMapsV3.Renderer.js"));
 #else
@@ -285,6 +285,17 @@ namespace Terratype.Providers
 			writer.RenderBeginTag(HtmlTextWriterTag.Div);
 			writer.RenderEndTag();
 			writer.RenderEndTag();
+		}
+
+		public override IEnumerable<Models.Label> Labels
+		{
+			get
+			{
+				return new Models.Label[]
+				{
+					new Labels.Standard()
+				};
+			}
 		}
 
 	}

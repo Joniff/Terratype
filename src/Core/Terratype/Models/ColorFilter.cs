@@ -17,10 +17,22 @@ namespace Terratype.Models
 		public static IEnumerable<string> InstalledTypes => InstalledTypes<ColorFilter>();
 
 		/// <summary>
-		/// Name of coordinate display
+		/// Name
 		/// </summary>
 		public abstract string Name { get; }
 
+		/// <summary>
+		/// Description
+		/// </summary>
+		public abstract string Description { get; }
+
+		/// <summary>
+		/// Value
+		/// </summary>
+		public int Value { get; set; }
+
 		public abstract void Render(HtmlTextWriter writer);
+
+		protected int PercentageToDegree(int value) => (value * 36) / 10;
 	}
 }

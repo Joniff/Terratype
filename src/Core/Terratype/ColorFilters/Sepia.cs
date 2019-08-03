@@ -11,10 +11,8 @@ namespace Terratype.ColorFilters
 		[JsonProperty]
 		public override string Id => _Id;
 		public override string Name => "terratypeColorFilterSepia_name";
+		public override string Description => "terratypeColorFilterSepia_description";
 		
-		[JsonProperty(PropertyName = "percent")]
-		public int Percent;
-
-		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: sepia(" + Percent.ToString() + "%); filter: sepia(" + Percent.ToString() + "%);");
+		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: sepia(" + Value.ToString() + "%); filter: sepia(" + Value.ToString() + "%);");
 	}
 }

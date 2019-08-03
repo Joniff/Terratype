@@ -11,10 +11,8 @@ namespace Terratype.ColorFilters
 		[JsonProperty]
 		public override string Id => _Id;
 		public override string Name => "terratypeColorFilterInvert_name";
+		public override string Description => "terratypeColorFilterHueRotate_description";
 		
-		[JsonProperty(PropertyName = "percent")]
-		public int Percent;
-
-		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: invert(" + Percent.ToString() + "%); filter: invert(" + Percent.ToString() + "%);");
+		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: invert(" + Value.ToString() + "%); filter: invert(" + Value.ToString() + "%);");
 	}
 }

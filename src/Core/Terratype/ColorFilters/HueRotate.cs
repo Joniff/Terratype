@@ -11,10 +11,8 @@ namespace Terratype.ColorFilters
 		[JsonProperty]
 		public override string Id => _Id;
 		public override string Name => "terratypeColorFilterHueRotate_name";
+		public override string Description => "terratypeColorFilterHueRotate_description";
 		
-		[JsonProperty(PropertyName = "degree")]
-		public int Degree;
-
-		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: hue-rotate(" + Degree.ToString() + "deg); filter: hue-rotate(" + Degree.ToString() + "deg);");
+		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: hue-rotate(" + PercentageToDegree(Value).ToString() + "deg); filter: hue-rotate(" + PercentageToDegree(Value).ToString() + "deg);");
 	}
 }

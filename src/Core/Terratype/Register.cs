@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Sync;
@@ -56,6 +54,10 @@ namespace Terratype
 			Models.Position.RegisterType<Models.Position, CoordinateSystems.Wgs84>(CoordinateSystems.Wgs84._Id);
 			Models.Label.RegisterType<Models.Label, Labels.Standard>(Labels.Standard._Id);
 			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.Sepia._Id);
+			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.Grayscale._Id);
+			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.Colorscale._Id);
+			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.HueRotate._Id);
+			Models.ColorFilter.RegisterType<Models.ColorFilter, ColorFilters.Sepia>(ColorFilters.Invert._Id);
 		}
 
 		protected override void ApplicationStarted(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)

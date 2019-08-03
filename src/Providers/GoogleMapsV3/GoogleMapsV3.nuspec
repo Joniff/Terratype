@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Terratype.GoogleMapsV3</id>
-    <version>1.0.20</version>
+    <version>1.0.21</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Joniff</owners>
@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Google Maps Gmaps Open Street View</tags>
     <dependencies>
-      <dependency id="Terratype" version="1.0.20" />
+      <dependency id="Terratype" version="1.0.21" />
     </dependencies>
   </metadata>
   <files>

@@ -23,7 +23,7 @@
     <key alias="apiKeyGet">[Get a key]</key>
     <key alias="apiKeyInvalid">Invalid API Key</key>
     <key alias="apiKeyValid">API Key is valid</key>
-    <key alias="retryTitle">Try and reload map using this Bing Map API Key</key>
+    <key alias="retryTitle">Try and reload map using this Bing API Key</key>
     <key alias="retryLabel">Retry</key>
 
     <key alias="httpsLabel">Force Https:</key>

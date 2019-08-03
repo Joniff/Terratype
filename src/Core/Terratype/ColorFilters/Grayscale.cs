@@ -4,17 +4,15 @@ using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class Greyscale : Models.ColorFilter
+	public class Grayscale : Models.ColorFilter
 	{
-		public const string _Id = "greyscale";
+		public const string _Id = "grayscale";
 
 		[JsonProperty]
 		public override string Id => _Id;
-		public override string Name => "terratypeColorFilterGreyscale_name";
+		public override string Name => "terratypeColorFilterGrayscale_name";
+		public override string Description => "terratypeColorFilterGrayscale_description";
 		
-		[JsonProperty(PropertyName = "percent")]
-		public int Percent;
-
-		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: greyscale(" + Percent.ToString() + "%); filter: greyscale(" + Percent.ToString() + "%);");
+		public override void Render(HtmlTextWriter writer) => writer.Write("-webkit-filter: grayscale(" + Value.ToString() + "%); filter: grayscale(" + Value.ToString() + "%);");
 	}
 }
