@@ -48,6 +48,7 @@ https://github.com/Joniff/Terratype/blob/master/docs/manual.pdf
 **1.0.21**
 
 	Added Stamen Tileserver to Leaflet
+	Fixed Grid Label error
 	
 
 **1.0.20**
