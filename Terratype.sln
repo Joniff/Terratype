@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingMapsV8", "src\Providers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco772", "src\Test\Umbraco772\Umbraco772.csproj", "{1E4C60DB-D3B9-4AD7-BE58-1302A7C85B26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco811", "src\Test\Umbraco811\Umbraco811.csproj", "{CFF529A4-9450-4313-9F37-06CCA6AC56EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{1E4C60DB-D3B9-4AD7-BE58-1302A7C85B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E4C60DB-D3B9-4AD7-BE58-1302A7C85B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E4C60DB-D3B9-4AD7-BE58-1302A7C85B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFF529A4-9450-4313-9F37-06CCA6AC56EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFF529A4-9450-4313-9F37-06CCA6AC56EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFF529A4-9450-4313-9F37-06CCA6AC56EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFF529A4-9450-4313-9F37-06CCA6AC56EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{ECF6FB91-0A2B-4A56-B6D2-BD122561030C} = {85D353DE-D775-4584-B473-0C8368BD3472}
 		{ED33E90F-4002-47E5-B113-2D3837A1DBE5} = {85D353DE-D775-4584-B473-0C8368BD3472}
 		{1E4C60DB-D3B9-4AD7-BE58-1302A7C85B26} = {A044B1B9-8024-46CC-9E83-908226E3A742}
+		{CFF529A4-9450-4313-9F37-06CCA6AC56EC} = {A044B1B9-8024-46CC-9E83-908226E3A742}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B8EA4DC-234E-4B23-BF86-2F6F4F114868}

@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Web.UI;
 using Newtonsoft.Json;
+using Umbraco.Core.Composing;
 
 namespace Terratype.Models
 {
 	[DebuggerDisplay("{Id}")]
 	[JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
-	public abstract class Provider : Plugins.Resolver
+	public abstract class Provider : IDiscoverable
 	{
-		public static Type ResolveType(string id) => ResolveType<Provider>(id, nameof(Provider)); 
-
-		public static Provider Resolve(string id) => Resolve<Provider>(id, nameof(Provider)) as Provider;
-
-		public static IEnumerable<string> InstalledTypes => InstalledTypes<Provider>();
-
 		/// <summary>
 		/// Name of provider
 		/// </summary>
@@ -39,7 +34,7 @@ namespace Terratype.Models
 		/// <summary>
 		/// Labels that this map provider can handle
 		/// </summary>
-		public abstract IEnumerable<Label> Labels { get; }
+		public abstract IEnumerable<string> Labels { get; }
 
 		/// <summary>
 		/// Can this map handle searches

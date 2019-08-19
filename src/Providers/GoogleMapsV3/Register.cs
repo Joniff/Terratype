@@ -1,13 +1,16 @@
-﻿using Umbraco.Core;
+﻿using Terratype.Models;
+using Umbraco.Core;
+using Umbraco.Core.Composing;
 
 namespace Terratype.Providers.GoogleMapsV3Core
 {
-	public class Register : ApplicationEventHandler
-    {
-        protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-        {
-			base.ApplicationStarting(umbracoApplication, applicationContext);
-			Models.Provider.RegisterType<Models.Provider, Providers.GoogleMapsV3>(Providers.GoogleMapsV3._Id);
-        }
+	[RuntimeLevel(MinLevel = RuntimeLevel.Run)]
+	public class Register : IUserComposer
+	{
+		public void Compose(Composition composition)
+		{
+			var container = new LightInject.ServiceContainer();
+			container.Register<Provider, GoogleMapsV3>(GoogleMapsV3._Id);
+		}
 	}
 }

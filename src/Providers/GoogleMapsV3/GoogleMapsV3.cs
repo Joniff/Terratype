@@ -41,6 +41,17 @@ namespace Terratype.Providers
 			}
 		}
 
+		public override IEnumerable<string> Labels
+		{
+			get
+			{
+				return new string[]
+				{
+					Terratype.Labels.Standard._Id
+				};
+			}
+		}
+
 		public override bool CanSearch => true;
 
 		[JsonProperty(PropertyName = "version")]
@@ -285,17 +296,6 @@ namespace Terratype.Providers
 			writer.RenderBeginTag(HtmlTextWriterTag.Div);
 			writer.RenderEndTag();
 			writer.RenderEndTag();
-		}
-
-		public override IEnumerable<Models.Label> Labels
-		{
-			get
-			{
-				return new Models.Label[]
-				{
-					new Labels.Standard()
-				};
-			}
 		}
 
 	}

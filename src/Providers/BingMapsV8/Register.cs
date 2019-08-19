@@ -1,13 +1,16 @@
-﻿using Umbraco.Core;
+﻿using Terratype.Models;
+using Umbraco.Core;
+using Umbraco.Core.Composing;
 
 namespace Terratype.Providers.BingMapsV8Core
 {
-	public class Register : ApplicationEventHandler
+	[RuntimeLevel(MinLevel = RuntimeLevel.Run)]
+	public class Register : IUserComposer
 	{
-		protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
+		public void Compose(Composition composition)
 		{
-			base.ApplicationStarting(umbracoApplication, applicationContext);
-			Models.Provider.RegisterType<Models.Provider, Providers.BingMapsV8>(Providers.BingMapsV8._Id);
+			var container = new LightInject.ServiceContainer();
+			container.Register<Provider, BingMapsV8>(BingMapsV8._Id);
 		}
 	}
 }
