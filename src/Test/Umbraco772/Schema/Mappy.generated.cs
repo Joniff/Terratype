@@ -49,63 +49,63 @@ namespace Terratype.Test.Umbraco772.Schema
 		/// bing
 		///</summary>
 		[ImplementPropertyType("bing")]
-		public Terratype.Models.Model Bing
+		public Terratype.Models.Map Bing
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("bing"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("bing"); }
 		}
 
 		///<summary>
 		/// c1
 		///</summary>
 		[ImplementPropertyType("c1")]
-		public Terratype.Models.Model C1
+		public Terratype.Models.Map C1
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("c1"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("c1"); }
 		}
 
 		///<summary>
 		/// c2
 		///</summary>
 		[ImplementPropertyType("c2")]
-		public Terratype.Models.Model C2
+		public Terratype.Models.Map C2
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("c2"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("c2"); }
 		}
 
 		///<summary>
 		/// c3
 		///</summary>
 		[ImplementPropertyType("c3")]
-		public Terratype.Models.Model C3
+		public Terratype.Models.Map C3
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("c3"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("c3"); }
 		}
 
 		///<summary>
 		/// l1
 		///</summary>
 		[ImplementPropertyType("l1")]
-		public Terratype.Models.Model L1
+		public Terratype.Models.Map L1
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("l1"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("l1"); }
 		}
 
 		///<summary>
 		/// map2: map description
 		///</summary>
 		[ImplementPropertyType("map2")]
-		public Terratype.Models.Model Map2
+		public Terratype.Models.Map Map2
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("map2"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("map2"); }
 		}
 
 		///<summary>
 		/// map44
 		///</summary>
 		[ImplementPropertyType("map44")]
-		public Terratype.Models.Model Map44
+		public Terratype.Models.Map Map44
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("map44"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("map44"); }
 		}
 
 		///<summary>

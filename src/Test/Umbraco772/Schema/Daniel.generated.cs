@@ -49,9 +49,9 @@ namespace Terratype.Test.Umbraco772.Schema
 		/// dmap
 		///</summary>
 		[ImplementPropertyType("dmap")]
-		public Terratype.Models.Model Dmap
+		public Terratype.Models.Map Dmap
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("dmap"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("dmap"); }
 		}
 	}
 }

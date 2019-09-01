@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Terratype.Indexer.ProcessorService;
-using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer
 {
 	public class ContentService
 	{
+		IEntityService EntityService;
+		IContentService UmbracoContentService;
+		IDataTypeService DataTypeService;
+		IContentTypeService ContentTypeService;
+		ILogger Logger;
+
 		private const string KeySeperator = ".";
+
+		public ContentService(IEntityService entityService, IContentService contentService, IDataTypeService dataTypeService, IContentTypeService contentTypeService, ILogger logger)
+		{
+			EntityService = entityService;
+			UmbracoContentService = contentService;
+			DataTypeService = dataTypeService;
+			ContentTypeService = contentTypeService;
+			Logger = logger;
+		}
 
 		private string Identity(Umbraco.Core.Models.IContent content)
 		{
@@ -26,14 +40,14 @@ namespace Terratype.Indexer
 			var results = new List<Guid>();
 			foreach (var id in content.Path.Split(new char[] {','}).Select(x => int.Parse(x)).Where(x => x != Umbraco.Core.Constants.System.Root && x != content.Id))
 			{
-				var attempt = ApplicationContext.Current.Services.EntityService.GetKeyForId(id, Umbraco.Core.Models.UmbracoObjectTypes.Document);
+				var attempt = EntityService.GetKey(id, Umbraco.Core.Models.UmbracoObjectTypes.Document);
 				if (attempt.Success)
 				{
 					results.Insert(0, attempt.Result);
 				}
 				else
 				{
-					var parent = ApplicationContext.Current.Services.ContentService.GetById(id);
+					var parent = UmbracoContentService.GetById(id);
 					results.Insert(0, parent.Key);
 				}
 			}
@@ -48,10 +62,10 @@ namespace Terratype.Indexer
 			var processors = new List<PropertyBase>
 			{
 				new Processors.TerratypeProcessor(results, tasks),
-				new Processors.ArchetypeProcessor(results, tasks),
+				new Processors.ArchetypeProcessor(results, tasks, DataTypeService),
 				new Processors.GridProcessor(results, tasks),
-				new Processors.NestedContentProcessor(results, tasks),
-				new Processors.StackedContentProcessor(results, tasks),
+				new Processors.NestedContentProcessor(results, tasks, ContentTypeService),
+				new Processors.StackedContentProcessor(results, tasks, ContentTypeService),
 				new Processors.GenericProcessor(results, tasks)
 			};
 
@@ -64,12 +78,15 @@ namespace Terratype.Indexer
 
 				var ancestor = Ancestors(content);
 
-				foreach (var property in content.Properties.Where(x => x.Value is string))
+				foreach (var property in content.Properties)
 				{
-					if (Helper.IsJson(property.Value as string))
+					foreach (var val in property.Values.Where(x => x.PublishedValue is string))
 					{
-						tasks.Push(new Task(content.Key, ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(property.Value as string), 
-							new DataTypeId(property.PropertyType.DataTypeDefinitionId), keys, property.PropertyType.Alias));
+						if (Helper.IsJson(val.PublishedValue as string))
+						{
+							tasks.Push(new Task(content.Key, ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(val.PublishedValue as string),
+								new DataTypeId(property.PropertyType.DataTypeId), keys, property.PropertyType.Alias));
+						}
 					}
 				}
 			}
@@ -89,7 +106,7 @@ namespace Terratype.Indexer
 					}
 					catch (Exception ex)
 					{
-						LogHelper.Error<ContentService>($"Error proccesing {task.Id} content node with {processor.GetType().Name}", ex);
+						Logger.Error<ContentService>($"Error proccesing {task.Id} content node with {processor.GetType().Name}", ex);
 					}
 				}
 			}

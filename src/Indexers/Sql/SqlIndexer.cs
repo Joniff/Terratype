@@ -9,8 +9,8 @@ using Umbraco.Core.Logging;
 namespace Terratype.Indexers
 {
 	public class SqlIndexer : IndexerBase, IAncestorSearch<AncestorSearchRequest>
-    {
-        public const string _Id = "Terratype.Indexer.Sql";
+	{
+		public const string _Id = "Terratype.Indexer.Sql";
 		public override string Id => _Id;
 
 		public override bool MasterOnly => true;
@@ -70,5 +70,5 @@ namespace Terratype.Indexers
 		{
 			return new AncestorContext().List(request.Ancestor).Select(x => new Models.Model(x.Map));
 		}
-    }
+	}
 }

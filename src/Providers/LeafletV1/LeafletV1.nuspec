@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Terratype.LeafletV1</id>
-    <version>1.0.21</version>
+    <version>2.0.0</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>Joniff</owners>
@@ -15,7 +15,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>Umbraco Google Maps Open Street View leaflet</tags>
     <dependencies>
-      <dependency id="Terratype" version="1.0.21" />
+      <dependency id="Terratype" version="2.0.0" />
     </dependencies>
   </metadata>
   <files>

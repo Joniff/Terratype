@@ -49,9 +49,9 @@ namespace Terratype.Test.Umbraco772.Schema
 		/// map4
 		///</summary>
 		[ImplementPropertyType("map4")]
-		public Terratype.Models.Model Map4
+		public Terratype.Models.Map Map4
 		{
-			get { return this.GetPropertyValue<Terratype.Models.Model>("map4"); }
+			get { return this.GetPropertyValue<Terratype.Models.Map>("map4"); }
 		}
 	}
 }

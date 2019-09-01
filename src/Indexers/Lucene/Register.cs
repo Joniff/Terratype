@@ -1,13 +1,15 @@
 ﻿using Umbraco.Core;
+using Umbraco.Core.Composing;
 
 namespace Terratype.Indexers.Lucene
 {
-	public class Register : ApplicationEventHandler
-    {
-        protected override void ApplicationStarting(UmbracoApplicationBase umbracoApplication, ApplicationContext applicationContext)
-        {
-			base.ApplicationStarting(umbracoApplication, applicationContext);
-			Indexer.IndexerBase.RegisterType<Indexer.IndexerBase, Indexers.LuceneIndexer>(Indexers.LuceneIndexer._Id);
-        }
+	[RuntimeLevel(MinLevel = RuntimeLevel.Run)]
+	public class Register : IUserComposer
+	{
+		public void Compose(Composition composition)
+		{
+			var container = new LightInject.ServiceContainer();
+			container.Register<Indexer.IndexerBase, LuceneIndexer>(LuceneIndexer._Id);
+		}
 	}
 }

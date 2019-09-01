@@ -14,7 +14,7 @@ namespace Terratype.Providers
 			var result = "/App_Plugins/Terratype.LeafletV1/" + file;
 			if (cache)
 			{
-				result += "?cache=1.0.21";
+				result += "?cache=2.0.0";
 			}
 			return result;
 		}
@@ -103,7 +103,7 @@ namespace Terratype.Providers
 		public ZoomControlDefinition ZoomControl { get; set; }
 
 
-		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Map model, string labelId = null, int? height = null, 
 			string language = null,Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
 			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
 		{

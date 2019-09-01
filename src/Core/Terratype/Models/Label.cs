@@ -45,7 +45,7 @@ namespace Terratype.Models
 		/// </summary>
 		public abstract bool HasContent { get; }
 
-		public abstract void Render(Guid key, HtmlTextWriter writer, Models.Model model);
+		public abstract void Render(Guid key, HtmlTextWriter writer, Map model);
 
 	}
 }

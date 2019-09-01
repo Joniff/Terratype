@@ -15,7 +15,7 @@ namespace Terratype.Providers
 			var result = "/App_Plugins/Terratype.GoogleMapsV3/" + file;
 			if (cache)
 			{
-				result += "?cache=1.0.21";
+				result += "?cache=2.0.0";
 			}
 			return result;
 		}
@@ -189,7 +189,7 @@ namespace Terratype.Providers
 		[JsonProperty(PropertyName = "search")]
 		public SearchDefinition Search { get; set; }
 
-		private string GoogleScript(Models.Model model)
+		private string GoogleScript(Models.Map model)
 		{
 			var url = new StringBuilder();
 
@@ -227,7 +227,7 @@ namespace Terratype.Providers
 		/// <param name="language"></param>
 		/// <param name="label"></param>
 		/// <returns></returns>
-		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Model model, string labelId = null, int? height = null, 
+		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Map model, string labelId = null, int? height = null, 
 			string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
 			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
 		{

@@ -29,6 +29,6 @@ namespace Terratype.Labels
 
 		public override bool HasContent => !String.IsNullOrWhiteSpace(Content.ToString());
 
-		public override void Render(Guid Key, HtmlTextWriter writer, Models.Model model) => writer.Write(this.Content.ToString());
+		public override void Render(Guid Key, HtmlTextWriter writer, Models.Map model) => writer.Write(this.Content.ToString());
 	}
 }

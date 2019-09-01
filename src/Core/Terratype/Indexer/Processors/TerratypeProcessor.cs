@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Terratype.DataEditors.Map;
 using Terratype.Indexer.ProcessorService;
 
 namespace Terratype.Indexer.Processors
@@ -14,7 +15,7 @@ namespace Terratype.Indexer.Processors
 
 		public override bool Process(Task task)
 		{
-			if (string.Compare(task.PropertyEditorAlias, Terratype.TerratypePropertyEditor.PropertyEditorAlias, true) != 0 || task.Json.Type != JTokenType.Object)
+			if (string.Compare(task.PropertyEditorAlias, MapDataEditor.DataEditorAlias, true) != 0 || task.Json.Type != JTokenType.Object)
 			{
 				return false;
 			}
@@ -24,7 +25,7 @@ namespace Terratype.Indexer.Processors
 			{
 				obj.Add(new JProperty("datatypeId", (int) task.DataTypeId));
 			}
-			this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Model(obj)));
+			this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Map(obj)));
 			return true;
 		}
 	}

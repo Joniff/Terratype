@@ -4,7 +4,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using Newtonsoft.Json.Linq;
-using Umbraco.Core.Models;
 using Umbraco.Web.Models;
 
 namespace Terratype
@@ -37,12 +36,12 @@ namespace Terratype
 			return htmlHelper.Terratype(options, null, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, null, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Map map)
 		{
 			return htmlHelper.Terratype(new Options()
 			{
@@ -51,7 +50,7 @@ namespace Terratype
 			}, map, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Models.Model map)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Models.Map map)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -60,7 +59,7 @@ namespace Terratype
 			}, map, null);
 		}
 
-		private static Models.Model Object2Model(object property)
+		private static Models.Map Object2Model(object property)
 		{
 			if (property == null)
 			{
@@ -69,18 +68,18 @@ namespace Terratype
 			else if (property is IPublishedProperty)
 			{
 				var obj = (property as IPublishedProperty).Value;
-				if (obj is Models.Model || obj.GetType().IsSubclassOf(typeof(Models.Model)))
+				if (obj is Models.Map || obj.GetType().IsSubclassOf(typeof(Models.Map)))
 				{
-					return obj as Models.Model;
+					return obj as Models.Map;
 				}
 				else
 				{
 					throw new ArgumentException();
 				}
 			}
-			else if (property is Models.Model || property.GetType().IsSubclassOf(typeof(Models.Model)))
+			else if (property is Models.Map || property.GetType().IsSubclassOf(typeof(Models.Map)))
 			{
-				return property as Models.Model;
+				return property as Models.Map;
 			}
 			else
 			{
@@ -88,7 +87,7 @@ namespace Terratype
 			}
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, object property)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, object property)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -97,12 +96,12 @@ namespace Terratype
 			}, Object2Model(property), null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, string propertyAlias)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, string propertyAlias)
 		{
 			return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Model map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Map map, params Func<object, object>[] label)
 		{
 			return htmlHelper.Terratype(new Options()
 			{
@@ -111,7 +110,7 @@ namespace Terratype
 			}, map,  label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Models.Model map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Models.Map map, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -120,7 +119,7 @@ namespace Terratype
 			}, map, label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, object property, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, object property, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -129,42 +128,42 @@ namespace Terratype
 			}, Object2Model(property), label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, string propertyAlias, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, string propertyAlias, params Func<object, object>[] label)
 		{
 			return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Map map)
 		{
 			return htmlHelper.Terratype(options, map, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, Models.Model map)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, Models.Map map)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, map, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, object property)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, object property)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, Object2Model(property), null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, string propertyAlias)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, string propertyAlias)
 		{
 			return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, Models.Map map, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, map, label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, object property, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, object property, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, Object2Model(property), label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<RenderModel> htmlHelper, Options options, string propertyAlias, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, string propertyAlias, params Func<object, object>[] label)
 		{
 			return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
 		}
@@ -174,12 +173,12 @@ namespace Terratype
 			var result = "/App_Plugins/Terratype/" + file;
 			if (cache)
 			{
-				result += "?cache=1.0.21";
+				result += "?cache=2.0.0";
 			}
 			return result;
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Model map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Map map, params Func<object, object>[] label)
 		{
 			if (options == null && map == null)
 			{
@@ -200,11 +199,11 @@ namespace Terratype
 				};
 			}
 
-			Models.Model merge = null;
+			Models.Map merge = null;
 
 			if (map == null)
 			{
-				merge = new Models.Model()
+				merge = new Models.Map()
 				{
 					Provider = options.Provider,
 					Position = options.Position,
@@ -215,7 +214,7 @@ namespace Terratype
 			}
 			else
 			{
-				merge = new Models.Model()
+				merge = new Models.Map()
 				{
 					Provider = map.Provider,
 					Position = map.Position,

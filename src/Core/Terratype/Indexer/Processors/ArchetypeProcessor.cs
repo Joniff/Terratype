@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
 using Terratype.Indexer.ProcessorService;
-using Umbraco.Core;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer.Processors
 {
 	public class ArchetypeProcessor : PropertyBase
 	{
-		public ArchetypeProcessor(IList<Entry> results, Stack<Task> tasks) : base(results, tasks)
+		IDataTypeService DataTypeService;
+
+		public ArchetypeProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks)
 		{
+			DataTypeService = dataTypeService;
 		}
 
-		private IDictionary<string, IDictionary<string, Umbraco.Core.Models.IDataTypeDefinition>> Definitions(int dataTypeId)
+		private IDictionary<string, IDictionary<string, Umbraco.Core.Models.IDataType>> Definitions(int dataTypeId)
 		{
-			var results = new Dictionary<string, IDictionary<string, Umbraco.Core.Models.IDataTypeDefinition>>();
-			var definitions = ApplicationContext.Current.Services.DataTypeService.GetPreValuesByDataTypeId((int) dataTypeId);
-			if (definitions == null || !definitions.Any())
+			var results = new Dictionary<string, IDictionary<string, Umbraco.Core.Models.IDataType>>();
+			var definition = DataTypeService.GetDataType((int) dataTypeId);
+			if (definition == null)
 			{
 				return null;
 			}
 
-			var config = JToken.Parse(definitions.FirstOrDefault());
+			var config = JToken.Parse((string) definition.Configuration);
 			if (config.Type != JTokenType.Object)
 			{
 				return null;
@@ -54,7 +56,7 @@ namespace Terratype.Indexer.Processors
 					continue;
 				}
 
-				var innerResults = new Dictionary<string, Umbraco.Core.Models.IDataTypeDefinition>();
+				var innerResults = new Dictionary<string, Umbraco.Core.Models.IDataType>();
 				foreach (var prop in properties)
 				{
 					var name = ((JObject)prop).GetValue("alias", StringComparison.InvariantCultureIgnoreCase);
@@ -65,7 +67,7 @@ namespace Terratype.Indexer.Processors
 					{
 						continue;
 					}
-					innerResults.Add(name.Value<string>(), ApplicationContext.Current.Services.DataTypeService.GetDataTypeDefinitionById(dataType));
+					innerResults.Add(name.Value<string>(), DataTypeService.GetDataType(dataType));
 				}
 				results.Add(alias.Value<string>(), innerResults);
 			}
@@ -110,7 +112,7 @@ namespace Terratype.Indexer.Processors
 
 						var id = idType.Value<string>();
 
-						IDictionary<string, Umbraco.Core.Models.IDataTypeDefinition> def;
+						IDictionary<string, Umbraco.Core.Models.IDataType> def;
 						if (!definitions.TryGetValue(defName.Value<string>(), out def))
 						{
 							continue;
@@ -144,13 +146,13 @@ namespace Terratype.Indexer.Processors
 									continue;
 								}
 								var alias = aliasType.Value<string>();
-								Umbraco.Core.Models.IDataTypeDefinition aliasDef;
+								Umbraco.Core.Models.IDataType aliasDef;
 								if (alias == null || !def.TryGetValue(alias, out aliasDef))
 								{
 									continue;
 								}
 
-								Tasks.Push(new Task(task.Id, task.Ancestors, aliasDef.PropertyEditorAlias, value,
+								Tasks.Push(new Task(task.Id, task.Ancestors, aliasDef.EditorAlias, value,
 									new DataTypeId(aliasDef.Id), task.Keys, id, alias));
 							}
 						}

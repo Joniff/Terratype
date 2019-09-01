@@ -12,6 +12,11 @@ namespace Terratype.Models
 	public abstract class Provider : IDiscoverable
 	{
 		/// <summary>
+		/// Id of provider
+		/// </summary>
+		public abstract string Id { get; }
+
+		/// <summary>
 		/// Name of provider
 		/// </summary>
 		public abstract string Name { get; }
@@ -41,7 +46,7 @@ namespace Terratype.Models
 		/// </summary>
 		public abstract bool CanSearch { get; }
 
-		public abstract void Render(Guid key, HtmlTextWriter writer, int id, Models.Model model, string labelId = null, int? height = null, string language = null, 
+		public abstract void Render(Guid key, HtmlTextWriter writer, int id, Map model, string labelId = null, int? height = null, string language = null, 
 			Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript, bool AutoShowLabel = false,
 			bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null);
 	}

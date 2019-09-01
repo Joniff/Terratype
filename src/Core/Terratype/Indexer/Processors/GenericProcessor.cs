@@ -22,7 +22,7 @@ namespace Terratype.Indexer.Processors
 					int? datatypeId = obj.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
 					if (datatypeId != null)
 					{
-						this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Model(obj)));
+						this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Map(obj)));
 					}
 				}
 				else
@@ -57,16 +57,16 @@ namespace Terratype.Indexer.Processors
 				return false;
 			}
 
-			var position = json.GetValue(Json.PropertyName<Models.Model>(nameof(Models.Model.Position)), StringComparison.InvariantCultureIgnoreCase);
-            if (position == null)
-            {
+			var position = json.GetValue(Json.PropertyName<Models.Map>(nameof(Models.Map.Position)), StringComparison.InvariantCultureIgnoreCase);
+			if (position == null)
+			{
 				return false;
 			}
 			var field = position.First as JProperty;
 			var matches = 0;
-            while (field != null)
-            {
-                if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position.Id)), StringComparison.InvariantCultureIgnoreCase))
+			while (field != null)
+			{
+				if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position.Id)), StringComparison.InvariantCultureIgnoreCase))
 				{
 					var id = field.Value.ToObject<string>();
 					if (!Models.Position.InstalledTypes.Any(x => x == id))
@@ -75,7 +75,7 @@ namespace Terratype.Indexer.Processors
 					}
 					matches++;
 				}
-                else if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
+				else if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
 				{
 					if (string.IsNullOrWhiteSpace(field.Value.ToObject<string>()))
 					{

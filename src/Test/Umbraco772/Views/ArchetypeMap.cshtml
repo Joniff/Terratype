@@ -28,7 +28,7 @@
 		@foreach (var record in Model.Content.Archetype)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(
 				map,
@@ -55,7 +55,7 @@
 		@foreach (var record in Model.Content.Archetype)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 1, AutoFit = true, AutoRecenterAfterRefresh = true, Tag = name }, map,
 				@<text>
@@ -91,7 +91,7 @@
 		@foreach (var record in Model.Content.Archetype)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 2, AutoShowLabel = true, Tag = name }, map,
 				@<text>
@@ -114,7 +114,7 @@
 		@foreach (var record in Model.Content.Leaflet)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(map,
 				@<text>
@@ -140,7 +140,7 @@
 		@foreach (var record in Model.Content.Leaflet)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 10, AutoFit = true, Tag = name }, map,
 				@<text>
@@ -191,7 +191,7 @@
 		@foreach (var record in Model.Content.Leaflet)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 11, AutoShowLabel = true, Tag = name }, map,
 				@<text>
@@ -215,7 +215,7 @@
 		@foreach (var record in Model.Content.Bing)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 11, Height = 800, AutoFit = true, AutoShowLabel = true, Tag = name }, map,
 				@<text>
@@ -234,7 +234,7 @@
 		@foreach (var record in Model.Content.Bing)
 		{
 			var name = record.GetValue<string>("name");
-			var map = record.GetValue<Terratype.Models.Model>("location");
+			var map = record.GetValue<Terratype.Models.Map>("location");
 
 			@Html.Terratype(new Options { MapSetId = 12, Provider = Model.Content.Leaflet[0].Provider }, map,
 				@<text>

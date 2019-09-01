@@ -7,203 +7,203 @@ using System.Threading;
 
 namespace Terratype.Tests.CoordinateSystems
 {
-    [TestClass]
-    public class Wgs84
-    {
-        private Random rnd = new Random();
+	[TestClass]
+	public class Wgs84
+	{
+		private Random rnd = new Random();
 
-        private Terratype.Models.LatLng RandomLatLng()
-        {
-            return new Terratype.Models.LatLng()
-            {
-                Latitude = (rnd.NextDouble() * 180.0) - 90.0,
-                Longitude = (rnd.NextDouble() * 360.0) - 180.0
-            };
-        }
+		private Terratype.Models.LatLng RandomLatLng()
+		{
+			return new Terratype.Models.LatLng()
+			{
+				Latitude = (rnd.NextDouble() * 180.0) - 90.0,
+				Longitude = (rnd.NextDouble() * 360.0) - 180.0
+			};
+		}
 
-        private double _delta = double.NaN;
-        private double Delta
-        {
-            get
-            {
-                if (!Double.IsNaN(_delta))
-                {
-                    return _delta;
-                }
+		private double _delta = double.NaN;
+		private double Delta
+		{
+			get
+			{
+				if (!Double.IsNaN(_delta))
+				{
+					return _delta;
+				}
 
-                _delta = 1.0;
-                for (var count = 0; count != new Terratype.CoordinateSystems.Wgs84().Precision; count++)
-                {
-                    _delta = _delta / 10.0;
-                }
-                return _delta;
-            }
-        }
+				_delta = 1.0;
+				for (var count = 0; count != new Terratype.CoordinateSystems.Wgs84().Precision; count++)
+				{
+					_delta = _delta / 10.0;
+				}
+				return _delta;
+			}
+		}
 
-        [TestMethod]
-        public void LatLng_ConvertToWgsAndStringAndDatum_TheyShouldAllBeEqual()
-        {
-            var attempts = 1000;
-            while (--attempts != 0)
-            {
-                //  Create a test position
-                var latlng = RandomLatLng();
+		[TestMethod]
+		public void LatLng_ConvertToWgsAndStringAndDatum_TheyShouldAllBeEqual()
+		{
+			var attempts = 1000;
+			while (--attempts != 0)
+			{
+				//  Create a test position
+				var latlng = RandomLatLng();
 
-                var wgs84 = new Terratype.CoordinateSystems.Wgs84(latlng);
+				var wgs84 = new Terratype.CoordinateSystems.Wgs84(latlng);
 
-                var parse = wgs84.ToString();
-                wgs84.Parse(parse);
+				var parse = wgs84.ToString();
+				wgs84.Parse(parse);
 
-                var parse2 = wgs84.ToString();
+				var parse2 = wgs84.ToString();
 
-                Assert.AreEqual(parse, parse2);
+				Assert.AreEqual(parse, parse2);
 
-                var datum = wgs84.Datum;
-                Assert.AreEqual(latlng.Latitude, datum.Latitude, Delta);
-                Assert.AreEqual(latlng.Longitude, datum.Longitude, Delta);
+				var datum = wgs84.Datum;
+				Assert.AreEqual(latlng.Latitude, datum.Latitude, Delta);
+				Assert.AreEqual(latlng.Longitude, datum.Longitude, Delta);
 
-                wgs84.Datum = datum;
+				wgs84.Datum = datum;
 
-                var compare = wgs84.ToWgs84();
+				var compare = wgs84.ToWgs84();
 
-                Assert.AreEqual(latlng.Latitude, compare.Latitude, Delta);
-                Assert.AreEqual(latlng.Longitude, compare.Longitude, Delta);
-            }
-        }
+				Assert.AreEqual(latlng.Latitude, compare.Latitude, Delta);
+				Assert.AreEqual(latlng.Longitude, compare.Longitude, Delta);
+			}
+		}
 
-        [TestMethod]
-        public void Datum_ConvertToWgsAndStringAndLatLng_TheyShouldAllBeEqual()
-        {
-            var attempts = 1000;
-            while (--attempts != 0)
-            {
-                var latlng = RandomLatLng();
-                //  Create a test position
-                var datum = new Terratype.CoordinateSystems.Wgs84.DatumType()
-                {
-                    Latitude = latlng.Latitude,
-                    Longitude = latlng.Longitude
-                };
+		[TestMethod]
+		public void Datum_ConvertToWgsAndStringAndLatLng_TheyShouldAllBeEqual()
+		{
+			var attempts = 1000;
+			while (--attempts != 0)
+			{
+				var latlng = RandomLatLng();
+				//  Create a test position
+				var datum = new Terratype.CoordinateSystems.Wgs84.DatumType()
+				{
+					Latitude = latlng.Latitude,
+					Longitude = latlng.Longitude
+				};
 
-                var wgs84 = new Terratype.CoordinateSystems.Wgs84(datum);
+				var wgs84 = new Terratype.CoordinateSystems.Wgs84(datum);
 
-                var parse = wgs84.ToString();
-                wgs84.Parse(parse);
+				var parse = wgs84.ToString();
+				wgs84.Parse(parse);
 
-                var parse2 = wgs84.ToString();
+				var parse2 = wgs84.ToString();
 
-                Assert.AreEqual(parse, parse2);
+				Assert.AreEqual(parse, parse2);
 
-                var compare = wgs84.ToWgs84();
-                Assert.AreEqual(datum.Latitude, compare.Latitude, Delta);
-                Assert.AreEqual(datum.Longitude, compare.Longitude, Delta);
-            }
-        }
+				var compare = wgs84.ToWgs84();
+				Assert.AreEqual(datum.Latitude, compare.Latitude, Delta);
+				Assert.AreEqual(datum.Longitude, compare.Longitude, Delta);
+			}
+		}
 
 
-        [TestMethod]
-        public void Culture()
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("");
-            double d = -1.01;
-            Assert.AreEqual(d.ToString(), "-1.01");
+		[TestMethod]
+		public void Culture()
+		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("");
+			double d = -1.01;
+			Assert.AreEqual(d.ToString(), "-1.01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Assert.AreEqual(d.ToString(), "-1.01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+			Assert.AreEqual(d.ToString(), "-1.01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-            Assert.AreEqual(d.ToString(), "-1,01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+			Assert.AreEqual(d.ToString(), "-1,01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-            Assert.AreEqual(d.ToString(), "-1,01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+			Assert.AreEqual(d.ToString(), "-1,01");
 
-        }
+		}
 
-        private string[] Cultures = new string[]
-        {
-            "",
-            "en-US",
-            "en-GB",
-            "ar-EG",
-            "ar-SA",
-            "zh-CN",
-            "hr-HR",
-            "cs-CZ",
-            "da-DK",
-            "nl-NL",
-            "fa-IR",
-            "fi-FI",
-            "fr-FR",
-            "de-DE",
-            "el-GR",
-            "gu-IN",
-            "hi-IN",
-            "hu-HU",
-            "it-IT",
-            "ja-JP",
-            "ko-KR",
-            "pl-PL",
-            "es-ES",
-            "tr-TR",
-            "vi-VN"
-        };
+		private string[] Cultures = new string[]
+		{
+			"",
+			"en-US",
+			"en-GB",
+			"ar-EG",
+			"ar-SA",
+			"zh-CN",
+			"hr-HR",
+			"cs-CZ",
+			"da-DK",
+			"nl-NL",
+			"fa-IR",
+			"fi-FI",
+			"fr-FR",
+			"de-DE",
+			"el-GR",
+			"gu-IN",
+			"hi-IN",
+			"hu-HU",
+			"it-IT",
+			"ja-JP",
+			"ko-KR",
+			"pl-PL",
+			"es-ES",
+			"tr-TR",
+			"vi-VN"
+		};
 
-        //  Note this is just a base test for testing expected C# behavour, if this fails then c# has changed
-        [TestMethod]
-        public void Double_ConvertToStringUsingDifferentCultures_DoubleIsConvertedWithCorrectCulturalSetting()  
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("");
-            double d = -1.01;
-            Assert.AreEqual(d.ToString(), "-1.01");
+		//  Note this is just a base test for testing expected C# behavour, if this fails then c# has changed
+		[TestMethod]
+		public void Double_ConvertToStringUsingDifferentCultures_DoubleIsConvertedWithCorrectCulturalSetting()  
+		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("");
+			double d = -1.01;
+			Assert.AreEqual(d.ToString(), "-1.01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Assert.AreEqual(d.ToString(), "-1.01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+			Assert.AreEqual(d.ToString(), "-1.01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-            Assert.AreEqual(d.ToString(), "-1,01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+			Assert.AreEqual(d.ToString(), "-1,01");
 
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-            Assert.AreEqual(d.ToString(), "-1,01");
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
+			Assert.AreEqual(d.ToString(), "-1,01");
 
-        }
+		}
 
-        [TestMethod]
-        public void StringWithDifferentCulture_ConvertToWgsAndDatumAndLatLng_TheyShouldAllBeEqual()
-        {
-            foreach (var culture in Cultures)
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-                var attempts = 1000;
-                while (--attempts != 0)
-                {
-                    var latlng = RandomLatLng();
-                    //  Create a test position
-                    var text = latlng.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
-                        latlng.Longitude.ToString(CultureInfo.InvariantCulture);
+		[TestMethod]
+		public void StringWithDifferentCulture_ConvertToWgsAndDatumAndLatLng_TheyShouldAllBeEqual()
+		{
+			foreach (var culture in Cultures)
+			{
+				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+				var attempts = 1000;
+				while (--attempts != 0)
+				{
+					var latlng = RandomLatLng();
+					//  Create a test position
+					var text = latlng.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
+						latlng.Longitude.ToString(CultureInfo.InvariantCulture);
 
-                    var wgs84 = new Terratype.CoordinateSystems.Wgs84(text);
+					var wgs84 = new Terratype.CoordinateSystems.Wgs84(text);
 
-                    var parse = wgs84.ToString();
-                    wgs84.Parse(parse);
+					var parse = wgs84.ToString();
+					wgs84.Parse(parse);
 
-                    var parse2 = wgs84.ToString();
+					var parse2 = wgs84.ToString();
 
-                    Assert.AreEqual(parse, parse2);
+					Assert.AreEqual(parse, parse2);
 
-                    var compare = wgs84.ToWgs84();
-                    Assert.AreEqual(latlng.Latitude, compare.Latitude, Delta);
-                    Assert.AreEqual(latlng.Longitude, compare.Longitude, Delta);
-                }
-            }
-        }
+					var compare = wgs84.ToWgs84();
+					Assert.AreEqual(latlng.Latitude, compare.Latitude, Delta);
+					Assert.AreEqual(latlng.Longitude, compare.Longitude, Delta);
+				}
+			}
+		}
 
-        [TestMethod]
+		[TestMethod]
 		public void TwoPositions_KnownDistanceApart_CorrectDistance()
 		{
-            foreach (var culture in Cultures)
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-                var newyork = new Terratype.CoordinateSystems.Wgs84("40.7128,-74.0060");
+			foreach (var culture in Cultures)
+			{
+				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+				var newyork = new Terratype.CoordinateSystems.Wgs84("40.7128,-74.0060");
 				var paris = new Terratype.CoordinateSystems.Wgs84("48.8566,2.3522");
 				var moscow = new Terratype.CoordinateSystems.Wgs84("55.7558,37.6173");
 				var toyko = new Terratype.CoordinateSystems.Wgs84("35.6895,139.6917");
@@ -228,25 +228,25 @@ namespace Terratype.Tests.CoordinateSystems
 			}
 		}
 
-        [TestMethod]
+		[TestMethod]
 		public void TwoPositions_UnKnownDistanceApart_WithinEarth()
 		{
-            foreach (var culture in Cultures)
-            {
-                Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
-                var attempts = 1000;
-                while (--attempts != 0)
-                {
-                    var latlng1 = RandomLatLng();
-                    var latlng2 = RandomLatLng();
+			foreach (var culture in Cultures)
+			{
+				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
+				var attempts = 1000;
+				while (--attempts != 0)
+				{
+					var latlng1 = RandomLatLng();
+					var latlng2 = RandomLatLng();
 
-                    var startWgs84 = new Terratype.CoordinateSystems.Wgs84(
+					var startWgs84 = new Terratype.CoordinateSystems.Wgs84(
 						latlng1.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
-                        latlng1.Longitude.ToString(CultureInfo.InvariantCulture));
+						latlng1.Longitude.ToString(CultureInfo.InvariantCulture));
 
-                    var endWgs84 = new Terratype.CoordinateSystems.Wgs84(
+					var endWgs84 = new Terratype.CoordinateSystems.Wgs84(
 						latlng2.Latitude.ToString(CultureInfo.InvariantCulture) + "," +
-                        latlng2.Longitude.ToString(CultureInfo.InvariantCulture));
+						latlng2.Longitude.ToString(CultureInfo.InvariantCulture));
 
 					var distance = startWgs84.Distance(endWgs84);
 					Assert.IsTrue(distance > 0.0 && distance < 20000000.0);		//	Somewhere on Earth
@@ -254,5 +254,5 @@ namespace Terratype.Tests.CoordinateSystems
 				}
 			}
 		}
-    }
+	}
 }

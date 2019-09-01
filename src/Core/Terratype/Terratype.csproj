@@ -263,6 +263,8 @@
     <Compile Include="CoordinateSystems\Bd09\Bd09.cs" />
     <Compile Include="CoordinateSystems\Gcj02\Gcj02.cs" />
     <Compile Include="CoordinateSystems\Wgs84\Wgs84.cs" />
+    <Compile Include="DataEditors\Map\MapConfigurationEditor.cs" />
+    <Compile Include="DataEditors\Map\MapDataValueEditor.cs" />
     <Compile Include="Indexer\ContentService.cs" />
     <Compile Include="Indexer\Entry.cs" />
     <Compile Include="Indexer\Helper.cs" />
@@ -288,7 +290,7 @@
     <Compile Include="Models\Icon.cs" />
     <Compile Include="Models\Label.cs" />
     <Compile Include="Models\LatLng.cs" />
-    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Map.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="Models\Provider.cs" />
     <Compile Include="Models\CoordinateDisplay.cs" />
@@ -296,9 +298,9 @@
     <Compile Include="Options.cs" />
     <Compile Include="Plugins\Resolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyEditor.cs" />
+    <Compile Include="DataEditors\Map\MapDataEditor.cs" />
     <Compile Include="Register.cs" />
-    <Compile Include="TerratypeConverter.cs" />
+    <Compile Include="DataEditors\Map\MapConverter.cs" />
     <Compile Include="TerratypeHtml.cs" />
   </ItemGroup>
   <ItemGroup>

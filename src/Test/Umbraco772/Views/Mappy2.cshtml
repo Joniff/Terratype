@@ -24,7 +24,7 @@
 	@foreach (var record in Model.Content.Nested)
 	{
 		var name = record.GetPropertyValue<string>("mapName");
-		var map = record.GetPropertyValue<Terratype.Models.Model>("map");
+		var map = record.GetPropertyValue<Terratype.Models.Map>("map");
 		map.Icon.Url = new Uri("https://mt.google.com/vt/icon/name=icons/spotlight/spotlight-poi.png");
 
 		@Html.Terratype(new Options {

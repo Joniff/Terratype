@@ -1,31 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using Terratype.Indexer;
 using Terratype.Indexers.Sql.Persistance.Context;
-using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Umbraco.Core.Migrations;
 using Umbraco.Core.Persistence;
-using Umbraco.Core.Persistence.Migrations;
 using Umbraco.Core.Persistence.SqlSyntax;
 
 namespace Terratype.Indexers.Sql.Persistance.Data.Migrations.Versions
 {
-    /// <summary>
-    /// Handles Creating/Editing the Configuration table
-    /// </summary>
-    [Migration("1.0.0", 1, nameof(Terratype) + nameof(Indexer) + nameof(Sql))]
-    internal class Migration100 : MigrationBase
+	/// <summary>
+	/// Handles Creating/Editing the Configuration table
+	/// </summary>
+	[Migration("1.0.0", 1, nameof(Terratype) + nameof(Indexer) + nameof(Sql))]
+	internal class Migration100 : MigrationBase
 	{
-        private readonly UmbracoDatabase _database = ApplicationContext.Current.DatabaseContext.Database;
-        private readonly DatabaseSchemaHelper _schemaHelper;
+		private readonly UmbracoDatabase _database = ApplicationContext.Current.DatabaseContext.Database;
+		private readonly DatabaseSchemaHelper _schemaHelper;
 
-        public Migration100(ISqlSyntaxProvider sqlSyntax, ILogger logger) : base(sqlSyntax, logger)
-        {
-            _schemaHelper = new DatabaseSchemaHelper(_database, logger, sqlSyntax);
-        }
+		public Migration100(ISqlSyntaxProvider sqlSyntax, ILogger logger) : base(sqlSyntax, logger)
+		{
+			_schemaHelper = new DatabaseSchemaHelper(_database, logger, sqlSyntax);
+		}
 		
-        public override void Up()
+		public override void Up()
 		{
 			try
 			{
@@ -77,8 +75,8 @@ namespace Terratype.Indexers.Sql.Persistance.Data.Migrations.Versions
 
 		}
 
-        public override void Down()
-        {
+		public override void Down()
+		{
 			_schemaHelper.DropTable<Dto.Ancestor.Ancestor100>();
 			_schemaHelper.DropTable<Dto.Entry.Entry100>();
 		}

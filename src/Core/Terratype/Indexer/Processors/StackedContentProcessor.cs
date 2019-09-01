@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Terratype.Indexer.ProcessorService;
-using Umbraco.Core;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer.Processors
 {
 	public class StackedContentProcessor : PropertyBase
 	{
-		public StackedContentProcessor(IList<Entry> results, Stack<Task> tasks) : base(results, tasks)
+		IContentTypeService ContentTypeService;
+
+		public StackedContentProcessor(IList<Entry> results, Stack<Task> tasks, IContentTypeService contentTypeService) : base(results, tasks)
 		{
+			ContentTypeService = contentTypeService;
 		}
 
 		private Dictionary<string, Umbraco.Core.Models.IContentType> cacheContentTypes = new Dictionary<string, Umbraco.Core.Models.IContentType>();
@@ -19,7 +22,7 @@ namespace Terratype.Indexer.Processors
 			Umbraco.Core.Models.IContentType contentType;
 			if (!cacheContentTypes.TryGetValue(contentTypeAlias, out contentType))
 			{
-				contentType = ApplicationContext.Current.Services.ContentTypeService.GetContentType(contentTypeAlias);
+				contentType = ContentTypeService.Get(contentTypeAlias);
 				cacheContentTypes.Add(contentTypeAlias, contentType);
 			}
 			return contentType;
@@ -33,7 +36,7 @@ namespace Terratype.Indexer.Processors
 				return false;
 			}
 
-			var results = new Dictionary<string, Models.Model>();
+			var results = new Dictionary<string, Models.Map>();
 			foreach (var token in task.Json.ToArray())
 			{
 				if (token.Type != JTokenType.Object)
@@ -66,7 +69,7 @@ namespace Terratype.Indexer.Processors
 					}
 					if (value.Type == JTokenType.Array || value.Type == JTokenType.Object)
 					{
-						Tasks.Push(new Task(task.Id, task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeDefinitionId), task.Keys, tokenKey, prop.Alias));
+						Tasks.Push(new Task(task.Id, task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeId), task.Keys, tokenKey, prop.Alias));
 					}
 				}
 			}

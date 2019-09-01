@@ -14,7 +14,7 @@ namespace Terratype.Indexer
 
 		public abstract bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add);
 
-		public static IEnumerable<Models.Model> Search(Searchers.ISearchRequest search)
+		public static IEnumerable<Models.Map> Search(Searchers.ISearchRequest search)
 		{
 			//	See if we can find an indexer that can handle our request
 			var container = new LightInject.ServiceContainer();
@@ -28,7 +28,7 @@ namespace Terratype.Indexer
 						new Type[] {search.GetType()});
 					if (method != null)
 					{
-						return method.Invoke(indexer, new object[] { search }) as IEnumerable<Models.Model>;
+						return method.Invoke(indexer, new object[] { search }) as IEnumerable<Models.Map>;
 					}
 				}
 			}

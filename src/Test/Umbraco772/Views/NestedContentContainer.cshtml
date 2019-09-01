@@ -49,10 +49,10 @@
 	var styleMapsNode = Umbraco.TypedContent(1145);
 
 	//	Load the 10 maps into an array
-	var styleMaps = new List<Terratype.Models.Model> {
-		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("bingMap"), 
-		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("leafleatMap"), 
-		styleMapsNode.GetPropertyValue<Terratype.Models.Model>("googleMap")
+	var styleMaps = new List<Terratype.Models.Map> {
+		styleMapsNode.GetPropertyValue<Terratype.Models.Map>("bingMap"), 
+		styleMapsNode.GetPropertyValue<Terratype.Models.Map>("leafleatMap"), 
+		styleMapsNode.GetPropertyValue<Terratype.Models.Map>("googleMap")
 	};
 
 }
