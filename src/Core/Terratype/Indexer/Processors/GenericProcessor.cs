@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Terratype.CoordinateSystems;
 using Terratype.Indexer.ProcessorService;
 using Umbraco.Core.Services;
 
@@ -23,7 +24,7 @@ namespace Terratype.Indexer.Processors
 					int? datatypeId = obj.GetValue("datatypeId", StringComparison.InvariantCultureIgnoreCase)?.Value<int>();
 					if (datatypeId != null)
 					{
-						this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Map(obj)));
+						this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Map(obj)));
 					}
 				}
 				else
@@ -58,27 +59,26 @@ namespace Terratype.Indexer.Processors
 				return false;
 			}
 
-			var position = json.GetValue(Json.PropertyName<Models.Map>(nameof(Models.Map.Position)), StringComparison.InvariantCultureIgnoreCase);
+			var position = json.GetValue(Json.PropertyName<IMap>(nameof(IMap.Position)), StringComparison.InvariantCultureIgnoreCase);
 			if (position == null)
 			{
 				return false;
 			}
 			var field = position.First as JProperty;
 			var matches = 0;
-			var container = new LightInject.ServiceContainer();
 
 			while (field != null)
 			{
-				if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position.Id)), StringComparison.InvariantCultureIgnoreCase))
+				if (String.Equals(field.Name, Json.PropertyName<IPosition>(nameof(IPosition.Id)), StringComparison.InvariantCultureIgnoreCase))
 				{
 					var id = field.Value.ToObject<string>();
-					if (container.GetInstance(typeof(Models.Position), id) == null)
+					if (PositionBase.GetInstance<IPosition>(id) == null)
 					{
 						return false;
 					}
 					matches++;
 				}
-				else if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
+				else if (String.Equals(field.Name, Json.PropertyName<IPosition>(nameof(PositionBase._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
 				{
 					if (string.IsNullOrWhiteSpace(field.Value.ToObject<string>()))
 					{

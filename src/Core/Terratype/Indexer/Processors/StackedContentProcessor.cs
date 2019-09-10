@@ -36,7 +36,7 @@ namespace Terratype.Indexer.Processors
 				return false;
 			}
 
-			var results = new Dictionary<string, Models.Map>();
+			var results = new Dictionary<string, Map>();
 			foreach (var token in task.Json.ToArray())
 			{
 				if (token.Type != JTokenType.Object)

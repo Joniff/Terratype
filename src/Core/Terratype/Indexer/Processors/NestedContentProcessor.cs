@@ -37,7 +37,7 @@ namespace Terratype.Indexer.Processors
 				return false;
 			}
 
-			var results = new Dictionary<string, Models.Map>();
+			var results = new Dictionary<string, Map>();
 			int index = 0;
 			foreach (var token in task.Json.ToArray())
 			{

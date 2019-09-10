@@ -99,17 +99,27 @@ namespace Terratype.Test.Models
 			new Terratype.Providers.LeafletV1Core.Register().Compose(composition);
 		}
 
+		[TestCleanup()]
+		public void Teardown()
+		{
+			Current.Reset(); // disposes the factory
+		}
+
+
 		[TestMethod]
 		public void CheckDI()
 		{
 			var bd09 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Bd09._Id);
 			Assert.IsNotNull(bd09);
+			Assert.AreEqual(bd09.Id, CoordinateSystems.Bd09._Id);
 
 			var gcj02 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Gcj02._Id);
 			Assert.IsNotNull(gcj02);
+			Assert.AreEqual(gcj02.Id, CoordinateSystems.Gcj02._Id);
 
 			var wgs84 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Wgs84._Id);
 			Assert.IsNotNull(wgs84);
+			Assert.AreEqual(wgs84.Id, CoordinateSystems.Wgs84._Id);
 		}
 
 		private LatLng RandomLatLng()

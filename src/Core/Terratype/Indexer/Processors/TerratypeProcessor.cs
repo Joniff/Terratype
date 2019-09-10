@@ -24,7 +24,7 @@ namespace Terratype.Indexer.Processors
 			{
 				obj.Add(new JProperty("datatypeId", (int) task.DataTypeId));
 			}
-			this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Models.Map(obj)));
+			this.Results.Add(new Entry(task.Id, task.Ancestors, task.Keys, new Map(obj)));
 			return true;
 		}
 	}

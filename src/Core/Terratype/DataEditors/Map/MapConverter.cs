@@ -23,10 +23,10 @@ namespace Terratype.DataEditors.Map
 		public override bool IsConverter(IPublishedPropertyType propertyType) => propertyType.EditorAlias == MapDataEditor.DataEditorAlias;
 		public override PropertyCacheLevel GetPropertyCacheLevel(IPublishedPropertyType propertyType) => PropertyCacheLevel.Element;
 
-		public override Type GetPropertyValueType(IPublishedPropertyType propertyType) => typeof(Terratype.Models.Map);
+		public override Type GetPropertyValueType(IPublishedPropertyType propertyType) => typeof(IMap);
 
 		private void MergeJson(JObject data, JObject config, string fieldName) => 
-			data.Merge(new JObject(new JProperty(Json.PropertyName<Models.Map>(fieldName), config.GetValue(Json.PropertyName<Models.Map>(fieldName), StringComparison.InvariantCultureIgnoreCase))));
+			data.Merge(new JObject(new JProperty(Json.PropertyName<IMap>(fieldName), config.GetValue(Json.PropertyName<IMap>(fieldName), StringComparison.InvariantCultureIgnoreCase))));
 
 		public object ConvertDataToSource(PublishedPropertyType propertyType, object source, bool preview)
 		{
@@ -42,14 +42,14 @@ namespace Terratype.DataEditors.Map
 			{
 				data = new JObject();
 				//MergeJson(data, config, nameof(Models.Map.Lookup));
-				MergeJson(data, config, nameof(Models.Map.Zoom));
-				MergeJson(data, config, nameof(Models.Map.Position));
+				MergeJson(data, config, nameof(IMap.Zoom));
+				MergeJson(data, config, nameof(IMap.Position));
 			}
 			var innerConfig = config.GetValue("config") as JObject;
-			MergeJson(data, innerConfig, nameof(Models.Map.Icon));
-			MergeJson(data, innerConfig, nameof(Models.Map.Provider));
-			MergeJson(data, innerConfig, nameof(Models.Map.Height));
-			return new Models.Map(data);
+			MergeJson(data, innerConfig, nameof(IMap.Icon));
+			MergeJson(data, innerConfig, nameof(IMap.Provider));
+			MergeJson(data, innerConfig, nameof(IMap.Height));
+			return new Terratype.Map(data);
 		}
 
 		public object ConvertSourceToObject(PublishedPropertyType propertyType, object source, bool preview)

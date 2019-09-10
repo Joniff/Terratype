@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using Terratype.CoordinateSystems;
+using Terratype.Icons;
+using Terratype.Providers;
 
 namespace Terratype
 {
@@ -33,17 +31,17 @@ namespace Terratype
 		/// <summary>
 		/// Initial position that you wish to display this map, if not will try and display all markers
 		/// </summary>
-		public Models.Position Position { get; set; }
+		public IPosition Position { get; set; }
 
 		/// <summary>
 		/// Your own custom provider, otherwise will use the provider from the first map of the map set
 		/// </summary>
-		public Models.Provider Provider { get; set; }
+		public IProvider Provider { get; set; }
 
 		/// <summary>
 		/// Your own custom icon, otherwise will use the icon from the first map of the map set
 		/// </summary>
-		public Models.Icon Icon { get; set; }
+		public Icon Icon { get; set; }
 
 		/// <summary>
 		/// Most base map providers don't detect dom changes (Changes to the layout of a webpage, be it resizing the browser, 

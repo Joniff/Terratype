@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Terratype.Providers
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class LeafletV1 : Models.Provider
+	public class LeafletV1 : ProviderBase
 	{
 		private string UrlPath(string file, bool cache = true)
 		{
@@ -104,7 +104,7 @@ namespace Terratype.Providers
 		public ZoomControlDefinition ZoomControl { get; set; }
 
 
-		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Map model, string labelId = null, int? height = null, 
+		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, IMap model, string labelId = null, int? height = null, 
 			string language = null,Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
 			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
 		{

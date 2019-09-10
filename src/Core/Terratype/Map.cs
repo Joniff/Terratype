@@ -253,23 +253,21 @@ namespace Terratype
 			var position = item.GetValue(Json.PropertyName<Map>(nameof(Map.Position)), StringComparison.InvariantCultureIgnoreCase);
 			if (position != null)
 			{
+				var idTitle = Json.PropertyName<IPosition>(nameof(IPosition.Id));
+				var datumTitle = Json.PropertyName<PositionBase>(nameof(PositionBase._internalDatum));
+				var count = 2;
 				var field = position.First as JProperty;
-				while (field != null)
+				while (count != 0 && field != null)
 				{
-					if (String.Equals(field.Name, Json.PropertyName<IPosition>(nameof(IPosition.Id)), StringComparison.InvariantCultureIgnoreCase))
+					if (String.Equals(field.Name, idTitle, StringComparison.InvariantCultureIgnoreCase))
 					{
 						model.Position = PositionBase.GetInstance<IPosition>(field.Value.ToObject<string>());
-						break;
+						count--;
 					}
-					field = field.Next as JProperty;
-				}
-				field = position.First as JProperty;
-				while (field != null)
-				{
-					if (String.Equals(field.Name, Json.PropertyName<IPosition>(nameof(PositionBase._internalDatum)), StringComparison.InvariantCultureIgnoreCase))
+					else if (String.Equals(field.Name, datumTitle, StringComparison.InvariantCultureIgnoreCase))
 					{
 						model.Position.TryParse(field.Value.ToObject<string>());
-						break;
+						count--;
 					}
 					field = field.Next as JProperty;
 				}

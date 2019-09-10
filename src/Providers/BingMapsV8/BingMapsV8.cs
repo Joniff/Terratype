@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Terratype.Providers
 {
 	[JsonObject(MemberSerialization.OptIn)]
-	public class BingMapsV8 : Models.Provider
+	public class BingMapsV8 : ProviderBase
 	{
 		private string UrlPath(string file, bool cache = true)
 		{
@@ -137,7 +137,7 @@ namespace Terratype.Providers
 		[JsonProperty(PropertyName = "showLabels")]
 		public bool ShowLabels { get; set; }
 
-		private string BingScript(Models.Map model)
+		private string BingScript(IMap model)
 		{
 			var url = new StringBuilder();
 
@@ -170,7 +170,7 @@ namespace Terratype.Providers
 		/// <param name="language"></param>
 		/// <param name="label"></param>
 		/// <returns></returns>
-		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, Models.Map model, string labelId = null, int? height = null, 
+		public override void Render(Guid guid, HtmlTextWriter writer, int mapId, IMap model, string labelId = null, int? height = null, 
 			string language = null, Options.DomMonitorTypes domMonitorType = Options.DomMonitorTypes.Javascript,
 			bool AutoShowLabel = false, bool AutoRecenterAfterRefresh = false, bool AutoFit = false, string Tag = null)
 		{

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 using System.Threading;
+using Terratype.CoordinateSystems;
 
 //  Given When Then
 
@@ -12,9 +13,9 @@ namespace Terratype.Tests.CoordinateSystems
     {
         private Random rnd = new Random();
 
-        private Models.LatLng RandomLatLng()
+        private LatLng RandomLatLng()
         {
-            return new Terratype.Models.LatLng()
+            return new LatLng()
             {
                 Latitude = (rnd.NextDouble() * 180.0) - 90.0,
                 Longitude = (rnd.NextDouble() * 360.0) - 180.0

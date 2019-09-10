@@ -23,7 +23,7 @@ namespace Terratype.Discover
 
 		public static IEnumerable<T> GetAllInstances<T>() => Current.Factory.GetAllInstances(typeof(T)).Cast<T>();
 
-		public static T GetInstance<T>(string id) => (T) Current.Factory.GetAllInstances(typeof(T)).Cast<DiscoverBase>().Where(x => x.Id == id);
+		public static T GetInstance<T>(string id) => GetAllInstances<T>().FirstOrDefault(x => ((IDiscover)x).Id == id);
 
 		T IDiscover.GetInstance<T>(string id) => DiscoverBase.GetInstance<T>(id);
 

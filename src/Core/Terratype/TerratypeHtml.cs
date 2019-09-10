@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using Newtonsoft.Json.Linq;
+using Terratype.Providers;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web.Models;
 
@@ -42,7 +43,7 @@ namespace Terratype
 			return (htmlHelper as HtmlHelper).Terratype(options, null, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Map map)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, IMap map)
 		{
 			return htmlHelper.Terratype(new Options()
 			{
@@ -51,7 +52,7 @@ namespace Terratype
 			}, map, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Models.Map map)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, IMap map)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -60,7 +61,7 @@ namespace Terratype
 			}, map, null);
 		}
 
-		private static Models.Map Object2Model(object property)
+		private static IMap Object2Model(object property)
 		{
 			if (property == null)
 			{
@@ -69,18 +70,18 @@ namespace Terratype
 			else if (property is IPublishedProperty)
 			{
 				var obj = (property as IPublishedProperty).GetValue();
-				if (obj is Models.Map || obj.GetType().IsSubclassOf(typeof(Models.Map)))
+				if (obj is IMap || obj.GetType().IsSubclassOf(typeof(IMap)))
 				{
-					return obj as Models.Map;
+					return obj as IMap;
 				}
 				else
 				{
 					throw new ArgumentException();
 				}
 			}
-			else if (property is Models.Map || property.GetType().IsSubclassOf(typeof(Models.Map)))
+			else if (property is IMap || property.GetType().IsSubclassOf(typeof(IMap)))
 			{
-				return property as Models.Map;
+				return property as IMap;
 			}
 			else
 			{
@@ -102,7 +103,7 @@ namespace Terratype
 			return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Models.Map map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, IMap map, params Func<object, object>[] label)
 		{
 			return htmlHelper.Terratype(new Options()
 			{
@@ -111,7 +112,7 @@ namespace Terratype
 			}, map,  label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Models.Map map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, IMap map, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(new Options()
 			{
@@ -134,12 +135,12 @@ namespace Terratype
 			return htmlHelper.Terratype(htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias), label);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Map map)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, IMap map)
 		{
 			return htmlHelper.Terratype(options, map, null);
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, Models.Map map)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, IMap map)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, map, null);
 		}
@@ -154,7 +155,7 @@ namespace Terratype
 			return htmlHelper.Terratype(options, htmlHelper.ViewData.Model.Content.GetProperty(propertyAlias));
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, Models.Map map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper<ContentModel> htmlHelper, Options options, IMap map, params Func<object, object>[] label)
 		{
 			return (htmlHelper as HtmlHelper).Terratype(options, map, label);
 		}
@@ -179,7 +180,7 @@ namespace Terratype
 			return result;
 		}
 
-		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, Models.Map map, params Func<object, object>[] label)
+		public static IHtmlString Terratype(this HtmlHelper htmlHelper, Options options, IMap map, params Func<object, object>[] label)
 		{
 			if (options == null && map == null)
 			{
@@ -200,11 +201,11 @@ namespace Terratype
 				};
 			}
 
-			Models.Map merge = null;
+			Map merge = null;
 
 			if (map == null)
 			{
-				merge = new Models.Map()
+				merge = new Map()
 				{
 					Provider = options.Provider,
 					Position = options.Position,
@@ -215,7 +216,7 @@ namespace Terratype
 			}
 			else
 			{
-				merge = new Models.Map()
+				merge = new Map()
 				{
 					Provider = map.Provider,
 					Position = map.Position,
@@ -228,8 +229,8 @@ namespace Terratype
 					//  Merge providers, with options taking precedents
 					var mergeJson = JObject.FromObject(merge.Provider);
 					mergeJson.Merge(JObject.FromObject(options.Provider), new JsonMergeSettings { MergeArrayHandling = MergeArrayHandling.Replace });
-					var providerType = (options.Provider is Models.Provider) ? map.Provider.GetType() : options.Provider.GetType();
-					merge.Provider = (Models.Provider) mergeJson.ToObject(providerType);
+					var providerType = (options.Provider.GetType().IsSubclassOf(typeof(IProvider))) ? map.Provider.GetType() : options.Provider.GetType();
+					merge.Provider = (IProvider) mergeJson.ToObject(providerType);
 				}
 				if (options.Zoom != null)
 				{

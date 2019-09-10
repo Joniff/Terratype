@@ -36,9 +36,9 @@ namespace Terratype.Indexer
 			}
 		}
 
-		public Models.Map Map {get; set; }
+		public IMap Map {get; set; }
 
-		public Entry(Guid id, IEnumerable<Guid> ancestors, string key, Models.Map map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, string key, IMap map)
 		{
 			Id = id;
 			Key = key;
@@ -46,7 +46,7 @@ namespace Terratype.Indexer
 			Ancestors = ancestors;
 		}
 
-		public Entry(Guid id, IEnumerable<Guid> ancestors, string[] keys, Models.Map map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, string[] keys, IMap map)
 		{
 			Id = id;
 			Keys = keys;
@@ -54,7 +54,7 @@ namespace Terratype.Indexer
 			Ancestors = ancestors;
 		}
 
-		public Entry(Guid id, IEnumerable<Guid> ancestors, IEnumerable<string> keys, Models.Map map)
+		public Entry(Guid id, IEnumerable<Guid> ancestors, IEnumerable<string> keys, IMap map)
 		{
 			Id = id;
 			Keys = keys;

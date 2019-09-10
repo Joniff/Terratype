@@ -8,6 +8,8 @@ namespace Terratype.Indexers
 	{
 		public const string _Id = "Terratype.Indexer.Lucene";
 		public override string Id => _Id;
+		public override string Name => _Id;
+		public override string Description => _Id;
 
 		public override bool MasterOnly => true;
 
