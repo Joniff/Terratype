@@ -21,6 +21,7 @@ namespace Terratype.Providers
 
 		public const string _Id = "Terratype.LeafletV1";
 
+		[JsonProperty(PropertyName = "id")]
 		public override string Id => _Id;
 
 		public override string Name => "terratypeLeafletV1_name";                   //  Value in language file

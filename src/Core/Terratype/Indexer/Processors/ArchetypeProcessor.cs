@@ -9,9 +9,7 @@ namespace Terratype.Indexer.Processors
 {
 	public class ArchetypeProcessor : PropertyBase
 	{
-		IDataTypeService DataTypeService;
-
-		public ArchetypeProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks)
+		public ArchetypeProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks, dataTypeService)
 		{
 			DataTypeService = dataTypeService;
 		}
@@ -153,7 +151,7 @@ namespace Terratype.Indexer.Processors
 								}
 
 								Tasks.Push(new Task(task.Id, task.Ancestors, aliasDef.EditorAlias, value,
-									new DataTypeId(aliasDef.Id), task.Keys, id, alias));
+									new DataTypeId(aliasDef.Id, DataTypeService), task.Keys, id, alias));
 							}
 						}
 					}

@@ -2,24 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Terratype.Discover;
 using Umbraco.Core.Composing;
 
 namespace Terratype.Indexer
 {
-	public abstract class IndexerBase : IDiscoverable
+	public abstract class IndexerBase : DiscoverBase, IIndexer
 	{
 		public virtual bool MasterOnly => false;
 
 		public abstract bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add);
 
-		public static IEnumerable<Models.Map> Search(Searchers.ISearchRequest search)
+		public static IEnumerable<IMap> Search(Searchers.ISearchRequest search)
 		{
 			//	See if we can find an indexer that can handle our request
-			var container = new LightInject.ServiceContainer();
-			var indexers = container.GetAllInstances(typeof(IndexerBase));
-			foreach (var indexer in indexers)
+			foreach (var indexer in IndexerBase.GetAllInstances<IIndexer>())
 			{
 				if (indexer != null && indexer.GetType().GetInterfaces().Any(x => x.GenericTypeArguments.Any(y => y.GUID == search.GetType().GUID)))
 				{
@@ -28,12 +25,14 @@ namespace Terratype.Indexer
 						new Type[] {search.GetType()});
 					if (method != null)
 					{
-						return method.Invoke(indexer, new object[] { search }) as IEnumerable<Models.Map>;
+						return method.Invoke(indexer, new object[] { search }) as IEnumerable<Map>;
 					}
 				}
 			}
 
 			throw new NotImplementedException();
 		}
+
+		IEnumerable<IMap> IIndexer.Search(Searchers.ISearchRequest search) => Search(search);
 	}
 }

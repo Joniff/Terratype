@@ -1,15 +1,26 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Newtonsoft.Json.Linq;
+using Terratype.CoordinateSystems;
+using Terratype.Labels;
+using Terratype.Providers;
+using Umbraco.Core.Services.Implement;
 
 namespace Terratype.Controllers
 {
 	[Umbraco.Web.Mvc.PluginController("terratype")]
 	public class AjaxController : Umbraco.Web.Editors.UmbracoAuthorizedJsonController
 	{
+		DataTypeService DataTypeService;
+
+		public AjaxController(DataTypeService dataTypeService)
+		{
+			DataTypeService = dataTypeService;
+		}
+
 		public class CoordinateSystemsJson
 		{
 			public string id { get; set; }
@@ -20,7 +31,7 @@ namespace Terratype.Controllers
 
 			public int precision { get; set; }
 
-			public CoordinateSystemsJson(Models.Position position)
+			public CoordinateSystemsJson(IPosition position)
 			{
 				id = position.Id;
 				name = position.Name;
@@ -40,13 +51,13 @@ namespace Terratype.Controllers
 			public IEnumerable<CoordinateSystemsJson> coordinateSystems { get; set; }
 			public bool canSearch { get; set; }
 
-			public ProviderJson(Models.Provider provider)
+			public ProviderJson(IProvider provider)
 			{
 				id = provider.Id;
 				name = provider.Name;
 				description = provider.Description;
 				referenceUrl = provider.ReferenceUrl;
-				coordinateSystems = provider.CoordinateSystems.Select(x => new CoordinateSystemsJson(Models.Position.Resolve(x)));
+				coordinateSystems = provider.CoordinateSystems.Select(x => new CoordinateSystemsJson(PositionBase.GetInstance<IPosition>(x)));
 				canSearch = provider.CanSearch;
 			}
 		}
@@ -55,9 +66,9 @@ namespace Terratype.Controllers
 		public IEnumerable<ProviderJson> Providers()
 		{
 			var providers = new List<ProviderJson>();
-			foreach (var item in Models.Provider.InstalledTypes)
+			foreach (var item in ProviderBase.GetAllInstances<IProvider>())
 			{
-				providers.Add(new ProviderJson(Models.Provider.Resolve(item)));
+				providers.Add(new ProviderJson(item));
 			}
 			return providers;
 		}
@@ -68,7 +79,7 @@ namespace Terratype.Controllers
 			public string name { get; set; }
 			public string description { get; set; }
 
-			public LabelJson(Models.Label label)
+			public LabelJson(ILabel label)
 			{
 				id = label.Id;
 				name = label.Name;
@@ -80,9 +91,9 @@ namespace Terratype.Controllers
 		public IEnumerable<LabelJson> Labels()
 		{
 			var labels = new List<LabelJson>();
-			foreach (var item in Models.Label.InstalledTypes)
+			foreach (var item in LabelBase.GetAllInstances<ILabel>())
 			{
-				labels.Add(new LabelJson(Models.Label.Resolve(item)));
+				labels.Add(new LabelJson(item));
 			}
 			return labels;
 		}
@@ -90,7 +101,7 @@ namespace Terratype.Controllers
 		[System.Web.Http.HttpGet]
 		public string Parse(string id, string datum)
 		{
-			var position = Models.Position.Resolve(id);
+			var position = (PositionBase) PositionBase.GetInstance<IPosition>(id);
 			if (position == null || !position.TryParse(datum))
 			{
 				return null;
@@ -292,13 +303,13 @@ namespace Terratype.Controllers
 		[System.Web.Http.HttpGet]
 		public string ConvertCoordinateSystem(string sourceId, string sourceDatum, string destinationId)
 		{
-			var source = Models.Position.Resolve(sourceId);
+			var source = PositionBase.GetInstance<IPosition>(sourceId);
 			if (source == null || !source.TryParse(sourceDatum))
 			{
 				return null;
 			}
 			var wgs84 = source.ToWgs84();
-			var destination = Models.Position.Resolve(destinationId);
+			var destination = (PositionBase) PositionBase.GetInstance<IPosition>(destinationId);
 			destination.FromWgs84(wgs84);
 			return destination._internalDatum.ToString();
 		}
@@ -315,12 +326,10 @@ namespace Terratype.Controllers
 		public IEnumerable<DataType> Maps(int? id = null)
 		{
 			var results = new List<DataType>();
-			var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
 
-			foreach (var datatype in datatypes)
+			foreach (var datatype in DataTypeService.GetByEditorAlias(nameof(Map)))
 			{
-				var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
-				var json = JObject.Parse(values.First());
+				var json = JObject.Parse(datatype.Configuration as string);
 				if (json == null)
 				{
 					continue;
@@ -367,12 +376,10 @@ namespace Terratype.Controllers
 		public IEnumerable<DataType> DataTypes(int? id = null)
 		{
 			var results = new List<DataType>();
-			var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
 
-			foreach (var datatype in datatypes)
+			foreach (var datatype in DataTypeService.GetByEditorAlias(nameof(Map)))
 			{
-				var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
-				var json = JObject.Parse(values.First());
+				var json = JObject.Parse(datatype.Configuration as string);
 				if (json == null)
 				{
 					continue;
@@ -415,13 +422,10 @@ namespace Terratype.Controllers
 			}
 
 			var results = new HashSet<string>();
-			var datatypes = ApplicationContext.Services.DataTypeService.GetDataTypeDefinitionByPropertyEditorAlias(nameof(Terratype));
 
-			foreach (var datatype in datatypes)
+			foreach (var datatype in DataTypeService.GetByEditorAlias(nameof(Map)))
 			{
-				var values = ApplicationContext.Services.DataTypeService.GetPreValuesByDataTypeId(datatype.Id);
-
-				var json = JObject.Parse(values.First());
+				var json = JObject.Parse(datatype.Configuration as string);
 				if (json == null)
 				{
 					continue;
@@ -438,18 +442,6 @@ namespace Terratype.Controllers
 				}
 			}
 			return results;
-		}
-
-		[System.Web.Http.HttpGet]
-		public IEnumerable<string> TestProviders()
-		{
-			//return Frisk.Frisk.Test(typeof(Models.Provider), new string[] 
-			//{
-			//	"terratype.bingmapsv8.dll", 
-			//	"terratype.googlemapsv3.dll", 
-			//	"terratype.leafletv1.dll"
-			//});
-			return null;
 		}
 	}
 }

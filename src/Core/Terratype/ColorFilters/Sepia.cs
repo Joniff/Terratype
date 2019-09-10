@@ -1,10 +1,9 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class Sepia : Models.ColorFilter
+	public class Sepia : ColorFilterBase
 	{
 		public const string _Id = "sepia";
 

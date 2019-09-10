@@ -61,12 +61,12 @@ namespace Terratype.Indexer
 
 			var processors = new List<PropertyBase>
 			{
-				new Processors.TerratypeProcessor(results, tasks),
+				new Processors.TerratypeProcessor(results, tasks, DataTypeService),
 				new Processors.ArchetypeProcessor(results, tasks, DataTypeService),
-				new Processors.GridProcessor(results, tasks),
-				new Processors.NestedContentProcessor(results, tasks, ContentTypeService),
-				new Processors.StackedContentProcessor(results, tasks, ContentTypeService),
-				new Processors.GenericProcessor(results, tasks)
+				new Processors.GridProcessor(results, tasks, DataTypeService),
+				new Processors.NestedContentProcessor(results, tasks, ContentTypeService, DataTypeService),
+				new Processors.StackedContentProcessor(results, tasks, ContentTypeService, DataTypeService),
+				new Processors.GenericProcessor(results, tasks, DataTypeService)
 			};
 
 			foreach (var content in contents)
@@ -85,7 +85,7 @@ namespace Terratype.Indexer
 						if (Helper.IsJson(val.PublishedValue as string))
 						{
 							tasks.Push(new Task(content.Key, ancestor, property.PropertyType.PropertyEditorAlias, JToken.Parse(val.PublishedValue as string),
-								new DataTypeId(property.PropertyType.DataTypeId), keys, property.PropertyType.Alias));
+								new DataTypeId(property.PropertyType.DataTypeId, DataTypeService), keys, property.PropertyType.Alias));
 						}
 					}
 				}

@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Terratype.DataEditors.Map;
 using Terratype.Indexer.ProcessorService;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer.Processors
 {
 	public class TerratypeProcessor : PropertyBase
 	{
-		public TerratypeProcessor(IList<Entry> results, Stack<Task> tasks) : base(results, tasks)
+		public TerratypeProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks, dataTypeService)
 		{
 		}
 

@@ -11,7 +11,7 @@ namespace Terratype.Indexer.Processors
 	{
 		IContentTypeService ContentTypeService;
 
-		public NestedContentProcessor(IList<Entry> results, Stack<Task> tasks, IContentTypeService contentTypeService) : base(results, tasks)
+		public NestedContentProcessor(IList<Entry> results, Stack<Task> tasks, IContentTypeService contentTypeService, IDataTypeService dataTypeService) : base(results, tasks, dataTypeService)
 		{
 			ContentTypeService = contentTypeService;
 		}
@@ -70,7 +70,7 @@ namespace Terratype.Indexer.Processors
 					}
 					if (value.Type == JTokenType.Array || value.Type == JTokenType.Object)
 					{
-						Tasks.Push(new Task(task.Id, task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeId), task.Keys, index, prop.Alias));
+						Tasks.Push(new Task(task.Id, task.Ancestors, prop.PropertyEditorAlias, value, new DataTypeId(prop.DataTypeId, DataTypeService), task.Keys, index, prop.Alias));
 					}
 				}
 				index++;

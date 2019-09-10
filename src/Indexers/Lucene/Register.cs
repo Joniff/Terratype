@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using Terratype.Indexer;
+using Umbraco.Core;
 using Umbraco.Core.Composing;
 
 namespace Terratype.Indexers.Lucene
@@ -8,8 +9,7 @@ namespace Terratype.Indexers.Lucene
 	{
 		public void Compose(Composition composition)
 		{
-			var container = new LightInject.ServiceContainer();
-			container.Register<Indexer.IndexerBase, LuceneIndexer>(LuceneIndexer._Id);
+			composition.Register<IIndexer, LuceneIndexer>();
 		}
 	}
 }

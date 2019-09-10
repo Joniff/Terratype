@@ -8,7 +8,7 @@ namespace Terratype.Labels
 {
 	[DebuggerDisplay("{Id}")]
 	[JsonObject(MemberSerialization.OptIn, ItemTypeNameHandling = TypeNameHandling.All)]
-	public class Standard : Models.Label
+	public class Standard : LabelBase
 	{
 		public const string _Id = "standard";
 
@@ -29,6 +29,6 @@ namespace Terratype.Labels
 
 		public override bool HasContent => !String.IsNullOrWhiteSpace(Content.ToString());
 
-		public override void Render(Guid Key, HtmlTextWriter writer, Models.Map model) => writer.Write(this.Content.ToString());
+		public override void Render(Guid Key, HtmlTextWriter writer, IMap model) => writer.Write(this.Content.ToString());
 	}
 }

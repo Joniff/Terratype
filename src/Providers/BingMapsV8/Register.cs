@@ -1,5 +1,4 @@
-﻿using Terratype.Models;
-using Umbraco.Core;
+﻿using Umbraco.Core;
 using Umbraco.Core.Composing;
 
 namespace Terratype.Providers.BingMapsV8Core
@@ -9,8 +8,7 @@ namespace Terratype.Providers.BingMapsV8Core
 	{
 		public void Compose(Composition composition)
 		{
-			var container = new LightInject.ServiceContainer();
-			container.Register<Provider, BingMapsV8>(BingMapsV8._Id);
+			composition.Register<IProvider, BingMapsV8>();
 		}
 	}
 }

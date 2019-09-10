@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿/*
+using System.Collections.Generic;
 using ClientDependency.Core;
 using Umbraco.Core.PropertyEditors;
 using Umbraco.Web.PropertyEditors;
-/*
+
 namespace Terratype.ListView
 {
 	[PropertyEditor(TerratypeListViewPropertyEditor.PropertyEditorAlias, TerratypeListViewPropertyEditor.PropertyEditorName, "/App_Plugins/Terratype.ListView/views/editor.html?cache=2.0.0", ValueType = PropertyEditorValueTypes.Text, Group = "Map", Icon = "icon-map-location")]

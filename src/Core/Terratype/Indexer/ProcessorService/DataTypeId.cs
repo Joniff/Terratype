@@ -1,4 +1,6 @@
 ﻿using System;
+using Umbraco.Core.Services;
+using Umbraco.Core.Services.Implement;
 
 namespace Terratype.Indexer.ProcessorService
 {
@@ -9,28 +11,30 @@ namespace Terratype.Indexer.ProcessorService
 		private Func<object, int> caller;
 		private Func<object, Guid> callerGuid;
 		private object arg;
+		private IDataTypeService DataTypeService;
 
-		public DataTypeId()
+		public DataTypeId(IDataTypeService dataTypeService)
 		{
+			DataTypeService = dataTypeService;
 		}
 			
-		public DataTypeId(int value)
+		public DataTypeId(int value, IDataTypeService dataTypeService) : this(dataTypeService)
 		{
 			constant = value;
 		}
 
-		public DataTypeId(Guid value)
+		public DataTypeId(Guid value, IDataTypeService dataTypeService) : this(dataTypeService)
 		{
 			constantGuid = value;
 		}
 
-		public DataTypeId(Func<object, int> c, object o)
+		public DataTypeId(Func<object, int> c, object o, IDataTypeService dataTypeService) : this(dataTypeService)
 		{
 			caller = c;
 			arg = o;
 		}
 
-		public DataTypeId(Func<object, Guid> c, object o)
+		public DataTypeId(Func<object, Guid> c, object o, IDataTypeService dataTypeService) : this(dataTypeService)
 		{
 			callerGuid = c;
 			arg = o;
@@ -52,7 +56,7 @@ namespace Terratype.Indexer.ProcessorService
 			}
 			if (data.constantGuid != null)
 			{
-				return data.constant = ApplicationContext.Current.Services.DataTypeService.GetDataTypeDefinitionById((Guid) data.constantGuid).Id;
+				//return data.constant = DataTypeService..GetDataTypeDefinitionById((Guid) data.constantGuid).Id;
 			}
 			return data.constant;
 		}
@@ -73,7 +77,8 @@ namespace Terratype.Indexer.ProcessorService
 			}
 			if (data.constant != null)
 			{
-				return data.constantGuid = ApplicationContext.Current.Services.DataTypeService.GetDataTypeDefinitionById((int) data.constant).Key;
+				// TODO
+				//return data.constantGuid = ApplicationContext.Current.Services.DataTypeService.GetDataTypeDefinitionById((int) data.constant).Key;
 			}
 			return data.constantGuid;
 		}

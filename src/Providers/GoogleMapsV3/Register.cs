@@ -1,5 +1,4 @@
-﻿using Terratype.Models;
-using Umbraco.Core;
+﻿using Umbraco.Core;
 using Umbraco.Core.Composing;
 
 namespace Terratype.Providers.GoogleMapsV3Core
@@ -9,8 +8,7 @@ namespace Terratype.Providers.GoogleMapsV3Core
 	{
 		public void Compose(Composition composition)
 		{
-			var container = new LightInject.ServiceContainer();
-			container.Register<Provider, GoogleMapsV3>(GoogleMapsV3._Id);
+			composition.Register<IProvider, GoogleMapsV3>();
 		}
 	}
 }

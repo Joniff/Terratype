@@ -5,8 +5,8 @@ using Terratype.Indexer;
 namespace Terratype.Indexers
 {
 	public class LuceneIndexer : IndexerBase
-    {
-        public const string _Id = "Terratype.Indexer.Lucene";
+	{
+		public const string _Id = "Terratype.Indexer.Lucene";
 		public override string Id => _Id;
 
 		public override bool MasterOnly => true;
@@ -14,7 +14,7 @@ namespace Terratype.Indexers
 
 		public override bool Sync(IEnumerable<Guid> remove, IEnumerable<Entry> add)
 		{
-            throw new NotImplementedException();
+			throw new NotImplementedException();
 		}
-    }
+	}
 }

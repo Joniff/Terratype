@@ -21,6 +21,8 @@ namespace Terratype.Providers
 		}
 
 		public const string _Id = "Terratype.GoogleMapsV3";
+
+		[JsonProperty(PropertyName = "id")]
 		public override string Id => _Id;
 
 		public override string Name => "terratypeGoogleMapsV3_name";            //  Value is in the language file

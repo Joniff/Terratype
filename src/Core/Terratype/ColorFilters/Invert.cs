@@ -1,10 +1,9 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class Invert : Models.ColorFilter
+	public class Invert : ColorFilterBase
 	{
 		public const string _Id = "invert";
 

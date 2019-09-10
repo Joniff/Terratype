@@ -1,12 +1,19 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 using System.Threading;
 using System.Web;
-using Newtonsoft.Json;
 using FluentAssertions;
-using Terratype.Models;
-using Terratype.Providers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Newtonsoft.Json;
+using Terratype.CoordinateSystems;
+using Terratype.Icons;
+using Umbraco.Core;
+using Umbraco.Core.Cache;
+using Umbraco.Core.Composing;
+using Umbraco.Core.Configuration;
+using Umbraco.Core.IO;
+using Umbraco.Core.Logging;
 
 //  Given When Then
 
@@ -46,31 +53,68 @@ namespace Terratype.Test.Models
 
 		private Random rnd = new Random();
 
+		private Composition Composition()
+		{
+			var logger = Mock.Of<ILogger>();
+			var profiler = Mock.Of<IProfiler>();
+			var proflogger = new ProfilingLogger(logger, profiler);
+			var appCaches = AppCaches.Disabled;
+			var globalSettings = Mock.Of<IGlobalSettings>(
+				settings =>
+					settings.ConfigurationStatus == UmbracoVersion.SemanticVersion.ToSemanticString() &&
+					settings.UseHttps == false &&
+					settings.HideTopLevelNodeFromPath == false &&
+					settings.Path == IOHelper.ResolveUrl("~/umbraco") &&
+					settings.TimeOutInMinutes == 20 &&
+					settings.DefaultUILanguage == "en" &&
+					settings.LocalTempStorageLocation == LocalTempStorage.Default &&
+					settings.LocalTempPath == IOHelper.MapPath("~/App_Data/TEMP") &&
+					settings.ReservedPaths == ("~/app_plugins/,~/install/,~/mini-profiler-resources/,~/umbraco") &&
+					settings.ReservedUrls == "~/config/splashes/noNodes.aspx,~/.well-known,");
+			var typeLoader = new TypeLoader(appCaches.RuntimeCache, globalSettings.LocalTempPath, proflogger);
+
+			var register = Umbraco.Core.Composing.RegisterFactory.Create();
+
+			var composition = new Composition(register, typeLoader, proflogger, Mock.Of<IRuntimeState>());
+
+			composition.RegisterUnique(typeLoader);
+			composition.RegisterUnique(logger);
+			composition.RegisterUnique(profiler);
+			composition.RegisterUnique<IProfilingLogger>(proflogger);
+			composition.RegisterUnique(appCaches);
+
+			Current.Factory = composition.CreateFactory();
+
+			return composition;
+		}
+
 
 		[TestInitialize()]
 		public void Initialize() 
 		{
-			var container = new LightInject.ServiceContainer();
-			container.Register<Position, CoordinateSystems.Bd09>(CoordinateSystems.Bd09._Id);
-			container.Register<Position, CoordinateSystems.Gcj02>(CoordinateSystems.Gcj02._Id);
-			container.Register<Position, CoordinateSystems.Wgs84>(CoordinateSystems.Wgs84._Id);
-
-			container.Register<Label, Labels.Standard>(Labels.Standard._Id);
-
-			container.Register<ColorFilter, ColorFilters.Sepia>(ColorFilters.Sepia._Id);
-			container.Register<ColorFilter, ColorFilters.Colorscale>(ColorFilters.Colorscale._Id);
-			container.Register<ColorFilter, ColorFilters.Grayscale>(ColorFilters.Grayscale._Id);
-			container.Register<ColorFilter, ColorFilters.HueRotate>(ColorFilters.HueRotate._Id);
-			container.Register<ColorFilter, ColorFilters.Invert>(ColorFilters.Invert._Id);
-
-			container.Register<Provider, BingMapsV8>(BingMapsV8._Id);
-			container.Register<Provider, GoogleMapsV3>(GoogleMapsV3._Id);
-			container.Register<Provider, LeafletV1>(BingMapsV8._Id);
+			var composition = Composition();
+			new Terratype.Register().Compose(composition);
+			new Terratype.Providers.BingMapsV8Core.Register().Compose(composition);
+			new Terratype.Providers.GoogleMapsV3Core.Register().Compose(composition);
+			new Terratype.Providers.LeafletV1Core.Register().Compose(composition);
 		}
 
-		private Terratype.Models.LatLng RandomLatLng()
+		[TestMethod]
+		public void CheckDI()
 		{
-			return new Terratype.Models.LatLng()
+			var bd09 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Bd09._Id);
+			Assert.IsNotNull(bd09);
+
+			var gcj02 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Gcj02._Id);
+			Assert.IsNotNull(gcj02);
+
+			var wgs84 = PositionBase.GetInstance<IPosition>(CoordinateSystems.Wgs84._Id);
+			Assert.IsNotNull(wgs84);
+		}
+
+		private LatLng RandomLatLng()
+		{
+			return new LatLng()
 			{
 				Latitude = (rnd.NextDouble() * 180.0) - 90.0,
 				Longitude = (rnd.NextDouble() * 360.0) - 180.0
@@ -122,16 +166,16 @@ namespace Terratype.Test.Models
 			{
 				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
 
-				var icon = new Terratype.Models.Icon()
+				var icon = new Icon()
 				{
 					Id = "test",
 					Url = new Uri("http://mydomain.com/myfile.jpg"),
-					Size = new Terratype.Models.Icon.SizeDefinition()
+					Size = new Icon.SizeDefinition()
 					{
 						Width = 50,
 						Height = 66
 					},
-					Anchor = new Terratype.Models.Icon.AnchorDefinition()
+					Anchor = new Icon.AnchorDefinition()
 					{
 						Vertical = 25,
 						Horizontal = 33
@@ -191,30 +235,26 @@ namespace Terratype.Test.Models
 				providerAccessor.SetProperty(nameof(Terratype.Providers.GoogleMapsV3.ShowLabels), false);
 
 
-				var model = new Terratype.Models.Map()
+				var model = new Map()
 				{
 					Zoom = rnd.Next(19) + 1,
 					Label = new Terratype.Labels.Standard()
 					{
 						Content = new HtmlString("<p>This is some text<p>")
 					},
-					Lookup = "Paris, France",
+					SearchText = "Paris, France",
 					Position = new Terratype.CoordinateSystems.Wgs84(RandomLatLng()),
 				};
 
 				//  Use private set to add properties to class
 				PrivateObject accessor = new PrivateObject(model);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Provider), provider);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Icon), icon);
+				accessor.SetProperty(nameof(Map.Provider), provider);
+				accessor.SetProperty(nameof(Map.Icon), icon);
 
 				var json = JsonConvert.SerializeObject(model);
-
-				var model2 = new Model(json);
-
-				model.ShouldBeEquivalentTo<Terratype.Models.Map>(model2);
-
+				var model2 = new Map(json);
+				model.Should().BeEquivalentTo<Map>(model2);
 				var json2 = JsonConvert.SerializeObject(model2);
-
 				Assert.AreEqual(json, json2);
 
 			}
@@ -227,16 +267,16 @@ namespace Terratype.Test.Models
 			{
 				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
 
-				var icon = new Terratype.Models.Icon()
+				var icon = new Icon()
 				{
 					Id = "test",
 					Url = new Uri("http://mydomain.com/myfile.jpg"),
-					Size = new Terratype.Models.Icon.SizeDefinition()
+					Size = new Icon.SizeDefinition()
 					{
 						Width = 50,
 						Height = 66
 					},
-					Anchor = new Terratype.Models.Icon.AnchorDefinition()
+					Anchor = new Icon.AnchorDefinition()
 					{
 						Vertical = 25,
 						Horizontal = 33
@@ -271,27 +311,27 @@ namespace Terratype.Test.Models
 					},
 				};
 
-				var model = new Terratype.Models.Map()
+				var model = new Map()
 				{
 					Zoom = rnd.Next(19) + 1,
 					Label = new Terratype.Labels.Standard()
 					{
 						Content = new HtmlString("<p>This is some text<p>")
 					},
-					Lookup = "Paris, France",
+					SearchText = "Paris, France",
 					Position = new Terratype.CoordinateSystems.Wgs84(RandomLatLng()),
 				};
 
 				//  Use private set to add properties to class
 				PrivateObject accessor = new PrivateObject(model);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Provider), provider);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Icon), icon);
+				accessor.SetProperty(nameof(Map.Provider), provider);
+				accessor.SetProperty(nameof(Map.Icon), icon);
 
 				var json = JsonConvert.SerializeObject(model);
 
-				var model2 = new Terratype.Models.Map(json);
+				var model2 = new Map(json);
 
-				model.ShouldBeEquivalentTo<Terratype.Models.Map>(model2);
+				model.Should().BeEquivalentTo<Map>(model2);
 
 				var json2 = JsonConvert.SerializeObject(model2);
 
@@ -307,16 +347,16 @@ namespace Terratype.Test.Models
 			{
 				Thread.CurrentThread.CurrentCulture = new CultureInfo(culture);
 
-				var icon = new Terratype.Models.Icon()
+				var icon = new Icon()
 				{
 					Id = "test",
 					Url = new Uri("http://mydomain.com/myfile.jpg"),
-					Size = new Terratype.Models.Icon.SizeDefinition()
+					Size = new Icon.SizeDefinition()
 					{
 						Width = 50,
 						Height = 66
 					},
-					Anchor = new Terratype.Models.Icon.AnchorDefinition()
+					Anchor = new Icon.AnchorDefinition()
 					{
 						Vertical = 25,
 						Horizontal = 33
@@ -354,28 +394,25 @@ namespace Terratype.Test.Models
 					ShowLabels = false
 				};
 
-				var model = new Terratype.Models.Map()
+				var model = new Map()
 				{
 					Zoom = rnd.Next(19) + 1,
 					Label = new Terratype.Labels.Standard()
 					{
 						Content = new HtmlString("<p>This is some text<p>")
 					},
-					Lookup = "Paris, France",
+					SearchText = "Paris, France",
 					Position = new Terratype.CoordinateSystems.Wgs84(RandomLatLng()),
 				};
 
 				//  Use private set to add properties to class
 				PrivateObject accessor = new PrivateObject(model);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Provider), provider);
-				accessor.SetProperty(nameof(Terratype.Models.Map.Icon), icon);
+				accessor.SetProperty(nameof(Map.Provider), provider);
+				accessor.SetProperty(nameof(Map.Icon), icon);
 
 				var json = JsonConvert.SerializeObject(model);
-
-				var model2 = new Terratype.Models.Map(json);
-
-				model.ShouldBeEquivalentTo<Terratype.Models.Map>(model2);
-
+				var model2 = new Map(json);
+				model.Should().BeEquivalentTo<Map>(model2);
 				var json2 = JsonConvert.SerializeObject(model2);
 
 				Assert.AreEqual(json, json2);

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class Grayscale : Models.ColorFilter
+	public class Grayscale : ColorFilterBase
 	{
 		public const string _Id = "grayscale";
 

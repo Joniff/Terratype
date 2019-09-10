@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using Umbraco.Core;
 using Terratype.Indexer.ProcessorService;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer.Processors
 {
 	public class GridProcessor : PropertyBase
 	{
-		public GridProcessor(IList<Entry> results, Stack<Task> tasks) : base(results, tasks)
+		public GridProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks, dataTypeService)
 		{
 		}
 
@@ -76,7 +74,7 @@ namespace Terratype.Indexer.Processors
 															if (editorAliasType != null && editorAliasType.Type == JTokenType.String)
 															{
 																Tasks.Push(new Task(task.Id, task.Ancestors, editorAliasType.Value<string>(), valueType,
-																	new DataTypeId(), task.Keys, sectionIndex, rowIdType.Value<string>(), areaIndex, controlIndex));
+																	new DataTypeId(DataTypeService), task.Keys, sectionIndex, rowIdType.Value<string>(), areaIndex, controlIndex));
 															}
 														}
 													}

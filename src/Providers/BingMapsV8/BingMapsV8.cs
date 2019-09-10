@@ -21,6 +21,8 @@ namespace Terratype.Providers
 		}
 		
 		public const string _Id = "Terratype.BingMapsV8";
+
+		[JsonProperty(PropertyName = "id")]
 		public override string Id => _Id;
 
 		public override string Name => "terratypeBingMapsV8_name";              //  Value is in language file

@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using Terratype.Indexer;
+using Umbraco.Core;
 using Umbraco.Core.Composing;
 
 namespace Terratype.Indexers.Elasticsearch
@@ -8,8 +9,7 @@ namespace Terratype.Indexers.Elasticsearch
 	{
 		public void Compose(Composition composition)
 		{
-			var container = new LightInject.ServiceContainer();
-			container.Register<Indexer.IndexerBase, ElasticsearchIndexer>(ElasticsearchIndexer._Id);
+			composition.Register<IIndexer, ElasticsearchIndexer>();
 		}
 	}
 }

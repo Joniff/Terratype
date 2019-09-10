@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Terratype.Indexer.ProcessorService;
+using Umbraco.Core.Services;
 
 namespace Terratype.Indexer.Processors
 {
 	public class GenericProcessor : PropertyBase
 	{
-		public GenericProcessor(IList<Entry> results, Stack<Task> tasks) : base(results, tasks)
+		public GenericProcessor(IList<Entry> results, Stack<Task> tasks, IDataTypeService dataTypeService) : base(results, tasks, dataTypeService)
 		{
 		}
 
@@ -64,12 +65,14 @@ namespace Terratype.Indexer.Processors
 			}
 			var field = position.First as JProperty;
 			var matches = 0;
+			var container = new LightInject.ServiceContainer();
+
 			while (field != null)
 			{
 				if (String.Equals(field.Name, Json.PropertyName<Models.Position>(nameof(Models.Position.Id)), StringComparison.InvariantCultureIgnoreCase))
 				{
 					var id = field.Value.ToObject<string>();
-					if (!Models.Position.InstalledTypes.Any(x => x == id))
+					if (container.GetInstance(typeof(Models.Position), id) == null)
 					{
 						return false;
 					}

@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using Newtonsoft.Json.Linq;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web.Models;
 
 namespace Terratype
@@ -67,7 +68,7 @@ namespace Terratype
 			}
 			else if (property is IPublishedProperty)
 			{
-				var obj = (property as IPublishedProperty).Value;
+				var obj = (property as IPublishedProperty).GetValue();
 				if (obj is Models.Map || obj.GetType().IsSubclassOf(typeof(Models.Map)))
 				{
 					return obj as Models.Map;

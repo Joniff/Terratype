@@ -1,10 +1,9 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class HueRotate : Models.ColorFilter
+	public class HueRotate : ColorFilterBase
 	{
 		public const string _Id = "huerotate";
 

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Web.UI;
+﻿using System.Web.UI;
 using Newtonsoft.Json;
 
 namespace Terratype.ColorFilters
 {
-	public class Colorscale : Models.ColorFilter
+	public class Colorscale : ColorFilterBase
 	{
 		public const string _Id = "colorscale";
 
-		[JsonProperty]
+		[JsonProperty(PropertyName = "id")]
 		public override string Id => _Id;
 		public override string Name => "terratypeColorFilterColorscale_name";
 		public override string Description => "terratypeColorFilterColorscale_description";
